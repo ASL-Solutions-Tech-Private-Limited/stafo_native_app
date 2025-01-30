@@ -1,0 +1,23 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven {
+            url 'https://jitpack.io'
+        }
+        maven {
+            url 'https://storage.googleapis.com/r8-releases/raw'
+        }
+    }
+}
+rootProject.name = "Asl EMP  1.0"
+include ':app'

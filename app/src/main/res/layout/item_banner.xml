@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_100sdp"
+    android:layout_margin="@dimen/_2sdp"
+    app:cardBackgroundColor="@color/zxing_transparent"
+    app:cardCornerRadius="@dimen/_14sdp"
+    app:cardElevation="@dimen/_6sdp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_banner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_demo_banner" />
+</androidx.cardview.widget.CardView>

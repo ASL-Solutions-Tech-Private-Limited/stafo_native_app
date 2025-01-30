@@ -1,0 +1,40 @@
+<!-- res/values/arrays.xml -->
+<resources>
+    <string-array name="spinner_items">
+        <item>Startek</item>
+        <item>Morpho</item>
+        <item>Mantra</item>
+        <item>Precision</item>
+        <item>NEXT Biometrics OneTouch L0</item>
+        <item>Morpho L1</item>
+    </string-array>
+    <string-array name="master_admin_items">
+        <item>All</item>
+        <item>Master Distributor</item>
+        <item>Distributor</item>
+        <item>Retailer</item>
+    </string-array>
+    <string-array name="master_dis_items">
+        <item>All</item>
+        <item>Distributor</item>
+        <item>Retailer</item>
+    </string-array>
+
+    <string-array name="company_type_items">
+
+        <item>Sole Proprietorship</item>
+        <item>Partnership</item>
+        <item>Limited Liability Company (LLC)</item>
+        <item>Corporation</item>
+        <item>Nonprofit Organization</item>
+        <item>Cooperative (Co-op)</item>
+        <item>Joint Venture</item>
+        <item>Public Limited Company (PLC)</item>
+        <item>Private Limited Company (Ltd)</item>
+        <item>Franchise</item>
+        <item>Holding Company</item>
+        <item>Trust</item>
+        <item>Social Enterprise</item>
+        <item>Virtual Company</item>
+    </string-array>
+</resources>

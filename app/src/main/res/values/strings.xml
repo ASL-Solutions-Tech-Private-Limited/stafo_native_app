@@ -1,0 +1,215 @@
+<resources>
+    <string name="create_account">Create account</string>
+    <string name="your_username">Your username</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="your_email">Your email</string>
+    <string name="password">Password</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="i_accept_the_terms_and_privacy_policy">I accept the terms and privacy policy</string>
+    <string name="already_account">Already have an account?</string>
+    <string name="log_in">Log in</string>
+    <string name="hi_welcome">Hi,Welcome!</string>
+    <string name="mobile">Mobile</string>
+    <string name="enter_your_mobile_number">Enter your Mobile number</string>
+    <string name="don_t_have_an_accunt">Don\'t have an accunt?</string>
+    <string name="verify">Verify</string>
+    <string name="request_otp">Request OTP</string>
+    <string name="name">Name</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="enter_your_age">Enter your age</string>
+    <string name="what_is_your_name">What is your name?</string>
+    <string name="what_is_your_gender">What is your gender?</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="connect_device">Connect Device</string>
+    <string name="add_patients">Add Patients</string>
+    <string name="add_patient">Add Patient</string>
+    <string name="age">Age</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="address">Address</string>
+    <string name="enter">Enter</string>
+    <string name="view">View</string>
+    <string name="report">Report</string>
+    <string name="profile_details">Profile details</string>
+    <string name="gender">Gender</string>
+    <string name="ok">Ok</string>
+    <string name="what_is_your_age">What is your age?</string>
+    <string name="upload_your_profile_picture">Upload your Profile Picture</string>
+    <string name="from_gallery">From Gallery</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="next">Next</string>
+    <string name="search_patient_name">Search Patient Name</string>
+    <string name="recent">Recent</string>
+    <string name="date">Date</string>
+    <string name="check_up">Check up</string>
+    <string name="scan_device">Scan Device</string>
+    <string name="connect">Connect</string>
+    <string name="temperature">Temperature</string>
+    <string name="check">Check</string>
+    <string name="spo2">SPO2</string>
+    <string name="ecg">ECG</string>
+    <string name="sign_in">Sign In</string>
+    <string name="enter_username">Enter Username please</string>
+    <string name="error_net_check">"No Internet Connection.Please Internet "</string>
+    <string name="error_something_went_wrong">Something went wrong</string>
+    <string name="cash_withdrawal">Cash Withdrawal</string>
+    <string name="balance_enq">Balance Enquiry</string>
+    <string name="mini_statement">Mini Statment</string>
+    <string name="aadhaar">Aadhaar Number</string>
+    <string name="enter_aadhaar_no">Enter Aadhaar Number</string>
+    <string name="customer_number">Customer Mobile Number</string>
+    <string name="enter_customer_mobile_number">Enter Customer Mobile Number</string>
+    <string name="withdrawal_amount">Withdrawal Amount</string>
+    <string name="enter_withdrawal_amount">Enter Withdrawal Amount</string>
+    <string name="proceed">Proceed</string>
+    <string name="Select_bank">Select Bank</string>
+    <string name="provider_bank">Provider Bank</string>
+    <string name="choose_device">Choose RD Service</string>
+    <string name="bank_name">Bank Name</string>
+    <string name="sub_tilte_bio_success">Kindly proceed with Document verification and Shop verification for final approval</string>
+    <string name="GPSAlertDialogTitle">GPS is setting</string>
+    <string name="GPSAlertDialogMessage">GPS is not enabled. Do you want to go to setting menu</string>
+
+    <string name="settings">Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="action_settings">Settings</string>
+    <string name="kyc_reports">KYC Reports</string>
+    <string name="onboard_agent">Onboard Agent</string>
+    <string name="view_agent">View Agent</string>
+    <string name="today_s_earning">Today\'s Earning</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="view_qr_merchant">View QR Merchant</string>
+    <string name="view_csp_agent">View CSP Agent</string>
+    <string name="onboarding_csp_agent">Onboarding CSP \nAgent</string>
+    <string name="onboarding_qr_merchant">Onboarding QR \nMerchant</string>
+    <string name="onboarding_data">Onboarding Data</string>
+    <string name="filling_for_review">Filling for Review</string>
+    <string name="store_registration">Store Registration</string>
+    <string name="sub_header">Fill all the necessary details to set-up your store \nwith Softmint Digital Service</string>
+    <string name="additinal_details">Additinal Details</string>
+    <string name="bank_details_for_settlement">Bank Details for Settlement</string>
+    <string name="login">Login</string>
+    <string name="forget_password">Forgot Password?</string>
+    <string name="don_t_have_an_account">Don’t have an account?</string>
+    <string name="register">Sign up</string>
+    <string name="policy">By clicking login, you agree to our Terms of Service and Privacy Policy</string>
+
+    <string name="latest_transaction">Latest Transaction</string>
+    <string name="see_all"><u>See All</u></string>
+    <string name="settlement_amount">Settlement Amount</string>
+    <string name="terminal_no">Terminal No:</string>
+    <string name="order_qr">Order QR</string>
+    <string name="view_and_manage_your_bank_account">View and manage your bank account</string>
+    <string name="view_and_manage_your_business_account">View and manage your business details</string>
+    <string name="business_profile">Business Profile</string>
+    <string name="unlock_exclusive">Unlock exclusive benefits with KYC verification</string>
+    <string name="manage_and_order">Manage and order new QR for your shop</string>
+    <string name="manage_business">Manage Business</string>
+    <string name="payment_options">Payment Options</string>
+
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="qr_code">QR Code</string>
+    <string name="history">History</string>
+    <string name="account">Account</string>
+    <string name="enter_the_otp_sent_to_your_number">Enter the OTP sent to your\n\nnumber</string>
+    <string name="submit">Verify</string>
+    <string name="notification_channel_id">my_channel_01</string>
+    <string name="upi_id">UPI:</string>
+    <string name="account_no">Account No</string>
+    <string name="account_holder_name">Account Holder Name</string>
+    <string name="ifsc_code">IFSC</string>
+    <string name="please_enter_bank_name">Please Select Bank Name</string>
+    <string name="please_enter_bank_acc">Please Enter bank Account No</string>
+    <string name="please_enter_account_holder_name">Please Enter Account Holder Name</string>
+    <string name="please_enter_bank_ifsc">"Please Enter IFSC "</string>
+    <string name="manage_nstuff">Manage\nStaff</string>
+    <string name="please_staff_name">Please Enter Staff name</string>
+    <string name="please_enter_staff_mobile">Please Enter Staff Mobile No</string>
+    <string name="please_enter_staff_email">Please Enter Staff Email</string>
+    <string name="business_service">Business Service</string>
+    <string name="terminal_code">Terminal Code</string>
+    <string name="terminal_name">Terminal Name</string>
+    <string name="please_terminal_code">Please enter Terminal Code</string>
+    <string name="please_enter_terminal_name">Please Enter Terminal Name</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="previous">Previous</string>
+
+    <string name="lorem_ipsum">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
+        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
+        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
+        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
+        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
+        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
+        Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
+        egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed
+        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada
+        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,
+        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
+        bibendum, vel congue leo egestas.\n\n
+        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit
+        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,
+        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer
+        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at
+        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
+        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
+        est.\n\n
+        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.
+        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui
+        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In
+        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,
+        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra
+        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a
+        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus
+        convallis.\n\n
+        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et
+        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa
+        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,
+        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper
+        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
+        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
+        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
+    </string>
+    <string name="intro_skip">Skip</string>
+    <string name="intro_get_started">Get Started</string>
+    <string name="intro_next">Next</string>
+    <string name="intro_title_1">Intro Title One</string>
+    <string name="intro_description_1">Description One</string>
+    <string name="intro_title_2">Intro Title Two</string>
+    <string name="intro_description_2">Description Two</string>
+    <string name="intro_title_3">Intro Title Three</string>
+    <string name="intro_description_3">Description Three</string>
+    <string name="company_name">Company Name</string>
+    <string name="company_type">Company Type</string>
+    <string name="gst_number_if_applicable">GST Number (if applicable)</string>
+    <string name="registration_number_if_available">Registration Number (if available)</string>
+    <string name="company_pan_number">Company PAN Number</string>
+    <string name="office_address">Office Address</string>
+    <string name="owner_name">Owner Name</string>
+    <string name="mobile_number">Mobile number</string>
+    <string name="pan_number">Pan Number</string>
+    <string name="company_registration_certificate">Company Registration Certificate</string>
+    <string name="gst_certificate">GST Certificate</string>
+    <string name="copy_of_pan_card">Copy of PAN Card</string>
+    <string name="copy_of_aadhaar_card_or_voter_id_proprietor">Copy of Aadhaar Card or Voter ID (Proprietor)</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="profile">Profile</string>
+    <string name="employees">Employees</string>
+    <string name="policy_">Policy</string>
+    <string name="leaves">Leaves</string>
+</resources>

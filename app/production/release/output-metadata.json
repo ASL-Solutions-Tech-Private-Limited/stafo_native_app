@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.softmint_upi.app",
+  "variantName": "productionRelease",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 3,
+      "versionName": "1.0.3",
+      "outputFile": "Softmint_UPI_productionRelease_1.0.3_1721488883956.apk"
+    }
+  ],
+  "elementType": "File"
+}

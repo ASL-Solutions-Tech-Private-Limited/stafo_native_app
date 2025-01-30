@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <queries>
+
+        <!-- Explicit apps you know in advance about: -->
+        <package android:name="com.acpl.registersdk" />
+        <package android:name="com.scl.rdservice" />
+        <package android:name="com.mantra.rdservice" />
+        <package android:name="com.precision.pb510.rdservice" />
+        <package android:name="com.nextbiometrics.onetouchrdservice" />
+        <package android:name="com.phonepe.app" />
+        <package android:name="net.one97.paytm" />
+        <package android:name="com.google.android.apps.nbu.paisa.user" />
+        <package android:name="protean.assisted.ekyc" />
+        <package android:name="com.whatsapp" />
+        <package android:name="com.mantra.mis100v2.rdservice" />
+        <package android:name="com.idemia.l1rdservice" />
+    </queries>
+
+    <application
+        android:name=".ASLEmpMng"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Sims"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
+        <activity
+            android:name=".screens.ui.AccountSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.ui.EmplyeeyerProfile"
+            android:exported="false" />
+
+        <activity
+            android:name=".screens.ui.EmployeeDashboard"
+            android:exported="false" />
+        <activity
+            android:name=".screens.ui.EmployerDashboard"
+            android:exported="false" />
+        <activity
+            android:name=".screens.MainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_main"
+            android:theme="@style/Theme.Sims.NoActionBar" />
+        <activity
+            android:name=".screens.OnBoardingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.RegistrationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Sims">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+
+</manifest>

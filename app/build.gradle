@@ -1,0 +1,234 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    // id 'kotlin-android-extensions'
+    id 'kotlin-android'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
+
+android {
+    namespace 'com.asl_emp_mng.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.asl_emp_mng.app"
+        minSdk 24
+        targetSdk 34
+        versionCode 4
+        versionName "1.0.4"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField 'boolean', 'LOG_ENABLED', 'true'
+            buildConfigField "Boolean", "DEBUG_MODE", "true"
+
+        }
+        release {
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField 'boolean', 'LOG_ENABLED', 'false'
+            buildConfigField "Boolean", "DEBUG_MODE", "false"
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    dataBinding {
+        enabled true
+    }
+    viewBinding {
+        enabled true
+    }
+    flavorDimensions 'default'
+    productFlavors {
+        production {
+            minSdkVersion 24
+            buildConfigField 'String', 'ENDPOINT', '"https://bc.easyswift.in/"'
+            buildConfigField 'String', 'BC_SOFMINT', '"https://bc.softmintindia.com/rest/"'
+            buildConfigField 'String', 'CSP_SOFMINT_INDIA', '"https://bc.easyswift.in/"'
+            buildConfigField 'String', 'API_KEY', '""'
+            buildConfigField 'boolean', 'STAGE_MODE', "false"
+            resValue "string", "app_name", "ASL MNG"
+        }
+        staging {
+            minSdkVersion 24
+            buildConfigField 'String', 'ENDPOINT', '"https://m.softmintindia.com/"'
+            buildConfigField 'String', 'BC_SOFMINT', '"https://bc.softmintindia.com/rest/"'
+            buildConfigField 'String', 'CSP_SOFMINT_INDIA', '"https://csp.softmintindia.com/"'
+            buildConfigField 'String', 'API_KEY', '""'
+            buildConfigField 'boolean', 'STAGE_MODE', "true"
+            resValue "string", "app_name", "ASL MNG"
+        }
+    }
+    lintOptions {
+        baseline file("lint-baseline.xml")
+        baseline file("lint-baseline.xml")
+        abortOnError false
+        checkReleaseBuilds false // Disable lint checks for release builds
+
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def formattedDate = System.currentTimeMillis()
+            def appName = "Softmint_UPI"
+            def buildVariant = variant.name
+            def versionCode = variant.versionName
+            outputFileName = "${appName}_${buildVariant}_${versionCode}_${formattedDate}.apk"
+        }
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.9'
+    implementation 'com.google.firebase:firebase-analytics:20.1.2'
+    implementation 'com.google.firebase:firebase-messaging:23.0.3'
+    implementation 'androidx.activity:activity:1.9.0'
+    implementation 'androidx.work:work-runtime-ktx:2.9.0'
+    //  implementation 'androidx.activity:activity:1.9.0'
+    //implementation 'androidx.activity:activity:1.8.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.fragment:fragment-ktx:1.5.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    /**
+     *  LiveData
+     */
+    def life_versions = "1.1.1"
+    def kotlin_version = "1.8.22"
+    // ext.anko_version = '0.10.8'
+
+    implementation "android.arch.lifecycle:extensions:$life_versions"
+    annotationProcessor "android.arch.lifecycle:compiler:$life_versions"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    /*Coroutines*/
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7'
+
+    /*Retrofit*/
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
+
+    /*SDP*/
+    implementation 'com.intuit.sdp:sdp-android:1.1.0'
+
+    /*Loader*/
+    implementation 'com.tuyenmonkey:mkloader:1.4.0'
+
+    /*Circular ImageView*/
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.mikhaellopez:circularimageview:4.3.0'
+
+    /*Dots Indicator*/
+    // implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:3.0.3'
+
+    //  implementation "org.jetbrains.anko:anko:$anko_version"
+
+    /*Rx*/
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+    implementation 'com.jakewharton.rxbinding2:rxbinding-kotlin:2.0.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.16'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
+
+    /*Local Storage*/
+    implementation "com.orhanobut:hawk:2.0.1"
+
+    /*Tooltip*/
+    implementation 'com.github.douglasjunior:android-simple-tooltip:1.1.0'
+    implementation "com.github.kamrul3288:dateced:1.0.2"
+    implementation "com.github.tanoDxyz:GDownload:1.0"
+
+    //Permission
+    implementation 'com.karumi:dexter:6.2.1'
+
+    //Image Slider
+    //  implementation 'com.github.smarteist:autoimageslider:1.4.0'
+    //GIF
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'
+
+    /*Tricker*/
+    implementation 'com.trackier:android-sdk:1.6.45'
+    implementation 'com.android.installreferrer:installreferrer:2.2'
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+
+
+    implementation 'com.github.OzcanAlasalvar:DatePicker:1.0.4'
+    implementation 'com.github.ajithvgiri:search-dialog:v1.3'
+
+    implementation 'com.github.bumptech.glide:glide:4.15.0'
+    kapt 'com.github.bumptech.glide:compiler:4.15.0'
+
+    implementation 'com.github.mukeshsolanki.android-otpview-pinview:otpview:3.1.0'
+// Lottie dependency
+    def lottieVersion = "3.4.0"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+
+    implementation 'com.google.zxing:core:3.4.1'
+    implementation 'com.github.kenglxn.QRGen:android:2.6.0'
+    //implementation 'com.github.Piashsarker:AndroidAppUpdateLibrary:1.0.4'
+
+
+    implementation 'com.intuit.ssp:ssp-android:1.1.0'
+    implementation 'io.github.chaosleung:pinview:1.4.4'
+
+    //implementation 'com.github.5AbhishekSaxena.toaster-android:toaster:2.3.1'
+    implementation 'com.github.5AbhishekSaxena.toaster-android:toaster-ktx:2.3.1'
+    //implementation("net.orandja.shadowlayout:shadowlayout:1.0.1")
+    // implementation("com.robertlevonyan.view:MaterialChipView:3.0.8")
+
+
+    debugImplementation "com.github.chuckerteam.chucker:library:4.0.0"
+    releaseImplementation "com.github.chuckerteam.chucker:library-no-op:4.0.0"
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+//    debugCompile 'com.balsikandar.android:crashreporter:1.1.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+
+    implementation 'com.github.AbedElazizShe:LightCompressor:1.3.2'
+    implementation "com.github.skydoves:powerspinner:1.2.7"
+
+    implementation 'com.google.zxing:core:3.4.1'
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+
+    implementation("com.github.pokercc:ExpandableRecyclerView:0.9.3")
+
+    implementation("com.intuit.sdp:sdp-android:1.1.1")
+
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.9'
+    implementation 'com.google.firebase:firebase-analytics:20.1.2'
+    implementation 'com.google.firebase:firebase-messaging:23.0.3'
+
+
+    /*In-App Updater*/
+    implementation 'com.google.android.play:app-update:2.1.0'
+    implementation 'com.google.android.play:app-update-ktx:2.1.0'
+
+    implementation 'com.github.ajithvgiri:search-dialog:v1.5'
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+
+    implementation "com.github.skydoves:expandablelayout:1.0.7"
+
+}

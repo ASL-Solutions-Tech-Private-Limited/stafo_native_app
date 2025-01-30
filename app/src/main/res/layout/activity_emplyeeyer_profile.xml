@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".screens.ui.EmplyeeyerProfile">
+
+
+        <LinearLayout
+            android:id="@+id/ll_header_top"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_220sdp"
+            android:background="@drawable/gradient_header"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_header_profile_pic"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
+                android:padding="@dimen/_4sdp"
+                android:src="@drawable/demo_avatar" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_header_emp_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_bold"
+                android:padding="@dimen/_4sdp"
+                android:text="Md Injamamul Hoque"
+                android:textSize="@dimen/_16sdp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_header_emp_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_bold"
+                android:text="1oHdL@example.com"
+                android:textSize="@dimen/_12sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="-30dp"
+            android:background="@drawable/top_rounded_bg"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_header_top">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/_16sdp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <!--Company Profile-->
+                    <LinearLayout
+                        android:id="@+id/ll_companyProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+
+                        <com.skydoves.expandablelayout.ExpandableLayout
+                            android:id="@+id/expandable_account_setting"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:expandable_duration="300"
+                            app:expandable_isExpanded="false"
+                            app:expandable_parentLayout="@layout/layout_account_settings"
+                            app:expandable_secondLayout="@layout/layout_account_setting_items"
+                            app:expandable_showSpinner="true"
+                            app:expandable_spinner="@drawable/ic_arrow_down"
+                            app:expandable_spinner_animate="true"
+                            app:expandable_spinner_gravity="end"
+                            app:expandable_spinner_margin="@dimen/_20sdp"
+                            app:expandable_spinner_size="@dimen/_34sdp" />
+
+                        <com.skydoves.expandablelayout.ExpandableLayout
+                            android:id="@+id/expandable_attandancen_management"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:expandable_duration="300"
+                            app:expandable_isExpanded="false"
+                            app:expandable_parentLayout="@layout/layout_attendace_settings"
+                            app:expandable_secondLayout="@layout/layout_attendace_items"
+                            app:expandable_showSpinner="true"
+                            app:expandable_spinner="@drawable/ic_arrow_down"
+                            app:expandable_spinner_animate="true"
+                            app:expandable_spinner_gravity="end"
+                            app:expandable_spinner_margin="@dimen/_20sdp"
+                            app:expandable_spinner_size="@dimen/_34sdp" />
+
+                        <com.skydoves.expandablelayout.ExpandableLayout
+                            android:id="@+id/expandable_leave_management"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:expandable_duration="300"
+                            app:expandable_isExpanded="false"
+                            app:expandable_parentLayout="@layout/layout_leave_settings"
+                            app:expandable_secondLayout="@layout/layout_leave_items"
+                            app:expandable_showSpinner="true"
+                            app:expandable_spinner="@drawable/ic_arrow_down"
+                            app:expandable_spinner_animate="true"
+                            app:expandable_spinner_gravity="end"
+                            app:expandable_spinner_margin="@dimen/_20sdp"
+                            app:expandable_spinner_size="@dimen/_34sdp" />
+
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_others_settings"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_44sdp"
+                            android:layout_marginStart="@dimen/_12sdp"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:layout_marginEnd="@dimen/_12sdp"
+                            android:background="@drawable/button_normal_bg"
+                            android:drawableLeft="@drawable/ic_policy"
+                            android:drawablePadding="@dimen/_12sdp"
+                            android:drawableTint="@color/white"
+                            android:fontFamily="@font/gilroy_bold"
+                            android:gravity="center_vertical"
+                            android:padding="@dimen/_12sdp"
+                            android:text="Others Settings"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_12sdp" />
+                    </LinearLayout>
+                    <!--End Company Profile-->
+
+                    <!--Employer Profile-->
+                    <LinearLayout
+                        android:id="@+id/ll_employerProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_profile"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_44sdp"
+                            android:layout_marginStart="@dimen/_12sdp"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:layout_marginEnd="@dimen/_12sdp"
+                            android:background="@drawable/button_normal_bg"
+                            android:drawableLeft="@drawable/ic_policy"
+                            android:drawablePadding="@dimen/_12sdp"
+                            android:drawableTint="@color/white"
+                            android:fontFamily="@font/gilroy_bold"
+                            android:gravity="center_vertical"
+                            android:padding="@dimen/_12sdp"
+                            android:text="Profile"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_attendance"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_44sdp"
+                            android:layout_marginStart="@dimen/_12sdp"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:layout_marginEnd="@dimen/_12sdp"
+                            android:background="@drawable/button_normal_bg"
+                            android:drawableLeft="@drawable/ic_policy"
+                            android:drawablePadding="@dimen/_12sdp"
+                            android:drawableTint="@color/white"
+                            android:fontFamily="@font/gilroy_bold"
+                            android:gravity="center_vertical"
+                            android:padding="@dimen/_12sdp"
+                            android:text="Attendance"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_leave"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_44sdp"
+                            android:layout_marginStart="@dimen/_12sdp"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:layout_marginEnd="@dimen/_12sdp"
+                            android:background="@drawable/button_normal_bg"
+                            android:drawableLeft="@drawable/ic_policy"
+                            android:drawablePadding="@dimen/_12sdp"
+                            android:drawableTint="@color/white"
+                            android:fontFamily="@font/gilroy_bold"
+                            android:gravity="center_vertical"
+                            android:padding="@dimen/_12sdp"
+                            android:text="Leaves"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_policy"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_44sdp"
+                            android:layout_marginStart="@dimen/_12sdp"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:layout_marginEnd="@dimen/_12sdp"
+                            android:background="@drawable/button_normal_bg"
+                            android:drawableLeft="@drawable/ic_policy"
+                            android:drawablePadding="@dimen/_12sdp"
+                            android:drawableTint="@color/white"
+                            android:fontFamily="@font/gilroy_bold"
+                            android:gravity="center_vertical"
+                            android:padding="@dimen/_12sdp"
+                            android:text="@string/policy_"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_help_support"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_44sdp"
+                            android:layout_marginStart="@dimen/_12sdp"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:layout_marginEnd="@dimen/_12sdp"
+                            android:background="@drawable/button_normal_bg"
+                            android:drawableLeft="@drawable/ic_policy"
+                            android:drawablePadding="@dimen/_12sdp"
+                            android:drawableTint="@color/white"
+                            android:fontFamily="@font/gilroy_bold"
+                            android:gravity="center_vertical"
+                            android:padding="@dimen/_12sdp"
+                            android:text="Help &amp; Support"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_logout"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_44sdp"
+                            android:layout_marginStart="@dimen/_12sdp"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:layout_marginEnd="@dimen/_12sdp"
+                            android:background="@drawable/button_normal_bg"
+                            android:drawableLeft="@drawable/ic_policy"
+                            android:drawablePadding="@dimen/_12sdp"
+                            android:drawableTint="@color/white"
+                            android:fontFamily="@font/gilroy_bold"
+                            android:gravity="center_vertical"
+                            android:padding="@dimen/_12sdp"
+                            android:text="Logout"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_12sdp" />
+                    </LinearLayout>
+                    <!--End Employer Profile-->
+                </LinearLayout>
+            </ScrollView>
+
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

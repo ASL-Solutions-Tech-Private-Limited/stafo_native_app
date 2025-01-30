@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".screens.ui.EmployeeDashboard">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nested_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/header_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_228sdp"
+                    android:background="@drawable/gradient_header"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/iv_app_icon"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:src="@drawable/ic_user"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_app_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:fontFamily="@font/gilroy_semi_bold"
+                        android:gravity="center"
+                        android:text="Asl HR Wala"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_14sdp"
+
+                        app:layout_constraintBottom_toTopOf="@id/header_view"
+                        app:layout_constraintStart_toEndOf="@id/iv_app_icon"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_notification"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:src="@drawable/ic_notification"
+                        app:layout_constraintBottom_toTopOf="@id/header_view"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/header_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_1sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        app:layout_constraintTop_toBottomOf="@id/iv_app_icon" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_header_greeting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:fontFamily="@font/gilroy_bold"
+                        android:textSize="@dimen/_15sdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/header_view"
+                        tools:text="Good Morning" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_header_emp_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:fontFamily="@font/gilroy_bold"
+                        android:textSize="@dimen/_15sdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_header_greeting"
+                        tools:text="Md Injamamul Hoque" />
+
+                    <LinearLayout
+                        android:id="@+id/header_ll_view_profile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_header_emp_name">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_header_emp_no"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_12sdp"
+                            android:fontFamily="@font/gilroy_bold"
+                            android:textSize="@dimen/_10sdp"
+                            tools:text="Emp-0001" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_header_view_profile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_12sdp"
+                            android:fontFamily="@font/gilroy_bold"
+                            android:padding="@dimen/_6sdp"
+                            android:text="View Profile"
+                            android:textColor="@color/red"
+                            android:textSize="@dimen/_12sdp" />
+                    </LinearLayout>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/iv_header_profile_pic"
+                        android:layout_width="@dimen/_54sdp"
+                        android:layout_height="@dimen/_54sdp"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:src="@drawable/demo_avatar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_header_greeting" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_100sdp"
+                        android:layout_marginStart="@dimen/_14sdp"
+                        android:layout_marginTop="@dimen/_16sdp"
+                        android:layout_marginEnd="@dimen/_14sdp"
+                        android:background="@drawable/top_rounded_bg"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_12sdp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/header_ll_view_profile">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_office_timing"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/_12sdp"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:text="Your Office timing is 9:00 AM to 5:00 PM"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="@dimen/_100sdp"
+                            android:layout_height="@dimen/_34sdp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/button_background"
+                            android:text="Punch In"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_activities"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:text="Activities"
+                    android:textSize="@dimen/_14sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/header_layout" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_activities_viewAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:text="View All"
+                    android:textSize="@dimen/_14sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/header_layout" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_activities"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_6sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginEnd="@dimen/_6sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_activities"
+                    tools:itemCount="1"
+                    tools:listitem="@layout/item_activity_list" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_banners"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_6sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginEnd="@dimen/_6sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_activities"
+                    tools:itemCount="1"
+                    tools:listitem="@layout/item_banner" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_on_leave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:text="On Leave"
+                    android:textSize="@dimen/_14sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_banners" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_leave_viewAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:text="View All"
+                    android:textSize="@dimen/_14sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_banners" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_leaves"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_6sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginEnd="@dimen/_6sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_on_leave"
+                    tools:itemCount="1"
+                    tools:listitem="@layout/item_leave_list" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_wishes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:text="Wishes"
+                    android:textSize="@dimen/_14sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_leaves" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_wish_viewAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:text="View All"
+                    android:textSize="@dimen/_14sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_leaves" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_wishes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_6sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginEnd="@dimen/_6sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_wishes"
+                    tools:itemCount="1"
+                    tools:listitem="@layout/item_leave_list" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

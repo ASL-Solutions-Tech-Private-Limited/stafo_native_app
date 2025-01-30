@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?><!--Add ViewPage2, TabLayout & 2 MaterialButton to your layout.-->
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dialogInfo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <!--ViewPager2-->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!--indicator-->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        app:tabBackground="@drawable/intro_tab_selector"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_8sdp">
+        <!--Next-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNext"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_44sdp"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/primaryColor"
+            android:gravity="center"
+            android:text="Welcome"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            app:cornerRadius="30dp" />
+        <!--SKIP-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSkip"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_44sdp"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/colorEditText"
+            android:gravity="center"
+            android:text="@string/intro_skip"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:cornerRadius="30dp" />
+    </RelativeLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>
