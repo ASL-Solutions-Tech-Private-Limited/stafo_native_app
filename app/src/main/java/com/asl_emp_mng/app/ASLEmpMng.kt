@@ -5,7 +5,6 @@ import android.os.StrictMode
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.orhanobut.hawk.Hawk
-import com.asl_emp_mng.app.BuildConfig
 
 class ASLEmpMng : MultiDexApplication() {
     init {

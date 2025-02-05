@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screens.ui.PlaceSearchActivity">
+    <EditText
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/searchButton"
+        android:id="@+id/searchEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Search location" />
+
+    <Button
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/searchButton"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Search" />
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/mapView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchButton"
+       app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+    <Button
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="@dimen/_12sdp"
+        android:id="@+id/btn_add_address"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_margin="@dimen/_12sdp"
+        android:background="@drawable/button_background"
+        android:backgroundTint="@color/colorTextPrimary"
+        android:fontFamily="@font/gilroy_semi_bold"
+        android:text="Add Address"
+        android:textAllCaps="false"
+        android:textColor="@color/colorButtonText"
+        android:textSize="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

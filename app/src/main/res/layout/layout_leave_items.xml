@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_branch_settings"
+        android:id="@+id/tv_leaves_management"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_44sdp"
         android:layout_marginStart="@dimen/_12sdp"

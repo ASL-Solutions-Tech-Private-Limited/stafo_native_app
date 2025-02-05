@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screens.AddShiftActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/primaryColorDark"
+        app:elevation="0dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            tools:ignore="UseCompoundDrawables">
+
+
+            <ImageView
+                android:id="@+id/image_back"
+                android:layout_width="@dimen/_33sdp"
+                android:layout_height="@dimen/_26sdp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_back"
+                android:tint="@color/white"
+                tools:ignore="UseAppTint" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="Shifts"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14ssp" />
+        </RelativeLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <TextView
+        android:id="@+id/tv_shift_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:fontFamily="@font/gilroy_regular"
+        android:text="Shift Timings"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/app_bar_layout" />
+
+    <TextView
+        android:id="@+id/tv_shift_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:fontFamily="@font/gilroy_regular"
+        android:text="Shift Name"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"  />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:background="@color/color_grey1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_shift_time" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_show_leave_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/include_01"
+            tools:listitem="@layout/recy_shift_time_child_layout"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/txt_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        android:text="No applied leave Present"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llc_add_shift"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_14sdp"
+        android:background="@drawable/button_background"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:src="@drawable/ic_add"
+            android:tint="@color/white"
+            tools:ignore="UseAppTint" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:paddingVertical="@dimen/_8sdp"
+            android:text="Add Shift"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12ssp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

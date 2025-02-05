@@ -167,6 +167,7 @@
                             android:textSize="@dimen/_12sdp" />
 
                         <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btn_punch_in"
                             android:layout_width="@dimen/_100sdp"
                             android:layout_height="@dimen/_34sdp"
                             android:layout_gravity="center"

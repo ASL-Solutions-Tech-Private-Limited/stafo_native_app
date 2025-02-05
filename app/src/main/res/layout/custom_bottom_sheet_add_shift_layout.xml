@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_bg_bottom_sheet">
+
+        <RelativeLayout
+            android:id="@+id/layout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="Add New Shift"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/bottom_sheet_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:src="@drawable/ic_cancel" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_below="@+id/bottom_sheet_cancel"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@color/color_grey" />
+        </RelativeLayout>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edt_shift_name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_24sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:background="@drawable/edit_text_background"
+            android:fontFamily="@font/gilroy_regular"
+            android:hint="Shift Name"
+            android:paddingStart="@dimen/_16sdp"
+            android:paddingEnd="@dimen/_16sdp"
+            android:singleLine="true"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout1" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edt_shift_start_time"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:background="@drawable/edit_text_background"
+            android:fontFamily="@font/gilroy_regular"
+            android:hint="Shift Start Time"
+            android:paddingStart="@dimen/_16sdp"
+            android:paddingEnd="@dimen/_16sdp"
+            android:singleLine="true"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_shift_name" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt_can_punch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:fontFamily="@font/gilroy_regular"
+            android:text="Can Punch In*"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_shift_start_time" />
+
+        <RadioGroup
+            android:id="@+id/rg_punch_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:checkedButton="@id/rg_punch_in_any_time"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_can_punch">
+
+            <RadioButton
+                android:id="@+id/rg_punch_in_any_time"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_38sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Anytime"
+                android:textAlignment="center"
+                android:textColor="@color/radio_flat_text_selector"
+                android:textSize="@dimen/_12ssp" />
+
+            <RadioButton
+                android:id="@+id/rg_punch_in_limit_time"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_38sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Add Limit"
+                android:textAlignment="center"
+                android:textColor="@color/radio_flat_text_selector"
+                android:textSize="@dimen/_12ssp" />
+
+        </RadioGroup>
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edt_shift_end_time"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:background="@drawable/edit_text_background"
+            android:fontFamily="@font/gilroy_regular"
+            android:hint="Shift End Time"
+            android:paddingStart="@dimen/_16sdp"
+            android:paddingEnd="@dimen/_16sdp"
+            android:singleLine="true"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rg_punch_in" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt_can_punch_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:fontFamily="@font/gilroy_regular"
+            android:text="Can Punch Out*"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_shift_end_time" />
+
+        <RadioGroup
+            android:id="@+id/rg_punch_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:checkedButton="@id/rb_punch_out_anytime"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_can_punch_out">
+
+            <RadioButton
+                android:id="@+id/rb_punch_out_anytime"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_38sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Anytime"
+                android:textAlignment="center"
+                android:textColor="@color/radio_flat_text_selector"
+                android:textSize="@dimen/_12ssp" />
+
+            <RadioButton
+                android:id="@+id/rb_punch_out_limit_time"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_38sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Add Limit"
+                android:textAlignment="center"
+                android:textColor="@color/radio_flat_text_selector"
+                android:textSize="@dimen/_12ssp" />
+
+        </RadioGroup>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_add_shift"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_32sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/button_background"
+            android:elevation="10dp"
+            android:fontFamily="@font/gilroy_medium"
+            android:gravity="center"
+            android:text="Add Shift"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rg_punch_out" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

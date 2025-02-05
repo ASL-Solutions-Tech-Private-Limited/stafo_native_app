@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="@dimen/_6sdp"
+    android:layout_marginBottom="@dimen/_4sdp"
+
+   android:background="@drawable/custom_card_background"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/rroname"
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+
+      <!--  <LinearLayout
+            android:id="@+id/llodate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/o_lv_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:hint="Thu"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/o_lv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:hint="30"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/o_lv_mnth_yr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:hint="Apr, 2019"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_dot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/llodate">
+
+
+            <View
+                android:id="@+id/vwdot"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/color_grey1" />
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="55dp"
+                android:src="@drawable/ic_bulets_icon" />
+
+        </FrameLayout>-->
+
+        <RelativeLayout
+            android:id="@+id/rl_emp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/oval_bg_light">
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/approve_lv_emp_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_user_img"
+                app:shapeAppearanceOverlay="@style/Circular" />
+
+
+            <TextView
+                android:id="@+id/txt_emp_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="11dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_toEndOf="@+id/approve_lv_emp_image"
+                android:hint="Employee Name"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/emp_lv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_emp_name"
+                android:layout_alignStart="@+id/txt_emp_name"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_toEndOf="@+id/approve_lv_emp_image"
+                android:hint="Date"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/emp_lv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/emp_lv_date"
+                android:layout_alignStart="@+id/txt_emp_name"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_toEndOf="@+id/approve_lv_emp_image"
+                android:hint="Status"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_emp"
+            android:layout_alignParentStart="true"
+            android:orientation="horizontal">
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_approve_leave"
+                android:background="@drawable/button_background"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:text="Approve"
+                android:textAllCaps="false"
+                android:textSize="@dimen/_11ssp"
+                android:fontFamily="@font/gilroy_regular"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_24sdp"/>
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_reject_leave"
+                android:background="@drawable/custom_reject_btn_bg"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:text="Reject"
+                android:textAllCaps="false"
+                android:textSize="@dimen/_11ssp"
+                android:fontFamily="@font/gilroy_regular"
+                android:textColor="@color/reject"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_24sdp"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
