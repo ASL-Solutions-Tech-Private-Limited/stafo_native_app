@@ -65,11 +65,14 @@ class EmployeeDashboard : AppCompatActivity() {
 
             btnPunchIn.setOnClickListener {
 
-                if (!isLocationEnabled()) {
+                showCustomBottomSheet()
+
+
+              /*  if (!isLocationEnabled()) {
                     showLocationServicesDialog()
                 } else {
                     checkLocationPermissionAndFind()
-                }
+                }*/
             }
 
             tvHeaderViewProfile.setOnClickListener {
@@ -158,9 +161,11 @@ class EmployeeDashboard : AppCompatActivity() {
         startActivity(intent)
     }
 
- /*   private fun showCustomBottomSheet(){
+    private fun showCustomBottomSheet(){
         bottomSheetDialog=BottomSheetDialog(this)
-        val view = layoutInflater.inflate(R.layout.custom_bottom_sheet_attendance_layout, null)
+
+        bottomSheetDialogBinding=CustomBottomSheetAttendanceLayoutBinding.inflate(layoutInflater)
+        //val view = layoutInflater.inflate(R.layout.custom_bottom_sheet_attendance_layout, null)
 
         bottomSheetDialog.setOnShowListener { dialog ->
             val bottomSheet = (dialog as BottomSheetDialog)
@@ -170,29 +175,19 @@ class EmployeeDashboard : AppCompatActivity() {
 
         bottomSheetDialog.setCancelable(false)
 
-        edtShiftName = view.findViewById(R.id.edt_shift_name)
-        edtShiftStartTime = view.findViewById(R.id.edt_shift_start_time)
-        edtShiftEndTime = view.findViewById(R.id.edt_shift_end_time)
-        val btnCancel = view.findViewById<AppCompatImageView>(R.id.bottom_sheet_cancel)
 
-        btnCancel.setOnClickListener {
-            bottomSheetDialog.dismiss()
+
+        bottomSheetDialogBinding.bottomSheetCancel.setOnClickListener {
+
         }
-        val btnSubmit = view.findViewById<AppCompatButton>(R.id.btn_add_shift)
-
-        btnSubmit.setOnClickListener {
-            if (isValidate()){
-
-            }
-        }
-        bottomSheetDialog.setContentView(view)
+        bottomSheetDialog.setContentView(bottomSheetDialogBinding.root)
 
 
         bottomSheetDialog.show()
 
 
 
-    }*/
+    }
 
 
 

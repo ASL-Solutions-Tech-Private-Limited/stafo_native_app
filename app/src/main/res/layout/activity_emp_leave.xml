@@ -467,29 +467,7 @@
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/tv_stop_service"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:hint="Stop Service"
-                android:paddingLeft="5dip"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/tv_start_service"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:hint="Start Service"
-                android:paddingLeft="5dip"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
         </LinearLayout>
     </ScrollView>
 

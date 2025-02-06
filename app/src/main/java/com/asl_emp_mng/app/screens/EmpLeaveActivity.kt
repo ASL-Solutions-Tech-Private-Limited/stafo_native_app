@@ -96,7 +96,7 @@ class EmpLeaveActivity : AppCompatActivity() {
                 showCalender()
             }
 
-          tvStopService.setOnClickListener {
+         /* tvStopService.setOnClickListener {
               stopLocationService()
           }
 
@@ -106,7 +106,7 @@ class EmpLeaveActivity : AppCompatActivity() {
                 } else {
                     requestLocationPermission()
                 }
-            }
+            }*/
 
           btnLeave.setOnClickListener {
               if (isValidate()){
