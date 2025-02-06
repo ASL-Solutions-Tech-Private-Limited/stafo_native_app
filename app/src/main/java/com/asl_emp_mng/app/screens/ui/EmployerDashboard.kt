@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.asl_emp_mng.app.databinding.ActivityEmployerDashboardBinding
+import com.asl_emp_mng.app.screens.AddEmployeeActivity
+import com.asl_emp_mng.app.screens.AddShiftActivity
 import com.asl_emp_mng.app.utils.getGreetingBasedOnTime
 import com.asl_emp_mng.app.utils.getTodayDate
 
@@ -18,6 +20,8 @@ class EmployerDashboard : AppCompatActivity() {
 
         initViews()
         setOnClickEvents()
+
+
     }
 
     private fun initViews() {
@@ -45,6 +49,14 @@ class EmployerDashboard : AppCompatActivity() {
     private fun setOnClickEvents() {
         binding.tvHeaderSetting.setOnClickListener {
             startActivity(Intent(this, EmplyeeyerProfile::class.java))
+        }
+
+        binding.addEmp.setOnClickListener {
+            startActivity(Intent(this, AddEmployeeActivity::class.java))
+        }
+
+        binding.tvLetsCheckViewAll.setOnClickListener {
+           // startActivity(Intent(this, AddShiftActivity::class.java))
         }
     }
 }

@@ -31,4 +31,6 @@
     <style name="Theme.Sims.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Sims.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
 </resources>

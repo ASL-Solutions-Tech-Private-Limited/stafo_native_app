@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -42,12 +44,39 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".screens.OtpVerifyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.EmployeeLeaveHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.EmpLeaveActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.CreateLeavePolicyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.LeaveManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.AddShiftActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".screens.ui.PlaceSearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.AddBranchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.AddEmployeeActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.ui.AccountSettingsActivity"
             android:exported="false" />
         <activity
             android:name=".screens.ui.EmplyeeyerProfile"
             android:exported="false" />
-
         <activity
             android:name=".screens.ui.EmployeeDashboard"
             android:exported="false" />
@@ -88,6 +117,15 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <meta-data
+            android:name="org.osmdroid.config"
+            android:value="osm_config" />
+
+        <service
+            android:name=".base.service.LocationForegroundService"
+            android:foregroundServiceType="location"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>
