@@ -12,26 +12,38 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.asl_emp_mng.app.R
+import com.asl_emp_mng.app.base.model.DashboardType
 import com.asl_emp_mng.app.databinding.ActivityEmpDashboardBinding
+import com.asl_emp_mng.app.databinding.CustomBottomSheetAttendanceLayoutBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class EmployeeDashboard : AppCompatActivity() {
     private lateinit var binding: ActivityEmpDashboardBinding
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    //for bottom sheet
+    private lateinit var bottomSheetDialog: BottomSheetDialog
+    private lateinit var bottomSheetDialogBinding: CustomBottomSheetAttendanceLayoutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +73,9 @@ class EmployeeDashboard : AppCompatActivity() {
             }
 
             tvHeaderViewProfile.setOnClickListener {
-
+                val intent = Intent(this@EmployeeDashboard, EmplyeeyerProfile::class.java)
+                intent.putExtra("DASHBOARD_TYPE", DashboardType.EMPLOYEE.name)
+                startActivity(intent)
             }
 
 
@@ -143,6 +157,43 @@ class EmployeeDashboard : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_VIEW, mapUri)
         startActivity(intent)
     }
+
+ /*   private fun showCustomBottomSheet(){
+        bottomSheetDialog=BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.custom_bottom_sheet_attendance_layout, null)
+
+        bottomSheetDialog.setOnShowListener { dialog ->
+            val bottomSheet = (dialog as BottomSheetDialog)
+                .findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.setBackgroundResource(android.R.color.transparent)
+        }
+
+        bottomSheetDialog.setCancelable(false)
+
+        edtShiftName = view.findViewById(R.id.edt_shift_name)
+        edtShiftStartTime = view.findViewById(R.id.edt_shift_start_time)
+        edtShiftEndTime = view.findViewById(R.id.edt_shift_end_time)
+        val btnCancel = view.findViewById<AppCompatImageView>(R.id.bottom_sheet_cancel)
+
+        btnCancel.setOnClickListener {
+            bottomSheetDialog.dismiss()
+        }
+        val btnSubmit = view.findViewById<AppCompatButton>(R.id.btn_add_shift)
+
+        btnSubmit.setOnClickListener {
+            if (isValidate()){
+
+            }
+        }
+        bottomSheetDialog.setContentView(view)
+
+
+        bottomSheetDialog.show()
+
+
+
+    }*/
+
 
 
 }
