@@ -44,6 +44,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".screens.EmployeeAttendance"
+            android:exported="false" />
+        <activity
             android:name=".screens.OtpVerifyActivity"
             android:exported="false" />
         <activity

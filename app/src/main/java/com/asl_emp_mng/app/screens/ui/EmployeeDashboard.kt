@@ -28,6 +28,7 @@ import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.model.DashboardType
 import com.asl_emp_mng.app.databinding.ActivityEmpDashboardBinding
 import com.asl_emp_mng.app.databinding.CustomBottomSheetAttendanceLayoutBinding
+import com.asl_emp_mng.app.screens.OtpVerifyActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -65,7 +66,9 @@ class EmployeeDashboard : AppCompatActivity() {
 
             btnPunchIn.setOnClickListener {
 
-                showCustomBottomSheet()
+                //showCustomBottomSheet()
+
+                startActivity(Intent(this@EmployeeDashboard,OtpVerifyActivity::class.java))
 
 
               /*  if (!isLocationEnabled()) {
