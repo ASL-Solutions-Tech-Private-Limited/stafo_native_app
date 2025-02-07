@@ -26,8 +26,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.model.DashboardType
+import com.asl_emp_mng.app.base.model.PunchInType
 import com.asl_emp_mng.app.databinding.ActivityEmpDashboardBinding
 import com.asl_emp_mng.app.databinding.CustomBottomSheetAttendanceLayoutBinding
+import com.asl_emp_mng.app.screens.EmployeePunchInActivity
 import com.asl_emp_mng.app.screens.OtpVerifyActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -39,7 +41,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class EmployeeDashboard : AppCompatActivity() {
     private lateinit var binding: ActivityEmpDashboardBinding
-
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     //for bottom sheet
@@ -57,7 +58,9 @@ class EmployeeDashboard : AppCompatActivity() {
             insets
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
         onClickListener()
+
     }
 
     private fun onClickListener() {
@@ -66,16 +69,14 @@ class EmployeeDashboard : AppCompatActivity() {
 
             btnPunchIn.setOnClickListener {
 
-                //showCustomBottomSheet()
-
-                startActivity(Intent(this@EmployeeDashboard,OtpVerifyActivity::class.java))
+                showCustomBottomSheet()
 
 
-              /*  if (!isLocationEnabled()) {
-                    showLocationServicesDialog()
-                } else {
-                    checkLocationPermissionAndFind()
-                }*/
+                /*  if (!isLocationEnabled()) {
+                      showLocationServicesDialog()
+                  } else {
+                      checkLocationPermissionAndFind()
+                  }*/
             }
 
             tvHeaderViewProfile.setOnClickListener {
@@ -88,86 +89,10 @@ class EmployeeDashboard : AppCompatActivity() {
         }
     }
 
-    private fun isLocationEnabled(): Boolean {
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-    }
+    private fun showCustomBottomSheet() {
+        bottomSheetDialog = BottomSheetDialog(this)
 
-    private fun showLocationServicesDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Enable Location Services")
-            .setMessage("This app requires location services to be enabled. Please turn on location services.")
-            .setPositiveButton("OK") { _, _ ->
-                locationSettingsLauncher.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-            }
-            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-            .create()
-            .show()
-    }
-
-    private val locationSettingsLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (isLocationEnabled()) {
-                checkLocationPermissionAndFind()
-            }
-        }
-
-    private fun checkLocationPermissionAndFind() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            findLocation()
-        } else {
-            requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-    }
-
-    private val requestLocationPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                findLocation()
-            } else {
-                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-    private fun findLocation() {
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
-            .setWaitForAccurateLocation(false)
-            .setMinUpdateIntervalMillis(5000)
-            .setMaxUpdateDelayMillis(15000)
-            .build()
-
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-                fusedLocationClient.removeLocationUpdates(this)
-
-                if (locationResult.locations.isNotEmpty()) {
-                    val lastLocation: Location = locationResult.locations.last()
-                    val latitude = lastLocation.latitude
-                    val longitude = lastLocation.longitude
-                    openGoogleMaps(latitude,longitude)
-                } else {
-                    Toast.makeText(this@EmployeeDashboard, "Location not found", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
-        }
-    }
-
-    private fun openGoogleMaps(latitude: Double, longitude: Double) {
-        val mapUri = Uri.parse("https://maps.google.com/maps/search/$latitude,$longitude")
-        val intent = Intent(Intent.ACTION_VIEW, mapUri)
-        startActivity(intent)
-    }
-
-    private fun showCustomBottomSheet(){
-        bottomSheetDialog=BottomSheetDialog(this)
-
-        bottomSheetDialogBinding=CustomBottomSheetAttendanceLayoutBinding.inflate(layoutInflater)
+        bottomSheetDialogBinding = CustomBottomSheetAttendanceLayoutBinding.inflate(layoutInflater)
         //val view = layoutInflater.inflate(R.layout.custom_bottom_sheet_attendance_layout, null)
 
         bottomSheetDialog.setOnShowListener { dialog ->
@@ -181,17 +106,86 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
         bottomSheetDialogBinding.bottomSheetCancel.setOnClickListener {
-
+            bottomSheetDialog.dismiss()
         }
+
+        bottomSheetDialogBinding.llGeoAttendance.setOnClickListener {
+            if (!isLocationEnabled()) {
+                showLocationServicesDialog()
+            } else {
+                checkLocationPermissionAndFind()
+            }
+        }
+
+        bottomSheetDialogBinding.llSelfieAttendance.setOnClickListener {
+            val intent = Intent(this@EmployeeDashboard, EmployeePunchInActivity::class.java)
+            intent.putExtra("Punch_TYPE", PunchInType.SELFIE.name)
+            startActivity(intent)
+        }
+
+        bottomSheetDialogBinding.llQrAttendance.setOnClickListener {
+
+            Toast.makeText(this@EmployeeDashboard, "work in progress", Toast.LENGTH_SHORT).show()
+        }
+
+
+
         bottomSheetDialog.setContentView(bottomSheetDialogBinding.root)
 
 
         bottomSheetDialog.show()
 
 
-
     }
 
+    private fun isLocationEnabled(): Boolean {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
 
+    private val locationSettingsLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (isLocationEnabled()) {
+                checkLocationPermissionAndFind()
+            }
+        }
+
+    private fun showLocationServicesDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Enable Location Services")
+            .setMessage("This app requires location services to be enabled. Please turn on location services.")
+            .setPositiveButton("OK") { _, _ ->
+                locationSettingsLauncher.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            }
+            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+            .create()
+            .show()
+    }
+
+    private val requestLocationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                val intent = Intent(this@EmployeeDashboard, EmployeePunchInActivity::class.java)
+                intent.putExtra("Punch_TYPE", PunchInType.GEO.name)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    private fun checkLocationPermissionAndFind() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val intent = Intent(this@EmployeeDashboard, EmployeePunchInActivity::class.java)
+            intent.putExtra("Punch_TYPE", PunchInType.GEO.name)
+            startActivity(intent)
+        } else {
+            requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
 
 }

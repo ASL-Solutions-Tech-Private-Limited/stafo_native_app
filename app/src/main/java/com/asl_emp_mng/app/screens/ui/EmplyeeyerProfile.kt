@@ -13,6 +13,7 @@ import com.asl_emp_mng.app.screens.AddBranchActivity
 import com.asl_emp_mng.app.screens.AddEmployeeActivity
 import com.asl_emp_mng.app.screens.AddShiftActivity
 import com.asl_emp_mng.app.screens.EmpLeaveActivity
+import com.asl_emp_mng.app.screens.EmployeeAttendance
 import com.asl_emp_mng.app.screens.LeaveManagementActivity
 
 class EmplyeeyerProfile : AppCompatActivity() {
@@ -87,6 +88,9 @@ class EmplyeeyerProfile : AppCompatActivity() {
        binding?.tvLeave?.setOnClickListener {
            startActivity(Intent(this, EmpLeaveActivity::class.java))
        }
+        binding?.tvAttendance?.setOnClickListener {
+            startActivity(Intent(this, EmployeeAttendance::class.java))
+        }
 
 
     }

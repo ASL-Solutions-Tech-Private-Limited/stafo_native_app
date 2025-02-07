@@ -65,7 +65,7 @@
             app:layout_constraintTop_toBottomOf="@+id/layout1">
 
             <LinearLayout
-                android:id="@+id/ll_jio_attendance"
+                android:id="@+id/ll_geo_attendance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/_10sdp"

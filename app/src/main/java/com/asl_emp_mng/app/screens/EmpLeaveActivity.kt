@@ -140,7 +140,7 @@ class EmpLeaveActivity : AppCompatActivity() {
         popupMenu.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 0 -> {
-                    startActivity(Intent(this,CreateLeavePolicyActivity::class.java))
+                    startActivity(Intent(this,EmployeeLeaveHistoryActivity::class.java))
                     true
                 }
                 1 -> {
