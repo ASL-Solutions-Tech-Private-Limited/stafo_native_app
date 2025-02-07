@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="#80D3D3D3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#80D3D3D3"
     tools:context=".screens.EmployeeAttendance">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -62,54 +62,244 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_parent_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingVertical="@dimen/_12sdp"
+        android:weightSum="4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout">
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ng_header"
+                    android:layout_gravity="center_vertical"
+
+                    android:layout_weight="1"
+                    android:background="@color/tea_green"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_6sdp"
+                    android:text="Present"
+                    android:textColor="#565656"
+                    android:textSize="@dimen/_12ssp"
+                    app:drawableTint="@color/black" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ng_header"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/_8sdp"
+                    android:text="10 day"
+                    android:textColor="#565656"
+                    android:textSize="@dimen/_12ssp"
+                    app:drawableTint="@color/black" />
+            </LinearLayout>
+
+
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ng_header"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@color/tea_green"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_6sdp"
+                    android:text="Working"
+                    android:textColor="#565656"
+                    android:textSize="@dimen/_12ssp"
+                    app:drawableTint="@color/black" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ng_header"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/_8sdp"
+                    android:text="20hrs"
+                    android:textColor="#565656"
+                    android:textSize="@dimen/_12ssp"
+                    app:drawableTint="@color/black" />
+            </LinearLayout>
+
+
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ng_header"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@color/tea_green"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_6sdp"
+                    android:text="Logged"
+                    android:textColor="#565656"
+                    android:textSize="@dimen/_12ssp"
+                    app:drawableTint="@color/black" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ng_header"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/_8sdp"
+                    android:text="50 hrs"
+                    android:textColor="#565656"
+                    android:textSize="@dimen/_12ssp"
+                    app:drawableTint="@color/black" />
+            </LinearLayout>
+
+
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ng_header"
+                android:layout_weight="1"
+                android:background="@color/tea_green"
+                android:fontFamily="@font/gilroy_medium"
+                android:paddingVertical="@dimen/_6sdp"
+                android:text="Avg.Work"
+                android:textAlignment="center"
+                android:textColor="#565656"
+                android:textSize="@dimen/_12ssp"
+                app:drawableTint="@color/black" />
+
+            <com.asl_emp_mng.app.base.model.CircularProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:textColor="@android:color/black"
+                app:barBackgroundColor="#ffe1e7e9"
+                app:barForegroundColor="#fff36c60" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
     <RelativeLayout
         android:id="@+id/rl_top"
-        android:layout_marginTop="@dimen/_10sdp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_parent_top">
+
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:fontFamily="@font/gilroy_semi_bold"
-            android:text="Attendance"
             android:layout_marginStart="@dimen/_10sdp"
+            android:layout_weight="1"
+            android:fontFamily="@font/gilroy_semi_bold"
+            android:text="Attendance Record"
             android:textAlignment="center"
             android:textColor="#565656"
             android:textSize="@dimen/_13ssp"
             app:drawableTint="@color/black" />
 
         <LinearLayout
-            android:layout_marginVertical="@dimen/_4sdp"
-            android:background="@color/white"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:layout_alignParentEnd="true"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginVertical="@dimen/_4sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@drawable/custom_card_background"
+            android:orientation="horizontal">
+
             <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
                 android:layout_marginVertical="@dimen/_6sdp"
                 android:layout_marginStart="@dimen/_8sdp"
-                android:src="@drawable/ic_calendar_month"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"/>
+                android:src="@drawable/ic_calendar_month" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
-                android:layout_alignParentStart="true"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_alignParentStart="true"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_weight="1"
                 android:fontFamily="@font/gilroy_semi_bold"
                 android:text="2025"
-                android:layout_marginEnd="@dimen/_8sdp"
-                android:layout_marginStart="@dimen/_10sdp"
                 android:textColor="#565656"
                 android:textSize="@dimen/_12ssp"
                 app:drawableTint="@color/black" />
@@ -118,76 +308,79 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/llc_item_title"
-        android:layout_marginTop="@dimen/_12sdp"
-        android:layout_marginHorizontal="@dimen/_10sdp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rl_top"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_60sdp"
-        android:orientation="horizontal"
+        android:layout_height="@dimen/_37sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:background="@drawable/emp_list_item_top_bg"
-        android:weightSum="4">
+        android:orientation="horizontal"
+        android:weightSum="4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rl_top">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:paddingTop="@dimen/_8sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ng_header"
             android:layout_weight="1"
             android:fontFamily="@font/gilroy_medium"
+            android:paddingTop="@dimen/_8sdp"
             android:text="Date"
             android:textAlignment="center"
             android:textColor="#565656"
             android:textSize="@dimen/_12ssp"
             app:drawableTint="@color/black" />
+
         <View
-            android:background="@color/tea_green"
             android:layout_width="1dp"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@color/tea_green" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:paddingTop="@dimen/_8sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ng_header"
             android:layout_weight="1"
             android:fontFamily="@font/gilroy_medium"
             android:maxLines="3"
+            android:paddingTop="@dimen/_8sdp"
             android:text="Check In"
             android:textAlignment="center"
             android:textColor="#565656"
             android:textSize="@dimen/_12ssp"
             app:drawableTint="@color/black" />
+
         <View
-            android:background="@color/tea_green"
             android:layout_width="1dp"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@color/tea_green" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:paddingTop="@dimen/_8sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ng_header"
             android:layout_weight="1"
             android:fontFamily="@font/gilroy_medium"
+            android:paddingTop="@dimen/_8sdp"
             android:text="Check Out"
             android:textAlignment="center"
             android:textColor="#565656"
             android:textSize="@dimen/_12ssp"
             app:drawableTint="@color/black" />
+
         <View
-            android:background="@color/tea_green"
             android:layout_width="1dp"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@color/tea_green" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:paddingTop="@dimen/_8sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ng_header"
             android:layout_weight="1"
             android:fontFamily="@font/gilroy_medium"
+            android:paddingTop="@dimen/_8sdp"
             android:text="Working\nHr's"
             android:textAlignment="center"
             android:textColor="#565656"
@@ -199,13 +392,13 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/llc_item_title"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llc_item_title">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_emp_attend_list"
@@ -222,15 +415,15 @@
         android:id="@+id/txt_msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:gravity="center"
         android:text="No attendance present"
         android:textColor="@color/black"
         android:textSize="16sp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

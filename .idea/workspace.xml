@@ -52,6 +52,11 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_emp_profile.xml">
+        <config>
+          <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_employee_attendance.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
@@ -197,6 +202,16 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/layout_profile.xml">
+        <config>
+          <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/layout_profile_items.xml">
+        <config>
+          <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/nav_header_main.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
@@ -254,9 +269,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1eeb3fca-a4a9-48ce-a4f9-f3fda60e9524" name="Changes" comment="Update Add Staff API">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/PunchInType.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/EmployeePunchInActivity.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_punch_in.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/CircularProgressBar.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/EmpProfileActivity.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/custom_date_bg.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/custom_week_day_bg.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/navigation_header.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/outstanding_bg_border.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/progress_bar_bg_emp.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_emp_profile.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" afterDir="false" />
@@ -264,14 +284,17 @@
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/EmpLeaveActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/EmpLeaveActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/EmployeeDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/EmployeeDashboard.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/EmployeeAttendanceAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/EmployeeAttendanceAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/EmployeeAttendanceModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/EmployeeAttendanceModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/EmployeeAttendance.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/EmployeeAttendance.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/EmplyeeyerProfile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/EmplyeeyerProfile.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_attendance.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_attendance.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_emplyeeyer_profile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_emplyeeyer_profile.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_bottom_sheet_attendance_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_bottom_sheet_attendance_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/recy_emp_attendance_child_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/recy_emp_attendance_child_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/arrays.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/arrays.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -328,15 +351,15 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Kotlin File" />
         <option value="Kotlin Interface" />
-        <option value="valueResourceFile" />
-        <option value="layoutResourceFile" />
         <option value="Kotlin Class" />
         <option value="Kotlin Data Class" />
-        <option value="resourceFile" />
+        <option value="Class" />
+        <option value="valueResourceFile" />
+        <option value="layoutResourceFile" />
         <option value="Kotlin Enum" />
+        <option value="resourceFile" />
       </list>
     </option>
   </component>
@@ -370,48 +393,48 @@
     <option name="showLibraryContents" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Android App.Asl_EMP__1.0.app.executor&quot;: &quot;Run&quot;,
-    &quot;Android App.app.executor&quot;: &quot;Run&quot;,
-    &quot;ApkExportedModule&quot;: &quot;Softmint_UPI_1.0.app&quot;,
-    &quot;BundleExportedModule&quot;: &quot;Softmint_UPI_1.0.app&quot;,
-    &quot;DEBUGGABLE_DEVICE&quot;: &quot;Pixel_7_Pro_API_33 [emulator-5554]&quot;,
-    &quot;DEBUGGABLE_PROCESS&quot;: &quot;com.softmint_upi.app&quot;,
-    &quot;DEBUGGER_ID&quot;: &quot;Auto&quot;,
-    &quot;ExportApk.ApkPathForSoftmint_KYC.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app&quot;,
-    &quot;ExportApk.ApkPathForSoftmint_UPI_1.0.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app&quot;,
-    &quot;ExportBundle.BundlePathForSoftmint_KYC.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app&quot;,
-    &quot;ExportBundle.BundlePathForSoftmint_UPI_1.0.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;SHOW_ALL_PROCESSES&quot;: &quot;false&quot;,
-    &quot;ScreenshotViewer.SavePath&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC&quot;,
-    &quot;android-custom-view/Users/injamamul/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_SELECTED&quot;: &quot;RecyclerView&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;com.android.tools.idea.devicemanager.tab&quot;: &quot;Physical&quot;,
-    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master__on1&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_directory_selection&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/ASL Projects/ASLHRManagement/app/src/main/res/drawable&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/asl_hr_app_and/app/src/main/res/drawable&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Android App.Asl_EMP__1.0.app.executor": "Run",
+    "Android App.app.executor": "Run",
+    "ApkExportedModule": "Softmint_UPI_1.0.app",
+    "BundleExportedModule": "Softmint_UPI_1.0.app",
+    "DEBUGGABLE_DEVICE": "Pixel_7_Pro_API_33 [emulator-5554]",
+    "DEBUGGABLE_PROCESS": "com.softmint_upi.app",
+    "DEBUGGER_ID": "Auto",
+    "ExportApk.ApkPathForSoftmint_KYC.app": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app",
+    "ExportApk.ApkPathForSoftmint_UPI_1.0.app": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app",
+    "ExportBundle.BundlePathForSoftmint_KYC.app": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app",
+    "ExportBundle.BundlePathForSoftmint_UPI_1.0.app": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "SHOW_ALL_PROCESSES": "false",
+    "ScreenshotViewer.SavePath": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC",
+    "android-custom-view/Users/injamamul/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_SELECTED": "RecyclerView",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "com.android.tools.idea.devicemanager.tab": "Physical",
+    "com.codeium.enabled": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "master__on1",
+    "kotlin-language-version-configured": "true",
+    "last_directory_selection": "/Users/injamamul/Desktop/Android Projects/Freelance/ASL Projects/ASLHRManagement/app/src/main/res/drawable",
+    "last_opened_file_path": "D:/asl_hr_app_and/app/src/main/java/com/asl_emp_mng/app/base/model",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.17",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "show.migrate.to.gradle.popup": "false"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;ExportApk.BuildVariants&quot;: [
-      &quot;productionRelease&quot;
+  "keyToStringList": {
+    "ExportApk.BuildVariants": [
+      "productionRelease"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="android.template.1010459408">
       <recent name="com.asl_emp_mng.app.screens.ui" />
@@ -496,11 +519,11 @@
       <recent name="com.softmint_upi.app.screens.dashboard.adapter" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\asl_hr_app_and\app\src\main\java\com\asl_emp_mng\app\base\model" />
       <recent name="D:\asl_hr_app_and\app\src\main\res\drawable" />
       <recent name="$PROJECT_DIR$/app/src/main/res/layout" />
       <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
       <recent name="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/navigation" />
     </key>
     <key name="android.template.708963382">
       <recent name="com.asl_emp_mng.app.screens.ui" />

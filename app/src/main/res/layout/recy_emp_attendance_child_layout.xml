@@ -5,12 +5,11 @@
     android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/llc_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
         android:background="@drawable/custom_card_background"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,84 +17,224 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-
-
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llc_attend"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_60sdp"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:weightSum="4">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:paddingTop="@dimen/_8sdp"
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ng_header"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:fontFamily="@font/gilroy_medium"
-                android:text="01-\n02-\n2025"
-                android:textAlignment="center"
-                android:textColor="#565656"
-                android:textSize="@dimen/_12ssp"
-                app:drawableTint="@color/black" />
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/custom_date_bg"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ng_header"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:paddingTop="@dimen/_4sdp"
+                        android:text="01"
+                        android:textAlignment="center"
+                        android:textColor="#565656"
+                        android:textSize="@dimen/_12ssp"
+                        app:drawableTint="@color/black" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/custom_day_bg"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:paddingHorizontal="@dimen/_6sdp"
+                        android:paddingTop="@dimen/_1sdp"
+                        android:paddingBottom="@dimen/_4sdp"
+                        android:text="wed"
+                        android:textAlignment="center"
+                        android:textColor="#565656"
+                        android:textSize="@dimen/_12ssp"
+                        app:drawableTint="@color/black" />
+                </LinearLayout>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
             <View
-                android:background="@color/white"
                 android:layout_width="1dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/white" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:paddingTop="@dimen/_8sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ng_header"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:fontFamily="@font/gilroy_medium"
+                android:gravity="center"
                 android:maxLines="3"
-                android:text="09:\n32\nAM"
-                android:textAlignment="center"
+                android:text="09:32 AM"
+
                 android:textColor="#565656"
                 android:textSize="@dimen/_12ssp"
                 app:drawableTint="@color/black" />
+
             <View
-                android:background="@color/white"
                 android:layout_width="1dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/white" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:paddingTop="@dimen/_8sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ng_header"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:fontFamily="@font/gilroy_medium"
-                android:text="09:\n32\nPM"
-                android:textAlignment="center"
+                android:gravity="center"
+                android:text="09:32 PM"
                 android:textColor="#565656"
                 android:textSize="@dimen/_12ssp"
                 app:drawableTint="@color/black" />
+
             <View
-                android:background="@color/white"
                 android:layout_width="1dp"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/white" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:paddingTop="@dimen/_8sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ng_header"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:fontFamily="@font/gilroy_medium"
-                android:text="10:\n00\nHours"
-                android:textAlignment="center"
+                android:gravity="center"
+                android:text="10 Hrs"
                 android:textColor="#565656"
                 android:textSize="@dimen/_12ssp"
                 app:drawableTint="@color/black" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
-        <View
-            android:background="@color/tea_green"
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llc_week_off"
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            android:layout_height="@dimen/_60sdp">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_54sdp"
+                android:layout_gravity="center_vertical"
+                android:background="#fcf2f1"
+                android:orientation="horizontal"
+                android:visibility="visible"
+                android:weightSum="4">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/custom_week_off_bg"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/ng_header"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:paddingTop="@dimen/_4sdp"
+                            android:text="01"
+                            android:textAlignment="center"
+                            android:textColor="#565656"
+                            android:textSize="@dimen/_12ssp"
+                            app:drawableTint="@color/black" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/custom_week_day_bg"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:paddingTop="@dimen/_1sdp"
+                            android:paddingBottom="@dimen/_4sdp"
+                            android:text="wed"
+                            android:textAlignment="center"
+                            android:textColor="#565656"
+                            android:textSize="@dimen/_12ssp"
+                            app:drawableTint="@color/black" />
+                    </LinearLayout>
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ng_header"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:gravity="center"
+                    android:maxLines="3"
+                    android:text="Week off"
+
+                    android:textColor="#565656"
+                    android:textSize="@dimen/_12ssp"
+                    app:drawableTint="@color/black" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ng_header"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:gravity="center"
+                    android:textColor="#565656"
+                    android:textSize="@dimen/_12ssp"
+                    app:drawableTint="@color/black" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ng_header"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:gravity="center"
+                    android:textColor="#565656"
+                    android:textSize="@dimen/_12ssp"
+                    app:drawableTint="@color/black" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/tea_green" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

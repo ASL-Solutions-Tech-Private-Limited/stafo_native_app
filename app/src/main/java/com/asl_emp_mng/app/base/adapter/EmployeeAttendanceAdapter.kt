@@ -2,6 +2,7 @@ package com.asl_emp_mng.app.base.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.base.model.EmployeeAttendanceModel
@@ -27,6 +28,14 @@ class EmployeeAttendanceAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             with(attendList[position]) {
+
+                if (this.attend){
+                    binding.llcAttend.visibility= View.VISIBLE
+                    binding.llcWeekOff.visibility= View.GONE
+                }else{
+                    binding.llcAttend.visibility= View.GONE
+                    binding.llcWeekOff.visibility= View.VISIBLE
+                }
                /* binding.tvTime.text = this.attendTime
                 binding.tvDate.text = this.attendDate
                 binding.tvCheckType.text = this.checkType*/
