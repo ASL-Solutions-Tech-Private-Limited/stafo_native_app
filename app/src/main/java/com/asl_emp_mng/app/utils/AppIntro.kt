@@ -1,4 +1,4 @@
-package com.asl_emp_mng.app.screens
+package com.asl_emp_mng.app.utils
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,8 +11,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.IntroAppContentBinding
 import com.asl_emp_mng.app.databinding.IntroAppDesignBinding
-import com.asl_emp_mng.app.screens.AppIntro.Companion.MAX_STEP
-import com.asl_emp_mng.app.utils.setIsOnBoardingScreenShown
+import com.asl_emp_mng.app.utils.AppIntro.Companion.MAX_STEP
+import com.asl_emp_mng.app.screens.auth.LoginActivity
 import com.google.android.material.tabs.TabLayoutMediator
 
 class AppIntro : Fragment() {

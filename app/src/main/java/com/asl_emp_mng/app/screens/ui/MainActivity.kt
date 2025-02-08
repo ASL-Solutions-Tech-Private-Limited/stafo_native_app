@@ -1,4 +1,4 @@
-package com.asl_emp_mng.app.screens
+package com.asl_emp_mng.app.screens.ui
 
 import android.os.Bundle
 import android.view.Menu

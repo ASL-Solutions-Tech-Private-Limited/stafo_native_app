@@ -1,4 +1,4 @@
-package com.asl_emp_mng.app.screens
+package com.asl_emp_mng.app.screens.auth
 
 import android.content.Context
 import android.content.Intent
@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.ActivityOtpVerifyBinding
+import com.asl_emp_mng.app.screens.ui.EmployeeAttendance
 
 class OtpVerifyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOtpVerifyBinding
@@ -128,7 +129,8 @@ class OtpVerifyActivity : AppCompatActivity() {
             }
 
             ivBack.setOnClickListener { _ ->
-              startActivity(Intent(this@OtpVerifyActivity,EmployeeAttendance::class.java))
+                finish()
+             // startActivity(Intent(this@OtpVerifyActivity, EmployeeAttendance::class.java))
             }
 
             llResendCode.setOnClickListener {

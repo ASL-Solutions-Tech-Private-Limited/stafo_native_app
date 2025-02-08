@@ -1,13 +1,8 @@
-package com.asl_emp_mng.app.screens
+package com.asl_emp_mng.app.screens.settings
 
 import android.os.Bundle
-import android.view.Gravity
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.Spinner
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,11 +11,6 @@ import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.DynamicAdapter
 import com.asl_emp_mng.app.base.model.DynamicField
 import com.asl_emp_mng.app.databinding.ActivityCreateLeavePolicyBinding
-import com.asl_emp_mng.app.databinding.ActivityLeaveManagementBinding
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
-import java.util.Collections
-import java.util.Random
 
 class CreateLeavePolicyActivity : AppCompatActivity() {
     private lateinit var binding : ActivityCreateLeavePolicyBinding

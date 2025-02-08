@@ -1,4 +1,4 @@
-package com.asl_emp_mng.app.screens
+package com.asl_emp_mng.app.screens.auth
 
 import android.os.Bundle
 import android.view.WindowManager

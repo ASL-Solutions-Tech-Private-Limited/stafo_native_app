@@ -1,4 +1,4 @@
-package com.asl_emp_mng.app.screens.ui
+package com.asl_emp_mng.app.screens.profile
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,12 +9,11 @@ import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.model.DashboardType
 import com.asl_emp_mng.app.databinding.ActivityEmplyeeyerProfileBinding
 import com.asl_emp_mng.app.databinding.LayoutAccountSettingsBinding
-import com.asl_emp_mng.app.screens.AddBranchActivity
-import com.asl_emp_mng.app.screens.AddEmployeeActivity
-import com.asl_emp_mng.app.screens.AddShiftActivity
-import com.asl_emp_mng.app.screens.EmpLeaveActivity
-import com.asl_emp_mng.app.screens.EmployeeAttendance
-import com.asl_emp_mng.app.screens.LeaveManagementActivity
+import com.asl_emp_mng.app.screens.settings.AddBranchActivity
+import com.asl_emp_mng.app.screens.settings.AddShiftActivity
+import com.asl_emp_mng.app.screens.ui.EmpLeaveActivity
+import com.asl_emp_mng.app.screens.ui.EmployeeAttendance
+import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 
 class EmplyeeyerProfile : AppCompatActivity() {
 

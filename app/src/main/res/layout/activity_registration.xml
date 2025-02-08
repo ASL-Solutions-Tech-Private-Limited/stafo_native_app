@@ -1,530 +1,537 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/gradient_header"
-    tools:context=".screens.RegistrationActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_12sdp"
-        android:padding="@dimen/_6sdp"
-        android:src="@drawable/ic_back"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_registration_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_12sdp"
-        android:fontFamily="@font/gilroy_bold"
-        android:padding="@dimen/_4sdp"
-        android:text="Registration"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_18sdp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_back" />
+    </data>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/_12sdp"
-        android:background="@drawable/card_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_registration_title">
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_header"
+        tools:context=".screens.auth.RegistrationActivity">
 
-        <LinearLayout
-            android:id="@+id/ll_progresslayout"
-            android:layout_width="match_parent"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_12sdp"
-            android:orientation="horizontal"
-            android:padding="@dimen/_4sdp">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_4sdp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/gilroy_semi_bold"
-                    android:gravity="center"
-                    android:padding="@dimen/_2sdp"
-                    android:text="Basic Information"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10sdp" />
-
-                <com.asl_emp_mng.app.utils.RoundedCornerProgressBar
-                    android:id="@+id/rpb_basic_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_8sdp"
-                    android:layout_marginTop="@dimen/_4sdp"
-                    android:layout_weight="1"
-                    android:background="@color/tea_green" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_4sdp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/gilroy_semi_bold"
-                    android:gravity="center"
-                    android:padding="@dimen/_2sdp"
-                    android:text="Owner Details"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10sdp" />
-
-                <com.asl_emp_mng.app.utils.RoundedCornerProgressBar
-                    android:id="@+id/rpb_owner_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_8sdp"
-                    android:layout_marginTop="@dimen/_4sdp"
-                    android:layout_weight="1"
-                    android:background="@color/tea_green" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_4sdp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/gilroy_semi_bold"
-                    android:gravity="center"
-                    android:padding="@dimen/_2sdp"
-                    android:text="Documents"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10sdp" />
-
-                <com.asl_emp_mng.app.utils.RoundedCornerProgressBar
-                    android:id="@+id/rpb_document_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_8sdp"
-                    android:layout_marginTop="@dimen/_4sdp"
-                    android:layout_weight="1"
-                    android:background="@color/tea_green" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/btn_next"
-            android:layout_below="@+id/ll_progresslayout">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <!--Basic Information-->
-                <LinearLayout
-                    android:id="@+id/ll_basic_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/_12sdp"
-                    android:layout_marginTop="@dimen/_12sdp"
-                    android:layout_marginEnd="@dimen/_12sdp"
-                    android:orientation="vertical"
-                    android:visibility="visible">
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_company_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_company_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="@string/company_name"
-                            android:inputType="textPersonName" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_company_type"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        app:endIconDrawable="@drawable/ic_down"
-                        app:endIconMode="custom">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_company_type"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="@string/company_type"
-                            android:inputType="textPersonName" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_company_reg"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_company_reg_no"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="@string/registration_number_if_available"
-                            android:inputType="textPersonName" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_company_gst_no"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_company_gst_no"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="@string/gst_number_if_applicable"
-                            android:inputType="textPersonName" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_company_pan_no"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_company_pan_no"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="@string/company_pan_number"
-                            android:inputType="textPersonName" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_company_address"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_126sdp"
-                        android:layout_marginTop="@dimen/_12sdp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_company_address"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_126sdp"
-                            android:background="@drawable/edit_text_background"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:gravity="start|top"
-                            android:hint="@string/office_address"
-                            android:inputType="textImeMultiLine"
-                            android:textAlignment="viewStart" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </LinearLayout>
-                <!--End Of Basic Information-->
-
-                <!--Owner Information-->
-                <LinearLayout
-                    android:id="@+id/ll_owner_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/_12sdp"
-                    android:layout_marginTop="@dimen/_12sdp"
-                    android:layout_marginEnd="@dimen/_12sdp"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_owner_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_owner_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="@string/owner_name"
-                            android:inputType="textPersonName" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_owner_mobile_no"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_owner_mobile_no"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="@string/mobile_number"
-                            android:inputType="phone" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_owner_email"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_owner_email"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="@string/email"
-                            android:inputType="textPersonName" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_owner_aadhaar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_owner_aadhar"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="@string/aadhaar"
-                            android:inputType="textPersonName" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_owner_pan"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_owner_pan"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="@string/pan_number"
-                            android:inputType="textPersonName" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_owner_address"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_126sdp"
-                        android:layout_marginTop="@dimen/_12sdp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_owner_address"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_126sdp"
-                            android:background="@drawable/edit_text_background"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:gravity="start|top"
-                            android:hint="@string/address"
-                            android:inputType="textImeMultiLine"
-                            android:textAlignment="viewStart" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </LinearLayout>
-                <!--End Of Owner Information-->
-
-                <!--Document-->
-                <LinearLayout
-                    android:id="@+id/ll_documentinfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/_12sdp"
-                    android:layout_marginTop="@dimen/_12sdp"
-                    android:layout_marginEnd="@dimen/_12sdp"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_company_certificate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        app:endIconDrawable="@drawable/ic_down"
-                        app:endIconMode="custom">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_company_certificate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="@string/company_registration_certificate"
-                            android:inputType="textPersonName" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_company_gst_certificate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        app:endIconDrawable="@drawable/ic_down"
-                        app:endIconMode="custom">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_company_gst_certificate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="@string/gst_certificate"
-                            android:inputType="textPersonName" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_company_pan_certificate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        app:endIconDrawable="@drawable/ic_down"
-                        app:endIconMode="custom">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_company_pan_certificate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="@string/copy_of_pan_card"
-                            android:inputType="textPersonName" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_company_addhar_certificate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        app:endIconDrawable="@drawable/ic_down"
-                        app:endIconMode="custom">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_company_aadhar_certificate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="@string/copy_of_aadhaar_card_or_voter_id_proprietor"
-                            android:inputType="textPersonName" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_company_bank_statement"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        app:endIconDrawable="@drawable/ic_down"
-                        app:endIconMode="custom">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_company_bank_statement"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="Bank Statement or Cancelled Cheque"
-                            android:inputType="textPersonName" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-
-                </LinearLayout>
-                <!--End Of Document-->
-            </RelativeLayout>
-
-        </ScrollView>
-
-
-        <Button
-            android:id="@+id/btn_next"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/_12sdp"
-            android:layout_weight="1"
-            android:background="@drawable/button_background"
-            android:backgroundTint="@color/colorTextPrimary"
-            android:fontFamily="@font/gilroy_semi_bold"
-            android:text="Next"
-            android:textAllCaps="false"
-            android:textColor="@color/colorButtonText"
-            android:textSize="16dp" />
-    </RelativeLayout>
+            android:padding="@dimen/_6sdp"
+            android:src="@drawable/ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_registration_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_12sdp"
+            android:fontFamily="@font/gilroy_bold"
+            android:padding="@dimen/_4sdp"
+            android:text="Registration"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_18sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_back" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:background="@drawable/card_bg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_registration_title">
+
+            <LinearLayout
+                android:id="@+id/ll_progresslayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:orientation="horizontal"
+                android:padding="@dimen/_4sdp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_4sdp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gilroy_semi_bold"
+                        android:gravity="center"
+                        android:padding="@dimen/_2sdp"
+                        android:text="Basic Information"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <com.asl_emp_mng.app.utils.RoundedCornerProgressBar
+                        android:id="@+id/rpb_basic_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:layout_weight="1"
+                        android:background="@color/tea_green" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_4sdp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gilroy_semi_bold"
+                        android:gravity="center"
+                        android:padding="@dimen/_2sdp"
+                        android:text="Owner Details"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <com.asl_emp_mng.app.utils.RoundedCornerProgressBar
+                        android:id="@+id/rpb_owner_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:layout_weight="1"
+                        android:background="@color/tea_green" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_4sdp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gilroy_semi_bold"
+                        android:gravity="center"
+                        android:padding="@dimen/_2sdp"
+                        android:text="Documents"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <com.asl_emp_mng.app.utils.RoundedCornerProgressBar
+                        android:id="@+id/rpb_document_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_8sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:layout_weight="1"
+                        android:background="@color/tea_green" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/btn_next"
+                android:layout_below="@+id/ll_progresslayout">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <!--Basic Information-->
+                    <LinearLayout
+                        android:id="@+id/ll_basic_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:orientation="vertical"
+                        android:visibility="visible">
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_company_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_company_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="@string/company_name"
+                                android:inputType="textPersonName" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_company_type"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            app:endIconDrawable="@drawable/ic_down"
+                            app:endIconMode="custom">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_company_type"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="@string/company_type"
+                                android:inputType="textPersonName" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_company_reg"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_company_reg_no"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="@string/registration_number_if_available"
+                                android:inputType="textPersonName" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_company_gst_no"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_company_gst_no"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="@string/gst_number_if_applicable"
+                                android:inputType="textPersonName" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_company_pan_no"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_company_pan_no"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="@string/company_pan_number"
+                                android:inputType="textPersonName" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_company_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_126sdp"
+                            android:layout_marginTop="@dimen/_12sdp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_company_address"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_126sdp"
+                                android:background="@drawable/edit_text_background"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:gravity="start|top"
+                                android:hint="@string/office_address"
+                                android:inputType="textImeMultiLine"
+                                android:textAlignment="viewStart" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+                    <!--End Of Basic Information-->
+
+                    <!--Owner Information-->
+                    <LinearLayout
+                        android:id="@+id/ll_owner_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_owner_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_owner_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="@string/owner_name"
+                                android:inputType="textPersonName" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_owner_mobile_no"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_owner_mobile_no"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="@string/mobile_number"
+                                android:inputType="phone" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_owner_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_owner_email"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="@string/email"
+                                android:inputType="textPersonName" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_owner_aadhaar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_owner_aadhar"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="@string/aadhaar"
+                                android:inputType="textPersonName" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_owner_pan"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_owner_pan"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="@string/pan_number"
+                                android:inputType="textPersonName" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_owner_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_126sdp"
+                            android:layout_marginTop="@dimen/_12sdp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_owner_address"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_126sdp"
+                                android:background="@drawable/edit_text_background"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:gravity="start|top"
+                                android:hint="@string/address"
+                                android:inputType="textImeMultiLine"
+                                android:textAlignment="viewStart" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+                    <!--End Of Owner Information-->
+
+                    <!--Document-->
+                    <LinearLayout
+                        android:id="@+id/ll_documentinfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_company_certificate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            app:endIconDrawable="@drawable/ic_down"
+                            app:endIconMode="custom">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_company_certificate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="@string/company_registration_certificate"
+                                android:inputType="textPersonName" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_company_gst_certificate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            app:endIconDrawable="@drawable/ic_down"
+                            app:endIconMode="custom">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_company_gst_certificate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="@string/gst_certificate"
+                                android:inputType="textPersonName" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_company_pan_certificate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            app:endIconDrawable="@drawable/ic_down"
+                            app:endIconMode="custom">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_company_pan_certificate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="@string/copy_of_pan_card"
+                                android:inputType="textPersonName" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_company_addhar_certificate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            app:endIconDrawable="@drawable/ic_down"
+                            app:endIconMode="custom">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_company_aadhar_certificate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="@string/copy_of_aadhaar_card_or_voter_id_proprietor"
+                                android:inputType="textPersonName" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_company_bank_statement"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            app:endIconDrawable="@drawable/ic_down"
+                            app:endIconMode="custom">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_company_bank_statement"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="Bank Statement or Cancelled Cheque"
+                                android:inputType="textPersonName" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                    </LinearLayout>
+                    <!--End Of Document-->
+                </RelativeLayout>
+
+            </ScrollView>
+
+
+            <Button
+                android:id="@+id/btn_next"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="@dimen/_12sdp"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:backgroundTint="@color/colorTextPrimary"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="Next"
+                android:textAllCaps="false"
+                android:textColor="@color/colorButtonText"
+                android:textSize="16dp" />
+        </RelativeLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

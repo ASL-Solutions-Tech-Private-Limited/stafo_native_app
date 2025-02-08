@@ -1,4 +1,4 @@
-package com.asl_emp_mng.app.screens
+package com.asl_emp_mng.app.screens.ui
 
 import android.content.Intent
 import android.graphics.Color
@@ -11,6 +11,8 @@ import android.view.animation.AnimationUtils
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.BaseActivity
 import com.asl_emp_mng.app.databinding.ActivitySplashBinding
+import com.asl_emp_mng.app.screens.auth.LoginActivity
+import com.asl_emp_mng.app.screens.auth.OnBoardingActivity
 import com.asl_emp_mng.app.utils.CommonViewModel
 import com.asl_emp_mng.app.utils.isOnBoardingScreenShown
 

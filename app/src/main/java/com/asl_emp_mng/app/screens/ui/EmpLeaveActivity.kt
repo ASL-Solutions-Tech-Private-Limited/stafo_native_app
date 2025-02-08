@@ -1,11 +1,10 @@
-package com.asl_emp_mng.app.screens
+package com.asl_emp_mng.app.screens.ui
 
 import android.Manifest
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
@@ -24,13 +23,8 @@ import com.asl_emp_mng.app.base.service.LocationForegroundService
 import com.asl_emp_mng.app.databinding.ActivityEmpLeaveBinding
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.Period
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Collections
 import java.util.Locale
-import java.util.Random
 
 class EmpLeaveActivity : AppCompatActivity() {
     private lateinit var binding :ActivityEmpLeaveBinding
@@ -140,7 +134,7 @@ class EmpLeaveActivity : AppCompatActivity() {
         popupMenu.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 0 -> {
-                    startActivity(Intent(this,EmployeeLeaveHistoryActivity::class.java))
+                    startActivity(Intent(this, EmployeeLeaveHistoryActivity::class.java))
                     true
                 }
                 1 -> {

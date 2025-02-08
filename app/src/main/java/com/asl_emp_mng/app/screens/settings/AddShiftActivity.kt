@@ -1,4 +1,4 @@
-package com.asl_emp_mng.app.screens
+package com.asl_emp_mng.app.screens.settings
 
 import android.annotation.SuppressLint
 import android.os.Bundle

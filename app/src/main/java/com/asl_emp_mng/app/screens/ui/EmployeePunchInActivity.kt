@@ -1,4 +1,4 @@
-package com.asl_emp_mng.app.screens
+package com.asl_emp_mng.app.screens.ui
 
 import android.Manifest
 import android.app.Activity
@@ -21,11 +21,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.asl_emp_mng.app.R
-import com.asl_emp_mng.app.base.model.DashboardType
 import com.asl_emp_mng.app.base.model.PunchInType
 import com.asl_emp_mng.app.databinding.ActivityEmployeePunchInBinding
-import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback

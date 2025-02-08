@@ -1,8 +1,7 @@
-package com.asl_emp_mng.app.screens
+package com.asl_emp_mng.app.screens.settings
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
@@ -92,7 +91,7 @@ class LeaveManagementActivity : AppCompatActivity() {
         popupMenu.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 0 -> {
-                  startActivity(Intent(this,CreateLeavePolicyActivity::class.java))
+                  startActivity(Intent(this, CreateLeavePolicyActivity::class.java))
                     true
                 }
                 1 -> {

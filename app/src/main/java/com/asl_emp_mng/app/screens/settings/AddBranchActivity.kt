@@ -1,25 +1,21 @@
-package com.asl_emp_mng.app.screens
+package com.asl_emp_mng.app.screens.settings
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.PorterDuff
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
-import android.widget.RadioButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.ActivityAddBranchBinding
 import com.asl_emp_mng.app.screens.ui.PlaceSearchActivity
 import java.util.Locale
