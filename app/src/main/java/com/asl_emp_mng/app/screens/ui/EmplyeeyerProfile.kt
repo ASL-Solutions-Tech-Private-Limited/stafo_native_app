@@ -84,14 +84,11 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         }
 
-        val requestLeave =
-            binding?.expandableLeaveManagement?.findViewById<AppCompatTextView>(R.id.tv_leaves_management)
+        val requestLeave = binding?.expandableLeaveManagement?.findViewById<AppCompatTextView>(R.id.tv_leaves_management)
 
         requestLeave?.setOnClickListener {
-
             startActivity(Intent(this, LeaveManagementActivity::class.java))
-
-        }
+            }
 
         // for employee
 
@@ -106,32 +103,27 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         }
 
-        val basicProfile =
-            binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_basic)
+        val basicProfile = binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_basic)
 
         basicProfile?.setOnClickListener {
-
             val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
             intent.putExtra("PROFILE_TYPE", ProfileType.BASIC.name)
             startActivity(intent)
         }
 
-        val professionalProfile =
-            binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_professional)
+        val professionalProfile = binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_professional)
         professionalProfile?.setOnClickListener {
             val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
             intent.putExtra("PROFILE_TYPE", ProfileType.PROFESSIONAL.name)
             startActivity(intent)
         }
-        val educationalProfile =
-            binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_educational)
+        val educationalProfile = binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_educational)
         educationalProfile?.setOnClickListener {
             val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
             intent.putExtra("PROFILE_TYPE", ProfileType.EDUCATION.name)
             startActivity(intent)
         }
-        val documentProfile =
-            binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_documents)
+        val documentProfile = binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_documents)
         documentProfile?.setOnClickListener {
             val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
             intent.putExtra("PROFILE_TYPE", ProfileType.DOCUMENT.name)

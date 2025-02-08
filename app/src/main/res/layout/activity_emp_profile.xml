@@ -1294,11 +1294,11 @@
 
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/rl_education_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
@@ -1371,7 +1371,7 @@
                     android:drawableTint="@color/black"
                     android:fontFamily="@font/gilroy_medium"
                     android:paddingVertical="@dimen/_6sdp"
-                    android:text="Degree or Certificate"
+                    android:text="Certifications"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12sdp" />
 
@@ -1394,7 +1394,7 @@
                     android:layout_marginBottom="@dimen/_6sdp"
                     android:fontFamily="@font/gilroy_regular"
                     android:gravity="center"
-                    android:text="Courses or training"
+                    android:text="Details"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12ssp" />
 
@@ -1416,20 +1416,80 @@
             </RelativeLayout>
         </LinearLayout>
 
-
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/rl_document_details"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:visibility="gone">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Working is progress(document)" />
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_28sdp"
+                android:fontFamily="@font/gilroy_regular"
+                android:text="Documents"
+                android:textColor="#555454"
+                android:textSize="@dimen/_12ssp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:background="@drawable/custom_card_bg"
+                android:padding="@dimen/_8sdp"
+                android:visibility="visible">
 
 
-        </RelativeLayout>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_degree_doc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:drawableRight="@drawable/ic_arrow_down"
+                    android:drawablePadding="@dimen/_8sdp"
+                    android:drawableTint="@color/black"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:paddingVertical="@dimen/_6sdp"
+                    android:text="Degree or Training certificate"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp" />
+
+                <View
+                    android:id="@+id/view_docu_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/tv_degree_doc"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginEnd="1dp"
+                    android:background="@color/tea_green" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_degree_com"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/view_docu_1"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:drawableRight="@drawable/ic_arrow_down"
+                    android:drawablePadding="@dimen/_8sdp"
+                    android:drawableTint="@color/black"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:paddingVertical="@dimen/_6sdp"
+                    android:text="Company Document"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp" />
+
+            </RelativeLayout>
+        </LinearLayout>
 
 
     </LinearLayout>

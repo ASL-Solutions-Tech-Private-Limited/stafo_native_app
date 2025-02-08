@@ -43,7 +43,8 @@ class EmployeeAttendance : AppCompatActivity() {
             EmployeeAttendanceModel("Hamid", "09:10 AM", "confirm_check_in", "04/02/2025",true),
             EmployeeAttendanceModel("Hamid", "09:12 AM", "confirm_check_in", "04/02/2025",false),
             EmployeeAttendanceModel("Hamid", "09:45 AM", "confirm_check_in", "04/02/2025",false),
-            EmployeeAttendanceModel("Hamid", "09:22 AM", "confirm_check_in", "04/02/2025",true)
+            EmployeeAttendanceModel("Hamid", "09:22 AM", "confirm_check_in", "04/02/2025",true),
+            EmployeeAttendanceModel("Hamid", "10:22 AM", "confirm_check_in", "04/02/2025",true)
 
 
         )

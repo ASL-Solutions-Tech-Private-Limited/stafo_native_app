@@ -101,6 +101,7 @@
                     android:textSize="@dimen/_12ssp"
                     app:drawableTint="@color/black" />
 
+
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -280,7 +281,7 @@
             android:layout_centerVertical="true"
             android:layout_marginVertical="@dimen/_4sdp"
             android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/custom_card_background"
+            android:background="@drawable/custom_round_card_bg"
             android:orientation="horizontal">
 
             <ImageView
@@ -325,17 +326,18 @@
             android:layout_below="@+id/ng_header"
             android:layout_weight="1"
             android:fontFamily="@font/gilroy_medium"
-            android:paddingTop="@dimen/_8sdp"
             android:text="Date"
-            android:textAlignment="center"
+           android:layout_gravity="center_vertical"
+            android:gravity="center"
             android:textColor="#565656"
-            android:textSize="@dimen/_12ssp"
+            android:textSize="@dimen/_11ssp"
             app:drawableTint="@color/black" />
 
         <View
+            android:layout_marginVertical="@dimen/_8sdp"
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/tea_green" />
+            android:background="@color/gray_colour" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -344,17 +346,18 @@
             android:layout_weight="1"
             android:fontFamily="@font/gilroy_medium"
             android:maxLines="3"
-            android:paddingTop="@dimen/_8sdp"
             android:text="Check In"
-            android:textAlignment="center"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
             android:textColor="#565656"
-            android:textSize="@dimen/_12ssp"
+            android:textSize="@dimen/_11ssp"
             app:drawableTint="@color/black" />
 
         <View
+            android:layout_marginVertical="@dimen/_8sdp"
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/tea_green" />
+            android:background="@color/gray_colour" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -362,17 +365,18 @@
             android:layout_below="@+id/ng_header"
             android:layout_weight="1"
             android:fontFamily="@font/gilroy_medium"
-            android:paddingTop="@dimen/_8sdp"
             android:text="Check Out"
-            android:textAlignment="center"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
             android:textColor="#565656"
-            android:textSize="@dimen/_12ssp"
+            android:textSize="@dimen/_11ssp"
             app:drawableTint="@color/black" />
 
         <View
+            android:layout_marginVertical="@dimen/_8sdp"
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/tea_green" />
+            android:background="@color/gray_colour" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -380,11 +384,11 @@
             android:layout_below="@+id/ng_header"
             android:layout_weight="1"
             android:fontFamily="@font/gilroy_medium"
-            android:paddingTop="@dimen/_8sdp"
-            android:text="Working\nHr's"
-            android:textAlignment="center"
+            android:text="Working Hr's"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
             android:textColor="#565656"
-            android:textSize="@dimen/_12ssp"
+            android:textSize="@dimen/_11ssp"
             app:drawableTint="@color/black" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -395,6 +399,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -404,6 +410,7 @@
             android:id="@+id/rv_emp_attend_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:background="@drawable/custom_attend_list_bg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

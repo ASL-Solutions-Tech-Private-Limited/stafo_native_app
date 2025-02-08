@@ -62,6 +62,32 @@ class RegistrationActivity : AppCompatActivity() {
             tieCompanyType.setOnClickListener {
                 showSearchDialog()
             }
+
+            tieBusinessType.setOnClickListener {
+                showBusinessSearchDialog()
+            }
+            tieSelectCountry.setOnClickListener {
+                showCountrySearchDialog()
+            }
+            tieSelectState.setOnClickListener {
+                showStateSearchDialog()
+            }
+            tieSelectCity.setOnClickListener {
+                showCitySearchDialog()
+            }
+
+
+            tieOwnerSelectCountry.setOnClickListener {
+                showOwnerCountrySearchDialog()
+            }
+            tieOwnerSelectState.setOnClickListener {
+                showOwnerStateSearchDialog()
+            }
+            tieOwnerSelectCity.setOnClickListener {
+                showOwnerCitySearchDialog()
+            }
+
+
             tieCompanyCertificate.setOnClickListener {
                 openPicker(1101)
             }
@@ -128,6 +154,18 @@ class RegistrationActivity : AppCompatActivity() {
             } else if (tieCompanyType.text.isNullOrEmpty()) {
                 tieCompanyType.error = "Please enter company type"
                 return false
+            } else if (tieBusinessType.text.isNullOrEmpty()) {
+                tieBusinessType.error = "Please enter business type"
+                return false
+            } else if (tieSelectCountry.text.isNullOrEmpty()) {
+                tieSelectCountry.error = "Please select country"
+                return false
+            } else if (tieSelectState.text.isNullOrEmpty()) {
+                tieSelectState.error = "Please select state"
+                return false
+            } else if (tieSelectCity.text.isNullOrEmpty()) {
+                tieSelectCity.error = "Please select city"
+                return false
             } else if (tieCompanyRegNo.text.isNullOrEmpty()) {
                 tieCompanyRegNo.error = "Please enter registration number"
                 tieCompanyRegNo.requestFocus()
@@ -163,6 +201,15 @@ class RegistrationActivity : AppCompatActivity() {
                 tieOwnerEmail.error = "Please enter email"
                 tieOwnerEmail.requestFocus()
                 return false
+            } else if (tieOwnerSelectCountry.text.isNullOrEmpty()) {
+                tieOwnerSelectCountry.error = "Please select country"
+                return false
+            } else if (tieOwnerSelectState.text.isNullOrEmpty()) {
+                tieOwnerSelectState.error = "Please select state"
+                return false
+            } else if (tieOwnerSelectCity.text.isNullOrEmpty()) {
+                tieOwnerSelectCity.error = "Please select city"
+                return false
             } else if (tieOwnerAadhar.text.isNullOrEmpty()) {
                 tieOwnerAadhar.error = "Please enter aadhaar no"
                 tieOwnerAadhar.requestFocus()
@@ -192,6 +239,140 @@ class RegistrationActivity : AppCompatActivity() {
         searchableDialog.setOnItemSelected(object : OnSearchItemSelected {
             override fun onClick(position: Int, searchListItem: SearchListItem) {
                 binding.tieCompanyType.setText(searchListItem.title)
+                searchableDialog.dismiss()
+            }
+
+        })
+        searchableDialog.show()
+    }
+
+    private fun showBusinessSearchDialog() {
+        var itemList = ArrayList<String>()
+        var businessType = ArrayList<SearchListItem>()
+        itemList =
+            resources.getStringArray(R.array.company_type_items).toCollection(ArrayList())
+        for (i in itemList.indices) {
+            businessType.add(SearchListItem(i, itemList[i]))
+        }
+        val searchableDialog = SearchableDialog(this, businessType, "Search")
+        searchableDialog.setOnItemSelected(object : OnSearchItemSelected {
+            override fun onClick(position: Int, searchListItem: SearchListItem) {
+                binding.tieBusinessType.setText(searchListItem.title)
+                searchableDialog.dismiss()
+            }
+
+        })
+        searchableDialog.show()
+    }
+
+    private fun showCountrySearchDialog() {
+        var itemList = ArrayList<String>()
+        var countryList = ArrayList<SearchListItem>()
+        itemList =
+            resources.getStringArray(R.array.company_type_items).toCollection(ArrayList())
+        for (i in itemList.indices) {
+            countryList.add(SearchListItem(i, itemList[i]))
+        }
+        val searchableDialog = SearchableDialog(this, countryList, "Search")
+        searchableDialog.setOnItemSelected(object : OnSearchItemSelected {
+            override fun onClick(position: Int, searchListItem: SearchListItem) {
+                binding.tieSelectCountry.setText(searchListItem.title)
+                searchableDialog.dismiss()
+            }
+
+        })
+        searchableDialog.show()
+    }
+
+    private fun showOwnerCountrySearchDialog() {
+        var itemList = ArrayList<String>()
+        var countryList = ArrayList<SearchListItem>()
+        itemList =
+            resources.getStringArray(R.array.company_type_items).toCollection(ArrayList())
+        for (i in itemList.indices) {
+            countryList.add(SearchListItem(i, itemList[i]))
+        }
+        val searchableDialog = SearchableDialog(this, countryList, "Search")
+        searchableDialog.setOnItemSelected(object : OnSearchItemSelected {
+            override fun onClick(position: Int, searchListItem: SearchListItem) {
+                binding.tieOwnerSelectCountry.setText(searchListItem.title)
+                searchableDialog.dismiss()
+            }
+
+        })
+        searchableDialog.show()
+    }
+
+    private fun showStateSearchDialog() {
+        var itemList = ArrayList<String>()
+        var stateList = ArrayList<SearchListItem>()
+        itemList =
+            resources.getStringArray(R.array.company_type_items).toCollection(ArrayList())
+        for (i in itemList.indices) {
+            stateList.add(SearchListItem(i, itemList[i]))
+        }
+        val searchableDialog = SearchableDialog(this, stateList, "Search")
+        searchableDialog.setOnItemSelected(object : OnSearchItemSelected {
+            override fun onClick(position: Int, searchListItem: SearchListItem) {
+                binding.tieSelectState.setText(searchListItem.title)
+                searchableDialog.dismiss()
+            }
+
+        })
+        searchableDialog.show()
+    }
+
+
+    private fun showOwnerStateSearchDialog() {
+        var itemList = ArrayList<String>()
+        var stateList = ArrayList<SearchListItem>()
+        itemList =
+            resources.getStringArray(R.array.company_type_items).toCollection(ArrayList())
+        for (i in itemList.indices) {
+            stateList.add(SearchListItem(i, itemList[i]))
+        }
+        val searchableDialog = SearchableDialog(this, stateList, "Search")
+        searchableDialog.setOnItemSelected(object : OnSearchItemSelected {
+            override fun onClick(position: Int, searchListItem: SearchListItem) {
+                binding.tieOwnerSelectState.setText(searchListItem.title)
+                searchableDialog.dismiss()
+            }
+
+        })
+        searchableDialog.show()
+    }
+
+    private fun showCitySearchDialog() {
+        var itemList = ArrayList<String>()
+        var cityList = ArrayList<SearchListItem>()
+        itemList =
+            resources.getStringArray(R.array.company_type_items).toCollection(ArrayList())
+        for (i in itemList.indices) {
+            cityList.add(SearchListItem(i, itemList[i]))
+        }
+        val searchableDialog = SearchableDialog(this, cityList, "Search")
+        searchableDialog.setOnItemSelected(object : OnSearchItemSelected {
+            override fun onClick(position: Int, searchListItem: SearchListItem) {
+                binding.tieSelectCity.setText(searchListItem.title)
+                searchableDialog.dismiss()
+            }
+
+        })
+        searchableDialog.show()
+    }
+
+    private fun showOwnerCitySearchDialog() {
+        var itemList = ArrayList<String>()
+        var cityList = ArrayList<SearchListItem>()
+        itemList =
+            resources.getStringArray(R.array.company_type_items).toCollection(ArrayList())
+        for (i in itemList.indices) {
+            cityList.add(SearchListItem(i, itemList[i]))
+        }
+        val searchableDialog = SearchableDialog(this, cityList, "Search")
+        searchableDialog.setOnItemSelected(object : OnSearchItemSelected {
+            override fun onClick(position: Int, searchListItem: SearchListItem) {
+                binding.tieOwnerSelectCity.setText(searchListItem.title)
                 searchableDialog.dismiss()
             }
 
