@@ -13,4 +13,6 @@
     <color name="green_400">#E8F5E9</color>
     <color name="tea_green">#E0E0E0</color>
     <color name="reject">#d14249</color>
+    <color name="week_off_text_colour">#f5d3d2</color>
+    <color name="gray_colour">#808080</color>
 </resources>

@@ -44,67 +44,70 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".screens.ui.EmployeePunchInActivity"
+            android:name=".screens.EmpProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.ui.EmployeeAttendance"
+            android:name=".screens.EmployeePunchInActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.auth.OtpVerifyActivity"
+            android:name=".screens.EmployeeAttendance"
             android:exported="false" />
         <activity
-            android:name=".screens.ui.EmployeeLeaveHistoryActivity"
+            android:name=".screens.OtpVerifyActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.ui.EmpLeaveActivity"
+            android:name=".screens.EmployeeLeaveHistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.settings.CreateLeavePolicyActivity"
+            android:name=".screens.EmpLeaveActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.settings.LeaveManagementActivity"
+            android:name=".screens.CreateLeavePolicyActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.settings.AddShiftActivity"
+            android:name=".screens.LeaveManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.AddShiftActivity"
             android:exported="false"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".screens.ui.PlaceSearchActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.settings.AddBranchActivity"
+            android:name=".screens.AddBranchActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.settings.AddEmployeeActivity"
+            android:name=".screens.AddEmployeeActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.settings.AccountSettingsActivity"
+            android:name=".screens.ui.AccountSettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.profile.EmplyeeyerProfile"
+            android:name=".screens.ui.EmplyeeyerProfile"
             android:exported="false" />
         <activity
-            android:name=".screens.dashboard.EmployeeDashboard"
+            android:name=".screens.ui.EmployeeDashboard"
             android:exported="false" />
         <activity
-            android:name=".screens.dashboard.EmployerDashboard"
+            android:name=".screens.ui.EmployerDashboard"
             android:exported="false" />
         <activity
-            android:name=".screens.ui.MainActivity"
+            android:name=".screens.MainActivity"
             android:exported="false"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.Sims.NoActionBar" />
         <activity
-            android:name=".screens.auth.OnBoardingActivity"
+            android:name=".screens.OnBoardingActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.auth.RegistrationActivity"
+            android:name=".screens.RegistrationActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.auth.LoginActivity"
+            android:name=".screens.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.ui.SplashActivity"
+            android:name=".screens.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.Sims">
             <intent-filter>

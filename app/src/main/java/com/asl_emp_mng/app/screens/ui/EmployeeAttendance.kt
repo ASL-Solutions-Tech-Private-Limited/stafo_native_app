@@ -39,11 +39,12 @@ class EmployeeAttendance : AppCompatActivity() {
 
     private fun loadAttendList() {
         attendList = listOf(
-            EmployeeAttendanceModel("Hamid", "09:32:00 AM", "confirm_check_in", "04/02/2025"),
-            EmployeeAttendanceModel("Hamid", "09:10:00 AM", "confirm_check_in", "04/02/2025"),
-            EmployeeAttendanceModel("Hamid", "09:12:00 AM", "confirm_check_in", "04/02/2025"),
-            EmployeeAttendanceModel("Hamid", "09:45:00 AM", "confirm_check_in", "04/02/2025"),
-            EmployeeAttendanceModel("Hamid", "09:22:00 AM", "confirm_check_in", "04/02/2025")
+            EmployeeAttendanceModel("Hamid", "09:32 AM", "confirm_check_in", "04/02/2025",true),
+            EmployeeAttendanceModel("Hamid", "09:10 AM", "confirm_check_in", "04/02/2025",true),
+            EmployeeAttendanceModel("Hamid", "09:12 AM", "confirm_check_in", "04/02/2025",false),
+            EmployeeAttendanceModel("Hamid", "09:45 AM", "confirm_check_in", "04/02/2025",false),
+            EmployeeAttendanceModel("Hamid", "09:22 AM", "confirm_check_in", "04/02/2025",true),
+            EmployeeAttendanceModel("Hamid", "10:22 AM", "confirm_check_in", "04/02/2025",true)
 
 
         )
@@ -63,6 +64,9 @@ class EmployeeAttendance : AppCompatActivity() {
                 rvAdapter.notifyDataSetChanged()
 
             }
+
+            //progressBar.updateProgress(50.0F)
+            progressBar.updateProgress(Random().nextInt(100).toFloat())
 
 
         }

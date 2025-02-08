@@ -51,4 +51,10 @@
     <string-array name="emp_leave">
         <item>History</item>
     </string-array>
+    <string-array name="emp_profile_type">
+        <item>Basic</item>
+        <item>Professional</item>
+        <item>Educational</item>
+        <item>Document &amp; Certificates</item>
+    </string-array>
 </resources>
