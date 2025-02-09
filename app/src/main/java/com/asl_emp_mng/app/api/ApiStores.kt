@@ -1,6 +1,10 @@
 package com.asl_emp_mng.app.api
 
+import com.asl_emp_mng.app.screens.auth.dataClass.BusinessTypeResponse
+import com.asl_emp_mng.app.screens.auth.dataClass.CitiesListResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CompanyTypeResponse
+import com.asl_emp_mng.app.screens.auth.dataClass.CountryListResponse
+import com.asl_emp_mng.app.screens.auth.dataClass.StatesListResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -30,4 +34,19 @@ interface ApiStores {
 
     @GET("api/company-types")
     suspend fun callCompanyType(): Response<CompanyTypeResponse>
+
+    @GET("api/business-types")
+    suspend fun callBusinessType(): Response<BusinessTypeResponse>
+
+    @GET("api/countries")
+    suspend fun callCountryList(): Response<CountryListResponse>
+
+    @GET("api/countries/{country_id}/states")
+    suspend fun callStatesList(@Path("country_id") countryId: String): Response<StatesListResponse>
+
+
+    @GET("api/states/{state_id}/cities")
+    suspend fun callCityList(@Path("state_id") stateId: String): Response<CitiesListResponse>
+
+
 }

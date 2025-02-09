@@ -20,8 +20,8 @@ import com.asl_emp_mng.app.base.model.DashboardType
 import com.asl_emp_mng.app.base.model.PunchInType
 import com.asl_emp_mng.app.databinding.ActivityEmpDashboardBinding
 import com.asl_emp_mng.app.databinding.CustomBottomSheetAttendanceLayoutBinding
-import com.asl_emp_mng.app.screens.profile.EmplyeeyerProfile
 import com.asl_emp_mng.app.screens.ui.EmployeePunchInActivity
+import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog

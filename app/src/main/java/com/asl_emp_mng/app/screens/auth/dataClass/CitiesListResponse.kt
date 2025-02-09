@@ -1,16 +1,17 @@
 package com.asl_emp_mng.app.screens.auth.dataClass
 
-import java.util.ArrayList
-
-data class CompanyTypeResponse(
-    val data: ArrayList<DataCompanyType>?,
+data class CitiesListResponse(
+    val data: ArrayList<DataCity>,
+    val message: String,
     val success: Boolean
 )
 
-data class DataCompanyType(
-    val company_name: String,
+data class DataCity(
     val created_at: String,
     val id: Int,
+    val name: String,
+    val state_id: Int,
     val status: String,
     val updated_at: String
 )
+

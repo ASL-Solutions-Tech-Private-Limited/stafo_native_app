@@ -17,6 +17,12 @@ import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.BaseActivity
 import com.asl_emp_mng.app.databinding.ActivityLoginBinding
 import com.asl_emp_mng.app.databinding.ActivityRegistrationBinding
+import com.asl_emp_mng.app.screens.auth.dataClass.CompanyTypeResponse
+import com.asl_emp_mng.app.screens.auth.dataClass.DataBusinessType
+import com.asl_emp_mng.app.screens.auth.dataClass.DataCity
+import com.asl_emp_mng.app.screens.auth.dataClass.DataCompanyType
+import com.asl_emp_mng.app.screens.auth.dataClass.DataCountry
+import com.asl_emp_mng.app.screens.auth.dataClass.DataStates
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputEditText
@@ -30,58 +36,102 @@ class RegistrationActivity : BaseActivity<ActivityRegistrationBinding, AuthViewM
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
 
     private var mSteps = 1
+    private var mCompanyTypeList: ArrayList<DataCompanyType>? = ArrayList()
+    private var mCountryList: ArrayList<DataCountry>? = ArrayList()
+    private var mStateList: ArrayList<DataStates>? = ArrayList()
+    private var mCityList: ArrayList<DataCity>? = ArrayList()
+
+    private lateinit var companyTypeDialog: SearchableDialog
+    private lateinit var countryDialog: SearchableDialog
+    private lateinit var stateDialog: SearchableDialog
+    private lateinit var cityDialog: SearchableDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewDataBinding?.lifecycleOwner = this
-        viewModel.getLoaderLiveData().observe(this) {
-            if (it.equals("load", ignoreCase = true)) {
-                if (!customLoader.isShowing)
-                    customLoader.show()
-            } else if (it.equals("stop", ignoreCase = true)) {
-                if (customLoader.isShowing)
-                    customLoader.dismiss()
-            }
-        }
         observeViewModel()
         setupProgressBar()
         setupOnClickListener()
     }
 
     private fun observeViewModel() {
+        viewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
         viewModel.getCompanyType(this)
-        viewModel.mCompanyTypeResponse.observe(this, Observer {
+        viewModel.mCompanyTypeResponse.observe(this) {
             if (it.success) {
-
-
+                mCompanyTypeList = it.data
+                viewDataBinding?.let { it1 ->
+                    setupSearchableDialog(
+                        mCompanyTypeList,
+                        "Company Type",
+                        it1.tieCompanyType
+                    )
+                }
             }
-        })
+        }
+
+        viewModel.getCountryList(this)
+        viewModel.mCountryResponse.observe(this) {
+            if (it.success) {
+                mCountryList = it.data
+                viewDataBinding?.let { it1 ->
+                    setupSearchableDialog(
+                        mCountryList,
+                        "Country",
+                        it1.tieSelectCountry
+                    )
+                }
+            }
+        }
+
+        viewModel.mStateResponse.observe(this) {
+            if (it.success) {
+                mStateList = it.data
+                viewDataBinding?.let { it1 ->
+                    setupSearchableDialog(
+                        mStateList,
+                        "State",
+                        it1.tieSelectState
+                    )
+                }
+            }
+        }
+
+        viewModel.mCityResponse.observe(this) {
+            if (it.success) {
+                mCityList = it.data
+                viewDataBinding?.let { it1 ->
+                    setupSearchableDialog(
+                        mCityList,
+                        "City",
+                        it1.tieSelectCity
+                    )
+                }
+            }
+        }
+    }
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
+        }
     }
 
     private fun setupProgressBar() {
-        viewDataBinding?.apply {
-            rpbBasicInfo.setProgress(100f)
-            rpbBasicInfo.setUnfilledColor(
-                ContextCompat.getColor(
-                    this@RegistrationActivity,
-                    R.color.tea_green
-                )
-            )
-            rpbBasicInfo.setFilledColor(
-                ContextCompat.getColor(
-                    this@RegistrationActivity,
-                    R.color.primaryColor
-                )
-            )
+        viewDataBinding?.rpbBasicInfo?.apply {
+            setProgress(100f)
+            setUnfilledColor(ContextCompat.getColor(this@RegistrationActivity, R.color.tea_green))
+            setFilledColor(ContextCompat.getColor(this@RegistrationActivity, R.color.primaryColor))
         }
     }
 
     private fun setupOnClickListener() {
         viewDataBinding?.apply {
             btnNext.setOnClickListener { handleNextButtonClick() }
-
-            // Set up the pickers for documents
             listOf(
                 tieCompanyCertificate to 1101,
                 tieCompanyGstCertificate to 1102,
@@ -92,7 +142,10 @@ class RegistrationActivity : BaseActivity<ActivityRegistrationBinding, AuthViewM
                 view.setOnClickListener { openPicker(requestCode) }
             }
 
-            tieCompanyType.setOnClickListener { showSearchDialog() }
+            tieCompanyType.setOnClickListener { companyTypeDialog.show() }
+            tieSelectCountry.setOnClickListener { countryDialog.show() }
+            tieSelectState.setOnClickListener { validateAndShowStateDialog() }
+            tieSelectCity.setOnClickListener { validateAndShowCityDialog() }
         }
     }
 
@@ -104,7 +157,6 @@ class RegistrationActivity : BaseActivity<ActivityRegistrationBinding, AuthViewM
     }
 
     private fun openPicker(req: Int) {
-        Log.e("TAG", "openPicker: $req")
         ImagePicker.with(this)
             .crop()
             .compress(1024)
@@ -149,49 +201,95 @@ class RegistrationActivity : BaseActivity<ActivityRegistrationBinding, AuthViewM
     }
 
     private fun validateBasicInfo(): Boolean {
-        return validateField(viewDataBinding?.tieCompanyName, "Please enter company name")
-                && validateField(viewDataBinding?.tieCompanyType, "Please enter company type")
-                && validateField(
-            viewDataBinding?.tieCompanyRegNo,
-            "Please enter registration number"
-        )
-                && validateField(viewDataBinding?.tieCompanyGstNo, "Please enter gst number")
-                && validateField(viewDataBinding?.tieCompanyPanNo, "Please enter pan number")
-                && validateField(viewDataBinding?.tieCompanyAddress, "Please enter address")
+        return listOf(
+            viewDataBinding?.tieCompanyName to "Please enter company name",
+            viewDataBinding?.tieCompanyType to "Please enter company type",
+            viewDataBinding?.tieCompanyRegNo to "Please enter registration number",
+            viewDataBinding?.tieCompanyGstNo to "Please enter gst number",
+            viewDataBinding?.tieCompanyPanNo to "Please enter pan number",
+            viewDataBinding?.tieCompanyAddress to "Please enter address"
+        ).all { validateField(it.first, it.second) }
     }
 
     private fun isValidOwnerInfo(): Boolean {
-        return validateField(viewDataBinding?.tieOwnerName, "Please enter owner name")
-                && validateField(viewDataBinding?.tieOwnerMobileNo, "Please enter mobile")
-                && validateField(viewDataBinding?.tieOwnerEmail, "Please enter email")
-                && validateField(viewDataBinding?.tieOwnerAadhar, "Please enter aadhaar no")
-                && validateField(viewDataBinding?.tieOwnerPan, "Please enter pan no")
-                && validateField(viewDataBinding?.tieOwnerAddress, "Please enter address")
+        return listOf(
+            viewDataBinding?.tieOwnerName to "Please enter owner name",
+            viewDataBinding?.tieOwnerMobileNo to "Please enter mobile",
+            viewDataBinding?.tieOwnerEmail to "Please enter email",
+            viewDataBinding?.tieOwnerAadhar to "Please enter aadhaar no",
+            viewDataBinding?.tieOwnerPan to "Please enter pan no",
+            viewDataBinding?.tieOwnerAddress to "Please enter address"
+        ).all { validateField(it.first, it.second) }
     }
 
     private fun validateField(view: TextInputEditText?, errorMsg: String): Boolean {
-        if (view?.text.isNullOrEmpty()) {
+        return if (view?.text.isNullOrEmpty()) {
             view?.error = errorMsg
             view?.requestFocus()
-            return false
+            false
+        } else {
+            true
         }
-        return true
     }
 
-    private fun showSearchDialog() {
-        val companyTypes =
-            resources.getStringArray(R.array.company_type_items).mapIndexed { index, title ->
-                SearchListItem(index, title)
+    private fun setupSearchableDialog(
+        dataList: List<Any>?,
+        title: String,
+        field: TextInputEditText
+    ) {
+        val items = dataList?.map {
+            val name = when (it) {
+                is DataCompanyType -> it.company_name
+                is DataCountry -> it.name
+                is DataStates -> it.name
+                is DataCity -> it.name
+                else -> 0
             }
-        val searchableDialog =
-            SearchableDialog(this, companyTypes as ArrayList<SearchListItem>, "Search")
-        searchableDialog.setOnItemSelected(object : OnSearchItemSelected {
+            SearchListItem(it, name)
+        } ?: emptyList()
+
+        val dialog = SearchableDialog(this, items as ArrayList<SearchListItem>, title)
+        dialog.setOnItemSelected(object : OnSearchItemSelected {
             override fun onClick(position: Int, searchListItem: SearchListItem) {
-                viewDataBinding?.tieCompanyType?.setText(searchListItem.title)
-                searchableDialog.dismiss()
+                field.setText(searchListItem.title)
+                dialog.dismiss()
+
+                // Handle special cases for country and state selection
+                when (field) {
+                    viewDataBinding?.tieSelectCountry -> viewModel.getStateList(
+                        this@RegistrationActivity,
+                        searchListItem.id.toString()
+                    )
+
+                    viewDataBinding?.tieSelectState -> viewModel.getCityList(
+                        this@RegistrationActivity,
+                        searchListItem.id.toString()
+                    )
+                }
             }
         })
-        searchableDialog.show()
+        when (title) {
+            "Company Type" -> companyTypeDialog = dialog
+            "Country" -> countryDialog = dialog
+            "State" -> stateDialog = dialog
+            "City" -> cityDialog = dialog
+        }
+    }
+
+    private fun validateAndShowStateDialog() {
+        if (viewDataBinding?.tieSelectCountry?.text.isNullOrEmpty()) {
+            Toast.makeText(this, "Please select country first", Toast.LENGTH_SHORT).show()
+        } else {
+            stateDialog.show()
+        }
+    }
+
+    private fun validateAndShowCityDialog() {
+        if (viewDataBinding?.tieSelectState?.text.isNullOrEmpty()) {
+            Toast.makeText(this, "Please select state first", Toast.LENGTH_SHORT).show()
+        } else {
+            cityDialog.show()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -217,3 +315,4 @@ class RegistrationActivity : BaseActivity<ActivityRegistrationBinding, AuthViewM
         }
     }
 }
+
