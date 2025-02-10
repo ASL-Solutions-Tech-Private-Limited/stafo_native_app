@@ -95,9 +95,27 @@ class AddEmployeeActivity : AppCompatActivity() {
 
             btnNext.setOnClickListener {
                 if (mSteps == 1) {
+                    if (validateBasicInfo()) {
+                        mSteps++
+                        btnSkip.visibility=View.VISIBLE
+                        switchScreen(1)
+                    }
+                } else if (mSteps == 2) {
 
                     mSteps++
-                    switchScreen(1)
+                    switchScreen(2)
+
+                } else if (mSteps == 3) {
+                    mSteps++
+                    btnSkip.visibility=View.GONE
+                    btnNext.text="Submit"
+                    switchScreen(3)
+
+                }
+            }
+
+            btnSkip.setOnClickListener {
+                if (mSteps == 1) {
                     if (validateBasicInfo()) {
                         mSteps++
                         switchScreen(1)
@@ -108,8 +126,9 @@ class AddEmployeeActivity : AppCompatActivity() {
                     switchScreen(2)
 
                 } else if (mSteps == 3) {
-
                     mSteps++
+                    btnSkip.visibility=View.GONE
+                    btnNext.text="Submit"
                     switchScreen(3)
 
                 }
@@ -130,7 +149,7 @@ class AddEmployeeActivity : AppCompatActivity() {
                 tieStaffName.error = "Please enter staff name"
                 tieStaffName.requestFocus()
                 return false
-            } else if (tieJobTitle.text.isNullOrEmpty()) {
+            } /*else if (tieJobTitle.text.isNullOrEmpty()) {
                 tieJobTitle.error = "Please enter job title"
                 return false
             } else if (tieBranch.text.isNullOrEmpty()) {
@@ -141,7 +160,7 @@ class AddEmployeeActivity : AppCompatActivity() {
                 tieDepartment.error = "Please enter department"
                 tieDepartment.requestFocus()
                 return false
-            } else if (tieMobileNo.text.isNullOrEmpty()) {
+            } */else if (tieMobileNo.text.isNullOrEmpty()) {
                 tieMobileNo.error = "Please enter mobile number"
                 tieMobileNo.requestFocus()
                 return false

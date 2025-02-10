@@ -162,7 +162,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/btn_next"
+            android:layout_above="@id/layout_btn"
             android:layout_below="@+id/ll_progresslayout">
 
             <RelativeLayout
@@ -1077,20 +1077,47 @@
         </ScrollView>
 
 
-        <Button
-            android:id="@+id/btn_next"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_alignParentBottom="true"
-            android:layout_margin="@dimen/_12sdp"
-            android:layout_weight="1"
-            android:background="@drawable/button_background"
-            android:backgroundTint="@color/colorTextPrimary"
-            android:fontFamily="@font/gilroy_semi_bold"
-            android:text="Next"
-            android:textAllCaps="false"
-            android:textColor="@color/colorButtonText"
-            android:textSize="16dp" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:id="@+id/layout_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_skip"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_margin="@dimen/_12sdp"
+                android:layout_weight="1"
+                android:background="@drawable/skip_button_bg"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="Skip"
+                android:visibility="gone"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="16dp" />
+
+            <Button
+                android:id="@+id/btn_next"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_margin="@dimen/_12sdp"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:backgroundTint="@color/colorTextPrimary"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="Next"
+                android:textAllCaps="false"
+                android:textColor="@color/colorButtonText"
+                android:textSize="16dp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

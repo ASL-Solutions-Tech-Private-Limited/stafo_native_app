@@ -97,6 +97,11 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_mobile_sign_up.xml">
+        <config>
+          <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_on_boarding.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
@@ -118,6 +123,11 @@
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_set_attendance.xml">
+        <config>
+          <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_sign_up.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
         </config>
@@ -279,72 +289,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1eeb3fca-a4a9-48ce-a4f9-f3fda60e9524" name="Changes" comment="Update Add Staff API">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/api/ApiClient.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/api/ApiStores.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/AuthViewModel.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/LoginActivity.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/RegistrationActivity.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/BusinessTypeResponse.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/CitiesListResponse.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/CompanyTypeResponse.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/CountryListResponse.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/StatesListResponse.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/utils/CustomLoader.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/attendance_placeholder.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/birthday_placeholder.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/leave_placeholder.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/dialog_progress.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/ASLEmpMng.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/ASLEmpMng.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/BaseViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/BaseViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/notification/NotificationsHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/notification/NotificationsHelper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/AddBranchActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddBranchActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/AddEmployeeActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddEmployeeActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/AddShiftActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddShiftActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/AppIntro.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/utils/AppIntro.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/CreateLeavePolicyActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/CreateLeavePolicyActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/EmpLeaveActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/EmpLeaveActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/EmployeeAttendance.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/EmployeeAttendance.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/EmployeeLeaveHistoryActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/EmployeeLeaveHistoryActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/EmployeePunchInActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/EmployeePunchInActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/LeaveManagementActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/LeaveManagementActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/LoginActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/LoginActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/OnBoardingActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/OnBoardingActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/OtpVerifyActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/OtpVerifyActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/RegistrationActivity.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/SplashActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/SplashActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/AccountSettingsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AccountSettingsActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/EmployeeDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployeeDashboard.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/EmployerDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployerDashboard.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/EmplyeeyerProfile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/profile/EmplyeeyerProfile.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_account_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_account_settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_add_branch.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_add_branch.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_add_employee.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_add_employee.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_add_shift.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_add_shift.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_create_leave_policy.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_create_leave_policy.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_emp_dashboard.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_emp_dashboard.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_emp_leave.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_emp_leave.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_leave_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_leave_history.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_punch_in.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_punch_in.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_employer_dashboard.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_employer_dashboard.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_emplyeeyer_profile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_emplyeeyer_profile.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_leave_management.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_leave_management.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_otp_verify.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_otp_verify.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_registration.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_registration.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/app_bar_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/app_bar_main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/navigation/nav_graph.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/navigation/nav_graph.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/xml/network_security_config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/xml/network_security_config.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/api/ApiStores.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/api/ApiStores.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/AuthViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/AuthViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/LoginActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/LoginActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/OtpVerifyActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/OtpVerifyActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/LoginResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/LoginResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddEmployeeActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddEmployeeActivity.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -423,7 +383,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="emp_attendance" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -526,11 +486,11 @@
       <recent name="com.softmint_pro.app.screens.report.user" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.asl_emp_mng.app.base.request" />
       <recent name="com.softmint_upi.app.screens.account.bank" />
       <recent name="com.softmint_upi.app.screens.auth" />
       <recent name="com.softmint_pro.app.screens.qrCodeAgentOnboard.screens" />
       <recent name="com.softmint_pro.app.screens.report.adapters" />
-      <recent name="com.softmint_pro.app.screens.aeps.model.aeps.cw" />
     </key>
     <key name="android.template.-1940949072">
       <recent name="com.softmint_pro.app.screens.report" />
@@ -546,6 +506,9 @@
     </key>
     <key name="android.template.-838999855">
       <recent name="com.softmint_upi.app.screens.history.tabs" />
+    </key>
+    <key name="android.template.-321272910">
+      <recent name="com.asl_emp_mng.app.screens.auth" />
     </key>
     <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
       <recent name="com.asl_emp_mng.app.utils" />

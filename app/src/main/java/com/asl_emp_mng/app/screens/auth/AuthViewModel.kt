@@ -1,7 +1,6 @@
 package com.asl_emp_mng.app.screens.auth
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,16 +10,20 @@ import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.BaseViewModel
 import com.asl_emp_mng.app.base.model.CompanyInfo
 import com.asl_emp_mng.app.base.model.ErrorResponse
+import com.asl_emp_mng.app.base.request.OtpRequestBody
 import com.asl_emp_mng.app.base.model.OwnerInfo
 import com.asl_emp_mng.app.base.request.AddBranchRequest
 import com.asl_emp_mng.app.base.request.RegisterRequest
+import com.asl_emp_mng.app.base.request.VerifyOtpRequestBody
 import com.asl_emp_mng.app.screens.auth.dataClass.BusinessTypeResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CitiesListResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CompanyTypeResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CountryListResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.LoginResponse
+import com.asl_emp_mng.app.screens.auth.dataClass.OtpResponse
+import com.asl_emp_mng.app.screens.auth.dataClass.OtpVerifyResponse
+import com.asl_emp_mng.app.screens.auth.dataClass.RegisterResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.StatesListResponse
-import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
 import com.asl_emp_mng.app.utils.CustomToast
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +50,83 @@ class AuthViewModel() : BaseViewModel() {
     val mBusinessTypeResponse: LiveData<BusinessTypeResponse> get() = mBusinessType
 
     private var mLogin: MutableLiveData<LoginResponse> = MutableLiveData()
+
     val mLoginResponse: LiveData<LoginResponse> get() = mLogin
+
+    private var mRegister: MutableLiveData<RegisterResponse> = MutableLiveData()
+    val mRegisterResponse: LiveData<RegisterResponse> get() = mRegister
+    private var mOtp: MutableLiveData<OtpResponse> = MutableLiveData()
+    val mOtpResponse: LiveData<OtpResponse> get() = mOtp
+
+    private var mVerifyOtp: MutableLiveData<OtpVerifyResponse> = MutableLiveData()
+    val mVerifyOtpResponse: LiveData<OtpVerifyResponse> get() = mVerifyOtp
+
+
+
+    fun verifyOTP(mContext: Context, mobileNumber: String,otp:String) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val request = VerifyOtpRequestBody(mobile_number = mobileNumber, otp = otp)
+                val response = ASLEmpMng.instance.apiStores()?.verifyUserOtp(request)
+
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    if (response != null && response.isSuccessful) {
+                        mVerifyOtp.postValue(response.body())
+                    } else {
+                        val errorBody = response?.errorBody()?.string()
+                        errorBody?.let { errorJson ->
+                            val error = Gson().fromJson(errorJson, ErrorResponse::class.java)
+                            CustomToast(mContext, error?.message ?: "Unknown error")
+                        } ?: run {
+                            CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    Log.e("EXCEPTION", "Error: ${e.localizedMessage}")
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun sendOTP(mContext: Context, mobileNumber: String) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val request = OtpRequestBody(mobile_number = mobileNumber)
+                val response = ASLEmpMng.instance.apiStores()?.sendOtp(request)
+
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    if (response != null && response.isSuccessful) {
+                        mOtp.postValue(response.body())
+                    } else {
+                        val errorBody = response?.errorBody()?.string()
+                        errorBody?.let { errorJson ->
+                            val error = Gson().fromJson(errorJson, ErrorResponse::class.java)
+                            CustomToast(mContext, error?.message ?: "Unknown error")
+                        } ?: run {
+                            CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    Log.e("EXCEPTION", "Error: ${e.localizedMessage}")
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
 
     fun getCompanyType(mContext: Context) {
         getLoaderLiveData().value = "load"
@@ -134,6 +213,8 @@ class AuthViewModel() : BaseViewModel() {
         }
     }
 
+
+
     fun registerUser(mContext: Context, companyInfo: CompanyInfo, ownerInfo: OwnerInfo) {
         getLoaderLiveData().value = "load"
 
@@ -148,12 +229,9 @@ class AuthViewModel() : BaseViewModel() {
 
                     if (response != null) {
                         if (response.isSuccessful) {
-                            Log.d("API_SUCCESS", "Response: ${response.body()}")
-                            mContext.startActivity(Intent(mContext, EmployerDashboard::class.java))
+                            mRegister.postValue(response.body())
                         } else {
                             val errorBody = response.errorBody()?.string()
-                            Log.e("API_ERROR", "Error Body: $errorBody")
-
                             errorBody?.let { errorJson ->
                                 val error = Gson().fromJson(errorJson, ErrorResponse::class.java)
                                 CustomToast(mContext, error?.message ?: "Unknown error")

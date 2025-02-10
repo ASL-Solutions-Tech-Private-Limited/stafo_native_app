@@ -28,6 +28,8 @@ import com.asl_emp_mng.app.utils.CustomToast
 
 class OtpVerifyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOtpVerifyBinding
+    private lateinit var mobile: String
+    private lateinit var otp: String
 
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
@@ -44,6 +46,7 @@ class OtpVerifyActivity : AppCompatActivity() {
         }
 
         onClickListener()
+        observeViewModel()
     }
 
     private fun addTextWatcher(editText: EditText) {
@@ -95,6 +98,9 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun onClickListener() {
 
+        mobile=intent.extras?.getString("mobile") ?: ""
+        otp=intent.extras?.getString("otp") ?: ""
+
         val editTexts = listOf(
             binding.otpEditText1,
             binding.otpEditText2,
@@ -120,15 +126,15 @@ class OtpVerifyActivity : AppCompatActivity() {
             btnOtpVerify.setOnClickListener {
                 if (isValidate()) {
 
-                    String
-
                     val userOTP = binding.otpEditText1.text.toString()
                         .trim() + binding.otpEditText2.text.toString()
                         .trim() + binding.otpEditText3.text.toString()
                         .trim() + binding.otpEditText4.text.toString()
 
+                    authViewModel.verifyOTP(this@OtpVerifyActivity,mobile,otp)
+                    Log.d("otp","OtpVerifyActivity : $otp")
 
-                    verifyUserOtp(userOTP)
+
 
                 } else {
                     Toast.makeText(
@@ -157,8 +163,8 @@ class OtpVerifyActivity : AppCompatActivity() {
     private fun observeViewModel() {
 
         authViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-        val companyInfo = intent.getSerializableExtra("companyInfo") as? CompanyInfo
-        val ownerInfo = intent.getSerializableExtra("ownerInfo") as? OwnerInfo
+
+
 
       /*  val companyInfo = CompanyInfo(
             company_name = "ABCrt23",
@@ -186,14 +192,16 @@ class OtpVerifyActivity : AppCompatActivity() {
 
         )*/
 
-
-
-
-
-
-        if (companyInfo != null && ownerInfo !=null) {
-            authViewModel.registerUser(this, companyInfo, ownerInfo)
+        authViewModel.mVerifyOtpResponse.observe(this) {
+            if (it.success) {
+                startActivity(Intent(this@OtpVerifyActivity, SignUpActivity::class.java))
+            } else {
+                CustomToast(this, it.message)
+            }
         }
+
+
+
 
 
     }
@@ -238,13 +246,7 @@ class OtpVerifyActivity : AppCompatActivity() {
         return true
     }
 
-    private fun verifyUserOtp(otp: String) {
 
-
-        observeViewModel()
-
-
-    }
 
     private fun startTimer() {
         object : CountDownTimer(30000, 1000) {

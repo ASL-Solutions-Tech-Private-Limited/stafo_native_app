@@ -28,7 +28,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, AuthViewModel>() {
     private fun onClickListeners() {
         viewDataBinding?.apply {
             tvRegisterNow.setOnClickListener {
-                startActivity(Intent(this@LoginActivity, RegistrationActivity::class.java))
+                startActivity(Intent(this@LoginActivity, MobileSignUp::class.java))
             }
             btnSignIn.setOnClickListener {
                 if (isValidFields()) {

@@ -1,20 +1,22 @@
 package com.asl_emp_mng.app.api
 
+import com.asl_emp_mng.app.base.request.OtpRequestBody
 import com.asl_emp_mng.app.base.request.AddBranchRequest
 import com.asl_emp_mng.app.base.request.RegisterRequest
+import com.asl_emp_mng.app.base.request.VerifyOtpRequestBody
 import com.asl_emp_mng.app.screens.auth.dataClass.AddBranchResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.BusinessTypeResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CitiesListResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CompanyTypeResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CountryListResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.LoginResponse
+import com.asl_emp_mng.app.screens.auth.dataClass.OtpResponse
+import com.asl_emp_mng.app.screens.auth.dataClass.OtpVerifyResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.RegisterResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.StatesListResponse
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.HeaderMap
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -56,7 +58,11 @@ interface ApiStores {
     suspend fun callCreateBranch(@Body addBranchRequest: AddBranchRequest): Response<AddBranchResponse>
     @POST("api/register")
     suspend fun registerUser(@Body request: RegisterRequest): Response<RegisterResponse>
+    @POST("api/send-otp")
+    suspend fun sendOtp(@Body request: OtpRequestBody): Response<OtpResponse>
 
+    @POST("api/verify-otp")
+    suspend fun verifyUserOtp(@Body request: VerifyOtpRequestBody): Response<OtpVerifyResponse>
     @POST("api/login")
     suspend fun userLogin(
         @Query("email") email: String,
