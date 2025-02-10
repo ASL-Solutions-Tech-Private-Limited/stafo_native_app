@@ -23,7 +23,7 @@
         android:textSize="@dimen/_12sdp" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_set_attandan_settings"
+        android:id="@+id/tv_set_attendance_settings"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_44sdp"
         android:layout_marginStart="@dimen/_12sdp"

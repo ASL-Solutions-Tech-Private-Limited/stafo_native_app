@@ -81,7 +81,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
             tvHeaderViewProfile.setOnClickListener {
                 val intent = Intent(this@EmployeeDashboard, EmplyeeyerProfile::class.java)
-                intent.putExtra("DASHBOARD_TYPE", DashboardType.EMPLOYEE.name)
+                intent.putExtra("DASHBOARD_TYPE", DashboardType.COMPANY.name)
                 startActivity(intent)
             }
 

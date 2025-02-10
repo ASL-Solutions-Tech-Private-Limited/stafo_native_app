@@ -19,6 +19,7 @@ import com.asl_emp_mng.app.screens.EmpProfileActivity
 import com.asl_emp_mng.app.screens.EmployeeAttendance
 import com.asl_emp_mng.app.screens.EmployeePunchInActivity
 import com.asl_emp_mng.app.screens.LeaveManagementActivity
+import com.asl_emp_mng.app.screens.SetAttendanceActivity
 
 class EmplyeeyerProfile : AppCompatActivity() {
 
@@ -66,8 +67,14 @@ class EmplyeeyerProfile : AppCompatActivity() {
             binding.expandableAttandancenManagement.toggleLayout()
         }
 
-        val branchSettings =
-            binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_branch_settings)
+        val setAttendance = binding?.expandableAttandancenManagement?.findViewById<AppCompatTextView>(R.id.tv_set_attendance_settings)
+
+        setAttendance?.setOnClickListener {
+            startActivity(Intent(this, SetAttendanceActivity::class.java))
+        }
+
+
+        val branchSettings = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_branch_settings)
 
         branchSettings?.setOnClickListener {
 

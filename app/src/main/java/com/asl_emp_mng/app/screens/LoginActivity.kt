@@ -7,6 +7,7 @@ import com.asl_emp_mng.app.base.BaseActivity
 import com.asl_emp_mng.app.databinding.ActivityLoginBinding
 import com.asl_emp_mng.app.screens.ui.EmployeeDashboard
 import com.asl_emp_mng.app.screens.ui.EmployerDashboard
+import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.utils.CommonViewModel
 
 class LoginActivity : BaseActivity<ActivityLoginBinding, CommonViewModel>() {

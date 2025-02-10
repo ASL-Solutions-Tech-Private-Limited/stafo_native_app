@@ -44,6 +44,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".screens.SetAttendanceActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.EmpProfileActivity"
             android:exported="false" />
         <activity
