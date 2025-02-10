@@ -2,13 +2,10 @@ package com.asl_emp_mng.app.screens.auth
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.BaseActivity
 import com.asl_emp_mng.app.databinding.ActivityLoginBinding
-import com.asl_emp_mng.app.screens.dashboard.EmployeeDashboard
 import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
-import com.asl_emp_mng.app.utils.CommonViewModel
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 
@@ -24,6 +21,28 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, AuthViewModel>() {
 
         viewDataBinding?.lifecycleOwner = this
         obversers()
+
+        onClickListeners()
+    }
+
+    private fun onClickListeners() {
+        viewDataBinding?.apply {
+            tvRegisterNow.setOnClickListener {
+                startActivity(Intent(this@LoginActivity, RegistrationActivity::class.java))
+            }
+            btnSignIn.setOnClickListener {
+                if (isValidFields()) {
+                    viewModel.getLoaderLiveData().observe(this@LoginActivity) { handleLoader(it) }
+
+                    viewModel.userLogin(
+                        this@LoginActivity,
+                        userNumber.text.toString(),
+                        userPassword.text.toString()
+                    )
+                }
+                //startActivity(Intent(this@LoginActivity, EmployeeDashboard::class.java))
+            }
+        }
     }
 
     private fun obversers() {
@@ -37,19 +56,14 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, AuthViewModel>() {
             }
         }
 
-        viewDataBinding?.apply {
-            tvRegisterNow.setOnClickListener {
-                startActivity(Intent(this@LoginActivity, RegistrationActivity::class.java))
-            }
-            btnSignIn.setOnClickListener {
-                if (isValidFields()) {
-                    viewModel.getLoaderLiveData().observe(this@LoginActivity) { handleLoader(it) }
-
-                    viewModel.userLogin(this@LoginActivity,userNumber.text.toString(),userPassword.text.toString())
-                }
-                //startActivity(Intent(this@LoginActivity, EmployeeDashboard::class.java))
+        viewModel.mLoginResponse.observe(this) {
+            if (it.success) {
+                startActivity(Intent(this@LoginActivity, EmployerDashboard::class.java))
+            } else {
+                CustomToast(this, it.message)
             }
         }
+
     }
 
     private fun handleLoader(status: String) {

@@ -3,12 +3,12 @@ package com.asl_emp_mng.app.screens.auth
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.asl_emp_mng.app.base.BaseViewModel
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.asl_emp_mng.app.ASLEmpMng
 import com.asl_emp_mng.app.R
+import com.asl_emp_mng.app.base.BaseViewModel
 import com.asl_emp_mng.app.base.model.CompanyInfo
 import com.asl_emp_mng.app.base.model.ErrorResponse
 import com.asl_emp_mng.app.base.model.OwnerInfo
@@ -18,6 +18,7 @@ import com.asl_emp_mng.app.screens.auth.dataClass.BusinessTypeResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CitiesListResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CompanyTypeResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CountryListResponse
+import com.asl_emp_mng.app.screens.auth.dataClass.LoginResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.StatesListResponse
 import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
 import com.asl_emp_mng.app.utils.CustomToast
@@ -44,6 +45,9 @@ class AuthViewModel() : BaseViewModel() {
 
     private var mBusinessType: MutableLiveData<BusinessTypeResponse> = MutableLiveData()
     val mBusinessTypeResponse: LiveData<BusinessTypeResponse> get() = mBusinessType
+
+    private var mLogin: MutableLiveData<LoginResponse> = MutableLiveData()
+    val mLoginResponse: LiveData<LoginResponse> get() = mLogin
 
     fun getCompanyType(mContext: Context) {
         getLoaderLiveData().value = "load"
@@ -178,7 +182,6 @@ class AuthViewModel() : BaseViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                Log.d("API_SUCCESS", "post  login : $email $password")
                 val response = ASLEmpMng.instance.apiStores()?.userLogin(email = email, password = password)
 
                 withContext(Dispatchers.Main) {
@@ -186,12 +189,9 @@ class AuthViewModel() : BaseViewModel() {
 
                     if (response != null) {
                         if (response.isSuccessful) {
-                            Log.d("API_SUCCESS", "Response login : ${response.body()}")
-                            mContext.startActivity(Intent(mContext, EmployerDashboard::class.java))
+                            mLogin.postValue(response.body())
                         } else {
                             val errorBody = response.errorBody()?.string()
-                            Log.e("API_ERROR", "Error Body: $errorBody")
-
                             errorBody?.let { errorJson ->
                                 val error = Gson().fromJson(errorJson, ErrorResponse::class.java)
                                 CustomToast(mContext, error?.message ?: "Unknown error")
@@ -200,7 +200,6 @@ class AuthViewModel() : BaseViewModel() {
                             }
                         }
                     } else {
-                        Log.e("API_ERROR", "Response is null")
                         CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
                     }
                 }
