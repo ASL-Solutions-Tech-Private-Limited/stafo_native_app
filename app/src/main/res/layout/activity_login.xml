@@ -12,7 +12,7 @@
         android:background="@drawable/gradient_header"
         android:orientation="vertical"
         android:weightSum="4"
-        tools:context=".screens.LoginActivity">
+        tools:context=".screens.auth.LoginActivity">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -72,6 +72,7 @@
                 android:orientation="vertical">
 
                 <EditText
+                    android:id="@+id/user_number"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:layout_marginLeft="48dp"
@@ -80,15 +81,15 @@
                     android:drawableEnd="@drawable/ic_user"
                     android:drawableTint="@color/black"
                     android:fontFamily="@font/gilroy_semi_bold"
-                    android:hint="973000000"
+                    android:hint="email"
                     android:inputType="textEmailAddress"
-                    android:maxLength="10"
                     android:paddingLeft="26dp"
                     android:paddingRight="26dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/colorPlaceholder" />
 
                 <EditText
+                    android:id="@+id/user_password"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:layout_marginLeft="48dp"
@@ -106,6 +107,7 @@
                     android:textColorHint="@color/colorPlaceholder" />
 
                 <CheckBox
+                    android:id="@+id/cb_remember_me"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="48dp"
@@ -126,6 +128,7 @@
                     android:weightSum="2">
 
                     <TextView
+                        android:id="@+id/tv_need_help"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
@@ -136,6 +139,7 @@
                         android:textSize="18dp" />
 
                     <Button
+                        android:id="@+id/btn_sign_in"
                         android:layout_width="0dp"
                         android:layout_height="52dp"
                         android:layout_weight="1"
@@ -143,7 +147,7 @@
                         android:backgroundTint="@color/colorTextPrimary"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="Sign In"
-                        android:id="@+id/btn_sign_in"
+                        android:alpha=".3"
                         android:textAllCaps="false"
                         android:textColor="@color/colorButtonText"
                         android:textSize="16dp" />
@@ -168,10 +172,10 @@
                     android:textSize="18dp" />
 
                 <TextView
+                    android:id="@+id/tv_register_now"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
-                    android:id="@+id/tv_register_now"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:text="Register instead"
                     android:textColor="@color/colorTextPrimary"
