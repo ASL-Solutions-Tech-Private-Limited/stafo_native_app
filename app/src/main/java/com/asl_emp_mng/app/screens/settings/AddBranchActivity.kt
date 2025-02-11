@@ -10,6 +10,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -19,13 +20,16 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.asl_emp_mng.app.databinding.ActivityAddBranchBinding
 import com.asl_emp_mng.app.screens.auth.AuthViewModel
+import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
 import com.asl_emp_mng.app.screens.ui.PlaceSearchActivity
 import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.CustomToast
 import java.util.Locale
 
 class AddBranchActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivityAddBranchBinding
+    private lateinit var binding: ActivityAddBranchBinding
+    private var token: String? = null
 
     private lateinit var locationManager: LocationManager
     private var currentLocation: Location? = null
@@ -37,13 +41,13 @@ class AddBranchActivity : AppCompatActivity() {
 
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
-    private val authViewModel: AuthViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding=ActivityAddBranchBinding.inflate(layoutInflater)
+        binding = ActivityAddBranchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -51,17 +55,32 @@ class AddBranchActivity : AppCompatActivity() {
             insets
         }
 
+        token = getToken(this, "token")
+
         onClickListener()
 
+        Log.d("res", "token 2: $token")
 
+        observeViewModel()
+
+
+    }
+
+    private fun getToken(context: Context, key: String): String? {
+        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        return sharedPref.getString(key, null)
     }
 
     private fun observeViewModel() {
 
 
-        authViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
-        authViewModel.createBranch(this, latitude.toString(),longitude.toString())
+        settingsViewModel.mCreateBranchResponse.observe(this) {
+            CustomToast(this, it.message)
+            onBackPressedDispatcher.onBackPressed()
+        }
+
 
     }
 
@@ -175,15 +194,19 @@ class AddBranchActivity : AppCompatActivity() {
 
 
             btnAddBranch.setOnClickListener {
-              if (isValidate()){
-                  observeViewModel()
-              }
+                if (isValidate()) {
+                    token?.let {
+                        settingsViewModel.createBranch(
+                            this@AddBranchActivity,
+                            it, latitude.toString(), longitude.toString()
+                        )
+                    }
+                }
             }
 
             tieBranchAddress.setOnClickListener {
                 getLocation()
             }
-
 
 
         }
@@ -208,11 +231,11 @@ class AddBranchActivity : AppCompatActivity() {
                 tieBranchName.error = "Please enter branch name"
                 tieBranchName.requestFocus()
                 return false
-            } else if (tieBranchAddress.text.isNullOrEmpty()){
+            } else if (tieBranchAddress.text.isNullOrEmpty()) {
                 tieBranchAddress.error = "Please enter branch address"
                 tieBranchAddress.requestFocus()
                 return false
-            } else if (tieBranchRadius.text.isNullOrEmpty()){
+            } else if (tieBranchRadius.text.isNullOrEmpty()) {
                 tieBranchRadius.error = "Please enter radius"
                 tieBranchRadius.requestFocus()
                 return false

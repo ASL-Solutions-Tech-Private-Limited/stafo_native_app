@@ -1,16 +1,40 @@
 package com.asl_emp_mng.app.screens.settings
 
 import android.app.DatePickerDialog
+import android.content.Context
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.ajithvgiri.searchdialog.OnSearchItemSelected
+import com.ajithvgiri.searchdialog.SearchListItem
+import com.ajithvgiri.searchdialog.SearchableDialog
 import com.asl_emp_mng.app.R
+import com.asl_emp_mng.app.base.request.AddBranchRequest
 import com.asl_emp_mng.app.databinding.ActivityAddEmployeeBinding
+import com.asl_emp_mng.app.screens.auth.dataClass.DataBusinessType
+import com.asl_emp_mng.app.screens.auth.dataClass.DataCity
+import com.asl_emp_mng.app.screens.auth.dataClass.DataCompanyType
+import com.asl_emp_mng.app.screens.auth.dataClass.DataCountry
+import com.asl_emp_mng.app.screens.auth.dataClass.DataStates
+import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
+import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpRequestBody
+import com.asl_emp_mng.app.screens.settings.dataClass.BranchListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.DataBranch
+import com.asl_emp_mng.app.screens.settings.dataClass.DataDepartment
+import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
+import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.CustomToast
+import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -20,6 +44,19 @@ class AddEmployeeActivity : AppCompatActivity() {
     private val calendar = Calendar.getInstance()
     private var mSteps = 1
     private lateinit var selectGender: String
+    private lateinit var selectJobTitle: String
+    private var selectBranch: Int = 1
+    private var selectDepartment: Int = 1
+    private var token: String? = null
+
+    private lateinit var branchDialog: SearchableDialog
+    private lateinit var departmentDialog: SearchableDialog
+
+    private val customLoader: CustomLoader by lazy { CustomLoader(this) }
+    private val settingsViewModel: SettingsViewModel by viewModels()
+
+    private var mDepartmentList: ArrayList<DataDepartment>? = ArrayList()
+    private var mBranchList: ArrayList<DataBranch>? = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -34,19 +71,154 @@ class AddEmployeeActivity : AppCompatActivity() {
 
         binding?.apply {
             rpbBasicInfo.setProgress(100f)
-
-            // Customize colors
             rpbBasicInfo.setUnfilledColor(resources.getColor(R.color.tea_green))
             rpbBasicInfo.setFilledColor(resources.getColor(R.color.primaryColor))
         }
 
+        token = getToken(this, "token")
+
 
         onClickListener()
+        observeViewModel()
 
+    }
+
+    private fun getToken(context: Context, key: String): String? {
+        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        return sharedPref.getString(key, null)
+    }
+
+    private fun observeViewModel() {
+
+
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+        token?.let {
+
+            settingsViewModel.getBranchList(this, it)
+
+        }
+
+
+
+        settingsViewModel.mBranchListResponse.observe(this) {
+            mBranchList = it.data
+            binding?.let { it1 ->
+                setupSearchableDialog(
+                    mBranchList,
+                    "Branch",
+                    it1.tieBranch
+                )
+            }
+        }
+
+
+
+        token?.let {
+
+            settingsViewModel.getDepartmentList(this, it)
+
+        }
+        settingsViewModel.mDepartmentListResponse.observe(this) {
+            mDepartmentList = it.data
+            binding?.let { it1 ->
+                setupSearchableDialog(
+                    mDepartmentList,
+                    "Department",
+                    it1.tieDepartment
+                )
+            }
+        }
+
+        settingsViewModel.mAddEmpResponse.observe(this) {
+
+            if (it.status) {
+                CustomToast(this, it.message)
+                onBackPressedDispatcher.onBackPressed()
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
+
+
+    }
+
+    private fun setupSearchableDialog(
+        dataList: List<Any>?,
+        title: String,
+        field: TextInputEditText
+    ) {
+        val items = dataList?.map {
+            val name = when (it) {
+                is DataBranch -> it.branch_name
+                is DataDepartment -> it.name
+                else -> "Unknown"
+            }
+
+            val id = when (it) {
+                is DataBranch -> it.id
+                is DataDepartment -> it.id
+                else -> -1
+            }
+
+            SearchListItem(id, name)
+        } ?: emptyList()
+
+        val dialog = SearchableDialog(this, items as ArrayList<SearchListItem>, title)
+        dialog.setOnItemSelected(object : OnSearchItemSelected {
+            override fun onClick(position: Int, searchListItem: SearchListItem) {
+                field.setText(searchListItem.title)
+                if (title == "Branch") {
+                    selectBranch = searchListItem.id
+                } else if (title == "Department") {
+                    selectDepartment = searchListItem.id
+                }
+
+                dialog.dismiss()
+
+
+            }
+        })
+        when (title) {
+            "Branch" -> branchDialog = dialog
+            "Department" -> departmentDialog = dialog
+        }
+    }
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
+        }
     }
 
     private fun onClickListener() {
         binding?.apply {
+
+            val options = resources.getStringArray(R.array.position_type)
+            val adapterTitle =
+                ArrayAdapter(this@AddEmployeeActivity, R.layout.custom_spinner_item, options)
+            binding.spinnerJobTitle.setAdapter(adapterTitle)
+
+            binding.spinnerJobTitle.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        val selectedItem = parent.getItemAtPosition(position).toString()
+                        selectJobTitle = selectedItem
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>) {
+                    }
+                }
+
+
+
+
             binding.genderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
                 val radioButton = group.findViewById<RadioButton>(R.id.male)
                 val radioButton1 = group.findViewById<RadioButton>(R.id.female)
@@ -93,11 +265,11 @@ class AddEmployeeActivity : AppCompatActivity() {
 
             }
 
-            btnNext.setOnClickListener {
+            btnNext.setOnClickListener { it ->
                 if (mSteps == 1) {
                     if (validateBasicInfo()) {
                         mSteps++
-                        btnSkip.visibility=View.VISIBLE
+                        btnSkip.visibility = View.VISIBLE
                         switchScreen(1)
                     }
                 } else if (mSteps == 2) {
@@ -107,9 +279,27 @@ class AddEmployeeActivity : AppCompatActivity() {
 
                 } else if (mSteps == 3) {
                     mSteps++
-                    btnSkip.visibility=View.GONE
-                    btnNext.text="Submit"
+                    btnSkip.visibility = View.GONE
+                    btnNext.text = "Submit"
                     switchScreen(3)
+
+                } else {
+                    val requestBody = AddEmpRequestBody(
+
+                        name = tieStaffName.text.toString().trim(),
+                        email = tieEmailId.text.toString().trim(),
+                        position = selectJobTitle,
+                        salary = 10500,
+                        phone = tieMobileNo.text.toString(),
+                        branch_id = selectBranch,
+                        department_id = selectDepartment
+                    )
+
+                    token?.let {
+
+                        settingsViewModel.addEmployee(this@AddEmployeeActivity, it, requestBody)
+
+                    }
 
                 }
             }
@@ -127,8 +317,8 @@ class AddEmployeeActivity : AppCompatActivity() {
 
                 } else if (mSteps == 3) {
                     mSteps++
-                    btnSkip.visibility=View.GONE
-                    btnNext.text="Submit"
+                    btnSkip.visibility = View.GONE
+                    btnNext.text = "Submit"
                     switchScreen(3)
 
                 }
@@ -137,6 +327,9 @@ class AddEmployeeActivity : AppCompatActivity() {
             binding.tieDateJoining.setOnClickListener {
                 showDatePicker()
             }
+
+            tieBranch.setOnClickListener { branchDialog.show() }
+            tieDepartment.setOnClickListener { departmentDialog.show() }
 
 
         }
@@ -160,7 +353,7 @@ class AddEmployeeActivity : AppCompatActivity() {
                 tieDepartment.error = "Please enter department"
                 tieDepartment.requestFocus()
                 return false
-            } */else if (tieMobileNo.text.isNullOrEmpty()) {
+            } */ else if (tieMobileNo.text.isNullOrEmpty()) {
                 tieMobileNo.error = "Please enter mobile number"
                 tieMobileNo.requestFocus()
                 return false

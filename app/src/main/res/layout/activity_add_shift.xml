@@ -95,7 +95,7 @@
         android:layout_marginBottom="10dp">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_show_leave_list"
+            android:id="@+id/rv_show_shift_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/include_01"

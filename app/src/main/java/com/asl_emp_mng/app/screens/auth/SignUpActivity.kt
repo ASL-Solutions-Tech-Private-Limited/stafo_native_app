@@ -12,6 +12,8 @@ import com.ajithvgiri.searchdialog.OnSearchItemSelected
 import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
 import com.asl_emp_mng.app.R
+import com.asl_emp_mng.app.base.model.CompanyInfo
+import com.asl_emp_mng.app.base.model.OwnerInfo
 import com.asl_emp_mng.app.databinding.ActivityOtpVerifyBinding
 import com.asl_emp_mng.app.databinding.ActivitySignUpBinding
 import com.asl_emp_mng.app.screens.auth.dataClass.DataBusinessType
@@ -21,6 +23,7 @@ import com.asl_emp_mng.app.screens.auth.dataClass.DataCountry
 import com.asl_emp_mng.app.screens.auth.dataClass.DataStates
 import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
 import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.CustomToast
 import com.google.android.material.textfield.TextInputEditText
 
 class SignUpActivity : AppCompatActivity() {
@@ -39,7 +42,7 @@ class SignUpActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding=ActivitySignUpBinding.inflate(layoutInflater)
+        binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -55,9 +58,37 @@ class SignUpActivity : AppCompatActivity() {
         binding?.apply {
 
             btnNext.setOnClickListener {
-                if (validateBasicInfo()){
-                 Log.d("res","c:$userSelectCTypeId b:$userSelectBTypeId")
-                    startActivity(Intent(this@SignUpActivity,EmployerDashboard::class.java))
+                if (validateBasicInfo()) {
+                    Log.d("res", "c:$userSelectCTypeId b:$userSelectBTypeId")
+
+                    val companyInfo = CompanyInfo(
+                        company_name = tieCompanyName.text.toString(),
+                        company_type = userSelectCTypeId,
+                        business_type = userSelectBTypeId,
+                        registration_number = "",
+                        gst_number = "",
+                        pan_number = "",
+                        mobile_no = "",
+                        email = "",
+                        password = "",
+                        password_confirmation = "",
+                        country = "",
+                        state = "",
+                        city = "",
+                        address = "",
+                        pin = ""
+                    )
+
+                    val ownerInfo = OwnerInfo(
+                        first_name = tieOwnerName.text.toString(),
+                        last_name = "",
+                        email = "",
+                        mobile = ""
+
+                    )
+
+                    authViewModel.registerUser(this@SignUpActivity,companyInfo,ownerInfo)
+
 
                 }
             }
@@ -120,6 +151,16 @@ class SignUpActivity : AppCompatActivity() {
                 }
             }
         }
+        authViewModel.mRegisterResponse.observe(this) {
+            if (it.success) {
+                CustomToast(this, it.message)
+                startActivity(Intent(this@SignUpActivity, EmployerDashboard::class.java))
+            }else{
+
+                CustomToast(this, it.message)
+            }
+        }
+
 
     }
 
@@ -156,10 +197,10 @@ class SignUpActivity : AppCompatActivity() {
         dialog.setOnItemSelected(object : OnSearchItemSelected {
             override fun onClick(position: Int, searchListItem: SearchListItem) {
                 field.setText(searchListItem.title)
-                if (title == "Company Type"){
-                    userSelectCTypeId= searchListItem.id.toString()
-                }else{
-                    userSelectBTypeId= searchListItem.id.toString()
+                if (title == "Company Type") {
+                    userSelectCTypeId = searchListItem.id.toString()
+                } else {
+                    userSelectBTypeId = searchListItem.id.toString()
                 }
 
                 dialog.dismiss()

@@ -99,6 +99,7 @@ class OtpVerifyActivity : AppCompatActivity() {
     private fun onClickListener() {
 
         mobile=intent.extras?.getString("mobile") ?: ""
+
         otp=intent.extras?.getString("otp") ?: ""
 
         val editTexts = listOf(
@@ -166,31 +167,7 @@ class OtpVerifyActivity : AppCompatActivity() {
 
 
 
-      /*  val companyInfo = CompanyInfo(
-            company_name = "ABCrt23",
-            company_type = "2",
-            business_type = "2",
-            registration_number = "ACJD1231AS45f",
-            gst_number = "3812612684",
-            pan_number = "ASJDO1231A4",
-            mobile_no = "8746439862",
-            email = "demo23@abc.com",
-            password = "12345689",
-            password_confirmation="12345689",
-            country = "87",
-            state = "1",
-            city = "1",
-            address = "Kolkata",
-            pin = "785412"
-        )
 
-        val ownerInfo = OwnerInfo(
-            first_name = "Islam ",
-            last_name = "hamid ",
-            email = "nikhilshaw25s234@gmail.com",
-            mobile = "9876523880"
-
-        )*/
 
         authViewModel.mVerifyOtpResponse.observe(this) {
             if (it.success) {

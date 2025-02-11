@@ -1,7 +1,9 @@
 package com.asl_emp_mng.app.screens.auth
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.BaseActivity
 import com.asl_emp_mng.app.databinding.ActivityLoginBinding
@@ -58,7 +60,14 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, AuthViewModel>() {
 
         viewModel.mLoginResponse.observe(this) {
             if (it.success) {
-                startActivity(Intent(this@LoginActivity, EmployerDashboard::class.java))
+
+                val name = it.data.company.company_name
+                val i = Intent(this@LoginActivity, EmployerDashboard::class.java)
+                i.putExtra("name", name)
+                startActivity(i)
+
+                saveToken(this,"token",it.data.token)
+
             } else {
                 CustomToast(this, it.message)
             }
@@ -72,6 +81,14 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, AuthViewModel>() {
         } else if (status.equals("stop", ignoreCase = true)) {
             if (customLoader.isShowing) customLoader.dismiss()
         }
+    }
+
+
+    private fun saveToken(context: Context, key: String, value: String) {
+        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString(key, value)
+        editor.apply()
     }
     private fun isValidFields(): Boolean {
         viewDataBinding?.apply {

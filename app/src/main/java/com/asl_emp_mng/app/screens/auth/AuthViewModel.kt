@@ -15,6 +15,7 @@ import com.asl_emp_mng.app.base.model.OwnerInfo
 import com.asl_emp_mng.app.base.request.AddBranchRequest
 import com.asl_emp_mng.app.base.request.RegisterRequest
 import com.asl_emp_mng.app.base.request.VerifyOtpRequestBody
+import com.asl_emp_mng.app.screens.auth.dataClass.AddBranchResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.BusinessTypeResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CitiesListResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CompanyTypeResponse
@@ -26,6 +27,7 @@ import com.asl_emp_mng.app.screens.auth.dataClass.RegisterResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.StatesListResponse
 import com.asl_emp_mng.app.utils.CustomToast
 import com.google.gson.Gson
+import com.orhanobut.hawk.Hawk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -55,11 +57,17 @@ class AuthViewModel() : BaseViewModel() {
 
     private var mRegister: MutableLiveData<RegisterResponse> = MutableLiveData()
     val mRegisterResponse: LiveData<RegisterResponse> get() = mRegister
+
+
     private var mOtp: MutableLiveData<OtpResponse> = MutableLiveData()
     val mOtpResponse: LiveData<OtpResponse> get() = mOtp
 
     private var mVerifyOtp: MutableLiveData<OtpVerifyResponse> = MutableLiveData()
     val mVerifyOtpResponse: LiveData<OtpVerifyResponse> get() = mVerifyOtp
+
+    private var mCreateBranch: MutableLiveData<AddBranchResponse> = MutableLiveData()
+
+    val mCreateBranchResponse: LiveData<AddBranchResponse> get() = mCreateBranch
 
 
 
@@ -167,24 +175,27 @@ class AuthViewModel() : BaseViewModel() {
         }
     }
 
-    fun createBranch(mContext: Context,latitude:String,longitude:String) {
+    fun createBranch(mContext: Context,token:String,latitude:String,longitude:String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
+
+                val bearerToken = "Bearer $token"
+
                 val addBranchRequest = AddBranchRequest(
                     company_id = 1,
-                    branch_name = "Cafe",
+                    branch_name = "Cafe 5",
                     branch_address = "Kolkata",
                     latitute = latitude,
                     longtitute = longitude,
                     radar = "200"
                 )
-                val response = ASLEmpMng.instance.apiStores()?.callCreateBranch(addBranchRequest)
+                val response = ASLEmpMng.instance.apiStores()?.callCreateBranch(bearerToken,addBranchRequest)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
                         if (it.isSuccessful) {
-                           Log.d("res",it.message())
+                            mCreateBranch.postValue(response.body())
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
@@ -228,6 +239,9 @@ class AuthViewModel() : BaseViewModel() {
                     getLoaderLiveData().value = "stop"
 
                     if (response != null) {
+                        Log.e("API_ERROR", "${response.body()}")
+
+
                         if (response.isSuccessful) {
                             mRegister.postValue(response.body())
                         } else {

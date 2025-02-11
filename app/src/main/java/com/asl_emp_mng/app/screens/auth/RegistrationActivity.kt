@@ -182,7 +182,7 @@ class RegistrationActivity : BaseActivity<ActivityRegistrationBinding, AuthViewM
     }
 
     private fun handleNextButtonClick() {
-        Log.d("res", "Company Name:")
+
 
         when (mSteps) {
             1 -> if (validateBasicInfo()) {

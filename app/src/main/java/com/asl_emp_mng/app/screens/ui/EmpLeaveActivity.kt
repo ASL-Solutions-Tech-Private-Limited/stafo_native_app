@@ -27,7 +27,7 @@ import java.util.Calendar
 import java.util.Locale
 
 class EmpLeaveActivity : AppCompatActivity() {
-    private lateinit var binding :ActivityEmpLeaveBinding
+    private lateinit var binding: ActivityEmpLeaveBinding
 
 
     private var setToDate = true
@@ -40,14 +40,14 @@ class EmpLeaveActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding=ActivityEmpLeaveBinding.inflate(layoutInflater)
+        binding = ActivityEmpLeaveBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        window.statusBarColor= ContextCompat.getColor(this, R.color.primaryColorDark)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
 
 
 
@@ -72,10 +72,10 @@ class EmpLeaveActivity : AppCompatActivity() {
 
         binding?.apply {
 
-                 imageBack.setOnClickListener {
-                     onBackPressedDispatcher.onBackPressed()
-                     finish()
-                 }
+            imageBack.setOnClickListener {
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            }
 
 
 
@@ -90,34 +90,31 @@ class EmpLeaveActivity : AppCompatActivity() {
                 showCalender()
             }
 
-         /* tvStopService.setOnClickListener {
-              stopLocationService()
-          }
+            /* tvStopService.setOnClickListener {
+                 stopLocationService()
+             }
 
-            tvStartService.setOnClickListener {
-                if (hasLocationPermission()) {
-                    startLocationService()
-                } else {
-                    requestLocationPermission()
+               tvStartService.setOnClickListener {
+                   if (hasLocationPermission()) {
+                       startLocationService()
+                   } else {
+                       requestLocationPermission()
+                   }
+               }*/
+
+            btnLeave.setOnClickListener {
+                if (isValidate()) {
+                    fromdate = binding.edtFromDate.text.toString().trim()
+                    todate = binding.edtToDate.text.toString().trim()
+                    reason = binding.edtDescription.text.toString().trim()
+
+
                 }
-            }*/
-
-          btnLeave.setOnClickListener {
-              if (isValidate()){
-                  fromdate = binding.edtFromDate.text.toString().trim()
-                  todate = binding.edtToDate.text.toString().trim()
-                  reason = binding.edtDescription.text.toString().trim()
-
-
-              }
-          }
+            }
 
             imageSettings.setOnClickListener { view ->
                 showPopupMenu(view)
             }
-
-
-
 
 
         }
@@ -137,25 +134,28 @@ class EmpLeaveActivity : AppCompatActivity() {
                     startActivity(Intent(this, EmployeeLeaveHistoryActivity::class.java))
                     true
                 }
+
                 1 -> {
                     true
                 }
+
                 else -> false
             }
         }
         popupMenu.show()
     }
+
     private fun isValidate(): Boolean {
         binding?.apply {
             if (edtFromDate.text.isNullOrEmpty()) {
                 edtFromDate.error = "Please enter from date"
                 edtFromDate.requestFocus()
                 return false
-            } else if (edtToDate.text.isNullOrEmpty()){
+            } else if (edtToDate.text.isNullOrEmpty()) {
                 edtToDate.error = "Please enter to date"
                 edtToDate.requestFocus()
                 return false
-            }else if (edtDescription.text.isNullOrEmpty()){
+            } else if (edtDescription.text.isNullOrEmpty()) {
                 edtDescription.error = "Please enter description"
                 edtDescription.requestFocus()
                 return false
@@ -189,6 +189,7 @@ class EmpLeaveActivity : AppCompatActivity() {
             println("error$e")
         }
     }
+
     private fun onDateSet() {
         val myFormat = "dd/MM/yyyy"
         val sdf = SimpleDateFormat(myFormat, Locale.US)
@@ -204,6 +205,7 @@ class EmpLeaveActivity : AppCompatActivity() {
             setNoDay()
         }
     }
+
     private fun setNoDay() {
         try {
             fromdate = binding.edtFromDate.text.toString().trim()
@@ -217,7 +219,7 @@ class EmpLeaveActivity : AppCompatActivity() {
                 val mDate22 = mDateFormat.parse(todate)
 
 
-                if (mDate22.before(mDate11)){
+                if (mDate22.before(mDate11)) {
 
                     val alertDialog = AlertDialog.Builder(this@EmpLeaveActivity)
                         .setTitle("Invalid Date Range")
@@ -229,7 +231,7 @@ class EmpLeaveActivity : AppCompatActivity() {
 
                     alertDialog.show()
 
-                }else{
+                } else {
                     this.nodays = (Commonfunctions.differanceInDays(todate, fromdate) + 1).toFloat()
 
                     if (nodays <= 0) {
@@ -246,11 +248,6 @@ class EmpLeaveActivity : AppCompatActivity() {
                 }
 
 
-
-
-
-
-
             }
         } catch (e: ParseException) {
             e.printStackTrace()
@@ -264,6 +261,7 @@ class EmpLeaveActivity : AppCompatActivity() {
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
+
     private fun requestLocationPermission() {
         ActivityCompat.requestPermissions(
             this,
@@ -271,6 +269,7 @@ class EmpLeaveActivity : AppCompatActivity() {
             REQUEST_CODE_LOCATION
         )
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -283,7 +282,11 @@ class EmpLeaveActivity : AppCompatActivity() {
                 startLocationService()
             } else {
                 // Permission denied, show a message
-                Toast.makeText(this, "Location permission is required for this service.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Location permission is required for this service.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
