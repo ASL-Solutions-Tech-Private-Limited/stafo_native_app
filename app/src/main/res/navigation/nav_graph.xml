@@ -7,6 +7,6 @@
 
     <fragment
         android:id="@+id/appIntro"
-        android:name="com.asl_emp_mng.app.screens.AppIntro"
+        android:name="com.asl_emp_mng.app.utils.AppIntro"
         android:label="App Intro" />
 </navigation>

@@ -51,4 +51,24 @@
     <string-array name="emp_leave">
         <item>History</item>
     </string-array>
+    <string-array name="emp_profile_type">
+        <item>Basic</item>
+        <item>Professional</item>
+        <item>Educational</item>
+        <item>Document &amp; Certificates</item>
+    </string-array>
+
+    <string-array name="position_type">
+        <item>Junior Software Developer</item>
+        <item>Software Engineer</item>
+        <item>Backend Developer</item>
+        <item>Frontend Developer</item>
+        <item>Full Stack Developer</item>
+        <item>Mobile App Developer (Android, iOS)</item>
+        <item>Technical Lead / Team Lead</item>
+        <item>Solutions Architect</item>
+        <item>Data Analyst</item>
+        <item>Graphic Designer</item>
+        <item>UI/UX Designer</item>
+    </string-array>
 </resources>

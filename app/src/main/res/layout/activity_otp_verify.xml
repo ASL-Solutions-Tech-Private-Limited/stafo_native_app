@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@drawable/gradient_header"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.OtpVerifyActivity">
+    android:background="@drawable/gradient_header"
+    tools:context=".screens.auth.OtpVerifyActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_back"
@@ -22,19 +22,21 @@
         android:id="@+id/tv_registration_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginStart="@dimen/_12sdp"
         android:fontFamily="@font/gilroy_bold"
         android:padding="@dimen/_4sdp"
-        android:text="OTP Verify"
+        android:text="OTP Verification"
         android:textColor="@color/white"
         android:textSize="@dimen/_18sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_back" />
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_16sdp"
         android:background="@drawable/card_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,103 +44,119 @@
         app:layout_constraintTop_toBottomOf="@id/tv_registration_title">
 
         <LinearLayout
-            android:id="@+id/ll_progresslayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_12sdp"
-            android:orientation="vertical"
-            android:padding="@dimen/_4sdp">
+            android:id="@+id/ll_top"
+            app:layout_constraintStart_toStartOf="@+id/ll_otp"
+            app:layout_constraintBottom_toTopOf="@+id/ll_otp"
+            android:layout_marginBottom="@dimen/_32sdp"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_otp_mobile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_regular"
+                android:text="Enter OTP sent to"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_13ssp"
+               />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:text=""
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/tv_otp_mobile_no"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="6"
-                android:orientation="horizontal">
+                android:layout_marginStart="@dimen/_3sdp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="+919091268567"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_13ssp" />
+        </LinearLayout>
 
-                <EditText
-                    android:id="@+id/otp_edit_text1"
-                    android:layout_width="48dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="16dp"
-                    android:background="@drawable/otp_edittext"
-                    android:inputType="number"
-                    android:maxLength="1"
-                    android:layout_marginEnd="4dp"
-                    android:singleLine="true"
-                    android:textAlignment="center"
-                    android:textColor="@color/black" />
+        <LinearLayout
+            android:id="@+id/ll_otp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_80sdp"
+            android:layout_weight="6"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-                <EditText
-                    android:id="@+id/otp_edit_text2"
-                    android:layout_width="48dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="16dp"
-                    android:background="@drawable/otp_edittext"
-                    android:inputType="number"
-                    android:maxLength="1"
-                    android:layout_marginEnd="4dp"
-                    android:singleLine="true"
-                    android:textAlignment="center"
-                    android:textColor="@color/black" />
+            <EditText
+                android:id="@+id/otp_edit_text1"
+                android:layout_width="@dimen/_44sdp"
+                android:layout_height="@dimen/_46sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:background="@drawable/otp_edittext"
+                android:inputType="number"
+                android:maxLength="1"
+                android:singleLine="true"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
 
-                <EditText
-                    android:id="@+id/otp_edit_text3"
-                    android:layout_width="48dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="16dp"
-                    android:background="@drawable/otp_edittext"
-                    android:inputType="number"
-                    android:maxLength="1"
-                    android:layout_marginEnd="4dp"
-                    android:singleLine="true"
-                    android:textAlignment="center"
-                    android:textColor="@color/black" />
-                <EditText
-                    android:id="@+id/otp_edit_text4"
-                    android:layout_width="48dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="16dp"
-                    android:background="@drawable/otp_edittext"
-                    android:inputType="number"
-                    android:maxLength="1"
-                    android:layout_marginEnd="4dp"
-                    android:singleLine="true"
-                    android:textAlignment="center"
-                    android:textColor="@color/black" />
-                <EditText
-                    android:id="@+id/otp_edit_text5"
-                    android:layout_width="48dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="16dp"
-                    android:background="@drawable/otp_edittext"
-                    android:inputType="number"
-                    android:maxLength="1"
-                    android:layout_marginEnd="4dp"
-                    android:singleLine="true"
-                    android:textAlignment="center"
-                    android:textColor="@color/black" />
-                <EditText
-                    android:id="@+id/otp_edit_text6"
-                    android:layout_width="48dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="16dp"
-                    android:background="@drawable/otp_edittext"
-                    android:inputType="number"
-                    android:maxLength="1"
-                    android:layout_marginEnd="4dp"
-                    android:singleLine="true"
-                    android:textAlignment="center"
-                    android:textColor="@color/black" />
+            <EditText
+                android:id="@+id/otp_edit_text2"
+                android:layout_width="@dimen/_44sdp"
+                android:layout_height="@dimen/_46sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:background="@drawable/otp_edittext"
+                android:inputType="number"
+                android:maxLength="1"
+                android:singleLine="true"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
 
+            <EditText
+                android:id="@+id/otp_edit_text3"
+                android:layout_width="@dimen/_44sdp"
+                android:layout_height="@dimen/_46sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:background="@drawable/otp_edittext"
+                android:inputType="number"
+                android:maxLength="1"
+                android:singleLine="true"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
 
+            <!--  <EditText
+                  android:id="@+id/otp_edit_text4"
+                  android:layout_width="48dp"
+                  android:layout_height="50dp"
+                  android:layout_marginHorizontal="@dimen/_4sdp"
+                  android:background="@drawable/otp_edittext"
+                  android:inputType="number"
+                  android:maxLength="1"
+                  android:singleLine="true"
+                  android:textAlignment="center"
+                  android:textColor="@color/black" />
 
-            </LinearLayout>
+              <EditText
+                  android:id="@+id/otp_edit_text5"
+                  android:layout_width="48dp"
+                  android:layout_height="50dp"
+                  android:layout_marginHorizontal="@dimen/_4sdp"
+                  android:background="@drawable/otp_edittext"
+                  android:inputType="number"
+                  android:maxLength="1"
+                  android:singleLine="true"
+                  android:textAlignment="center"
+                  android:textColor="@color/black" />-->
 
+            <EditText
+                android:id="@+id/otp_edit_text4"
+                android:layout_width="@dimen/_44sdp"
+                android:layout_height="@dimen/_46sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:background="@drawable/otp_edittext"
+                android:inputType="number"
+                android:maxLength="1"
+                android:singleLine="true"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
 
 
         </LinearLayout>
@@ -146,21 +164,97 @@
 
 
 
+        <LinearLayout
+            android:id="@+id/ll_resend_code"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btn_otp_verify">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_resend_otp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_regular"
+                android:text="Didn't receive any code?"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_resend_mobile_otp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_3sdp"
+                android:layout_toRightOf="@+id/tv_resend_otp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="RESEND CODE"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_12ssp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btn_otp_verify">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_regular"
+                android:text="Expect OTP in"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_timer_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_3sdp"
+                android:layout_toRightOf="@+id/tv_resend_otp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="28"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_timer_time2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_3sdp"
+                android:layout_toRightOf="@+id/tv_resend_otp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="seconds"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
+        </LinearLayout>
+
+
         <Button
-            android:id="@+id/btn_next"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="@dimen/_12sdp"
+            android:id="@+id/btn_otp_verify"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_marginBottom="@dimen/_40sdp"
             android:layout_weight="1"
             android:background="@drawable/button_background"
             android:backgroundTint="@color/colorTextPrimary"
             android:fontFamily="@font/gilroy_semi_bold"
-            android:text="Verify"
+            android:text="Verify OTP"
             android:textAllCaps="false"
             android:textColor="@color/colorButtonText"
-            android:textSize="16dp" />
-    </RelativeLayout>
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/ll_otp"
+            app:layout_constraintStart_toStartOf="@+id/ll_otp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

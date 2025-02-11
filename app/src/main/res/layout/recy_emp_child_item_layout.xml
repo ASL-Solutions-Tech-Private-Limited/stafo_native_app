@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginVertical="@dimen/_6sdp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/rl_emp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_date_bg"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/siv_emp_pic"
+            android:layout_width="@dimen/_42sdp"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginVertical="@dimen/_10sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:background="@color/white"
+            android:src="@drawable/user"
+            app:contentPadding="@dimen/_4sdp"
+            app:shapeAppearanceOverlay="@style/RoundedSquare" />
+
+        <TextView
+            android:id="@+id/tv_emp_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_toLeftOf="@+id/iv_edit"
+            android:layout_toRightOf="@+id/siv_emp_pic"
+            android:fontFamily="@font/gilroy_medium"
+            android:paddingEnd="@dimen/_4sdp"
+            android:text="Hamid Islam"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
+
+            />
+
+        <TextView
+            android:id="@+id/tv_emp_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_emp_name"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:layout_toLeftOf="@+id/iv_edit"
+            android:layout_toRightOf="@+id/siv_emp_pic"
+            android:fontFamily="@font/gilroy_regular"
+            android:paddingEnd="@dimen/_4sdp"
+            android:text="Android App Developer"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
+
+            />
+
+        <ImageView
+            android:id="@+id/iv_edit"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@drawable/custom_emp_item_bg2"
+            android:padding="@dimen/_6sdp"
+            android:src="@drawable/ic_editing" />
+
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

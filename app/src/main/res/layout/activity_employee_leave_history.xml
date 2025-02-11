@@ -6,7 +6,7 @@
     android:background="#80D3D3D3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.EmployeeLeaveHistoryActivity">
+    tools:context=".screens.ui.EmployeeLeaveHistoryActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"

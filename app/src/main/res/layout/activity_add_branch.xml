@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_header"
-    tools:context=".screens.AddBranchActivity">
+    tools:context=".screens.settings.AddBranchActivity">
 
 
 
@@ -121,7 +121,7 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Radius"
-                            android:inputType="textPersonName" />
+                            android:inputType="number" />
                     </com.google.android.material.textfield.TextInputLayout>
 
 

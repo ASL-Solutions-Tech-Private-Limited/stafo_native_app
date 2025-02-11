@@ -51,18 +51,14 @@ android {
     productFlavors {
         production {
             minSdkVersion 24
-            buildConfigField 'String', 'ENDPOINT', '"https://bc.easyswift.in/"'
-            buildConfigField 'String', 'BC_SOFMINT', '"https://bc.softmintindia.com/rest/"'
-            buildConfigField 'String', 'CSP_SOFMINT_INDIA', '"https://bc.easyswift.in/"'
+            buildConfigField 'String', 'ENDPOINT', '"http://aslhr.2ndwork.in/"'
             buildConfigField 'String', 'API_KEY', '""'
             buildConfigField 'boolean', 'STAGE_MODE', "false"
             resValue "string", "app_name", "ASL MNG"
         }
         staging {
             minSdkVersion 24
-            buildConfigField 'String', 'ENDPOINT', '"https://m.softmintindia.com/"'
-            buildConfigField 'String', 'BC_SOFMINT', '"https://bc.softmintindia.com/rest/"'
-            buildConfigField 'String', 'CSP_SOFMINT_INDIA', '"https://csp.softmintindia.com/"'
+            buildConfigField 'String', 'ENDPOINT', '"http://aslhr.2ndwork.in/"'
             buildConfigField 'String', 'API_KEY', '""'
             buildConfigField 'boolean', 'STAGE_MODE', "true"
             resValue "string", "app_name", "ASL MNG"
@@ -81,7 +77,7 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
             def formattedDate = System.currentTimeMillis()
-            def appName = "Softmint_UPI"
+            def appName = "ASL_HR"
             def buildVariant = variant.name
             def versionCode = variant.versionName
             outputFileName = "${appName}_${buildVariant}_${versionCode}_${formattedDate}.apk"

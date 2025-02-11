@@ -2,6 +2,8 @@ package com.asl_emp_mng.app.base
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.asl_emp_mng.app.base.model.CompanyInfo
+import com.asl_emp_mng.app.base.model.OwnerInfo
 
 open class BaseViewModel : ViewModel() {
 
@@ -13,6 +15,8 @@ open class BaseViewModel : ViewModel() {
 
         return loaderLiveData as MutableLiveData<String>
     }
+
+
 
 
 }

@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.StrictMode
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
+import com.asl_emp_mng.app.api.ApiClient
+import com.asl_emp_mng.app.api.ApiStores
 import com.orhanobut.hawk.Hawk
 
 class ASLEmpMng : MultiDexApplication() {
@@ -30,5 +32,8 @@ class ASLEmpMng : MultiDexApplication() {
 
     }
 
-   
+    fun apiStores(): ApiStores? {
+        return ApiClient.retrofit(applicationContext, BuildConfig.ENDPOINT)
+            ?.create(ApiStores::class.java)
+    }
 }
