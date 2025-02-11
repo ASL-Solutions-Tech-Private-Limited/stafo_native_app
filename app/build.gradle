@@ -230,6 +230,8 @@ dependencies {
     //for custom location
     implementation("org.osmdroid:osmdroid-android:6.1.14")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
+   // implementation 'com.github.smarteist:autoimageslider:1.4.0'
+    implementation 'com.github.smarteist:Android-Image-Slider:1.4.0'
 
 
 }
