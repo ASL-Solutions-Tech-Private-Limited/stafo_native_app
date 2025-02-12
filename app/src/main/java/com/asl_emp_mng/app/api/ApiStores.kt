@@ -22,6 +22,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.ViewBranchResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -87,6 +88,9 @@ interface ApiStores {
 
     @GET("api/employees-list")
     suspend fun callEmployeeList(@Header("Authorization") token: String): Response<EmployeeListResponse>
+
+    @GET("api/branch/list")
+    suspend fun callBranchViewList(@Header("Authorization") token: String): Response<ViewBranchResponse>
 
     @GET("api/departments")
     suspend fun callDepartmentList( @Header("Authorization") token: String): Response<DepartmentResponse>

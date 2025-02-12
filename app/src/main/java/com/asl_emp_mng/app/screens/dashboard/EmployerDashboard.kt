@@ -16,8 +16,10 @@ import com.asl_emp_mng.app.base.model.DashboardType
 import com.asl_emp_mng.app.databinding.ActivityEmployerDashboardBinding
 import com.asl_emp_mng.app.screens.settings.AddBranchActivity
 import com.asl_emp_mng.app.screens.settings.AddEmployeeActivity
+import com.asl_emp_mng.app.screens.settings.BranchActivity
 import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
+import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.getGreetingBasedOnTime
@@ -48,7 +50,7 @@ class EmployerDashboard : AppCompatActivity() {
 
             token = getToken(this@EmployerDashboard, "token")
 
-            name=intent.extras?.getString("name") ?: ""
+            name = intent.extras?.getString("name") ?: ""
             tvHeaderGreeting.text = getGreetingBasedOnTime()
             tvHeaderEmpName.text = name
 
@@ -58,10 +60,10 @@ class EmployerDashboard : AppCompatActivity() {
             llNoWishes.visibility = View.VISIBLE
             llLeaves.visibility = View.VISIBLE
 
-         /*   rvLeaves.layoutManager =
-                LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
-            val emplyeeListWishAdapter = EmplyeeListAdapter(this@EmployerDashboard)
-            rvLeaves.adapter = emplyeeListWishAdapter*/
+            /*   rvLeaves.layoutManager =
+                   LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
+               val emplyeeListWishAdapter = EmplyeeListAdapter(this@EmployerDashboard)
+               rvLeaves.adapter = emplyeeListWishAdapter*/
 
             rvActions.layoutManager =
                 LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
@@ -70,7 +72,15 @@ class EmployerDashboard : AppCompatActivity() {
                 object : ActionsListAdapter.ActionClickListener {
                     override fun onActionClick(action: String) {
                         when (action) {
-                            "Employee" -> {}
+                            "Employee" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        ViewAllEmployeeActivity::class.java
+                                    )
+                                )
+                            }
+
                             "Leaves" -> {
                                 startActivity(
                                     Intent(
@@ -84,7 +94,7 @@ class EmployerDashboard : AppCompatActivity() {
                                 startActivity(
                                     Intent(
                                         this@EmployerDashboard,
-                                        AddBranchActivity::class.java
+                                        BranchActivity::class.java
                                     )
                                 )
                             }
@@ -105,7 +115,6 @@ class EmployerDashboard : AppCompatActivity() {
 
 
     }
-
 
 
     private fun getToken(context: Context, key: String): String? {
@@ -156,10 +165,10 @@ class EmployerDashboard : AppCompatActivity() {
         }
 
         binding.tvLetsCheckViewAll.setOnClickListener {
-           // startActivity(Intent(this, AddShiftActivity::class.java))
+            // startActivity(Intent(this, AddShiftActivity::class.java))
         }
 
-        binding.tvHeaderEmpName.text=name
+        binding.tvHeaderEmpName.text = name
     }
 
     private fun actionList(): List<ActionModel> {

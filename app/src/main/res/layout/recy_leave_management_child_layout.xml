@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
     android:layout_marginTop="@dimen/_6sdp"
     android:layout_marginBottom="@dimen/_4sdp"
-
-   android:background="@drawable/custom_card_background"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:background="@drawable/custom_card_background">
 
     <RelativeLayout
         android:id="@+id/rroname"
         android:layout_width="match_parent"
         android:layout_height="150dp">
 
-      <!--  <LinearLayout
+        <LinearLayout
             android:id="@+id/llodate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                 android:layout_marginTop="55dp"
                 android:src="@drawable/ic_bulets_icon" />
 
-        </FrameLayout>-->
+        </FrameLayout>
 
         <RelativeLayout
             android:id="@+id/rl_emp"
@@ -87,10 +87,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
-            android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_8sdp"
-            android:layout_alignParentStart="true"
+            android:layout_toRightOf="@+id/fl_dot"
             android:background="@drawable/oval_bg_light">
 
 
@@ -151,44 +151,45 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_marginTop="@dimen/_8sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/rl_emp"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
             android:orientation="horizontal">
 
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_approve_leave"
-                android:background="@drawable/button_background"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_marginEnd="@dimen/_6sdp"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
                 android:layout_marginBottom="@dimen/_4sdp"
+                android:layout_toLeftOf="@+id/btn_reject_leave"
+                android:background="@drawable/button_background"
+                android:fontFamily="@font/gilroy_regular"
                 android:text="Approve"
                 android:textAllCaps="false"
-                android:textSize="@dimen/_11ssp"
-                android:fontFamily="@font/gilroy_regular"
                 android:textColor="@color/white"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_24sdp"/>
+                android:textSize="@dimen/_11ssp" />
 
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_reject_leave"
-                android:background="@drawable/custom_reject_btn_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_24sdp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginBottom="@dimen/_4sdp"
+                android:background="@drawable/custom_reject_btn_bg"
+                android:fontFamily="@font/gilroy_regular"
                 android:text="Reject"
                 android:textAllCaps="false"
-                android:textSize="@dimen/_11ssp"
-                android:fontFamily="@font/gilroy_regular"
                 android:textColor="@color/reject"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_24sdp"/>
+                android:textSize="@dimen/_11ssp" />
 
         </RelativeLayout>
 

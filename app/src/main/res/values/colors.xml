@@ -17,4 +17,5 @@
     <color name="week_off_text_colour">#f5d3d2</color>
     <color name="gray_colour">#808080</color>
     <color name="dashboard_background">#dedede</color>
+    <color name="switch_bg">#f4f9ff</color>
 </resources>

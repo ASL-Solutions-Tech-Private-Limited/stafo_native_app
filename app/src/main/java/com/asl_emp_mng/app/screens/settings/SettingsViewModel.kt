@@ -21,6 +21,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.ViewBranchResponse
 import com.asl_emp_mng.app.utils.CustomToast
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -28,8 +29,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SettingsViewModel : BaseViewModel() {
-
-
 
 
     private var mCreateBranch: MutableLiveData<AddBranchResponse> = MutableLiveData()
@@ -56,9 +55,12 @@ class SettingsViewModel : BaseViewModel() {
     private var mEmployeeList: MutableLiveData<EmployeeListResponse> = MutableLiveData()
     val mEmployeeListResponse: LiveData<EmployeeListResponse> get() = mEmployeeList
 
+    private var mViewBranchList: MutableLiveData<ViewBranchResponse> = MutableLiveData()
+
+    val mViewBranchResponse: LiveData<ViewBranchResponse> get() = mViewBranchList
 
 
-    fun getEmpList(mContext: Context,token:String) {
+    fun getEmpList(mContext: Context, token: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -97,11 +99,47 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
+    fun getViewBranchList(mContext: Context, token: String) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val bearerToken = "Bearer $token"
+                val response = ASLEmpMng.instance.apiStores()?.callBranchViewList(bearerToken)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mViewBranchList.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
-
-
-    fun getShiftList(mContext: Context,token:String) {
+    fun getShiftList(mContext: Context, token: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -141,10 +179,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-    fun getBranchList(mContext: Context,token:String) {
+    fun getBranchList(mContext: Context, token: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -183,7 +218,7 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun getDepartmentList(mContext: Context,token:String) {
+    fun getDepartmentList(mContext: Context, token: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -223,12 +258,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
-    fun createBranch(mContext: Context, token:String, latitude:String, longitude:String) {
+    fun createBranch(mContext: Context, token: String, latitude: String, longitude: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -243,7 +273,8 @@ class SettingsViewModel : BaseViewModel() {
                     longtitute = longitude,
                     radar = "200"
                 )
-                val response = ASLEmpMng.instance.apiStores()?.callCreateBranch(bearerToken,addBranchRequest)
+                val response =
+                    ASLEmpMng.instance.apiStores()?.callCreateBranch(bearerToken, addBranchRequest)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -277,13 +308,13 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun addEmployee(mContext: Context, token:String,request:AddEmpRequestBody) {
+    fun addEmployee(mContext: Context, token: String, request: AddEmpRequestBody) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
                 val bearerToken = "Bearer $token"
-                val response = ASLEmpMng.instance.apiStores()?.callAddEmp(bearerToken,request)
+                val response = ASLEmpMng.instance.apiStores()?.callAddEmp(bearerToken, request)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -323,13 +354,13 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun createNewShift(mContext: Context, token:String,request: ShiftCreateRequest) {
+    fun createNewShift(mContext: Context, token: String, request: ShiftCreateRequest) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
                 val bearerToken = "Bearer $token"
-                val response = ASLEmpMng.instance.apiStores()?.callCreateShift(bearerToken,request)
+                val response = ASLEmpMng.instance.apiStores()?.callCreateShift(bearerToken, request)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -367,8 +398,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
-
 
 
 }

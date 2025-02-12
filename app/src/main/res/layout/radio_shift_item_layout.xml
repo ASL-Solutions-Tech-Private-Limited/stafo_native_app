@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/ll_shift_time"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_8sdp"
+        android:background="@drawable/custom_switch_card_bg2"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/img_radio"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:src="@drawable/ic_lv_inactive_radio"
+            android:layout_width="@dimen/_16sdp"
+            android:layout_height="@dimen/_16sdp"/>
+
+        <TextView
+            android:id="@+id/txt_shift_name"
+            android:layout_toRightOf="@+id/img_radio"
+            android:text="From Anywhere"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:textSize="@dimen/_11ssp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/txt_shift_time"
+            android:layout_alignParentEnd="true"
+            android:text="From Anywhere"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:textSize="@dimen/_11ssp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
