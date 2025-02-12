@@ -1,5 +1,6 @@
 package com.asl_emp_mng.app.screens.ui
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -12,6 +13,7 @@ import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.BaseActivity
 import com.asl_emp_mng.app.databinding.ActivitySplashBinding
 import com.asl_emp_mng.app.screens.auth.LoginActivity
+import com.asl_emp_mng.app.screens.auth.LoginWithOTPActivity
 import com.asl_emp_mng.app.screens.auth.OnBoardingActivity
 import com.asl_emp_mng.app.utils.CommonViewModel
 import com.asl_emp_mng.app.utils.isOnBoardingScreenShown
@@ -37,7 +39,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, CommonViewModel>() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             if (isOnBoardingScreenShown()) {
-                startActivity(Intent(this, LoginActivity::class.java))
+                startActivity(Intent(this, LoginWithOTPActivity::class.java))
                 finish()
             } else {
                 startActivity(Intent(this, OnBoardingActivity::class.java))
@@ -56,5 +58,10 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, CommonViewModel>() {
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             statusBarColor = Color.TRANSPARENT
         }
+    }
+
+    private fun getToken(key: String): String? {
+        val sharedPref = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        return sharedPref.getString(key, null)
     }
 }

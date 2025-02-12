@@ -5,14 +5,31 @@
     android:layout_height="match_parent">
 
 
-    <ProgressBar
-        android:id="@+id/loadingView"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+<!--    <com.airbnb.lottie.LottieAnimationView-->
+<!--        android:id="@+id/loadingView"-->
+<!--        android:layout_width="72dp"-->
+<!--        android:layout_height="72dp"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_marginTop="24dp"-->
+<!--        />-->
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view"
+        android:layout_width="@dimen/_75sdp"
+        android:layout_height="@dimen/_75sdp"
+        android:scaleType="fitCenter"
+        app:lottie_autoPlay="true"
         android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-        android:layout_marginTop="24dp"
-        />
+        app:lottie_colorFilter="@android:color/background_dark"
+        app:lottie_speed="1.0"
+        app:lottie_progress="0.5"
+        app:lottie_renderMode="automatic"
+        app:lottie_repeatCount="3"
+        app:lottie_repeatMode="restart"
+        app:lottie_loop="true" />
 
 </RelativeLayout>
