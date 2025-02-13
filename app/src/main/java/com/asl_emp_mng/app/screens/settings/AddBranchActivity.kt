@@ -208,6 +208,11 @@ class AddBranchActivity : AppCompatActivity() {
                 getLocation()
             }
 
+            ivBack.setOnClickListener {
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            }
+
 
         }
     }

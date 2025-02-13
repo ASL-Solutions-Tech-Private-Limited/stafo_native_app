@@ -1,31 +1,38 @@
 package com.asl_emp_mng.app.api
 
-import com.asl_emp_mng.app.base.request.OtpRequestBody
 import com.asl_emp_mng.app.base.request.AddBranchRequest
+import com.asl_emp_mng.app.base.request.OtpRequestBody
 import com.asl_emp_mng.app.base.request.RegisterRequest
 import com.asl_emp_mng.app.base.request.VerifyOtpRequestBody
 import com.asl_emp_mng.app.screens.auth.dataClass.AddBranchResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.BusinessTypeResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CitiesListResponse
+import com.asl_emp_mng.app.screens.auth.dataClass.CompanyRegistrationResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CompanyTypeResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CountryListResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.LoginResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.OtpResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.OtpVerifyResponse
-import com.asl_emp_mng.app.screens.auth.dataClass.RegisterResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.StatesListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveRequestBody
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.ViewBranchResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
+import retrofit2.http.HeaderMap
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -69,33 +76,39 @@ interface ApiStores {
 
     @POST("api/branch/create")
     suspend fun callCreateBranch(
-        @Header("Authorization") token: String,
-        @Body addBranchRequest: AddBranchRequest
+        @Body addBranchRequest: AddBranchRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<AddBranchResponse>
 
 
     @POST("api/employees")
     suspend fun callAddEmp(
-        @Header("Authorization") token: String,
-        @Body addEmpRequest: AddEmpRequestBody
+        @Body addEmpRequest: AddEmpRequestBody,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<AddEmpResponse>
 
     @POST("api/shifts")
-    suspend fun callCreateShift(@Header("Authorization") token: String, @Body request: ShiftCreateRequest): Response<ShiftCreateResponse>
+    suspend fun callCreateShift(
+        @Body request: ShiftCreateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ShiftCreateResponse>
     @GET("api/shifts")
-    suspend fun callShiftList(@Header("Authorization") token: String): Response<ShiftListResponse>
+    suspend fun callShiftList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ShiftListResponse>
 
     @GET("api/employees-list")
-    suspend fun callEmployeeList(@Header("Authorization") token: String): Response<EmployeeListResponse>
+    suspend fun callEmployeeList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<EmployeeListResponse>
+
+    @GET("api/branch/list")
+    suspend fun callBranchViewList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ViewBranchResponse>
 
     @GET("api/departments")
-    suspend fun callDepartmentList( @Header("Authorization") token: String): Response<DepartmentResponse>
+    suspend fun callDepartmentList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<DepartmentResponse>
     @GET("api/branch/list")
-    suspend fun callBranchList( @Header("Authorization") token: String): Response<BranchListResponse>
+    suspend fun callBranchList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<BranchListResponse>
 
 
     @POST("api/register")
-    suspend fun registerUser(@Body request: RegisterRequest): Response<RegisterResponse>
+    suspend fun registerUser(@Body request: RegisterRequest): Response<CompanyRegistrationResponse>
 
     @POST("api/send-otp")
     suspend fun sendOtp(@Body request: OtpRequestBody): Response<OtpResponse>
@@ -108,5 +121,23 @@ interface ApiStores {
         @Query("email") email: String,
         @Query("password") password: String
     ): Response<LoginResponse>
+
+    @POST("api/holidays-create")
+    suspend fun callCreateHoliday(
+        @Body request: CreateHolidayRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<CreateHolidayResponse>
+
+    @POST("api/company-dashboard")
+    suspend fun callCompanySummary(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<AttendanceSummaryResponse>
+
+    @POST("api/leave-request")
+    suspend fun callEmployeeLeaveRequest(
+        @Body request: EmployeeLeaveRequestBody,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EmployeeLeaveResponse>
+
+    @GET("api/company/profile")
+    suspend fun callCompanyProfile(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<CompanyProfileResponse>
 
 }

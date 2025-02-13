@@ -9,9 +9,6 @@
     tools:context=".screens.settings.AddBranchActivity">
 
 
-
-
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_back"
         android:layout_width="wrap_content"
@@ -47,17 +44,17 @@
         app:layout_constraintTop_toBottomOf="@id/tv_registration_title">
 
 
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/btn_add_branch"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/_10sdp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <LinearLayout
                     android:id="@+id/ll_basic_info"
                     android:layout_width="match_parent"
@@ -67,7 +64,6 @@
                     android:layout_marginEnd="@dimen/_12sdp"
                     android:orientation="vertical"
                     android:visibility="visible">
-
 
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -82,7 +78,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Branch Name"
-                            android:inputType="textPersonName" />
+                            android:inputType="textPersonName"
+                            android:textSize="@dimen/_12ssp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -104,7 +101,8 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Branch Address"
-                            android:inputType="textPersonName" />
+                            android:inputType="textPersonName"
+                            android:textSize="@dimen/_12ssp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -121,11 +119,9 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Radius"
-                            android:inputType="number" />
+                            android:inputType="number"
+                            android:textSize="@dimen/_12ssp" />
                     </com.google.android.material.textfield.TextInputLayout>
-
-
-
 
 
                 </LinearLayout>

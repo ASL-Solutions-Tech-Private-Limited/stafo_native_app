@@ -2,14 +2,10 @@ package com.asl_emp_mng.app.screens.auth
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import com.ajithvgiri.searchdialog.OnSearchItemSelected
 import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
@@ -18,7 +14,6 @@ import com.asl_emp_mng.app.base.BaseActivity
 import com.asl_emp_mng.app.base.model.CompanyInfo
 import com.asl_emp_mng.app.base.model.OwnerInfo
 import com.asl_emp_mng.app.databinding.ActivityRegistrationBinding
-import com.asl_emp_mng.app.screens.auth.dataClass.CompanyTypeResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.DataBusinessType
 import com.asl_emp_mng.app.screens.auth.dataClass.DataCity
 import com.asl_emp_mng.app.screens.auth.dataClass.DataCompanyType
@@ -27,10 +22,7 @@ import com.asl_emp_mng.app.screens.auth.dataClass.DataStates
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputEditText
-import com.google.gson.Gson
-import org.json.JSONObject
 import java.security.SecureRandom
-import java.util.Random
 
 
 class RegistrationActivity : BaseActivity<ActivityRegistrationBinding, AuthViewModel>() {
@@ -186,24 +178,16 @@ class RegistrationActivity : BaseActivity<ActivityRegistrationBinding, AuthViewM
 
         when (mSteps) {
             1 -> if (validateBasicInfo()) {
-
                 mSteps = 2
                 switchScreen(1)
             }
-
-
             2 -> if (isValidOwnerInfo()) {
-
                 mSteps = 3
                 switchScreen(2)
             }
-
             3 -> {
                 storeCompanyInfo()
-
             }
-
-
         }
     }
 
@@ -214,6 +198,7 @@ class RegistrationActivity : BaseActivity<ActivityRegistrationBinding, AuthViewM
             .maxResultSize(1080, 1080)
             .start(req)
     }
+
 
     private fun switchScreen(flag: Int) {
         val basicInfoVisibility = View.GONE

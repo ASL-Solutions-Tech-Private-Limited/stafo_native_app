@@ -3,24 +3,29 @@ package com.asl_emp_mng.app.screens.dashboard
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.asl_emp_mng.app.R
+import com.asl_emp_mng.app.base.adapter.ActionsListAdapter
 import com.asl_emp_mng.app.base.adapter.EmpListAdapter
-import com.asl_emp_mng.app.base.adapter.ShiftAdapter
+import com.asl_emp_mng.app.base.adapter.SliderAdapter
+import com.asl_emp_mng.app.base.model.ActionModel
 import com.asl_emp_mng.app.base.model.DashboardType
-import com.asl_emp_mng.app.base.model.ProfileType
 import com.asl_emp_mng.app.databinding.ActivityEmployerDashboardBinding
-import com.asl_emp_mng.app.screens.EmpProfileActivity
 import com.asl_emp_mng.app.screens.settings.AddEmployeeActivity
+import com.asl_emp_mng.app.screens.settings.BranchActivity
+import com.asl_emp_mng.app.screens.settings.CompanyProfileActivity
+import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
-import com.asl_emp_mng.app.screens.ui.EmplyeeListAdapter
+import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.utils.CustomLoader
-import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getCompanyDetails
 import com.asl_emp_mng.app.utils.getGreetingBasedOnTime
 import com.asl_emp_mng.app.utils.getTodayDate
+import com.asl_emp_mng.app.utils.getUserAccessToken
 
 class EmployerDashboard : AppCompatActivity() {
     private lateinit var binding: ActivityEmployerDashboardBinding
@@ -30,7 +35,7 @@ class EmployerDashboard : AppCompatActivity() {
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
     private lateinit var rvAdapter: EmpListAdapter
-
+    private val mActionList = ArrayList<ActionModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEmployerDashboardBinding.inflate(layoutInflater)
@@ -39,67 +44,84 @@ class EmployerDashboard : AppCompatActivity() {
         initViews()
         setOnClickEvents()
         observeViewModel()
-
+        setupImageSlider()
     }
 
     private fun initViews() {
         binding.apply {
-
-            token = getToken(this@EmployerDashboard, "token")
-
-            name=intent.extras?.getString("name") ?: ""
+            name = intent.extras?.getString("name") ?: ""
             tvHeaderGreeting.text = getGreetingBasedOnTime()
-            tvHeaderEmpName.text = name
+            tvHeaderEmpName.text = getCompanyDetails()?.companyName ?: " Guest"
 
             tvLetsCheck.text = "Today's Report (${getTodayDate()})"
             rvWishes.layoutManager =
                 LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
-            val emplyeeListAdapter = EmplyeeListAdapter(this@EmployerDashboard)
-            rvWishes.adapter = emplyeeListAdapter
+            llNoWishes.visibility = View.VISIBLE
+            llLeaves.visibility = View.VISIBLE
 
-         /*   rvLeaves.layoutManager =
+            rvActions.layoutManager =
                 LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
-            val emplyeeListWishAdapter = EmplyeeListAdapter(this@EmployerDashboard)
-            rvLeaves.adapter = emplyeeListWishAdapter*/
+            val actionsAdapter = ActionsListAdapter(actionList(),
+                this@EmployerDashboard,
+                object : ActionsListAdapter.ActionClickListener {
+                    override fun onActionClick(action: String) {
+                        when (action) {
+                            "Employee" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        ViewAllEmployeeActivity::class.java
+                                    )
+                                )
+                            }
+
+                            "Leaves" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        LeaveManagementActivity::class.java
+                                    )
+                                )
+                            }
+
+                            "Branchs" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        BranchActivity::class.java
+                                    )
+                                )
+                            }
+
+                            "Policy" -> {}
+                        }
+                    }
+
+                })
+            rvActions.adapter = actionsAdapter
 
             token?.let {
                 settingsViewModel.getEmpList(this@EmployerDashboard, it)
 
             }
 
+            token?.let {
+                settingsViewModel.getCompanyDashboard(this@EmployerDashboard, it)
+
+            }
+
         }
 
 
-    }
-
-
-
-    private fun getToken(context: Context, key: String): String? {
-        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        return sharedPref.getString(key, null)
     }
 
 
     private fun observeViewModel() {
-
-
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-
-        settingsViewModel.mEmployeeListResponse.observe(this) {
-
-            if (it.status) {
-                val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
-                binding.rvLeaves.setLayoutManager(layoutManager)
-                rvAdapter = EmpListAdapter(it.data, this)
-                binding.rvLeaves.adapter = rvAdapter
-                rvAdapter.notifyDataSetChanged()
-
-            } else {
-                CustomToast(this, it.message)
-            }
+        settingsViewModel.mAttendanceSummaryResponse.observe(this) {
+                      binding.tvPresentEmp.text=it.presentCount.toString()
+                      binding.tvOnLeaveEmp.text=it.employeeCount.toString()
         }
-
-
     }
 
     private fun handleLoader(status: String) {
@@ -111,9 +133,6 @@ class EmployerDashboard : AppCompatActivity() {
     }
 
     private fun setOnClickEvents() {
-
-
-
         binding.tvHeaderSetting.setOnClickListener {
             val intent = Intent(this@EmployerDashboard, EmplyeeyerProfile::class.java)
             intent.putExtra("DASHBOARD_TYPE", DashboardType.COMPANY.name)
@@ -125,9 +144,28 @@ class EmployerDashboard : AppCompatActivity() {
         }
 
         binding.tvLetsCheckViewAll.setOnClickListener {
-           // startActivity(Intent(this, AddShiftActivity::class.java))
+             startActivity(Intent(this, ViewAllEmployeeActivity::class.java))
         }
 
-        binding.tvHeaderEmpName.text=name
+        binding.tvHeaderEmpName.text = name
+
+        binding.tvProfile.setOnClickListener {
+            startActivity(Intent(this,CompanyProfileActivity::class.java))
+        }
+    }
+
+    private fun actionList(): List<ActionModel> {
+        mActionList.add(ActionModel("Employee", R.drawable.ic_user))
+        mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
+        mActionList.add(ActionModel("Branchs", R.drawable.ic_calendar_month))
+        mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
+        return mActionList
+    }
+
+    private fun setupImageSlider() {
+        var imageList = ArrayList<Int>()
+        imageList.add(R.drawable.banner_one)
+        imageList.add(R.drawable.banner_two)
+        binding.imageSlider.setSliderAdapter(SliderAdapter(this, imageList))
     }
 }

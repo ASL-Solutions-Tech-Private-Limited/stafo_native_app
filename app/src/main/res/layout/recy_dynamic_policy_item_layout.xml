@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/_4sdp"
+    android:orientation="vertical"
+    android:paddingHorizontal="8dp">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:background="@drawable/edit_text_background"
+        android:fontFamily="@font/gilroy_regular"
+        android:inputType="text"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12ssp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/editText2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:background="@drawable/edit_text_background"
+        android:drawableEnd="@drawable/ic_arrow_down"
+        android:drawableTint="@color/black"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:fontFamily="@font/gilroy_regular"
+        android:hint="Browse File"
+        android:inputType="text"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12ssp" />
+
+
+</LinearLayout>

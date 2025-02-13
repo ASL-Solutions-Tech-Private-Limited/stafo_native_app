@@ -4,18 +4,19 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.asl_emp_mng.app.databinding.ItemLeaveListBinding
+import com.asl_emp_mng.app.databinding.RecyViewEmployeeItemLayoutBinding
+import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDataList
 
 class EmpListAdapter(
     private var list: List<EmployeeDataList>,
     var context: Activity
 ) : RecyclerView.Adapter<EmpListAdapter.ViewHolder>() {
-    inner class ViewHolder(val binding: ItemLeaveListBinding) :
+    inner class ViewHolder(val binding: RecyViewEmployeeItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemLeaveListBinding.inflate(
+        val binding = RecyViewEmployeeItemLayoutBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -27,8 +28,20 @@ class EmpListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             with(list[position]) {
-                binding.tvName.text = this.name
-                binding.tvEmpId.text = this.emp_id
+                binding.txtEmpName.text = this.name
+                binding.txtMobile.text = this.phone
+                binding.txtEmail.text = this.email
+                binding.txtJobTitle.text = this.position
+
+                binding.llcAddAttendance.setOnClickListener {
+                    (context as ViewAllEmployeeActivity).showCustomBottomSheet()
+                }
+
+                binding.llcShiftTime.setOnClickListener {
+                    (context as ViewAllEmployeeActivity).showShiftCustomBottomSheet()
+                }
+
+
             }
         }
     }
@@ -36,5 +49,6 @@ class EmpListAdapter(
     override fun getItemCount(): Int {
         return list.size
     }
+
 
 }

@@ -325,7 +325,7 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
-                            android:hint="Office Email Id"
+                            android:hint="Email Id"
                             android:inputType="textEmailAddress" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -591,61 +591,61 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_emergency_contact_mobile_number"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp">
+                    <!--     <com.google.android.material.textfield.TextInputLayout
+                             android:id="@+id/til_emergency_contact_mobile_number"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:layout_marginTop="@dimen/_12sdp">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_emergency_contact_mobile_number"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="Emergency Contact Mobile Number"
-                            android:inputType="textPersonName" />
+                             <com.google.android.material.textfield.TextInputEditText
+                                 android:id="@+id/tie_emergency_contact_mobile_number"
+                                 android:layout_width="match_parent"
+                                 android:layout_height="wrap_content"
+                                 android:background="@drawable/edit_text_background"
+                                 android:fontFamily="@font/gilroy_medium"
+                                 android:hint="Emergency Contact Mobile Number"
+                                 android:inputType="textPersonName" />
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                         </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_emergency_contact_relationship"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp">
+                         <com.google.android.material.textfield.TextInputLayout
+                             android:id="@+id/til_emergency_contact_relationship"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:layout_marginTop="@dimen/_12sdp">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_emergency_contact_relationship"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="Emergency Contact Relationship"
-                            android:inputType="textPersonName" />
+                             <com.google.android.material.textfield.TextInputEditText
+                                 android:id="@+id/tie_emergency_contact_relationship"
+                                 android:layout_width="match_parent"
+                                 android:layout_height="wrap_content"
+                                 android:background="@drawable/edit_text_background"
+                                 android:fontFamily="@font/gilroy_medium"
+                                 android:hint="Emergency Contact Relationship"
+                                 android:inputType="textPersonName" />
 
-                    </com.google.android.material.textfield.TextInputLayout>
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_emergency_contact_address"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_126sdp"
-                        android:layout_marginTop="@dimen/_12sdp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_emergency_contact_address"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_126sdp"
-                            android:background="@drawable/edit_text_background"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:gravity="start|top"
-                            android:hint="Emergency Contact Address"
-                            android:inputType="textImeMultiLine"
-                            android:textAlignment="viewStart" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
+                         </com.google.android.material.textfield.TextInputLayout>
 
 
+                         <com.google.android.material.textfield.TextInputLayout
+                             android:id="@+id/til_emergency_contact_address"
+                             android:layout_width="match_parent"
+                             android:layout_height="@dimen/_126sdp"
+                             android:layout_marginTop="@dimen/_12sdp">
+
+                             <com.google.android.material.textfield.TextInputEditText
+                                 android:id="@+id/tie_emergency_contact_address"
+                                 android:layout_width="match_parent"
+                                 android:layout_height="@dimen/_126sdp"
+                                 android:background="@drawable/edit_text_background"
+                                 android:fontFamily="@font/gilroy_medium"
+                                 android:gravity="start|top"
+                                 android:hint="Emergency Contact Address"
+                                 android:inputType="textImeMultiLine"
+                                 android:textAlignment="viewStart" />
+
+                         </com.google.android.material.textfield.TextInputLayout>
+
+     -->
                 </LinearLayout>
                 <!--End Of Owner Information-->
 

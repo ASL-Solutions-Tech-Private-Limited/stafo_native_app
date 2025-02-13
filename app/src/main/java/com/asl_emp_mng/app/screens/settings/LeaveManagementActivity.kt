@@ -4,9 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.PopupMenu
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -16,6 +19,8 @@ import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.LeavesManagementAdapter
 import com.asl_emp_mng.app.base.model.LeavesManagementModel
 import com.asl_emp_mng.app.databinding.ActivityLeaveManagementBinding
+import com.asl_emp_mng.app.databinding.CustomEmpDetailsBottomSheetLayoutBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.util.Collections
 import java.util.Random
 
@@ -23,6 +28,9 @@ class LeaveManagementActivity : AppCompatActivity() {
     private lateinit var binding : ActivityLeaveManagementBinding
     private lateinit var rvAdapter: LeavesManagementAdapter
     private lateinit var leaveRequestList : List<LeavesManagementModel>
+
+    //for bottom sheet
+    private lateinit var bottomSheetDialog: BottomSheetDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -72,6 +80,11 @@ class LeaveManagementActivity : AppCompatActivity() {
                 showPopupMenu(view)
             }
 
+            imageBack.setOnClickListener {
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            }
+
 
 
 
@@ -95,6 +108,7 @@ class LeaveManagementActivity : AppCompatActivity() {
                     true
                 }
                 1 -> {
+                    startActivity(Intent(this, LeaveRequestHistoryActivity::class.java))
                     true
                 }
                 else -> false
@@ -102,4 +116,23 @@ class LeaveManagementActivity : AppCompatActivity() {
         }
         popupMenu.show()
     }
+
+    fun showCustomBottomSheet() {
+        bottomSheetDialog = BottomSheetDialog(this)
+        val binding = CustomEmpDetailsBottomSheetLayoutBinding.inflate(layoutInflater)
+        bottomSheetDialog.setOnShowListener { dialog ->
+            val bottomSheet = (dialog as BottomSheetDialog)
+                .findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.setBackgroundResource(android.R.color.transparent)
+        }
+
+        bottomSheetDialog.setCancelable(false)
+        binding.bottomSheetCancel.setOnClickListener {
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetDialog.setContentView(binding.root)
+        bottomSheetDialog.show()
+    }
+
 }

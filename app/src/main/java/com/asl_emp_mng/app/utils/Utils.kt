@@ -45,6 +45,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
+import com.asl_emp_mng.app.screens.auth.LoginWithOTPActivity
 import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -53,6 +54,7 @@ import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import com.journeyapps.barcodescanner.BarcodeEncoder
+import com.orhanobut.hawk.Hawk
 import com.trackier.sdk.TrackierEvent
 import com.trackier.sdk.TrackierSDK.trackEvent
 import org.json.JSONObject
@@ -1338,5 +1340,12 @@ fun getTodayDate(): String {
     val dateFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault()) // Date format pattern
     val today = Calendar.getInstance().time // Get today's date
     return dateFormat.format(today)
+}
+
+fun doLogout(mContext: Context) {
+    Hawk.deleteAll()
+    val intent = Intent(mContext, LoginWithOTPActivity::class.java)
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    mContext.startActivity(intent)
 }
 

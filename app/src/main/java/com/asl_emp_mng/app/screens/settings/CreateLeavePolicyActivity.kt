@@ -11,25 +11,33 @@ import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.DynamicAdapter
 import com.asl_emp_mng.app.base.model.DynamicField
 import com.asl_emp_mng.app.databinding.ActivityCreateLeavePolicyBinding
+import com.asl_emp_mng.app.utils.CustomToast
 
 class CreateLeavePolicyActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityCreateLeavePolicyBinding
+    private lateinit var binding: ActivityCreateLeavePolicyBinding
     private lateinit var adapter: DynamicAdapter
     private val dynamicFields = mutableListOf<DynamicField>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding=ActivityCreateLeavePolicyBinding.inflate(layoutInflater)
+        binding = ActivityCreateLeavePolicyBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        setupRecyclerView()
         addDynamicField()
         onClickListener()
     }
+
+    private fun setupRecyclerView() {
+        adapter = DynamicAdapter(dynamicFields)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = adapter
+    }
+
     private fun onClickListener() {
         binding?.apply {
 
@@ -45,12 +53,12 @@ class CreateLeavePolicyActivity : AppCompatActivity() {
             }
 
             btnAddPolicy.setOnClickListener {
-               if (adapter.isValid()){
-
-               }
+                if (adapter.isValid()) {
+                    CustomToast(this@CreateLeavePolicyActivity, "ok!")
+                } else {
+                    CustomToast(this@CreateLeavePolicyActivity, "Please fill blank field!")
+                }
             }
-
-
 
 
         }
@@ -58,12 +66,15 @@ class CreateLeavePolicyActivity : AppCompatActivity() {
 
     private fun addDynamicField() {
         val options = resources.getStringArray(R.array.leave_type).toList()
-        dynamicFields.add(DynamicField("Enter Number of Leave", options))
-        adapter = DynamicAdapter(dynamicFields)
-        adapter.notifyItemInserted(dynamicFields.size - 1)
+        val newField = DynamicField("Enter Number of Leave", options)
 
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-        binding.recyclerView.setLayoutManager(layoutManager)
-        binding.recyclerView.adapter = adapter
+        if (::adapter.isInitialized) {
+            adapter.addField(newField)
+        } else {
+            adapter = DynamicAdapter(dynamicFields)
+            binding.recyclerView.layoutManager = LinearLayoutManager(this)
+            binding.recyclerView.adapter = adapter
+        }
     }
+
 }

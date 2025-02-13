@@ -8,13 +8,19 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.model.DashboardType
 import com.asl_emp_mng.app.base.model.ProfileType
-import com.asl_emp_mng.app.base.model.PunchInType
 import com.asl_emp_mng.app.databinding.ActivityEmplyeeyerProfileBinding
 import com.asl_emp_mng.app.databinding.LayoutAccountSettingsBinding
 import com.asl_emp_mng.app.screens.EmpProfileActivity
-import com.asl_emp_mng.app.screens.settings.AddBranchActivity
 import com.asl_emp_mng.app.screens.settings.AddShiftActivity
+import com.asl_emp_mng.app.screens.settings.BranchActivity
+import com.asl_emp_mng.app.screens.settings.HolidayActivity
 import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
+import com.asl_emp_mng.app.screens.settings.PolicyActivity
+import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
+import com.asl_emp_mng.app.utils.doLogout
+import com.asl_emp_mng.app.utils.getCompanyDetails
+import com.asl_emp_mng.app.utils.getEmployeeDetails
+import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
 
 class EmplyeeyerProfile : AppCompatActivity() {
 
@@ -26,13 +32,25 @@ class EmplyeeyerProfile : AppCompatActivity() {
         val binding = ActivityEmplyeeyerProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
-
+        setupView(binding)
         setOnClickEvents(binding)
     }
 
+    private fun setupView(binding: ActivityEmplyeeyerProfileBinding) {
+        binding?.apply {
+            if (getIsCOMPANYLogin() == true) {
+                tvHeaderEmpName.text = getCompanyDetails()?.companyName ?: "Guest"
+                tvHeaderEmpEmail.text = getCompanyDetails()?.email ?: "--"
+            } else {
+                tvHeaderEmpName.text = getEmployeeDetails()?.employee?.name ?: "Guest"
+                tvHeaderEmpEmail.text = getEmployeeDetails()?.employee?.email ?: "--"
+            }
+        }
+    }
+
+
     private fun setOnClickEvents(binding: ActivityEmplyeeyerProfileBinding) {
+
 
         val dashboardType = DashboardType.valueOf(
             intent.getStringExtra("DASHBOARD_TYPE") ?: DashboardType.EMPLOYEE.name
@@ -62,14 +80,40 @@ class EmplyeeyerProfile : AppCompatActivity() {
             binding.expandableAttandancenManagement.toggleLayout()
         }
 
+        binding?.expandableOtherManagement?.setOnClickListener {
+            binding.expandableOtherManagement.toggleLayout()
+        }
+
+        val holidaySettings =
+            binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_holiday_settings)
+
+        holidaySettings?.setOnClickListener {
+            startActivity(Intent(this, HolidayActivity::class.java))
+        }
+
         val branchSettings =
             binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_branch_settings)
 
         branchSettings?.setOnClickListener {
 
-            startActivity(Intent(this, AddBranchActivity::class.java))
+            startActivity(Intent(this, BranchActivity::class.java))
 
         }
+
+        val setAttendanceSetting =
+            binding?.expandableAttandancenManagement?.findViewById<AppCompatTextView>(R.id.tv_set_attendance_settings)
+
+        setAttendanceSetting?.setOnClickListener {
+
+            startActivity(
+                Intent(
+                    this@EmplyeeyerProfile,
+                    ViewAllEmployeeActivity::class.java
+                )
+            )
+
+        }
+
 
         val shiftSettings =
             binding?.expandableAttandancenManagement?.findViewById<AppCompatTextView>(R.id.tv_shift_settings)
@@ -80,11 +124,19 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         }
 
+
+        val officePolicy = binding?.expandableLeaveManagement?.findViewById<AppCompatTextView>(R.id.tv_office_policy)
+
+        officePolicy?.setOnClickListener {
+            startActivity(Intent(this, PolicyActivity::class.java))
+        }
+
+
         val requestLeave = binding?.expandableLeaveManagement?.findViewById<AppCompatTextView>(R.id.tv_leaves_management)
 
         requestLeave?.setOnClickListener {
             startActivity(Intent(this, LeaveManagementActivity::class.java))
-            }
+        }
 
         // for employee
 
@@ -99,7 +151,12 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         }
 
-        val basicProfile = binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_basic)
+        binding.tvLogout.setOnClickListener {
+            doLogout(this)
+        }
+
+        val basicProfile =
+            binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_basic)
 
         basicProfile?.setOnClickListener {
             val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
@@ -107,19 +164,22 @@ class EmplyeeyerProfile : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val professionalProfile = binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_professional)
+        val professionalProfile =
+            binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_professional)
         professionalProfile?.setOnClickListener {
             val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
             intent.putExtra("PROFILE_TYPE", ProfileType.PROFESSIONAL.name)
             startActivity(intent)
         }
-        val educationalProfile = binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_educational)
+        val educationalProfile =
+            binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_educational)
         educationalProfile?.setOnClickListener {
             val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
             intent.putExtra("PROFILE_TYPE", ProfileType.EDUCATION.name)
             startActivity(intent)
         }
-        val documentProfile = binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_documents)
+        val documentProfile =
+            binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_documents)
         documentProfile?.setOnClickListener {
             val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
             intent.putExtra("PROFILE_TYPE", ProfileType.DOCUMENT.name)

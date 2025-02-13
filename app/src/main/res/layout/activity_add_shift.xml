@@ -47,48 +47,65 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
+<RelativeLayout
+    android:id="@+id/rl_top_header"
+    android:background="@drawable/shift_gradient_bg"
+    app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <TextView
         android:id="@+id/tv_shift_time"
+        android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_10sdp"
-        android:fontFamily="@font/gilroy_regular"
+        android:fontFamily="@font/gilroy_medium"
         android:text="Shift Timings"
         android:textColor="@color/black"
-        android:textSize="@dimen/_12ssp"
-        app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/app_bar_layout" />
+        android:textSize="@dimen/_12ssp" />
 
     <TextView
         android:id="@+id/tv_shift_name"
+        android:layout_alignParentStart="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_8sdp"
-        android:fontFamily="@font/gilroy_regular"
+        android:fontFamily="@font/gilroy_medium"
         android:text="Shift Name"
         android:textColor="@color/black"
-        android:textSize="@dimen/_12ssp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"  />
+        android:textSize="@dimen/_12ssp" />
 
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_below="@+id/tv_shift_time"
         android:layout_marginTop="@dimen/_8sdp"
+        android:background="@color/color_grey1" />
+</RelativeLayout>
+
+    <View
+        android:id="@+id/view_top1"
+        android:layout_width="@dimen/_10sdp"
+        android:layout_height="1dp"
         android:background="@color/color_grey1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_shift_time" />
+        app:layout_constraintTop_toBottomOf="@id/rl_top_header"
+        app:layout_constraintStart_toStartOf="parent" />
+    <View
+        android:id="@+id/view_top2"
+        android:layout_width="@dimen/_10sdp"
+        android:layout_height="1dp"
+        android:background="@color/color_grey1"
+        app:layout_constraintTop_toBottomOf="@id/rl_top_header"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view"
+        app:layout_constraintTop_toBottomOf="@id/rl_top_header"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
