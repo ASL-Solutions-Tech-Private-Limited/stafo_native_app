@@ -87,6 +87,11 @@ class BranchActivity : AppCompatActivity() {
 
         }
 
+        binding.imageBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+            finish()
+        }
+
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.swipeRefreshLayout.isRefreshing = false

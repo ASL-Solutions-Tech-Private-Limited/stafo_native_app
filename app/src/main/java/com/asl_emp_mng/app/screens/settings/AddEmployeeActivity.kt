@@ -216,6 +216,11 @@ class AddEmployeeActivity : AppCompatActivity() {
                     }
                 }
 
+            ivBack.setOnClickListener {
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            }
+
 
 
 

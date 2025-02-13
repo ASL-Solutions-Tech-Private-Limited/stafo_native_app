@@ -16,8 +16,14 @@ import com.asl_emp_mng.app.screens.auth.dataClass.RegisterResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.StatesListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveRequestBody
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateResponse
@@ -112,5 +118,17 @@ interface ApiStores {
         @Query("email") email: String,
         @Query("password") password: String
     ): Response<LoginResponse>
+
+    @POST("api/holidays-create")
+    suspend fun callCreateHoliday(@Header("Authorization") token: String, @Body request: CreateHolidayRequest): Response<CreateHolidayResponse>
+
+    @POST("api/company-dashboard")
+    suspend fun callCompanySummary( @Header("Authorization") token: String): Response<AttendanceSummaryResponse>
+
+    @POST("api/leave-request")
+    suspend fun callEmployeeLeaveRequest(@Header("Authorization") token: String, @Body request: EmployeeLeaveRequestBody): Response<EmployeeLeaveResponse>
+
+    @GET("api/company/profile")
+    suspend fun callCompanyProfile(@Header("Authorization") token: String): Response<CompanyProfileResponse>
 
 }
