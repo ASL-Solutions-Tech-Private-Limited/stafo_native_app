@@ -1,19 +1,18 @@
 package com.asl_emp_mng.app.utils
 
+import com.asl_emp_mng.app.screens.auth.dataClass.CompanyData
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeData
 import com.orhanobut.hawk.Hawk
 
 //Session
 
 private val LOGIN_DETAILS = "user_details"
-private val isLogin = "is_login"
+private val isEMPLogin = "is_emp_login"
+private val isCOMPANYLogin = "is_company_login"
 private val isOnBoardingShown = "is_onboarding_shown"
 private val TOKEN = "token"
-public val USERNAME = "user_name"
-public val USERPASSWORD = "user_password"
-private val FirebaseAuthToken = "firebase_token"
-private val STAFFLIST = "staff_list"
-private val VOICE_ON_OFF = "voice_on_off"
-private val LANGUAGE = "language"
+private val COMPANY_DETAILS = "company_details"
+private val EMPLOYEE_DETAILS = "employee_details"
 
 fun isOnBoardingScreenShown(): Boolean {
     return Hawk.get(isOnBoardingShown, false)
@@ -23,20 +22,36 @@ fun setIsOnBoardingScreenShown(isOnBoardingShown_: Boolean) {
     Hawk.put(isOnBoardingShown, isOnBoardingShown_)
 }
 
-fun setIsLogin(islogin: Boolean) {
-    Hawk.put(isLogin, islogin)
+fun setIsEMPLogin(islogin: Boolean) {
+    Hawk.put(isEMPLogin, islogin)
 }
 
 fun getIsLogin(): Boolean? {
-    return Hawk.get(isLogin, false)
+    return Hawk.get(isEMPLogin, false)
 }
 
-fun setLoginDetails(userDetails: String) {
-    Hawk.put(LOGIN_DETAILS, userDetails)
+fun setIsCOMPANYLogin(islogin: Boolean) {
+    Hawk.put(isCOMPANYLogin, islogin)
 }
 
-fun getLoginDetails(): String? {
-    return Hawk.get(LOGIN_DETAILS, null)
+fun getIsCOMPANYLogin(): Boolean? {
+    return Hawk.get(isCOMPANYLogin, false)
+}
+
+fun setCompanyDetails(companyDetails: CompanyData) {
+    Hawk.put(COMPANY_DETAILS, companyDetails)
+}
+
+fun getCompanyDetails(): CompanyData? {
+    return Hawk.get(COMPANY_DETAILS, null)
+}
+
+fun setEmployeeDetails(employeeDetails: EmployeeData) {
+    Hawk.put(EMPLOYEE_DETAILS, employeeDetails)
+}
+
+fun getEmployeeDetails(): EmployeeData? {
+    return Hawk.get(EMPLOYEE_DETAILS, null)
 }
 
 fun setUserAccessToken(token: String) {
@@ -48,18 +63,3 @@ fun getUserAccessToken(): String? {
 }
 
 
-fun setVoiceOnOff(voiceOnOff: Boolean) {
-    Hawk.put(VOICE_ON_OFF, voiceOnOff)
-}
-
-fun getVoiceOnOff(): Boolean? {
-    return Hawk.get(VOICE_ON_OFF, true)
-}
-
-fun setLanguage(language: String) {
-    Hawk.put(LANGUAGE, language)
-}
-
-fun getLanguage(): String {
-    return Hawk.get(LANGUAGE, "hi")
-}

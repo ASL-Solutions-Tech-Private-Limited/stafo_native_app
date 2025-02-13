@@ -18,6 +18,7 @@ import com.asl_emp_mng.app.base.request.VerifyOtpRequestBody
 import com.asl_emp_mng.app.screens.auth.dataClass.AddBranchResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.BusinessTypeResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CitiesListResponse
+import com.asl_emp_mng.app.screens.auth.dataClass.CompanyRegistrationResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CompanyTypeResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.CountryListResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.LoginResponse
@@ -55,8 +56,8 @@ class AuthViewModel() : BaseViewModel() {
 
     val mLoginResponse: LiveData<LoginResponse> get() = mLogin
 
-    private var mRegister: MutableLiveData<RegisterResponse> = MutableLiveData()
-    val mRegisterResponse: LiveData<RegisterResponse> get() = mRegister
+    private var mRegister: MutableLiveData<CompanyRegistrationResponse> = MutableLiveData()
+    val mRegisterResponse: LiveData<CompanyRegistrationResponse> get() = mRegister
 
 
     private var mOtp: MutableLiveData<OtpResponse> = MutableLiveData()
@@ -190,7 +191,7 @@ class AuthViewModel() : BaseViewModel() {
                     longtitute = longitude,
                     radar = "200"
                 )
-                val response = ASLEmpMng.instance.apiStores()?.callCreateBranch(bearerToken,addBranchRequest)
+                val response = ASLEmpMng.instance.apiStores()?.callCreateBranch(addBranchRequest)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {

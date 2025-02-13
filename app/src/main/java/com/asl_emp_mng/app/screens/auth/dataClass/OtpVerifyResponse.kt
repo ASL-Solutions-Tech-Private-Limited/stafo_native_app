@@ -1,5 +1,7 @@
 package com.asl_emp_mng.app.screens.auth.dataClass
 
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeData
+
 data class OtpVerifyResponse(
     val success: Boolean,
     val message: String,
@@ -7,6 +9,6 @@ data class OtpVerifyResponse(
 )
 data class OtpData (
     val token: String,
-    val company: Any? = null,
-    val employee: Any? = null
+    val company: CompanyData? = null,
+    val employee: EmployeeData? = null
 )

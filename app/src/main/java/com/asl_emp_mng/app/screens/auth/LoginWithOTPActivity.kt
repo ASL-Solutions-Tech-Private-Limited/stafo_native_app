@@ -1,6 +1,5 @@
 package com.asl_emp_mng.app.screens.auth
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.widget.addTextChangedListener
@@ -33,7 +32,13 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
             btnSignIn.setOnClickListener {
                 viewModel?.sendOTP(this@LoginWithOTPActivity, tieMobileNo.text.toString().trim())
             }
+
+            tvRegisterNow.setOnClickListener {
+                startActivity(Intent(this@LoginWithOTPActivity, MobileSignUp::class.java))
+            }
         }
+
+
     }
 
     private fun validateField() {

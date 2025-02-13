@@ -12,7 +12,6 @@ import com.asl_emp_mng.app.base.model.ErrorResponse
 import com.asl_emp_mng.app.base.request.AddBranchRequest
 import com.asl_emp_mng.app.screens.auth.LoginActivity
 import com.asl_emp_mng.app.screens.auth.dataClass.AddBranchResponse
-import com.asl_emp_mng.app.screens.auth.dataClass.CountryListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.AttendanceSummaryResponse
@@ -33,7 +32,6 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
 
 class SettingsViewModel : BaseViewModel() {
 
@@ -87,7 +85,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val bearerToken = "Bearer $token"
-                val response = ASLEmpMng.instance.apiStores()?.callCompanyProfile(bearerToken)
+                val response = ASLEmpMng.instance.apiStores()?.callCompanyProfile()
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -128,7 +126,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val bearerToken = "Bearer $token"
-                val response = ASLEmpMng.instance.apiStores()?.callEmployeeLeaveRequest(bearerToken,request)
+                val response = ASLEmpMng.instance.apiStores()?.callEmployeeLeaveRequest(request)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -168,7 +166,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val bearerToken = "Bearer $token"
-                val response = ASLEmpMng.instance.apiStores()?.callCreateHoliday(bearerToken,request)
+                val response = ASLEmpMng.instance.apiStores()?.callCreateHoliday(request)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -210,7 +208,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val bearerToken = "Bearer $token"
-                val response = ASLEmpMng.instance.apiStores()?.callCompanySummary(bearerToken)
+                val response = ASLEmpMng.instance.apiStores()?.callCompanySummary()
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     Log.d("API_",response?.body().toString())
@@ -254,7 +252,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val bearerToken = "Bearer $token"
-                val response = ASLEmpMng.instance.apiStores()?.callEmployeeList(bearerToken)
+                val response = ASLEmpMng.instance.apiStores()?.callEmployeeList()
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -293,7 +291,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val bearerToken = "Bearer $token"
-                val response = ASLEmpMng.instance.apiStores()?.callBranchViewList(bearerToken)
+                val response = ASLEmpMng.instance.apiStores()?.callBranchViewList()
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -333,7 +331,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val bearerToken = "Bearer $token"
-                val response = ASLEmpMng.instance.apiStores()?.callShiftList(bearerToken)
+                val response = ASLEmpMng.instance.apiStores()?.callShiftList()
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -373,7 +371,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val bearerToken = "Bearer $token"
-                val response = ASLEmpMng.instance.apiStores()?.callBranchList(bearerToken)
+                val response = ASLEmpMng.instance.apiStores()?.callBranchList()
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -412,7 +410,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val bearerToken = "Bearer $token"
-                val response = ASLEmpMng.instance.apiStores()?.callDepartmentList(bearerToken)
+                val response = ASLEmpMng.instance.apiStores()?.callDepartmentList()
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -463,7 +461,7 @@ class SettingsViewModel : BaseViewModel() {
                     radar = "200"
                 )
                 val response =
-                    ASLEmpMng.instance.apiStores()?.callCreateBranch(bearerToken, addBranchRequest)
+                    ASLEmpMng.instance.apiStores()?.callCreateBranch(addBranchRequest)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -503,7 +501,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
 
                 val bearerToken = "Bearer $token"
-                val response = ASLEmpMng.instance.apiStores()?.callAddEmp(bearerToken, request)
+                val response = ASLEmpMng.instance.apiStores()?.callAddEmp(request)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -549,7 +547,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
 
                 val bearerToken = "Bearer $token"
-                val response = ASLEmpMng.instance.apiStores()?.callCreateShift(bearerToken, request)
+                val response = ASLEmpMng.instance.apiStores()?.callCreateShift(request)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {

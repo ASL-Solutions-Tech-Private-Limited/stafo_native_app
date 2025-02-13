@@ -14,7 +14,6 @@ import com.asl_emp_mng.app.base.adapter.SliderAdapter
 import com.asl_emp_mng.app.base.model.ActionModel
 import com.asl_emp_mng.app.base.model.DashboardType
 import com.asl_emp_mng.app.databinding.ActivityEmployerDashboardBinding
-import com.asl_emp_mng.app.screens.settings.AddBranchActivity
 import com.asl_emp_mng.app.screens.settings.AddEmployeeActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
 import com.asl_emp_mng.app.screens.settings.CompanyProfileActivity
@@ -23,8 +22,10 @@ import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.getCompanyDetails
 import com.asl_emp_mng.app.utils.getGreetingBasedOnTime
 import com.asl_emp_mng.app.utils.getTodayDate
+import com.asl_emp_mng.app.utils.getUserAccessToken
 
 class EmployerDashboard : AppCompatActivity() {
     private lateinit var binding: ActivityEmployerDashboardBinding
@@ -48,23 +49,15 @@ class EmployerDashboard : AppCompatActivity() {
 
     private fun initViews() {
         binding.apply {
-
-            token = getToken(this@EmployerDashboard, "token")
-
             name = intent.extras?.getString("name") ?: ""
             tvHeaderGreeting.text = getGreetingBasedOnTime()
-            tvHeaderEmpName.text = name
+            tvHeaderEmpName.text = getCompanyDetails()?.companyName ?: " Guest"
 
             tvLetsCheck.text = "Today's Report (${getTodayDate()})"
             rvWishes.layoutManager =
                 LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
             llNoWishes.visibility = View.VISIBLE
             llLeaves.visibility = View.VISIBLE
-
-            /*   rvLeaves.layoutManager =
-                   LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
-               val emplyeeListWishAdapter = EmplyeeListAdapter(this@EmployerDashboard)
-               rvLeaves.adapter = emplyeeListWishAdapter*/
 
             rvActions.layoutManager =
                 LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
@@ -123,24 +116,12 @@ class EmployerDashboard : AppCompatActivity() {
     }
 
 
-    private fun getToken(context: Context, key: String): String? {
-        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        return sharedPref.getString(key, null)
-    }
-
-
     private fun observeViewModel() {
-
-
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-
         settingsViewModel.mAttendanceSummaryResponse.observe(this) {
                       binding.tvPresentEmp.text=it.presentCount.toString()
                       binding.tvOnLeaveEmp.text=it.employeeCount.toString()
-
         }
-
-
     }
 
     private fun handleLoader(status: String) {
@@ -163,7 +144,7 @@ class EmployerDashboard : AppCompatActivity() {
         }
 
         binding.tvLetsCheckViewAll.setOnClickListener {
-            // startActivity(Intent(this, AddShiftActivity::class.java))
+             startActivity(Intent(this, ViewAllEmployeeActivity::class.java))
         }
 
         binding.tvHeaderEmpName.text = name
@@ -185,7 +166,6 @@ class EmployerDashboard : AppCompatActivity() {
         var imageList = ArrayList<Int>()
         imageList.add(R.drawable.banner_one)
         imageList.add(R.drawable.banner_two)
-
         binding.imageSlider.setSliderAdapter(SliderAdapter(this, imageList))
     }
 }

@@ -12,10 +12,13 @@ import android.view.animation.AnimationUtils
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.BaseActivity
 import com.asl_emp_mng.app.databinding.ActivitySplashBinding
-import com.asl_emp_mng.app.screens.auth.LoginActivity
 import com.asl_emp_mng.app.screens.auth.LoginWithOTPActivity
 import com.asl_emp_mng.app.screens.auth.OnBoardingActivity
+import com.asl_emp_mng.app.screens.dashboard.EmployeeDashboard
+import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
 import com.asl_emp_mng.app.utils.CommonViewModel
+import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
+import com.asl_emp_mng.app.utils.getIsLogin
 import com.asl_emp_mng.app.utils.isOnBoardingScreenShown
 
 class SplashActivity : BaseActivity<ActivitySplashBinding, CommonViewModel>() {
@@ -38,7 +41,13 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, CommonViewModel>() {
         }, 1000)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            if (isOnBoardingScreenShown()) {
+            if (isOnBoardingScreenShown() && getIsCOMPANYLogin() == true) {
+                startActivity(Intent(this, EmployerDashboard::class.java))
+                finish()
+            } else if (isOnBoardingScreenShown() && getIsLogin() == true) {
+                startActivity(Intent(this, EmployeeDashboard::class.java))
+                finish()
+            } else if (isOnBoardingScreenShown()) {
                 startActivity(Intent(this, LoginWithOTPActivity::class.java))
                 finish()
             } else {

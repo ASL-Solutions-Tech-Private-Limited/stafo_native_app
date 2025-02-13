@@ -68,7 +68,7 @@ class AppIntro : Fragment() {
 
         //............................................................
         binding.btnSkip.setOnClickListener {
-            startActivity(Intent(requireContext(), LoginActivity::class.java))
+            startActivity(Intent(requireContext(), LoginWithOTPActivity::class.java))
             requireActivity().finish()
         }
 

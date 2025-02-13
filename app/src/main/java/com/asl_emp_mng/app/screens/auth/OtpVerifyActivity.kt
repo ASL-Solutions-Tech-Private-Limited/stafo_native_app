@@ -14,8 +14,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.ActivityOtpVerifyBinding
 import com.asl_emp_mng.app.screens.dashboard.EmployeeDashboard
+import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.setCompanyDetails
+import com.asl_emp_mng.app.utils.setEmployeeDetails
+import com.asl_emp_mng.app.utils.setIsCOMPANYLogin
+import com.asl_emp_mng.app.utils.setIsEMPLogin
+import com.asl_emp_mng.app.utils.setUserAccessToken
 
 class OtpVerifyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOtpVerifyBinding
@@ -88,10 +94,24 @@ class OtpVerifyActivity : AppCompatActivity() {
         authViewModel.mVerifyOtpResponse.observe(this) {
             if (it.success) {
                 if (it.data?.company != null) {
-                    startActivity(Intent(this@OtpVerifyActivity, SignUpActivity::class.java))
-                } else {
-                    saveToken(this, "token", it.data?.token ?: "")
+                    setUserAccessToken(it.data?.token ?: "")
+                    setIsCOMPANYLogin(true)
+                    setCompanyDetails(it.data.company)
+                    startActivity(Intent(this@OtpVerifyActivity, EmployerDashboard::class.java))
+                    finish()
+                } else if (it.data?.employee != null) {
+                    // saveToken(this, "token", it.data?.token ?: "")
+                    setUserAccessToken(it.data?.token ?: "")
+                    setIsEMPLogin(true)
+                    setEmployeeDetails(it.data.employee)
                     startActivity(Intent(this@OtpVerifyActivity, EmployeeDashboard::class.java))
+                    finish()
+                } else {
+
+                    // saveToken(this, "token", it.data?.token ?: "")
+                    startActivity(Intent(this@OtpVerifyActivity, SignUpActivity::class.java).apply {
+                        putExtra("mobile", mobile)
+                    })
                     finish()
                 }
             } else {
