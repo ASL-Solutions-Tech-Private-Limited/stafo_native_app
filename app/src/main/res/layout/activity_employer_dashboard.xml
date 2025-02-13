@@ -114,7 +114,7 @@
                         app:layout_constraintTop_toBottomOf="@id/tv_header_emp_name">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_header_emp_no"
+                            android:id="@+id/tv_profile"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_12sdp"
@@ -223,6 +223,7 @@
                                     android:textSize="@dimen/_14sdp" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/tv_present_emp"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/gilroy_bold"
@@ -266,6 +267,7 @@
                                     android:textSize="@dimen/_14sdp" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/tv_on_leave_emp"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/gilroy_bold"

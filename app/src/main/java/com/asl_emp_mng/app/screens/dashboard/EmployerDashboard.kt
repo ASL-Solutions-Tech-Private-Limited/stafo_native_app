@@ -17,6 +17,7 @@ import com.asl_emp_mng.app.databinding.ActivityEmployerDashboardBinding
 import com.asl_emp_mng.app.screens.settings.AddBranchActivity
 import com.asl_emp_mng.app.screens.settings.AddEmployeeActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
+import com.asl_emp_mng.app.screens.settings.CompanyProfileActivity
 import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
@@ -111,6 +112,11 @@ class EmployerDashboard : AppCompatActivity() {
 
             }
 
+            token?.let {
+                settingsViewModel.getCompanyDashboard(this@EmployerDashboard, it)
+
+            }
+
         }
 
 
@@ -128,19 +134,11 @@ class EmployerDashboard : AppCompatActivity() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
-        /*settingsViewModel.mEmployeeListResponse.observe(this) {
+        settingsViewModel.mAttendanceSummaryResponse.observe(this) {
+                      binding.tvPresentEmp.text=it.presentCount.toString()
+                      binding.tvOnLeaveEmp.text=it.employeeCount.toString()
 
-            if (it.status) {
-                val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
-                binding.rvLeaves.setLayoutManager(layoutManager)
-                rvAdapter = EmpListAdapter(it.data, this)
-                binding.rvLeaves.adapter = rvAdapter
-                rvAdapter.notifyDataSetChanged()
-
-            } else {
-                CustomToast(this, it.message)
-            }
-        }*/
+        }
 
 
     }
@@ -169,6 +167,10 @@ class EmployerDashboard : AppCompatActivity() {
         }
 
         binding.tvHeaderEmpName.text = name
+
+        binding.tvProfile.setOnClickListener {
+            startActivity(Intent(this,CompanyProfileActivity::class.java))
+        }
     }
 
     private fun actionList(): List<ActionModel> {

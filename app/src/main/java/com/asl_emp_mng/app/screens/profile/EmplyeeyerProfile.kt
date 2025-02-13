@@ -14,7 +14,10 @@ import com.asl_emp_mng.app.databinding.LayoutAccountSettingsBinding
 import com.asl_emp_mng.app.screens.EmpProfileActivity
 import com.asl_emp_mng.app.screens.settings.AddBranchActivity
 import com.asl_emp_mng.app.screens.settings.AddShiftActivity
+import com.asl_emp_mng.app.screens.settings.BranchActivity
+import com.asl_emp_mng.app.screens.settings.HolidayActivity
 import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
+import com.asl_emp_mng.app.screens.settings.PolicyActivity
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
 
 class EmplyeeyerProfile : AppCompatActivity() {
@@ -34,6 +37,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
     }
 
     private fun setOnClickEvents(binding: ActivityEmplyeeyerProfileBinding) {
+
 
         val dashboardType = DashboardType.valueOf(
             intent.getStringExtra("DASHBOARD_TYPE") ?: DashboardType.EMPLOYEE.name
@@ -63,12 +67,19 @@ class EmplyeeyerProfile : AppCompatActivity() {
             binding.expandableAttandancenManagement.toggleLayout()
         }
 
+        val holidaySettings =
+            binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_holiday_settings)
+
+        holidaySettings?.setOnClickListener {
+            startActivity(Intent(this, HolidayActivity::class.java))
+        }
+
         val branchSettings =
             binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_branch_settings)
 
         branchSettings?.setOnClickListener {
 
-            startActivity(Intent(this, AddBranchActivity::class.java))
+            startActivity(Intent(this, BranchActivity::class.java))
 
         }
 
@@ -97,8 +108,14 @@ class EmplyeeyerProfile : AppCompatActivity() {
         }
 
 
-        val requestLeave =
-            binding?.expandableLeaveManagement?.findViewById<AppCompatTextView>(R.id.tv_leaves_management)
+        val officePolicy = binding?.expandableLeaveManagement?.findViewById<AppCompatTextView>(R.id.tv_office_policy)
+
+        officePolicy?.setOnClickListener {
+            startActivity(Intent(this, PolicyActivity::class.java))
+        }
+
+
+        val requestLeave = binding?.expandableLeaveManagement?.findViewById<AppCompatTextView>(R.id.tv_leaves_management)
 
         requestLeave?.setOnClickListener {
             startActivity(Intent(this, LeaveManagementActivity::class.java))

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.base.model.LeavesManagementModel
 import com.asl_emp_mng.app.databinding.RecyLeaveManagementChildLayoutBinding
+import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 
 class LeavesManagementAdapter(
     private var leavesManagementList: List<LeavesManagementModel>,
@@ -28,8 +29,10 @@ class LeavesManagementAdapter(
         with(holder) {
             with(leavesManagementList[position]) {
                 binding.txtEmpName.text = this.empName
-                binding.empLvDate.text = this.leaveDate
-                binding.empLvStatus.text = this.leaveStatus
+                binding.txtLeaveDate.text = this.leaveDate
+                binding.txtInfo.setOnClickListener {
+                    (context as LeaveManagementActivity).showCustomBottomSheet()
+                }
             }
         }
     }

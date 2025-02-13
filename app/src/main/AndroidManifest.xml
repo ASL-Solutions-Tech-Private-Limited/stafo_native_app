@@ -49,6 +49,25 @@
             android:name=".screens.auth.LoginWithOTPActivity"
             android:exported="false" />
         <activity
+            android:name=".screens.settings.CompanyProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.settings.AddPolicyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.settings.PolicyActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Sims" />
+        <activity
+            android:name=".screens.settings.AddHolidayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.settings.HolidayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.settings.LeaveRequestHistoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.settings.ViewAllEmployeeActivity"
             android:exported="false" />
         <activity

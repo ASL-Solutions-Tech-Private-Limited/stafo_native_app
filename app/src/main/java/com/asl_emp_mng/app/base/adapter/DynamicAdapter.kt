@@ -1,20 +1,24 @@
 package com.asl_emp_mng.app.base.adapter
 
+import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.model.DynamicField
+import com.asl_emp_mng.app.utils.CustomToast
 
 
-class DynamicAdapter(private val fields: List<DynamicField>) :
+class DynamicAdapter(private val fields: MutableList<DynamicField>) :
     RecyclerView.Adapter<DynamicAdapter.DynamicViewHolder>() {
-    private val viewHolders = mutableListOf<DynamicViewHolder>()
 
     inner class DynamicViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val spinner: Spinner = view.findViewById(R.id.spinner_type)
@@ -24,14 +28,12 @@ class DynamicAdapter(private val fields: List<DynamicField>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DynamicViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.recy_dynamic_child_layout, parent, false)
-        val viewHolder = DynamicViewHolder(view)
-        viewHolders.add(viewHolder)
-        return viewHolder
+        return DynamicViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: DynamicViewHolder, position: Int) {
         val field = fields[position]
-
+        holder.editText.setText(field.userInput)
         holder.editText.hint = field.hint
 
         val adapter = ArrayAdapter(
@@ -40,35 +42,49 @@ class DynamicAdapter(private val fields: List<DynamicField>) :
             field.options
         )
         holder.spinner.adapter = adapter
+        val selectedIndex = field.options.indexOf(field.selectedOption)
+        if (selectedIndex != -1) {
+            holder.spinner.setSelection(selectedIndex)
+        }
+
+        holder.editText.addTextChangedListener {
+            field.userInput = it.toString()
+        }
+        holder.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                field.selectedOption = field.options[pos]
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
     }
 
     override fun getItemCount(): Int = fields.size
 
+    fun addField(newField: DynamicField) {
+        fields.add(newField)
+        notifyItemInserted(fields.size - 1)
+    }
+
+
     fun isValid(): Boolean {
         var isValid = true
 
-        for (viewHolder in viewHolders) {
-            val editTextValue = viewHolder.editText.text.toString().trim()
-            val spinnerSelectedItem = viewHolder.spinner.selectedItem?.toString()
-
-            // Check if EditText is empty
-            if (editTextValue.isEmpty()) {
-                viewHolder.editText.error = "This field cannot be empty"
+        for (field in fields) {
+            if (field.userInput.isBlank()) {
                 isValid = false
+                break
             }
 
-            // Check if Spinner has a valid selection
-            if (spinnerSelectedItem.isNullOrEmpty()) {
-                Toast.makeText(
-                    viewHolder.itemView.context,
-                    "Please select an option",
-                    Toast.LENGTH_SHORT
-                ).show()
+            if (field.selectedOption.isBlank()) {
                 isValid = false
+                break
             }
         }
+
         return isValid
     }
-
 }
+
+
 
