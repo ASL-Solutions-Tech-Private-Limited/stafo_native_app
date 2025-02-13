@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,10 +15,20 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ajithvgiri.searchdialog.OnSearchItemSelected
+import com.ajithvgiri.searchdialog.SearchListItem
+import com.ajithvgiri.searchdialog.SearchableDialog
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.BranchAdapter
 import com.asl_emp_mng.app.databinding.ActivityCompanyProfileBinding
+import com.asl_emp_mng.app.screens.auth.AuthViewModel
+import com.asl_emp_mng.app.screens.auth.dataClass.DataBusinessType
+import com.asl_emp_mng.app.screens.auth.dataClass.DataCity
+import com.asl_emp_mng.app.screens.auth.dataClass.DataCompanyType
+import com.asl_emp_mng.app.screens.auth.dataClass.DataCountry
+import com.asl_emp_mng.app.screens.auth.dataClass.DataStates
 import com.asl_emp_mng.app.utils.CustomLoader
+import com.google.android.material.textfield.TextInputEditText
 import java.util.Collections
 import java.util.Random
 
@@ -26,6 +38,25 @@ class CompanyProfileActivity : AppCompatActivity() {
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
+
+    // for update company type , business type ,country,state, city,
+
+    private val viewModel: AuthViewModel by viewModels()
+
+    private var mCompanyTypeList: ArrayList<DataCompanyType>? = ArrayList()
+    private var mBusinessTypeList: ArrayList<DataBusinessType>? = ArrayList()
+    private var mCountryList: ArrayList<DataCountry>? = ArrayList()
+    private var mStateList: ArrayList<DataStates>? = ArrayList()
+    private var mCityList: ArrayList<DataCity>? = ArrayList()
+
+    private lateinit var companyTypeDialog: SearchableDialog
+    private lateinit var businessTypeDialog: SearchableDialog
+    private lateinit var countryDialog: SearchableDialog
+    private lateinit var stateDialog: SearchableDialog
+    private lateinit var cityDialog: SearchableDialog
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +71,8 @@ class CompanyProfileActivity : AppCompatActivity() {
 
         onClickListener()
         observeViewModel()
+
+        observeAuthViewModel()
 
     }
 
@@ -86,6 +119,13 @@ class CompanyProfileActivity : AppCompatActivity() {
             }
 
 
+            tieCompanyType.setOnClickListener { companyTypeDialog.show() }
+            tieBusinessType.setOnClickListener { businessTypeDialog.show() }
+            tieSelectCountry.setOnClickListener { countryDialog.show() }
+            tieSelectState.setOnClickListener { validateAndShowStateDialog() }
+            tieSelectCity.setOnClickListener { validateAndShowCityDialog() }
+
+
         }
     }
 
@@ -103,6 +143,8 @@ class CompanyProfileActivity : AppCompatActivity() {
 
         settingsViewModel.mCompanyProfileResponse.observe(this) {
             if (it.status) {
+
+                Log.d("API_",it.data.toString())
                 val companyName = it.data?.company?.companyName
 
                 if (!companyName.isNullOrEmpty()) {
@@ -159,6 +201,85 @@ class CompanyProfileActivity : AppCompatActivity() {
 
     }
 
+
+    private fun observeAuthViewModel() {
+        viewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
+        viewModel.getCompanyType(this)
+        viewModel.mCompanyTypeResponse.observe(this) {
+            if (it.success) {
+                mCompanyTypeList = it.data
+                binding.let { it1 ->
+                    setupSearchableDialog(
+                        mCompanyTypeList,
+                        "Company Type",
+                        it1.tieCompanyType
+                    )
+                }
+            }
+        }
+
+
+        viewModel.getBusinessType(this)
+
+        viewModel.mBusinessTypeResponse.observe(this) {
+            if (it.success) {
+                mBusinessTypeList = it.data
+                binding.let { it1 ->
+                    setupSearchableDialog(
+                        mBusinessTypeList,
+                        "Business Type",
+                        it1.tieBusinessType
+                    )
+                }
+            }
+        }
+
+
+
+
+
+        viewModel.getCountryList(this)
+        viewModel.mCountryResponse.observe(this) {
+            if (it.success) {
+                mCountryList = it.data
+                binding.let { it1 ->
+                    setupSearchableDialog(
+                        mCountryList,
+                        "Country",
+                        it1.tieSelectCountry
+                    )
+                }
+            }
+        }
+
+        viewModel.mStateResponse.observe(this) {
+            if (it.success) {
+                mStateList = it.data
+                binding.let { it1 ->
+                    setupSearchableDialog(
+                        mStateList,
+                        "State",
+                        it1.tieSelectState
+                    )
+                }
+            }
+        }
+
+        viewModel.mCityResponse.observe(this) {
+            if (it.success) {
+                mCityList = it.data
+                binding.let { it1 ->
+                    setupSearchableDialog(
+                        mCityList,
+                        "City",
+                        it1.tieSelectCity
+                    )
+                }
+            }
+        }
+    }
+
     private fun handleLoader(status: String) {
         if (status.equals("load", ignoreCase = true)) {
             if (!customLoader.isShowing) customLoader.show()
@@ -166,6 +287,79 @@ class CompanyProfileActivity : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
+    private fun validateAndShowStateDialog() {
+        if (binding.tieSelectCountry.text.isNullOrEmpty()) {
+            Toast.makeText(this, "Please select country first", Toast.LENGTH_SHORT).show()
+        } else {
+            stateDialog.show()
+        }
+    }
 
+    private fun validateAndShowCityDialog() {
+        if (binding.tieSelectState.text.isNullOrEmpty()) {
+            Toast.makeText(this, "Please select state first", Toast.LENGTH_SHORT).show()
+        } else {
+            cityDialog.show()
+        }
+    }
+
+    private fun setupSearchableDialog(
+        dataList: List<Any>?,
+        title: String,
+        field: TextInputEditText
+    ) {
+        val items = dataList?.map {
+            val name = when (it) {
+                is DataCompanyType -> it.company_name
+                is DataBusinessType -> it.business_name
+                is DataCountry -> it.name
+                is DataStates -> it.name
+                is DataCity -> it.name
+                else -> "Unknown"
+            }
+
+            val id = when (it) {
+                is DataCompanyType -> it.id
+                is DataBusinessType -> it.id
+                is DataCountry -> it.id
+                is DataStates -> it.id
+                is DataCity -> it.id
+                else -> -1
+            }
+
+            SearchListItem(id, name)
+        } ?: emptyList()
+
+        val dialog = SearchableDialog(this, items as ArrayList<SearchListItem>, title)
+        dialog.setOnItemSelected(object : OnSearchItemSelected {
+            override fun onClick(position: Int, searchListItem: SearchListItem) {
+                field.setText(searchListItem.title)
+                dialog.dismiss()
+
+                // Handle special cases for country and state selection
+                when (field) {
+
+                    binding.tieSelectCountry -> viewModel.getStateList(
+                        this@CompanyProfileActivity,
+                        searchListItem.id.toString()
+                    )
+
+                    binding.tieSelectState -> viewModel.getCityList(
+                        this@CompanyProfileActivity,
+                        searchListItem.id.toString()
+
+
+                    )
+                }
+            }
+        })
+        when (title) {
+            "Company Type" -> companyTypeDialog = dialog
+            "Business Type" -> businessTypeDialog = dialog
+            "Country" -> countryDialog = dialog
+            "State" -> stateDialog = dialog
+            "City" -> cityDialog = dialog
+        }
+    }
 
 }
