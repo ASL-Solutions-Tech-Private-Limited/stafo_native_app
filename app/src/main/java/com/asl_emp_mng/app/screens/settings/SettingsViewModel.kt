@@ -24,6 +24,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.HolidayListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftListResponse
@@ -81,6 +82,55 @@ class SettingsViewModel : BaseViewModel() {
 
     private var mCompanyProfile: MutableLiveData<CompanyProfileResponse> = MutableLiveData()
     val mCompanyProfileResponse: LiveData<CompanyProfileResponse> get() = mCompanyProfile
+
+    private var mHolidayList: MutableLiveData<HolidayListResponse> = MutableLiveData()
+
+    val mHolidayListResponse: LiveData<HolidayListResponse> get() = mHolidayList
+
+
+    fun getHolidayList(mContext: Context, token: String) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val bearerToken = "Bearer $token"
+                val response = ASLEmpMng.instance.apiStores()?.callHolidayList(bearerToken)
+                Log.d("res",response?.body().toString())
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mHolidayList.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
 
     fun getCompanyDetails(mContext: Context, token: String) {
         getLoaderLiveData().value = "load"

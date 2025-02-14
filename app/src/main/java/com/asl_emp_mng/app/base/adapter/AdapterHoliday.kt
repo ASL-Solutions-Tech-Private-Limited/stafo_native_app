@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.databinding.RecyHolidayItemLayoutBinding
+import com.asl_emp_mng.app.screens.settings.dataClass.Holiday
 
 class AdapterHoliday (
-    //private var leavesManagementList: List<LeavesManagementModel>,
+    private var list: List<Holiday>,
     var context: Context
 ) : RecyclerView.Adapter<AdapterHoliday.ViewHolder>() {
     inner class ViewHolder(val binding: RecyHolidayItemLayoutBinding) :

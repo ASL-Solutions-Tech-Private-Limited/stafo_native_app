@@ -25,6 +25,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.HolidayListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftListResponse
@@ -130,5 +131,8 @@ interface ApiStores {
 
     @GET("api/company/profile")
     suspend fun callCompanyProfile(@Header("Authorization") token: String): Response<CompanyProfileResponse>
+
+    @GET("api/holidays/by-company")
+    suspend fun callHolidayList(@Header("Authorization") token: String): Response<HolidayListResponse>
 
 }
