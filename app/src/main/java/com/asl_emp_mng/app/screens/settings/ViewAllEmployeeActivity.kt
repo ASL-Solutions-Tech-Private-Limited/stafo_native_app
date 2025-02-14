@@ -2,7 +2,6 @@ package com.asl_emp_mng.app.screens.settings
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -17,14 +16,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
-import com.asl_emp_mng.app.base.adapter.BranchAdapter
-import com.asl_emp_mng.app.base.adapter.EmpItemAdapter
 import com.asl_emp_mng.app.base.adapter.EmpListAdapter
 import com.asl_emp_mng.app.base.adapter.RadioShiftAdapter
-import com.asl_emp_mng.app.base.adapter.ShiftAdapter
-import com.asl_emp_mng.app.databinding.ActivityBranchBinding
 import com.asl_emp_mng.app.databinding.ActivityViewAllEmployeeBinding
-import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateRequest
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.google.android.material.bottomsheet.BottomSheetDialog

@@ -13,6 +13,7 @@ import com.asl_emp_mng.app.databinding.IntroAppContentBinding
 import com.asl_emp_mng.app.databinding.IntroAppDesignBinding
 import com.asl_emp_mng.app.utils.AppIntro.Companion.MAX_STEP
 import com.asl_emp_mng.app.screens.auth.LoginActivity
+import com.asl_emp_mng.app.screens.auth.LoginWithOTPActivity
 import com.google.android.material.tabs.TabLayoutMediator
 
 class AppIntro : Fragment() {
@@ -67,7 +68,7 @@ class AppIntro : Fragment() {
 
         //............................................................
         binding.btnSkip.setOnClickListener {
-            startActivity(Intent(requireContext(), LoginActivity::class.java))
+            startActivity(Intent(requireContext(), LoginWithOTPActivity::class.java))
             requireActivity().finish()
         }
 
@@ -75,7 +76,7 @@ class AppIntro : Fragment() {
         binding.btnNext.setOnClickListener {
             if (binding.btnNext.text.toString() == getString(R.string.intro_get_started)) {
                 setIsOnBoardingScreenShown(true)
-                startActivity(Intent(requireContext(), LoginActivity::class.java))
+                startActivity(Intent(requireContext(), LoginWithOTPActivity::class.java))
                 requireActivity().finish()
             } else {
                 // to change current page - on click "Next BUTTON"

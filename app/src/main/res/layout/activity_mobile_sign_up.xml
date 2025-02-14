@@ -93,15 +93,6 @@
                             android:maxLength="10"
                             android:inputType="number" />
                     </com.google.android.material.textfield.TextInputLayout>
-
-
-
-
-
-
-
-
-
                 </LinearLayout>
                 <!--End Of Basic Information-->
 

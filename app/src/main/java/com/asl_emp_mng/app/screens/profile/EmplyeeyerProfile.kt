@@ -8,17 +8,19 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.model.DashboardType
 import com.asl_emp_mng.app.base.model.ProfileType
-import com.asl_emp_mng.app.base.model.PunchInType
 import com.asl_emp_mng.app.databinding.ActivityEmplyeeyerProfileBinding
 import com.asl_emp_mng.app.databinding.LayoutAccountSettingsBinding
 import com.asl_emp_mng.app.screens.EmpProfileActivity
-import com.asl_emp_mng.app.screens.settings.AddBranchActivity
 import com.asl_emp_mng.app.screens.settings.AddShiftActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
 import com.asl_emp_mng.app.screens.settings.HolidayActivity
 import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 import com.asl_emp_mng.app.screens.settings.PolicyActivity
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
+import com.asl_emp_mng.app.utils.doLogout
+import com.asl_emp_mng.app.utils.getCompanyDetails
+import com.asl_emp_mng.app.utils.getEmployeeDetails
+import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
 
 class EmplyeeyerProfile : AppCompatActivity() {
 
@@ -30,11 +32,22 @@ class EmplyeeyerProfile : AppCompatActivity() {
         val binding = ActivityEmplyeeyerProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
-
+        setupView(binding)
         setOnClickEvents(binding)
     }
+
+    private fun setupView(binding: ActivityEmplyeeyerProfileBinding) {
+        binding?.apply {
+            if (getIsCOMPANYLogin() == true) {
+                tvHeaderEmpName.text = getCompanyDetails()?.companyName ?: "Guest"
+                tvHeaderEmpEmail.text = getCompanyDetails()?.email ?: "--"
+            } else {
+                tvHeaderEmpName.text = getEmployeeDetails()?.employee?.name ?: "Guest"
+                tvHeaderEmpEmail.text = getEmployeeDetails()?.employee?.email ?: "--"
+            }
+        }
+    }
+
 
     private fun setOnClickEvents(binding: ActivityEmplyeeyerProfileBinding) {
 
@@ -65,6 +78,10 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         binding?.expandableAttandancenManagement?.setOnClickListener {
             binding.expandableAttandancenManagement.toggleLayout()
+        }
+
+        binding?.expandableOtherManagement?.setOnClickListener {
+            binding.expandableOtherManagement.toggleLayout()
         }
 
         val holidaySettings =
@@ -132,6 +149,10 @@ class EmplyeeyerProfile : AppCompatActivity() {
         binding?.expandableProfile?.setOnClickListener {
             binding.expandableProfile.toggleLayout()
 
+        }
+
+        binding.tvLogout.setOnClickListener {
+            doLogout(this)
         }
 
         val basicProfile =

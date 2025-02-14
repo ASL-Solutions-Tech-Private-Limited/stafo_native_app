@@ -1,8 +1,8 @@
 package com.asl_emp_mng.app.screens.auth
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -11,16 +11,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.ajithvgiri.searchdialog.OnSearchItemSelected
 import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
-import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.model.CompanyInfo
 import com.asl_emp_mng.app.base.model.OwnerInfo
-import com.asl_emp_mng.app.databinding.ActivityOtpVerifyBinding
 import com.asl_emp_mng.app.databinding.ActivitySignUpBinding
 import com.asl_emp_mng.app.screens.auth.dataClass.DataBusinessType
-import com.asl_emp_mng.app.screens.auth.dataClass.DataCity
 import com.asl_emp_mng.app.screens.auth.dataClass.DataCompanyType
-import com.asl_emp_mng.app.screens.auth.dataClass.DataCountry
-import com.asl_emp_mng.app.screens.auth.dataClass.DataStates
 import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
@@ -38,7 +33,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var businessTypeDialog: SearchableDialog
     private lateinit var userSelectCTypeId: String
     private lateinit var userSelectBTypeId: String
-
+    private var mMobile: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -49,7 +44,7 @@ class SignUpActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        mMobile = intent.extras?.getString("mobile")
         observeViewModel()
         setupOnClickListener()
     }
@@ -59,8 +54,6 @@ class SignUpActivity : AppCompatActivity() {
 
             btnNext.setOnClickListener {
                 if (validateBasicInfo()) {
-                    Log.d("res", "c:$userSelectCTypeId b:$userSelectBTypeId")
-
                     val companyInfo = CompanyInfo(
                         company_name = tieCompanyName.text.toString(),
                         company_type = userSelectCTypeId,
@@ -68,8 +61,8 @@ class SignUpActivity : AppCompatActivity() {
                         registration_number = "",
                         gst_number = "",
                         pan_number = "",
-                        mobile_no = "",
-                        email = "",
+                        mobile_no = "$mMobile",
+                        email = tieCompanyEmail.text.toString(),
                         password = "",
                         password_confirmation = "",
                         country = "",
@@ -78,18 +71,13 @@ class SignUpActivity : AppCompatActivity() {
                         address = "",
                         pin = ""
                     )
-
                     val ownerInfo = OwnerInfo(
                         first_name = tieOwnerName.text.toString(),
                         last_name = "",
-                        email = "",
-                        mobile = ""
+                        email = "", mobile = "$mMobile"
 
                     )
-
                     authViewModel.registerUser(this@SignUpActivity,companyInfo,ownerInfo)
-
-
                 }
             }
 
@@ -153,6 +141,7 @@ class SignUpActivity : AppCompatActivity() {
         }
         authViewModel.mRegisterResponse.observe(this) {
             if (it.success) {
+                saveToken(this, "token", it?.token ?: "")
                 CustomToast(this, it.message)
                 startActivity(Intent(this@SignUpActivity, EmployerDashboard::class.java))
             }else{
@@ -211,5 +200,12 @@ class SignUpActivity : AppCompatActivity() {
             "Company Type" -> companyTypeDialog = dialog
             "Business Type" -> businessTypeDialog = dialog
         }
+    }
+
+    private fun saveToken(context: Context, key: String, value: String) {
+        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString(key, value)
+        editor.apply()
     }
 }
