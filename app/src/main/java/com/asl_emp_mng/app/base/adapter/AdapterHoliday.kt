@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.databinding.RecyHolidayItemLayoutBinding
+import com.asl_emp_mng.app.screens.settings.dataClass.Holiday
 
 class AdapterHoliday (
-    //private var leavesManagementList: List<LeavesManagementModel>,
+    private var list: List<Holiday>,
     var context: Context
 ) : RecyclerView.Adapter<AdapterHoliday.ViewHolder>() {
     inner class ViewHolder(val binding: RecyHolidayItemLayoutBinding) :
@@ -24,19 +25,17 @@ class AdapterHoliday (
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        /* with(holder) {
-             with(leavesManagementList[position]) {
-                 binding.txtEmpName.text = this.empName
-                 binding.txtLeaveDate.text = this.leaveDate
-                 binding.txtInfo.setOnClickListener {
-                     (context as LeaveManagementActivity).showCustomBottomSheet()
-                 }
+         with(holder) {
+             with(list[position]) {
+                 binding.txtHolidayName.text = this.title
+                 binding.txtStartDate.text = this.start_date
+                 binding.txtEndDate.text = this.end_date
              }
-         }*/
+         }
     }
 
     override fun getItemCount(): Int {
-        return 6
+        return list.size
     }
 
 }

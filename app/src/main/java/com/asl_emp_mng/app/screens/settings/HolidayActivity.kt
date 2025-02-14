@@ -1,8 +1,12 @@
 package com.asl_emp_mng.app.screens.settings
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -11,43 +15,56 @@ import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.AdapterHoliday
 import com.asl_emp_mng.app.base.adapter.AdapterRequestLeaveHistory
+import com.asl_emp_mng.app.base.adapter.ShiftAdapter
 import com.asl_emp_mng.app.databinding.ActivityHolidayBinding
 import com.asl_emp_mng.app.databinding.ActivityLeaveRequestHistoryBinding
+import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.CustomToast
 
 class HolidayActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivityHolidayBinding
+    private lateinit var binding: ActivityHolidayBinding
     private lateinit var rvAdapter: AdapterHoliday
+
+    private var token: String? = null
+    private val customLoader: CustomLoader by lazy { CustomLoader(this) }
+    private val settingsViewModel: SettingsViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding=ActivityHolidayBinding.inflate(layoutInflater)
+
+        binding = ActivityHolidayBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         onClickListener()
+        observeViewModel()
 
 
     }
 
     private fun onClickListener() {
         binding?.apply {
+            token = getToken(this@HolidayActivity, "token")
 
-            val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this@HolidayActivity,
-                LinearLayoutManager.VERTICAL,false)
-            binding.rvHolidayList.setLayoutManager(layoutManager)
-            rvAdapter = AdapterHoliday(this@HolidayActivity)
-            binding.rvHolidayList.adapter = rvAdapter
+            token?.let {
+                settingsViewModel.getHolidayList(this@HolidayActivity, "176|Ih7lTuzx9ki2khNnsh0FzDy43WgAPu0ctzaLbexi080c13b7")
 
-
+            }
 
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
+                token?.let {
+                    settingsViewModel.getHolidayList(this@HolidayActivity, "176|Ih7lTuzx9ki2khNnsh0FzDy43WgAPu0ctzaLbexi080c13b7")
+
+                }
 
             }
 
@@ -58,8 +75,48 @@ class HolidayActivity : AppCompatActivity() {
             }
 
 
-
-
         }
     }
+
+    private fun getToken(context: Context, key: String): String? {
+        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        return sharedPref.getString(key, null)
+    }
+
+
+    private fun observeViewModel() {
+
+
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
+
+
+        settingsViewModel.mHolidayListResponse.observe(this) {
+
+            Log.d("res",it.data.toString())
+
+            if (it.status) {
+                val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+                binding.rvHolidayList.setLayoutManager(layoutManager)
+                rvAdapter = AdapterHoliday(it.data, this@HolidayActivity)
+                binding.rvHolidayList.adapter = rvAdapter
+                rvAdapter.notifyDataSetChanged()
+
+            } else {
+               binding.txtMsg.visibility=View.GONE
+            }
+        }
+
+
+    }
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
+        }
+    }
+
+
 }
