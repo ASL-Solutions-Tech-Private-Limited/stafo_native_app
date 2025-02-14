@@ -54,12 +54,15 @@ class HolidayActivity : AppCompatActivity() {
         binding?.apply {
             token = getToken(this@HolidayActivity, "token")
 
-            Log.d("res","token $token")
+            token?.let {
+                settingsViewModel.getHolidayList(this@HolidayActivity, "176|Ih7lTuzx9ki2khNnsh0FzDy43WgAPu0ctzaLbexi080c13b7")
+
+            }
 
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
                 token?.let {
-                    settingsViewModel.getHolidayList(this@HolidayActivity, it)
+                    settingsViewModel.getHolidayList(this@HolidayActivity, "176|Ih7lTuzx9ki2khNnsh0FzDy43WgAPu0ctzaLbexi080c13b7")
 
                 }
 
@@ -86,10 +89,7 @@ class HolidayActivity : AppCompatActivity() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
-        token?.let {
-            settingsViewModel.getHolidayList(this, it)
 
-        }
 
         settingsViewModel.mHolidayListResponse.observe(this) {
 

@@ -25,19 +25,17 @@ class AdapterHoliday (
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        /* with(holder) {
-             with(leavesManagementList[position]) {
-                 binding.txtEmpName.text = this.empName
-                 binding.txtLeaveDate.text = this.leaveDate
-                 binding.txtInfo.setOnClickListener {
-                     (context as LeaveManagementActivity).showCustomBottomSheet()
-                 }
+         with(holder) {
+             with(list[position]) {
+                 binding.txtHolidayName.text = this.title
+                 binding.txtStartDate.text = this.start_date
+                 binding.txtEndDate.text = this.end_date
              }
-         }*/
+         }
     }
 
     override fun getItemCount(): Int {
-        return 6
+        return list.size
     }
 
 }
