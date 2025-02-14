@@ -14,19 +14,14 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
-import com.asl_emp_mng.app.base.adapter.EmpListAdapter
 import com.asl_emp_mng.app.base.adapter.EmployeeAttendanceAdapter
-import com.asl_emp_mng.app.base.adapter.RadioShiftAdapter
 import com.asl_emp_mng.app.base.model.EmployeeAttendanceModel
 import com.asl_emp_mng.app.databinding.ActivityEmployeeAttendanceBinding
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.utils.CustomLoader
-import com.asl_emp_mng.app.utils.CustomToast
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Collections
 import java.util.Locale
-import java.util.Random
 
 class EmployeeAttendance : AppCompatActivity() {
     private lateinit var binding: ActivityEmployeeAttendanceBinding
@@ -37,6 +32,7 @@ class EmployeeAttendance : AppCompatActivity() {
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
+    private var mEMPId = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -48,7 +44,7 @@ class EmployeeAttendance : AppCompatActivity() {
             insets
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
-
+        mEMPId = intent.getStringExtra("EMPID").toString()
         onClickListener()
         observeViewModel()
 

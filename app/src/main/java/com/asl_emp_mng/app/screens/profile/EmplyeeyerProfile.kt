@@ -109,7 +109,9 @@ class EmplyeeyerProfile : AppCompatActivity() {
                 Intent(
                     this@EmplyeeyerProfile,
                     ViewAllEmployeeActivity::class.java
-                )
+                ).apply {
+                    putExtra("FROM","SetAttendance")
+                }
             )
 
         }

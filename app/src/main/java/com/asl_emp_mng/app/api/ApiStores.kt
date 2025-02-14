@@ -104,7 +104,7 @@ interface ApiStores {
     @GET("api/shifts")
     suspend fun callShiftList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ShiftListResponse>
 
-    @GET("api/employees-list")
+    @POST("api/employees-list")
     suspend fun callEmployeeList(@Body request: GetAttendanceRecordRequest, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<EmployeeListResponse>
 
     @GET("api/branch/list")
