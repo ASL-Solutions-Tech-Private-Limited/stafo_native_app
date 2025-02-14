@@ -29,6 +29,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAllEmployeeResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAttendanceRecordRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecord
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecordBody
 import com.asl_emp_mng.app.screens.settings.dataClass.HolidayListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
@@ -168,7 +169,7 @@ interface ApiStores {
 
 
     @GET("api/employees-list")
-    suspend fun callEmpRecord(@Body request: GetEmpAttendanceRecordBody, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<GetAllEmployeeResponse>
+    suspend fun callEmpRecord(@Body request: GetEmpAttendanceRecordBody, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<GetEmpAttendanceRecord>
 
 
 

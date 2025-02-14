@@ -27,6 +27,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAllEmployeeResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAttendanceRecordRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecord
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecordBody
 import com.asl_emp_mng.app.screens.settings.dataClass.HolidayListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PendingLeaveResponse
@@ -105,7 +107,48 @@ class SettingsViewModel : BaseViewModel() {
     private var mGetAllEmployee: MutableLiveData<GetAllEmployeeResponse> = MutableLiveData()
     val mGetAllEmployeeResponse: LiveData<GetAllEmployeeResponse> get() = mGetAllEmployee
 
+    private var mGetEmployeeRecord: MutableLiveData<GetEmpAttendanceRecord> = MutableLiveData()
 
+    val mGetEmployeeRecordResponse: LiveData<GetEmpAttendanceRecord> get() = mGetEmployeeRecord
+
+    fun getEmployeeAttendRecord(mContext: Context,request: GetEmpAttendanceRecordBody) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callEmpRecord(request)
+                Log.d("res","record: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mGetEmployeeRecord.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
 
