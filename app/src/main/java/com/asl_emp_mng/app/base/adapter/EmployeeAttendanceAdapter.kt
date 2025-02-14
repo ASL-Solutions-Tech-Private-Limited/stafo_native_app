@@ -6,17 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.base.model.EmployeeAttendanceModel
+import com.asl_emp_mng.app.databinding.ItemEmpAttendaceLayoutBinding
 import com.asl_emp_mng.app.databinding.RecyEmpAttendanceChildLayoutBinding
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDataList
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
 
 class EmployeeAttendanceAdapter(
-    private var attendList: List<EmployeeAttendanceModel>,
+    private var attendList: List<EmployeeDataList>,
     var context: Context
 ) : RecyclerView.Adapter<EmployeeAttendanceAdapter.ViewHolder>() {
-    inner class ViewHolder(val binding: RecyEmpAttendanceChildLayoutBinding) :
+    inner class ViewHolder(val binding: ItemEmpAttendaceLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = RecyEmpAttendanceChildLayoutBinding.inflate(
+        val binding = ItemEmpAttendaceLayoutBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -29,16 +32,16 @@ class EmployeeAttendanceAdapter(
         with(holder) {
             with(attendList[position]) {
 
-                if (this.attend){
-                    binding.llcAttend.visibility= View.VISIBLE
-                    binding.llcWeekOff.visibility= View.GONE
-                }else{
-                    binding.llcAttend.visibility= View.GONE
-                    binding.llcWeekOff.visibility= View.VISIBLE
+
+                binding.tvEmpName.text = this.name
+                binding.tvEmpJobTitle.text = this.position
+
+                if (this.attendances.isNotEmpty()) {
+                    binding.tvCheckIn.text = this.attendances[position].in_time
+                    binding.tvCheckOut.text = this.attendances[position].out_time
                 }
-               /* binding.tvTime.text = this.attendTime
-                binding.tvDate.text = this.attendDate
-                binding.tvCheckType.text = this.checkType*/
+
+
             }
         }
     }

@@ -38,7 +38,7 @@ import java.util.Random
 class AddShiftActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddShiftBinding
 
-    private var token: String? = null
+
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
 
@@ -61,17 +61,14 @@ class AddShiftActivity : AppCompatActivity() {
             insets
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
-        token = getToken(this, "token")
+
         onClickListener()
 
         observeViewModel()
 
     }
 
-    private fun getToken(context: Context, key: String): String? {
-        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        return sharedPref.getString(key, null)
-    }
+
 
 
     private fun observeViewModel() {
@@ -79,10 +76,7 @@ class AddShiftActivity : AppCompatActivity() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
-        token?.let {
-            settingsViewModel.getShiftList(this, it)
-
-        }
+        settingsViewModel.getShiftList(this)
 
         settingsViewModel.mShiftListResponse.observe(this) {
 
@@ -126,10 +120,7 @@ class AddShiftActivity : AppCompatActivity() {
 
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
-                token?.let {
-                    settingsViewModel.getShiftList(this@AddShiftActivity, it)
-
-                }
+                settingsViewModel.getShiftList(this@AddShiftActivity)
 
             }
 
@@ -180,15 +171,12 @@ class AddShiftActivity : AppCompatActivity() {
 
         btnSubmit.setOnClickListener {
             if (isValidate()) {
-                token?.let {
-                    val requestBody = ShiftCreateRequest(
-                        shift_name = edtShiftName.text.toString(),
-                        start_time = edtShiftStartTime.text.toString(),
-                        end_time = edtShiftEndTime.text.toString()
-                    )
-                    settingsViewModel.createNewShift(this, it, requestBody)
-
-                }
+                val requestBody = ShiftCreateRequest(
+                    shift_name = edtShiftName.text.toString(),
+                    start_time = edtShiftStartTime.text.toString(),
+                    end_time = edtShiftEndTime.text.toString()
+                )
+                settingsViewModel.createNewShift(this, requestBody)
             }
         }
 

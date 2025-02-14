@@ -135,6 +135,8 @@
         android:hint="Search"
         android:padding="@dimen/_12sdp"
         app:layout_constraintTop_toBottomOf="@+id/rl_top" />
+
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/llc_item_title"
         android:layout_width="match_parent"

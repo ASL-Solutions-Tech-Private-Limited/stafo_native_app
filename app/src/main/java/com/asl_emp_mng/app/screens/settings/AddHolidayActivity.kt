@@ -146,10 +146,7 @@ class AddHolidayActivity : AppCompatActivity() {
 
                     }*/
 
-                    token?.let {
-                        settingsViewModel.addHoliday(this@AddHolidayActivity, "176|Ih7lTuzx9ki2khNnsh0FzDy43WgAPu0ctzaLbexi080c13b7",request)
-
-                    }
+                    settingsViewModel.addHoliday(this@AddHolidayActivity,request)
 
                 } else {
                     CustomToast(this@AddHolidayActivity, "Please fill blank field!")

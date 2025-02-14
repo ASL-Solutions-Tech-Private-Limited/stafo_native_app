@@ -81,6 +81,7 @@ class AuthViewModel() : BaseViewModel() {
 
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
+                    Log.d("res",response?.body().toString())
                     if (response != null && response.isSuccessful) {
                         mVerifyOtp.postValue(response.body())
                     } else {
@@ -109,9 +110,11 @@ class AuthViewModel() : BaseViewModel() {
             try {
                 val request = OtpRequestBody(mobile_number = mobileNumber)
                 val response = ASLEmpMng.instance.apiStores()?.sendOtp(request)
-
+                Log.d("res",response?.body().toString())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
+
+
                     if (response != null && response.isSuccessful) {
                         mOtp.postValue(response.body())
                     } else {

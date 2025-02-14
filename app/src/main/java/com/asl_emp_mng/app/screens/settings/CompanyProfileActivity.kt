@@ -34,7 +34,7 @@ import java.util.Random
 
 class CompanyProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCompanyProfileBinding
-    private var token: String? = null
+
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
@@ -79,12 +79,7 @@ class CompanyProfileActivity : AppCompatActivity() {
     private fun onClickListener() {
         binding?.apply {
 
-            token = getToken(this@CompanyProfileActivity, "token")
-
-            token?.let {
-                settingsViewModel.getCompanyDetails(this@CompanyProfileActivity, it)
-
-            }
+            settingsViewModel.getCompanyDetails(this@CompanyProfileActivity)
 
 
 

@@ -7,9 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.databinding.RecyViewEmployeeItemLayoutBinding
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDataList
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployee
 
 class EmpListAdapter(
-    private var list: List<EmployeeDataList>,
+    private var list: List<GetEmployee>,
     var context: Activity
 ) : RecyclerView.Adapter<EmpListAdapter.ViewHolder>() {
     inner class ViewHolder(val binding: RecyViewEmployeeItemLayoutBinding) :

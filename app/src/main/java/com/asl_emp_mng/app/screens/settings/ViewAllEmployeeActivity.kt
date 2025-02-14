@@ -3,6 +3,7 @@ package com.asl_emp_mng.app.screens.settings
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -40,7 +41,6 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     private lateinit var rvRadioShift: RecyclerView
     private lateinit var rvRadioShiftAdapter: RadioShiftAdapter
 
-    private var token: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,10 +56,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         observeViewModel()
     }
 
-    private fun getToken(context: Context, key: String): String? {
-        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        return sharedPref.getString(key, null)
-    }
+
 
 
     private fun observeViewModel() {
@@ -67,9 +64,11 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
-        settingsViewModel.mEmployeeListResponse.observe(this) {
-
+        settingsViewModel.mGetAllEmployeeResponse.observe(this) {
+            Log.d("res",it.message)
            if (it.status) {
+
+               Log.d("res",it.data.toString())
                val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
                binding.rvViewEmpList.setLayoutManager(layoutManager)
                rvAdapter = EmpListAdapter(it.data, this)
@@ -112,20 +111,14 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     }
 
     private fun setOnClickEvents() {
-        token = getToken(this@ViewAllEmployeeActivity, "token")
 
-        token?.let {
-            settingsViewModel.getEmpList(this@ViewAllEmployeeActivity, it)
 
-        }
+        settingsViewModel.getAllEmployeeList(this@ViewAllEmployeeActivity)
 
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.swipeRefreshLayout.isRefreshing = false
-            token?.let {
-                settingsViewModel.getEmpList(this@ViewAllEmployeeActivity, it)
-
-            }
+            settingsViewModel.getAllEmployeeList(this@ViewAllEmployeeActivity)
 
         }
 
@@ -208,10 +201,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
 
 
-        token?.let {
-            settingsViewModel.getShiftList(this, it)
-
-        }
+        settingsViewModel.getShiftList(this)
 
 
 

@@ -24,7 +24,7 @@ import java.util.Random
 class BranchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBranchBinding
 
-    private var token: String? = null
+
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
@@ -80,12 +80,7 @@ class BranchActivity : AppCompatActivity() {
     }
 
     private fun setOnClickEvents() {
-        token = getToken(this@BranchActivity, "token")
-
-        token?.let {
-            settingsViewModel.getViewBranchList(this@BranchActivity, it)
-
-        }
+        settingsViewModel.getViewBranchList(this@BranchActivity)
 
         binding.imageBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -95,10 +90,7 @@ class BranchActivity : AppCompatActivity() {
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.swipeRefreshLayout.isRefreshing = false
-            token?.let {
-                settingsViewModel.getViewBranchList(this@BranchActivity, it)
-
-            }
+            settingsViewModel.getViewBranchList(this@BranchActivity)
 
         }
 

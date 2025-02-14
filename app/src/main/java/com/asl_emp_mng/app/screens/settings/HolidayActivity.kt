@@ -26,7 +26,6 @@ class HolidayActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHolidayBinding
     private lateinit var rvAdapter: AdapterHoliday
 
-    private var token: String? = null
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
 
@@ -52,19 +51,11 @@ class HolidayActivity : AppCompatActivity() {
 
     private fun onClickListener() {
         binding?.apply {
-            token = getToken(this@HolidayActivity, "token")
-
-            token?.let {
-                settingsViewModel.getHolidayList(this@HolidayActivity, "176|Ih7lTuzx9ki2khNnsh0FzDy43WgAPu0ctzaLbexi080c13b7")
-
-            }
+            settingsViewModel.getHolidayList(this@HolidayActivity)
 
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
-                token?.let {
-                    settingsViewModel.getHolidayList(this@HolidayActivity, "176|Ih7lTuzx9ki2khNnsh0FzDy43WgAPu0ctzaLbexi080c13b7")
-
-                }
+                settingsViewModel.getHolidayList(this@HolidayActivity)
 
             }
 
