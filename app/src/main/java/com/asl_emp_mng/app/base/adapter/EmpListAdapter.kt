@@ -63,11 +63,11 @@ class EmpListAdapter(
                 }
 
                 binding.llcAddAttendance.setOnClickListener {
-                    (context as ViewAllEmployeeActivity).showCustomBottomSheet()
+                    (context as ViewAllEmployeeActivity).showCustomBottomSheet(this.id.toString())
                 }
 
                 binding.llcShiftTime.setOnClickListener {
-                    (context as ViewAllEmployeeActivity).showShiftCustomBottomSheet()
+                    (context as ViewAllEmployeeActivity).showShiftCustomBottomSheet(this.id.toString())
                 }
 
 

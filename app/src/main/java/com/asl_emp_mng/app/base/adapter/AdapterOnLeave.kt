@@ -14,7 +14,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class AdapterOnLeave (
-    private var list: ArrayList<Leave>,
+    private var list: List<Leave>,
     var context: Context
 ) : RecyclerView.Adapter<AdapterOnLeave.ViewHolder>() {
     inner class ViewHolder(val binding: ItemLeaveListBinding) :

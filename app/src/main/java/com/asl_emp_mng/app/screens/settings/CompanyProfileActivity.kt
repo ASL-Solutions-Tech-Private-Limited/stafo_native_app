@@ -27,7 +27,10 @@ import com.asl_emp_mng.app.screens.auth.dataClass.DataCity
 import com.asl_emp_mng.app.screens.auth.dataClass.DataCompanyType
 import com.asl_emp_mng.app.screens.auth.dataClass.DataCountry
 import com.asl_emp_mng.app.screens.auth.dataClass.DataStates
+import com.asl_emp_mng.app.screens.settings.dataClass.OwnerInfo
+import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfile
 import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.CustomToast
 import com.google.android.material.textfield.TextInputEditText
 import java.util.Collections
 import java.util.Random
@@ -54,6 +57,13 @@ class CompanyProfileActivity : AppCompatActivity() {
     private lateinit var countryDialog: SearchableDialog
     private lateinit var stateDialog: SearchableDialog
     private lateinit var cityDialog: SearchableDialog
+    private var selectedCountry: Int=0
+    private var selectedState: Int=0
+    private var selectedCity: Int=0
+    private var selectedCompanyType: Int=0
+    private var selectedBusinessType: Int=0
+
+    private var profileType: String="company_basic"
 
 
 
@@ -92,18 +102,21 @@ class CompanyProfileActivity : AppCompatActivity() {
             binding.rdgpProfile.setOnCheckedChangeListener { group, checkedId ->
                 when (checkedId) {
                     R.id.radio_basic -> {
+                        profileType="company_basic"
                         binding.llBasicInfo.visibility = View.VISIBLE
                         binding.llOwnerInfo.visibility = View.GONE
                         binding.llDocumentinfo.visibility = View.GONE
                     }
 
                     R.id.radio_owner -> {
+                        profileType="company_owner"
                         binding.llBasicInfo.visibility = View.GONE
                         binding.llOwnerInfo.visibility = View.VISIBLE
                         binding.llDocumentinfo.visibility = View.GONE
                     }
 
                     R.id.radio_document -> {
+                        profileType="company_document"
                         binding.llBasicInfo.visibility = View.GONE
                         binding.llOwnerInfo.visibility = View.GONE
                         binding.llDocumentinfo.visibility = View.VISIBLE
@@ -121,14 +134,94 @@ class CompanyProfileActivity : AppCompatActivity() {
             tieSelectCity.setOnClickListener { validateAndShowCityDialog() }
 
 
+            btnCompanyProfile.setOnClickListener {
+                if (profileType=="company_basic"){
+
+                    if (validateBasicInfo()){
+
+                        val ownerInfo = OwnerInfo(
+                            firstName = "",
+                            lastName = "",
+                            mobile = "",
+                            email = ""
+                        )
+                        val companyInfo = UpdateCompanyProfile(
+                            companyName = binding.tieCompanyName.text.toString(),
+                            companyType = selectedCompanyType.toString(),
+                            businessTypeId = selectedBusinessType,
+                            registrationNumber = binding.tieCompanyRegNo.text.toString(),
+                            gstNumber = binding.tieCompanyGstNo.text.toString(),
+                            panNumber = binding.tieCompanyPanNo.text.toString(),
+                            address = binding.tieCompanyAddress.toString(),
+                            cityId = selectedCity,
+                            stateId = selectedState,
+                            countryId = selectedCountry,
+                            pin = "",
+                            bankName = "",
+                            accountNumber = "",
+                            ifscCode = "",
+                            noOfEmployee = 0,
+                            status = "",
+                            email = "",
+                            mobileNo = "",
+                            ownerInfo = ownerInfo
+                        )
+
+
+
+                        settingsViewModel.updateCompanyProfile(this@CompanyProfileActivity,companyInfo)
+
+
+                    }
+
+
+                }else if (profileType=="company_owner"){
+                    if (isValidOwnerInfo()){
+              /*          val ownerInfo = OwnerInfo(
+                            firstName = binding.tieOwnerName.text.toString(),
+                            lastName = "",
+                            mobile = binding.tieOwnerMobileNo.text.toString(),
+                            email = binding.tieOwnerEmail.text.toString()
+                        )
+                        val companyInfo = UpdateCompanyProfile(
+                            companyName = "",
+                            companyType ="",
+                            businessTypeId = 0,
+                            registrationNumber = "",
+                            gstNumber = "",
+                            panNumber = "",
+                            address ="",
+                            cityId = selectedCity,
+                            stateId = selectedState,
+                            countryId = selectedCountry,
+                            pin = "",
+                            bankName = "",
+                            accountNumber = "",
+                            ifscCode = "",
+                            noOfEmployee = 0,
+                            status = "",
+                            email = "",
+                            mobileNo = "",
+                            ownerInfo = ownerInfo
+                        )
+
+
+
+                        settingsViewModel.updateCompanyProfile(this@CompanyProfileActivity,companyInfo)
+*/
+                        CustomToast(this@CompanyProfileActivity,"Working is progress")
+
+                    }
+                }else if (profileType=="company_document"){
+                    CustomToast(this@CompanyProfileActivity,"Working is progress")
+                }
+            }
+
+
         }
     }
 
 
-    private fun getToken(context: Context, key: String): String? {
-        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        return sharedPref.getString(key, null)
-    }
 
 
     private fun observeViewModel() {
@@ -139,70 +232,59 @@ class CompanyProfileActivity : AppCompatActivity() {
         settingsViewModel.mCompanyProfileResponse.observe(this) {
             if (it.status) {
 
-                Log.d("API_",it.data.toString())
-                val companyName = it.data?.company?.companyName
+                it.data?.let { data ->
 
-                if (!companyName.isNullOrEmpty()) {
-                    binding.tieCompanyName.setText(companyName)
-                    binding.tieCompanyName.isFocusable = false
-                    binding.tieCompanyName.isFocusableInTouchMode = false
+                    binding.tieCompanyName.setText(data.company?.companyName ?: "")
+                    isFocusableField(binding.tieCompanyName)
+
+
+                    binding.tieCompanyAddress.setText(data.company?.address ?: "")
+                    isFocusableField(binding.tieCompanyAddress)
+
+
+                    binding.tieCompanyRegNo.setText(data.company?.registrationNumber ?: "")
+                    isFocusableField(binding.tieCompanyRegNo)
+
+
+                    binding.tieCompanyGstNo.setText(data.company?.gstNumber ?: "")
+                    isFocusableField(binding.tieCompanyGstNo)
+
+
+                    binding.tieCompanyPanNo.setText(data.company?.panNumber ?: "")
+                    isFocusableField(binding.tieCompanyPanNo)
+
                 }
-
-                val companyType = it.data?.company?.companyType
-
-                if (!companyType.isNullOrEmpty()) {
-                    binding.tieCompanyType.setText(companyType)
-                    binding.tieCompanyType.isFocusable = false
-                    binding.tieCompanyType.isFocusableInTouchMode = false
-                }
-
-                val panNo = it.data?.company?.panNumber
-                if (!panNo.isNullOrEmpty()) {
-                    binding.tieCompanyPanNo.setText(panNo)
-                    binding.tieCompanyPanNo.isFocusable = false
-                    binding.tieCompanyPanNo.isFocusableInTouchMode = false
-                }
-
-                val gstNo = it.data?.company?.gstNumber
-
-                if (!gstNo.isNullOrEmpty()) {
-                    binding.tieCompanyGstNo.setText(gstNo)
-                    binding.tieCompanyGstNo.isFocusable = false
-                    binding.tieCompanyGstNo.isFocusableInTouchMode = false
-                }
-                val rgsNo = it.data?.company?.registrationNumber
-
-
-                if (!rgsNo.isNullOrEmpty()) {
-                    binding.tieCompanyRegNo.setText(rgsNo)
-                    binding.tieCompanyRegNo.isFocusable = false
-                    binding.tieCompanyRegNo.isFocusableInTouchMode = false
-                }
-
-                val address = it.data?.company?.address
-
-
-                if (!address.isNullOrEmpty()) {
-                    binding.tieCompanyAddress.setText(address)
-                    binding.tieCompanyAddress.isFocusable = false
-                    binding.tieCompanyAddress.isFocusableInTouchMode = false
-                }
-
-
+            }else{
+                CustomToast(this,it.message)
             }
+
+        }
+
+        settingsViewModel.mUpdateCompanyResponse.observe(this) {
+          if (it.status){
+              CustomToast(this,it.message)
+              onBackPressedDispatcher.onBackPressed()
+          }else{
+              CustomToast(this,it.message)
+          }
 
         }
 
 
     }
 
-
+    private fun isFocusableField(view: TextInputEditText?) {
+        view?.isFocusable = false
+        view?.isFocusableInTouchMode = false
+    }
     private fun observeAuthViewModel() {
         viewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
         viewModel.getCompanyType(this)
         viewModel.mCompanyTypeResponse.observe(this) {
             if (it.success) {
+
+
                 mCompanyTypeList = it.data
                 binding.let { it1 ->
                     setupSearchableDialog(
@@ -238,6 +320,8 @@ class CompanyProfileActivity : AppCompatActivity() {
         viewModel.mCountryResponse.observe(this) {
             if (it.success) {
                 mCountryList = it.data
+
+                Log.d("API_",mCountryList.toString())
                 binding.let { it1 ->
                     setupSearchableDialog(
                         mCountryList,
@@ -282,6 +366,8 @@ class CompanyProfileActivity : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
+
+
     private fun validateAndShowStateDialog() {
         if (binding.tieSelectCountry.text.isNullOrEmpty()) {
             Toast.makeText(this, "Please select country first", Toast.LENGTH_SHORT).show()
@@ -329,9 +415,32 @@ class CompanyProfileActivity : AppCompatActivity() {
         dialog.setOnItemSelected(object : OnSearchItemSelected {
             override fun onClick(position: Int, searchListItem: SearchListItem) {
                 field.setText(searchListItem.title)
+
+                if (title=="Company Type"){
+                    selectedCompanyType=searchListItem.id
+                    Log.d("res","get : $selectedCompanyType $searchListItem.title")
+
+                }else if (title=="Business Type"){
+                    selectedBusinessType=searchListItem.id
+                    Log.d("res","get : $selectedBusinessType $searchListItem.title")
+                }else if (title=="Country"){
+                    selectedCountry=searchListItem.id
+                    Log.d("res","get : $selectedCountry $searchListItem.title")
+                }
+                else if (title=="State"){
+                    selectedState=searchListItem.id
+                    Log.d("res","get : $selectedState $searchListItem.title")
+
+                }else if (title=="City"){
+                    selectedCity=searchListItem.id
+                    Log.d("res","get : $selectedCity $searchListItem.title")
+
+                }
+
+
                 dialog.dismiss()
 
-                // Handle special cases for country and state selection
+
                 when (field) {
 
                     binding.tieSelectCountry -> viewModel.getStateList(
@@ -354,6 +463,47 @@ class CompanyProfileActivity : AppCompatActivity() {
             "Country" -> countryDialog = dialog
             "State" -> stateDialog = dialog
             "City" -> cityDialog = dialog
+        }
+    }
+    fun getCountryName(code: Int): String {
+        for (country in mCountryList!!) {
+            if (country.id == code) {
+                return country.name
+            }
+        }
+        return "Unknown Country"
+    }
+
+
+    private fun validateBasicInfo(): Boolean {
+        return listOf(
+            binding.tieCompanyName to "Please enter company name",
+            binding.tieCompanyType to "Please enter company type",
+            binding.tieBusinessType to "Please enter company type",
+            binding.tieSelectCountry to "Please enter company type",
+            binding.tieSelectState to "Please enter company type",
+            binding.tieSelectCity to "Please enter company type",
+            binding.tieCompanyPanNo to "Please enter pan number",
+            binding.tieCompanyAddress to "Please enter address"
+        ).all { validateField(it.first, it.second) }
+    }
+
+    private fun isValidOwnerInfo(): Boolean {
+        return listOf(
+            binding.tieOwnerName to "Please enter owner name",
+            binding.tieOwnerMobileNo to "Please enter mobile",
+            binding.tieOwnerEmail to "Please enter email",
+            binding.tieOwnerAddress to "Please enter address"
+        ).all { validateField(it.first, it.second) }
+    }
+
+    private fun validateField(view: TextInputEditText?, errorMsg: String): Boolean {
+        return if (view?.text.isNullOrEmpty()) {
+            view?.error = errorMsg
+            view?.requestFocus()
+            false
+        } else {
+            true
         }
     }
 

@@ -16,13 +16,21 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.asl_emp_mng.app.base.adapter.LeavesManagementAdapter
 import com.asl_emp_mng.app.base.model.PunchInType
 import com.asl_emp_mng.app.databinding.ActivityEmployeePunchInBinding
+import com.asl_emp_mng.app.screens.settings.SettingsViewModel
+import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
+import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.CustomToast
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -34,6 +42,13 @@ import com.google.android.gms.location.Priority
 class EmployeePunchInActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmployeePunchInBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val customLoader: CustomLoader by lazy { CustomLoader(this) }
+    private val settingsViewModel: SettingsViewModel by viewModels()
+
+    private lateinit var latitude: String
+    private lateinit var longitude: String
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -46,6 +61,8 @@ class EmployeePunchInActivity : AppCompatActivity() {
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         onClickListener()
+
+        observeViewModel()
     }
 
     private fun onClickListener() {
@@ -53,7 +70,7 @@ class EmployeePunchInActivity : AppCompatActivity() {
         val punchType =
             PunchInType.valueOf(intent.getStringExtra("Punch_TYPE") ?: PunchInType.SELFIE.name)
 
-        if (punchType == PunchInType.SELFIE) {
+        /*if (punchType == PunchInType.SELFIE) {
             binding.clEmpAttendSelfie.visibility = View.VISIBLE
         } else {
             binding.clEmpAttendSelfie.visibility = View.GONE
@@ -62,7 +79,10 @@ class EmployeePunchInActivity : AppCompatActivity() {
             } else {
                 checkLocationPermissionAndFind()
             }
-        }
+        }*/
+
+        binding.rlSelfiePunchIn.visibility = View.GONE
+
 
 
 
@@ -77,7 +97,54 @@ class EmployeePunchInActivity : AppCompatActivity() {
 
 
         }
+
+
+
+
+
+        binding.btnPunchIn.setOnClickListener {
+
+
+            if (!isLocationEnabled()) {
+                showLocationServicesDialog()
+            } else {
+                checkLocationPermissionAndFind()
+            }
+
+
+        }
     }
+
+
+    private fun observeViewModel() {
+
+
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
+
+
+        settingsViewModel.mPunchInResponse.observe(this) {
+
+            if (it.status) {
+                CustomToast(this, it.message)
+            } else {
+                CustomToast(this, it.message)
+            }
+
+
+        }
+
+
+    }
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
+        }
+    }
+
 
     private fun openPicker(req: Int) {
         Log.e("TAG", "openPicker: $req")
@@ -153,9 +220,19 @@ class EmployeePunchInActivity : AppCompatActivity() {
 
                 if (locationResult.locations.isNotEmpty()) {
                     val lastLocation: Location = locationResult.locations.last()
-                    val latitude = lastLocation.latitude
-                    val longitude = lastLocation.longitude
-                    openGoogleMaps(latitude, longitude)
+                    latitude = lastLocation.latitude.toString()
+                    longitude = lastLocation.longitude.toString()
+
+                    val request = PunchInRequest(
+                        employeeId = "7",
+                        latitude = latitude,
+                        longitude = longitude
+                    )
+
+                    Log.d("res",request.toString())
+                    settingsViewModel.punchInRequest(this@EmployeePunchInActivity, request)
+
+
                 } else {
                     Toast.makeText(
                         this@EmployeePunchInActivity,
@@ -180,29 +257,28 @@ class EmployeePunchInActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun openGoogleMaps(latitude: Double, longitude: Double) {
-        val mapUri = Uri.parse("https://maps.google.com/maps/search/$latitude,$longitude")
-        val intent = Intent(Intent.ACTION_VIEW, mapUri)
-        startActivity(intent)
-    }
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-
-            //Image Uri will not be null for RESULT_OK
             val uri: Uri = data?.data!!
             if (requestCode == 1101) {
                 binding.sivEmpPunch.visibility = View.VISIBLE
                 binding.sivEmpPunch.setImageURI(uri)
-                // binding.tilCompanyCertificate.editText?.setText(uri.toString())
+
             }
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
         }
+
+
+    }
+
+
+    private fun openGoogleMaps(latitude: Double, longitude: Double) {
+        val mapUri = Uri.parse("https://maps.google.com/maps/search/$latitude,$longitude")
+        val intent = Intent(Intent.ACTION_VIEW, mapUri)
+        startActivity(intent)
     }
 }

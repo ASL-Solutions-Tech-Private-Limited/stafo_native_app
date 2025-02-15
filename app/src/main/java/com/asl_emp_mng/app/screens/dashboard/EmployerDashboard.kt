@@ -18,10 +18,12 @@ import com.asl_emp_mng.app.databinding.ActivityEmployerDashboardBinding
 import com.asl_emp_mng.app.screens.settings.AddEmployeeActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
 import com.asl_emp_mng.app.screens.settings.CompanyProfileActivity
+import com.asl_emp_mng.app.screens.settings.EmployeeProfileDetails
 import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
 import com.asl_emp_mng.app.screens.ui.EmployeeAttendance
+import com.asl_emp_mng.app.screens.ui.EmployeePunchInActivity
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.getCompanyDetails
@@ -33,7 +35,6 @@ class EmployerDashboard : AppCompatActivity() {
     private lateinit var binding: ActivityEmployerDashboardBinding
     private lateinit var name: String
 
-    private var token: String? = null
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
     private lateinit var rvAdapter: EmpListAdapter
@@ -147,7 +148,7 @@ class EmployerDashboard : AppCompatActivity() {
     private fun setOnClickEvents() {
         binding.tvHeaderSetting.setOnClickListener {
             val intent = Intent(this@EmployerDashboard, EmplyeeyerProfile::class.java)
-            intent.putExtra("DASHBOARD_TYPE", DashboardType.COMPANY.name)
+            intent.putExtra("DASHBOARD_TYPE", DashboardType.EMPLOYEE.name)
             startActivity(intent)
         }
 
@@ -163,6 +164,8 @@ class EmployerDashboard : AppCompatActivity() {
 
         binding.tvProfile.setOnClickListener {
             startActivity(Intent(this, CompanyProfileActivity::class.java))
+            //startActivity(Intent(this, EmployeeProfileDetails::class.java))
+           //startActivity(Intent(this, EmployeePunchInActivity::class.java))
         }
     }
 

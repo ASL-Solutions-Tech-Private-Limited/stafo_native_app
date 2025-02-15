@@ -16,6 +16,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.AssignShiftRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
@@ -25,6 +26,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.FetchEmployeeDetails
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAllEmployeeResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAttendanceRecordRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecord
@@ -32,9 +34,16 @@ import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecordBody
 import com.asl_emp_mng.app.screens.settings.dataClass.HolidayListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PendingLeaveResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.PunchInResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.ShiftAssignmentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfile
+import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfileResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfile
+import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ViewBranchResponse
 import com.asl_emp_mng.app.utils.CustomToast
 import com.google.gson.Gson
@@ -110,6 +119,240 @@ class SettingsViewModel : BaseViewModel() {
     private var mGetEmployeeRecord: MutableLiveData<GetEmpAttendanceRecord> = MutableLiveData()
 
     val mGetEmployeeRecordResponse: LiveData<GetEmpAttendanceRecord> get() = mGetEmployeeRecord
+
+
+    private var mUpdateCompany: MutableLiveData<UpdateCompanyProfileResponse> = MutableLiveData()
+    val mUpdateCompanyResponse: LiveData<UpdateCompanyProfileResponse> get() = mUpdateCompany
+
+    private var mFetchEmployeeDetails: MutableLiveData<FetchEmployeeDetails> = MutableLiveData()
+
+    val mFetchEmployeeDetailsResponse: LiveData<FetchEmployeeDetails> get() = mFetchEmployeeDetails
+
+
+    private var mUpdateEmployeeProfile: MutableLiveData<UpdateEmployeeProfileResponse> = MutableLiveData()
+    val mmUpdateEmployeeProfileResponse: LiveData<UpdateEmployeeProfileResponse> get() = mUpdateEmployeeProfile
+
+
+    private var mPunchIn: MutableLiveData<PunchInResponse> = MutableLiveData()
+    val mPunchInResponse: LiveData<PunchInResponse> get() = mPunchIn
+
+    private var mShiftAssignment: MutableLiveData<ShiftAssignmentResponse> = MutableLiveData()
+    val mShiftAssignmentResponse: LiveData<ShiftAssignmentResponse> get() = mShiftAssignment
+
+    fun assignShift(mContext: Context,request:AssignShiftRequest) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callAssignShift(request)
+                Log.d("res","mPunchIn: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mShiftAssignment.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+    fun punchInRequest(mContext: Context,request:PunchInRequest) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callPunchIn(request)
+                Log.d("res","mPunchIn: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mPunchIn.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun updateEmployeeDetails(mContext: Context,id:String,request:UpdateEmployeeProfile) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callUpdateEmployee(id,request)
+                Log.d("res","update: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mUpdateEmployeeProfile.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+    fun fetchEmployeeDetails(mContext: Context,id:String) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callFetchEmployeeDetails(id)
+                Log.d("res","details: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mFetchEmployeeDetails.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun updateCompanyProfile(mContext: Context,request: UpdateCompanyProfile) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callUpdateCompany(request)
+                Log.d("res","record: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mUpdateCompany.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
 
     fun getEmployeeAttendRecord(mContext: Context,id:String,date: String) {
         getLoaderLiveData().value = "load"
@@ -404,6 +647,9 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callEmployeeLeaveRequest(request)
+
+                Log.d("res","leave :${response?.body()}")
+
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -487,7 +733,7 @@ class SettingsViewModel : BaseViewModel() {
                 val response = ASLEmpMng.instance.apiStores()?.callCompanySummary()
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
-                    Log.d("API_",response?.body().toString())
+
 
                     response?.let {
                         if (it.isSuccessful) {

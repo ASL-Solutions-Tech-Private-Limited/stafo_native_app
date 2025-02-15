@@ -5,22 +5,31 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
+import com.asl_emp_mng.app.base.adapter.LeavesManagementAdapter
 import com.asl_emp_mng.app.base.model.Commonfunctions
 import com.asl_emp_mng.app.base.service.LocationForegroundService
 import com.asl_emp_mng.app.databinding.ActivityEmpLeaveBinding
+import com.asl_emp_mng.app.screens.settings.SettingsViewModel
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveRequestBody
+import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.CustomToast
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -32,11 +41,14 @@ class EmpLeaveActivity : AppCompatActivity() {
 
     private var setToDate = true
     private var todate = ""
-    private var fromdate: String? = ""
-    private var reason: String? = ""
+    private var fromdate: String = ""
+    private var reason: String = ""
     private var nodays = 0f
 
     var cal = Calendar.getInstance()
+
+    private val customLoader: CustomLoader by lazy { CustomLoader(this) }
+    private val settingsViewModel: SettingsViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,6 +68,31 @@ class EmpLeaveActivity : AppCompatActivity() {
 
         onClickListener()
 
+        observeViewModel()
+
+    }
+
+
+    private fun observeViewModel() {
+
+
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
+
+        settingsViewModel.mEmpLeaveRequestResponse.observe(this) {
+
+            CustomToast(this, it.message)
+
+        }
+
+    }
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
+        }
     }
 
     private fun onClickListener() {
@@ -104,9 +141,19 @@ class EmpLeaveActivity : AppCompatActivity() {
 
             btnLeave.setOnClickListener {
                 if (isValidate()) {
-                    fromdate = binding.edtFromDate.text.toString().trim()
-                    todate = binding.edtToDate.text.toString().trim()
-                    reason = binding.edtDescription.text.toString().trim()
+                    Log.d("res","post :")
+
+                    val request = EmployeeLeaveRequestBody(
+                        employee_id = "7",
+                        from_date = binding.edtFromDate.text.toString(),
+                        to_date = binding.edtToDate.text.toString(),
+                        reason = binding.edtDescription.text.toString()
+
+                    )
+
+                    Log.d("res","post :${request}")
+
+                    settingsViewModel.requestLeaveEmp(this@EmpLeaveActivity, request)
 
 
                 }
@@ -191,7 +238,7 @@ class EmpLeaveActivity : AppCompatActivity() {
     }
 
     private fun onDateSet() {
-        val myFormat = "dd/MM/yyyy"
+        val myFormat = "yyyy/MM/dd"
         val sdf = SimpleDateFormat(myFormat, Locale.US)
         if (!setToDate) {
             fromdate = sdf.format(cal.time)
@@ -213,7 +260,7 @@ class EmpLeaveActivity : AppCompatActivity() {
 
             if (fromdate != null && fromdate != "" && todate != null && todate != "") {
 
-                val myFormat = "dd/MM/yyyy"
+                val myFormat = "yyyy/MM/dd"
                 val mDateFormat = SimpleDateFormat(myFormat)
                 val mDate11 = mDateFormat.parse(fromdate)
                 val mDate22 = mDateFormat.parse(todate)

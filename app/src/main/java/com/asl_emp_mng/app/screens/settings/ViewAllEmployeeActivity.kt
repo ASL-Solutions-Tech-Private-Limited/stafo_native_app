@@ -1,6 +1,7 @@
 package com.asl_emp_mng.app.screens.settings
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -16,9 +17,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
+import com.asl_emp_mng.app.base.adapter.ActionsListAdapter
 import com.asl_emp_mng.app.base.adapter.EmpListAdapter
 import com.asl_emp_mng.app.base.adapter.RadioShiftAdapter
 import com.asl_emp_mng.app.databinding.ActivityViewAllEmployeeBinding
+import com.asl_emp_mng.app.screens.settings.dataClass.AssignShiftRequest
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -34,6 +37,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     private val settingsViewModel: SettingsViewModel by viewModels()
 
     private lateinit var rvAdapter: EmpListAdapter
+    private lateinit var shiftID: String
     private var mFrom = "View All"
 
 
@@ -91,7 +95,13 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
             if (it.success) {
                 val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
                 rvRadioShift.setLayoutManager(layoutManager)
-                rvRadioShiftAdapter = RadioShiftAdapter(it.data, this)
+                rvRadioShiftAdapter = RadioShiftAdapter(it.data, this,
+                    object : RadioShiftAdapter.ActionClickListener {
+                        override fun onActionClick(action: String) {
+                            shiftID=action
+                        }
+
+                    })
                 rvRadioShift.adapter = rvRadioShiftAdapter
                 rvAdapter.notifyDataSetChanged()
 
@@ -102,6 +112,18 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         }
 
 
+
+
+        settingsViewModel.mShiftAssignmentResponse.observe(this) {
+
+            if (it.success) {
+                CustomToast(this, it.message)
+                shiftBottomSheetDialog.dismiss()
+
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
 
 
 
@@ -137,7 +159,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     }
 
      @SuppressLint("MissingInflatedId")
-     fun showCustomBottomSheet() {
+     fun showCustomBottomSheet(id:String) {
         bottomSheetDialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.attendance_mode_bottom_sheet_layout, null)
 
@@ -188,7 +210,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     }
 
     @SuppressLint("MissingInflatedId")
-    fun showShiftCustomBottomSheet() {
+    fun showShiftCustomBottomSheet(id:String) {
         shiftBottomSheetDialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.shift_time_bottom_sheet_layout, null)
 
@@ -206,12 +228,31 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
 
 
+        btnSubmit.setOnClickListener {
+
+
+            if (::shiftID.isInitialized && shiftID.isNotEmpty()){
+                val request=AssignShiftRequest(
+                    employeeId = id,
+                    shiftId = shiftID
+                )
+              Log.d("res","post: $request")
+                settingsViewModel.assignShift(this,request)
+            }else{
+                CustomToast(this,"Please select shift!")
+            }
+
+        }
+
+
+
         settingsViewModel.getShiftList(this)
 
 
 
 
         btnCancel.setOnClickListener {
+            shiftID=""
             shiftBottomSheetDialog.dismiss()
         }
 

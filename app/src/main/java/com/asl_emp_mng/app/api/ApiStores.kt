@@ -18,6 +18,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.AssignShiftRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
@@ -27,6 +28,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.FetchEmployeeDetails
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAllEmployeeResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAttendanceRecordRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecord
@@ -34,15 +36,23 @@ import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecordBody
 import com.asl_emp_mng.app.screens.settings.dataClass.HolidayListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PendingLeaveResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.PunchInResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.ShiftAssignmentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfile
+import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfileResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfile
+import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ViewBranchResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HeaderMap
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -170,6 +180,23 @@ interface ApiStores {
 
     @POST("api/employees-list")
     suspend fun callEmpRecord(@Body request:GetEmpAttendanceRecordBody, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<GetEmpAttendanceRecord>
+
+    @PUT("api/company/update")
+    suspend fun callUpdateCompany(@Body request:UpdateCompanyProfile, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<UpdateCompanyProfileResponse>
+
+    @GET("api/employee-details/{id}")
+    suspend fun callFetchEmployeeDetails(@Path("id")id:String,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<FetchEmployeeDetails>
+
+    @PUT("api/employees-update/{id}")
+    suspend fun callUpdateEmployee(@Path("id")id:String,@Body request:UpdateEmployeeProfile,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<UpdateEmployeeProfileResponse>
+
+
+    @POST("api/employee/punch")
+    suspend fun callPunchIn(@Body request: PunchInRequest, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<PunchInResponse>
+
+
+    @POST("api/employees/assign-shift")
+    suspend fun callAssignShift(@Body request: AssignShiftRequest, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ShiftAssignmentResponse>
 
 
 
