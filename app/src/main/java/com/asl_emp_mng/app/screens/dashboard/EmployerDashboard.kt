@@ -23,6 +23,7 @@ import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
 import com.asl_emp_mng.app.screens.ui.EmployeeAttendance
+import com.asl_emp_mng.app.screens.ui.EmployeeLeaveHistoryActivity
 import com.asl_emp_mng.app.screens.ui.EmployeePunchInActivity
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.utils.CustomLoader
@@ -148,7 +149,7 @@ class EmployerDashboard : AppCompatActivity() {
     private fun setOnClickEvents() {
         binding.tvHeaderSetting.setOnClickListener {
             val intent = Intent(this@EmployerDashboard, EmplyeeyerProfile::class.java)
-            intent.putExtra("DASHBOARD_TYPE", DashboardType.EMPLOYEE.name)
+            intent.putExtra("DASHBOARD_TYPE", DashboardType.COMPANY.name)
             startActivity(intent)
         }
 
@@ -164,8 +165,7 @@ class EmployerDashboard : AppCompatActivity() {
 
         binding.tvProfile.setOnClickListener {
             startActivity(Intent(this, CompanyProfileActivity::class.java))
-            //startActivity(Intent(this, EmployeeProfileDetails::class.java))
-           //startActivity(Intent(this, EmployeePunchInActivity::class.java))
+           //startActivity(Intent(this, EmployeeLeaveHistoryActivity::class.java))
         }
     }
 

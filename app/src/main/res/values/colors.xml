@@ -18,4 +18,5 @@
     <color name="gray_colour">#808080</color>
     <color name="dashboard_background">#dedede</color>
     <color name="switch_bg">#f4f9ff</color>
+    <color name="pending_colour">#F29339</color>
 </resources>

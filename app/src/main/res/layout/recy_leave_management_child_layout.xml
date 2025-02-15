@@ -89,6 +89,7 @@
             android:background="@drawable/custom_leave_type_bg"
             android:fontFamily="@font/gilroy_medium"
             android:hint="Casual Leave"
+            android:textAlignment="center"
             android:paddingHorizontal="@dimen/_6sdp"
             android:paddingVertical="@dimen/_3sdp"
             android:singleLine="true"

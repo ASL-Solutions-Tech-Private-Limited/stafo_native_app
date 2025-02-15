@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -78,7 +79,7 @@ class CompanyProfileActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
         onClickListener()
         observeViewModel()
 
@@ -177,20 +178,20 @@ class CompanyProfileActivity : AppCompatActivity() {
 
                 }else if (profileType=="company_owner"){
                     if (isValidOwnerInfo()){
-              /*          val ownerInfo = OwnerInfo(
+                        val ownerInfo = OwnerInfo(
                             firstName = binding.tieOwnerName.text.toString(),
                             lastName = "",
                             mobile = binding.tieOwnerMobileNo.text.toString(),
                             email = binding.tieOwnerEmail.text.toString()
                         )
                         val companyInfo = UpdateCompanyProfile(
-                            companyName = "",
-                            companyType ="",
-                            businessTypeId = 0,
-                            registrationNumber = "",
-                            gstNumber = "",
-                            panNumber = "",
-                            address ="",
+                            companyName = binding.tieCompanyName.text.toString(),
+                            companyType = selectedCompanyType.toString(),
+                            businessTypeId = selectedBusinessType,
+                            registrationNumber = binding.tieCompanyRegNo.text.toString(),
+                            gstNumber = binding.tieCompanyGstNo.text.toString(),
+                            panNumber = binding.tieCompanyPanNo.text.toString(),
+                            address = binding.tieCompanyAddress.toString(),
                             cityId = selectedCity,
                             stateId = selectedState,
                             countryId = selectedCountry,
@@ -208,8 +209,7 @@ class CompanyProfileActivity : AppCompatActivity() {
 
 
                         settingsViewModel.updateCompanyProfile(this@CompanyProfileActivity,companyInfo)
-*/
-                        CustomToast(this@CompanyProfileActivity,"Working is progress")
+                       // CustomToast(this@CompanyProfileActivity,"Working is progress")
 
                     }
                 }else if (profileType=="company_document"){
@@ -231,27 +231,57 @@ class CompanyProfileActivity : AppCompatActivity() {
 
         settingsViewModel.mCompanyProfileResponse.observe(this) {
             if (it.status) {
-
+                  Log.d("res","data: ${it.data?.proprietor}")
                 it.data?.let { data ->
 
+                    // Company details
                     binding.tieCompanyName.setText(data.company?.companyName ?: "")
-                    isFocusableField(binding.tieCompanyName)
-
+                    if (!data.company?.companyName.isNullOrEmpty()) {
+                        isFocusableField(binding.tieCompanyName)
+                    }
 
                     binding.tieCompanyAddress.setText(data.company?.address ?: "")
-                    isFocusableField(binding.tieCompanyAddress)
-
+                    if (!data.company?.address.isNullOrEmpty()) {
+                        isFocusableField(binding.tieCompanyAddress)
+                    }
 
                     binding.tieCompanyRegNo.setText(data.company?.registrationNumber ?: "")
-                    isFocusableField(binding.tieCompanyRegNo)
-
+                    if (!data.company?.registrationNumber.isNullOrEmpty()) {
+                        isFocusableField(binding.tieCompanyRegNo)
+                    }
 
                     binding.tieCompanyGstNo.setText(data.company?.gstNumber ?: "")
-                    isFocusableField(binding.tieCompanyGstNo)
-
+                    if (!data.company?.gstNumber.isNullOrEmpty()) {
+                        isFocusableField(binding.tieCompanyGstNo)
+                    }
 
                     binding.tieCompanyPanNo.setText(data.company?.panNumber ?: "")
-                    isFocusableField(binding.tieCompanyPanNo)
+                    if (!data.company?.panNumber.isNullOrEmpty()) {
+                        isFocusableField(binding.tieCompanyPanNo)
+                    }
+
+
+                    //owner details
+
+                    binding.tieOwnerName.setText(data.proprietor?.firstName ?: "")
+                    if (!data.proprietor?.firstName.isNullOrEmpty()) {
+                        isFocusableField(binding.tieOwnerName)
+                    }
+
+                    binding.tieOwnerMobileNo.setText(data.proprietor?.mobile ?: "")
+                    if (!data.proprietor?.mobile.isNullOrEmpty()) {
+                        isFocusableField(binding.tieOwnerMobileNo)
+                    }
+
+                    binding.tieOwnerEmail.setText(data.proprietor?.email ?: "")
+                    if (!data.proprietor?.email.isNullOrEmpty()) {
+                        isFocusableField(binding.tieOwnerEmail)
+                    }
+
+                    binding.tieOwnerAddress.setText(data.proprietor?.currentAddress ?: "")
+                    if (!data.proprietor?.currentAddress.isNullOrEmpty()) {
+                        isFocusableField(binding.tieOwnerAddress)
+                    }
 
                 }
             }else{

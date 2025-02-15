@@ -9,13 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.base.model.LeavesManagementModel
 import com.asl_emp_mng.app.databinding.RecyLeaveManagementChildLayoutBinding
 import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveData
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequest
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 class LeavesManagementAdapter(
-    private var list: List<LeaveRequest>,
+    private var list: List<LeaveData>,
     var context: Context
 ) : RecyclerView.Adapter<LeavesManagementAdapter.ViewHolder>() {
     inner class ViewHolder(val binding: RecyLeaveManagementChildLayoutBinding) :
@@ -35,23 +36,35 @@ class LeavesManagementAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             with(list[position]) {
+
+
                 binding.txtEmpName.text = this.employeeBasicInfo.name
-                binding.txtLeaveDate.text = this.fromDate+"-"+this.toDate
+                binding.txtLeaveDate.text = this.fromDate + "-" + this.toDate
                 binding.txtStartDate.text = this.fromDate
                 binding.txtEndDate.text = this.toDate
                 binding.txtAppliedDate.text = this.fromDate
-                binding.txtDuration.text=calculateDuration(this.fromDate,this.toDate)
+                //binding.txtLeaveType.text = this.leaveType
+                binding.txtDuration.text = calculateDuration(this.fromDate, this.toDate)
                 binding.txtInfo.setOnClickListener {
-                    (context as LeaveManagementActivity).showCustomBottomSheet(list,position, binding.txtDuration.text.toString())
+                    (context as LeaveManagementActivity).showCustomBottomSheet(
+                        list,
+                        position,
+                        binding.txtDuration.text.toString()
+                    )
                 }
 
                 binding.btnApprove.setOnClickListener {
-                    (context as LeaveManagementActivity).approveRequest(this.id.toString(),"approved")
+                    (context as LeaveManagementActivity).approveRequest(
+                        this.id.toString(),
+                        "approved"
+                    )
                 }
                 binding.btnReject.setOnClickListener {
-                    (context as LeaveManagementActivity).approveRequest(this.id.toString(),"rejected")
+                    (context as LeaveManagementActivity).approveRequest(
+                        this.id.toString(),
+                        "rejected"
+                    )
                 }
-
 
 
             }
@@ -64,7 +77,7 @@ class LeavesManagementAdapter(
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun calculateDuration(fromDate:String, toDate:String):String{
+    private fun calculateDuration(fromDate: String, toDate: String): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
         val fromDate = LocalDate.parse(fromDate, formatter)

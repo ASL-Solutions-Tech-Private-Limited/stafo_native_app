@@ -17,6 +17,7 @@ import com.asl_emp_mng.app.screens.settings.HolidayActivity
 import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 import com.asl_emp_mng.app.screens.settings.PolicyActivity
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
+import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.doLogout
 import com.asl_emp_mng.app.utils.getCompanyDetails
 import com.asl_emp_mng.app.utils.getEmployeeDetails
@@ -176,16 +177,19 @@ class EmplyeeyerProfile : AppCompatActivity() {
         val educationalProfile =
             binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_educational)
         educationalProfile?.setOnClickListener {
-            val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
+
+            CustomToast(this,"Working is progress")
+          /*  val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
             intent.putExtra("PROFILE_TYPE", ProfileType.EDUCATION.name)
-            startActivity(intent)
+            startActivity(intent)*/
         }
         val documentProfile =
             binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_documents)
         documentProfile?.setOnClickListener {
-            val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
+            CustomToast(this,"Working is progress")
+          /*  val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
             intent.putExtra("PROFILE_TYPE", ProfileType.DOCUMENT.name)
-            startActivity(intent)
+            startActivity(intent)*/
         }
 
     }

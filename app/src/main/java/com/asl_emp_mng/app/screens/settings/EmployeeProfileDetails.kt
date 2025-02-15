@@ -11,6 +11,7 @@ import android.widget.RadioButton
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.ajithvgiri.searchdialog.OnSearchItemSelected
@@ -60,7 +61,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
         onClickListener()
         observeViewModel()
 
@@ -108,38 +109,69 @@ class EmployeeProfileDetails : AppCompatActivity() {
                 it.data?.let { data ->
 
                     binding.tieStaffName.setText(data.name ?: "")
-                    isFocusableField(binding.tieStaffName)
+                    if (!data.name.isNullOrEmpty()) {
+                        isFocusableField(binding.tieStaffName)
+                    }
+
 
 
                     binding.tieMobileNo.setText(data.phone ?: "")
-                    isFocusableField(binding.tieMobileNo)
+
+                    if (!data.phone.isNullOrEmpty()) {
+                        isFocusableField(binding.tieMobileNo)
+                    }
 
 
                     binding.tieEmailId.setText(data.email ?: "")
-                    isFocusableField(binding.tieEmailId)
+                    if (!data.email.isNullOrEmpty()) {
+                        isFocusableField(binding.tieEmailId)
+                    }
+
 
 
                     binding.tieDateJoining.setText(data.dateOfJoining ?: "")
-                    isFocusableField(binding.tieDateJoining)
+
+                    if (!data.dateOfJoining.isNullOrEmpty()) {
+                        isFocusableField(binding.tieDateJoining)
+                    }
+
 
 
                     binding.tieAddress.setText(data.address ?: "")
-                    isFocusableField(binding.tieAddress)
+                    if (!data.address.isNullOrEmpty()) {
+                        isFocusableField(binding.tieAddress)
+                    }
+
 
 
                     binding.tieDateOfBirth.setText(data.dateOfBirth ?: "")
-                    isFocusableField(binding.tieDateOfBirth)
+
+                    if (!data.dateOfBirth.isNullOrEmpty()) {
+                        isFocusableField(binding.tieDateOfBirth)
+                    }
+
 
 
                     binding.tieMaritalStatus.setText(data.maritalStatus ?: "")
-                    isFocusableField(binding.tieMaritalStatus)
+
+                    if (!data.maritalStatus.isNullOrEmpty()) {
+                        isFocusableField(binding.tieMaritalStatus)
+                    }
+
 
 
                     binding.tieBloodGroup.setText(data.bloodGroup ?: "")
-                    isFocusableField(binding.tieBloodGroup)
+                    if (!data.bloodGroup.isNullOrEmpty()) {
+                        isFocusableField(binding.tieBloodGroup)
+                    }
+
 
                     binding.tieGurdianName.setText(data.guardianName ?: "")
-                    isFocusableField(binding.tieGurdianName)
+
+                    if (!data.guardianName.isNullOrEmpty()) {
+                        isFocusableField(binding.tieGurdianName)
+                    }
+
                 }
             } else {
                 CustomToast(this, it.message)
@@ -155,6 +187,14 @@ class EmployeeProfileDetails : AppCompatActivity() {
             } else {
                 CustomToast(this, it.message)
             }
+        }
+    }
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
         }
     }
 
@@ -200,13 +240,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
         }
     }
 
-    private fun handleLoader(status: String) {
-        if (status.equals("load", ignoreCase = true)) {
-            if (!customLoader.isShowing) customLoader.show()
-        } else if (status.equals("stop", ignoreCase = true)) {
-            if (customLoader.isShowing) customLoader.dismiss()
-        }
-    }
+
 
     private fun onClickListener() {
         binding?.apply {

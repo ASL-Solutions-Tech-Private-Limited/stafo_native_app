@@ -33,7 +33,11 @@ import com.asl_emp_mng.app.screens.settings.dataClass.GetAllEmployeeResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAttendanceRecordRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecord
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecordBody
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployeeLeaveHistRequestBody
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployeeLeaveHistResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.HolidayListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequestBody
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PendingLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
@@ -198,6 +202,10 @@ interface ApiStores {
     @POST("api/employees/assign-shift")
     suspend fun callAssignShift(@Body request: AssignShiftRequest, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ShiftAssignmentResponse>
 
+    @POST("api/leave-list")
+    suspend fun callAllLeaveList(@Body request: LeaveRequestBody, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<LeaveResponse>
 
+    @POST("api/leave-list")
+    suspend fun callGetEmpLeaveList(@Body request: GetEmployeeLeaveHistRequestBody, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<GetEmployeeLeaveHistResponse>
 
 }

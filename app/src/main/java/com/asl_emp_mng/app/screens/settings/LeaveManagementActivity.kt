@@ -24,7 +24,9 @@ import com.asl_emp_mng.app.base.model.LeavesManagementModel
 import com.asl_emp_mng.app.databinding.ActivityLeaveManagementBinding
 import com.asl_emp_mng.app.databinding.CustomEmpDetailsBottomSheetLayoutBinding
 import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveData
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequestBody
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -66,12 +68,14 @@ class LeaveManagementActivity : AppCompatActivity() {
 
 
 
-        settingsViewModel.mPendingLeaveListResponse.observe(this) {
+        settingsViewModel.mLeaveResponse.observe(this) {
 
             if (it.data.isNotEmpty()) {
+                val pendingLeaves = it.data.filter { leave -> leave.status == "pending" }
+
                 val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
                 binding.rvShowLeaveList.setLayoutManager(layoutManager)
-                rvAdapter = LeavesManagementAdapter(it.data, this)
+                rvAdapter = LeavesManagementAdapter(pendingLeaves, this)
                 binding.rvShowLeaveList.adapter = rvAdapter
                 rvAdapter.notifyDataSetChanged()
             } else {
@@ -83,7 +87,12 @@ class LeaveManagementActivity : AppCompatActivity() {
         settingsViewModel.mApproveLeaveResponse.observe(this) {
 
             CustomToast(this, it.message)
-            settingsViewModel.getPendingLeaveList(this@LeaveManagementActivity)
+            val request = LeaveRequestBody(
+                companyId = "1",
+                employeeId = ""
+            )
+
+            settingsViewModel.getAllLeaveList(this@LeaveManagementActivity, request)
 
         }
 
@@ -101,11 +110,26 @@ class LeaveManagementActivity : AppCompatActivity() {
     private fun onClickListener() {
         binding?.apply {
 
-            settingsViewModel.getPendingLeaveList(this@LeaveManagementActivity)
+            val request = LeaveRequestBody(
+                companyId = "1",
+                employeeId = ""
+            )
+
+            settingsViewModel.getAllLeaveList(this@LeaveManagementActivity, request)
+
+
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
 
-                settingsViewModel.getPendingLeaveList(this@LeaveManagementActivity)
+                val request = LeaveRequestBody(
+                    companyId = "1",
+                    employeeId = ""
+                )
+
+                settingsViewModel.getAllLeaveList(this@LeaveManagementActivity, request)
+
+
+                //settingsViewModel.getPendingLeaveList(this@LeaveManagementActivity)
             }
 
             imageSettings.setOnClickListener { view ->
@@ -148,7 +172,7 @@ class LeaveManagementActivity : AppCompatActivity() {
         popupMenu.show()
     }
 
-    fun showCustomBottomSheet(list: List<LeaveRequest>, position: Int, duration: String) {
+    fun showCustomBottomSheet(list: List<LeaveData>, position: Int, duration: String) {
         bottomSheetDialog = BottomSheetDialog(this)
         val binding = CustomEmpDetailsBottomSheetLayoutBinding.inflate(layoutInflater)
         bottomSheetDialog.setOnShowListener { dialog ->

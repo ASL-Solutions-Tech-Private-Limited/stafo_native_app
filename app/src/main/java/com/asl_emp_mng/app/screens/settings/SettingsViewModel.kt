@@ -31,7 +31,11 @@ import com.asl_emp_mng.app.screens.settings.dataClass.GetAllEmployeeResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAttendanceRecordRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecord
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecordBody
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployeeLeaveHistRequestBody
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployeeLeaveHistResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.HolidayListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequestBody
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PendingLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
@@ -138,6 +142,99 @@ class SettingsViewModel : BaseViewModel() {
 
     private var mShiftAssignment: MutableLiveData<ShiftAssignmentResponse> = MutableLiveData()
     val mShiftAssignmentResponse: LiveData<ShiftAssignmentResponse> get() = mShiftAssignment
+
+    private var mLeave: MutableLiveData<LeaveResponse> = MutableLiveData()
+    val mLeaveResponse: LiveData<LeaveResponse> get() = mLeave
+
+    private var mGetEmployeeLeaveHist: MutableLiveData<GetEmployeeLeaveHistResponse> = MutableLiveData()
+    val mGetEmployeeLeaveHistResponse: LiveData<GetEmployeeLeaveHistResponse> get() = mGetEmployeeLeaveHist
+
+
+
+    fun getEmployeeLeaveHist(mContext: Context,request: GetEmployeeLeaveHistRequestBody) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callGetEmpLeaveList(request)
+                Log.d("res","Leave Data: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mGetEmployeeLeaveHist.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun getAllLeaveList(mContext: Context,request:LeaveRequestBody) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callAllLeaveList(request)
+                Log.d("res","Leave Data: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mLeave.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
 
     fun assignShift(mContext: Context,request:AssignShiftRequest) {
         getLoaderLiveData().value = "load"

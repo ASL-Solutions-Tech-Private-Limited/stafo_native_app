@@ -19,24 +19,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/txt_employee_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Personal"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                android:visibility="gone" />
+
 
             <TextView
                 android:id="@+id/txt_leave_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
-                android:layout_below="@+id/txt_employee_name"
+               android:layout_alignParentTop="true"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:fontFamily="@font/gilroy_medium"
-                android:text="Annual Leave"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="Casual Leave"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
@@ -45,12 +38,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txt_leave_type"
-                android:layout_alignStart="@+id/txt_leave_type"
-                android:layout_marginTop="5dip"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:layout_marginEnd="0dp"
+                android:layout_toRightOf="@+id/txt_rqst_dt1"
                 android:ellipsize="end"
                 android:fontFamily="@font/gilroy_regular"
                 android:maxLength="28"
-                android:text="18/09/2024 - 24-09-2024"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txt_rqst_dt1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_leave_type"
+                android:layout_alignStart="@+id/txt_leave_type"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:ellipsize="end"
+                android:fontFamily="@font/gilroy_medium"
+                android:maxLength="28"
+                android:text="Leave Date"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
@@ -60,9 +71,21 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txt_rqst_dt"
                 android:layout_alignStart="@+id/txt_rqst_dt"
-                android:layout_marginTop="5dip"
+                android:layout_marginTop="@dimen/_6sdp"
                 android:fontFamily="@font/gilroy_regular"
-                android:text="6.00 Days "
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txt_days1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_rqst_dt"
+                android:layout_alignStart="@+id/txt_rqst_dt1"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Duration"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
@@ -70,15 +93,19 @@
                 android:id="@+id/txt_status"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/_70sdp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txt_rqst_dt"
-               android:layout_alignParentEnd="true"
-                android:layout_marginTop="5dip"
-                android:fontFamily="@font/gilroy_regular"
-                android:text="Pending"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:textAlignment="center"
+                android:background="@drawable/capsule_pending_button"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Approve"
+                android:paddingHorizontal="@dimen/_7sdp"
+                android:paddingVertical="@dimen/_3sdp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
 
 
         </RelativeLayout>

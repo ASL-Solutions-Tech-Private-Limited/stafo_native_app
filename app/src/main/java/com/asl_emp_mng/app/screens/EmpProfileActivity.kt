@@ -1,16 +1,23 @@
 package com.asl_emp_mng.app.screens
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.asl_emp_mng.app.base.model.ProfileType
 import com.asl_emp_mng.app.databinding.ActivityEmpProfileBinding
+import com.asl_emp_mng.app.screens.settings.SettingsViewModel
+import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.CustomToast
 
 class EmpProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmpProfileBinding
+    private val customLoader: CustomLoader by lazy { CustomLoader(this) }
+    private val settingsViewModel: SettingsViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -22,11 +29,15 @@ class EmpProfileActivity : AppCompatActivity() {
             insets
         }
         onClickListener()
+        observeViewModel()
 
     }
 
     private fun onClickListener() {
         binding?.apply {
+
+
+
 
             val profileType = ProfileType.valueOf(
                 intent.getStringExtra("PROFILE_TYPE") ?: ProfileType.BASIC.name
@@ -48,7 +59,83 @@ class EmpProfileActivity : AppCompatActivity() {
 
             imageBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
+            settingsViewModel.fetchEmployeeDetails(this@EmpProfileActivity, "11")
 
+        }
+    }
+
+    private fun observeViewModel() {
+
+
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+        settingsViewModel.getBranchList(this)
+
+
+
+
+        settingsViewModel.mFetchEmployeeDetailsResponse.observe(this) {
+
+            if (it.status) {
+                it.data?.let { data ->
+
+                    Log.d("res","data: ${it.data}")
+                    //basic details
+                    binding.txtName.text=data.name
+                    binding.txtMobile.text=data.phone
+                    binding.txtEmail.text=data.email
+                    binding.txtAddress.text=data.address
+                    binding.txtDob.text=data.dateOfBirth
+
+                    //professional details
+                    binding.txtCComName.text= data.companyId.toString()
+                    binding.txtCComBranch.text= data.branchId.toString()
+                    binding.txtCComDepartment.text= data.departmentId.toString()
+                    binding.txtCComEmpType.text= data.employeeTypeId.toString()
+                    binding.txtCComJoining.text= data.dateOfJoining.toString()
+                    binding.txtCComLeaving.text= data.dateOfLeaving.toString()
+                    binding.txtCComEmpId.text= data.empId
+                    binding.txtCComJobTitle.text= data.position.toString()
+                    binding.txtCComPfNo.text= data.pfNumber.toString()
+                    binding.txtCComOfficialEmail.text= data.email
+
+                    //last company
+                    binding.txtLComName.text= data.companyId.toString()
+                    binding.txtLComBranch.text= data.branchId.toString()
+                    binding.txtLComDepartment.text= data.departmentId.toString()
+                    binding.txtLComEmpType.text= data.employeeTypeId.toString()
+                    binding.txtLComJoining.text= data.dateOfJoining.toString()
+                    binding.txtLComLeaving.text= data.dateOfLeaving.toString()
+                    binding.txtLComEmpId.text= data.empId
+                    binding.txtLComJobTitle.text= data.position.toString()
+                    binding.txtLComPfNo.text= data.pfNumber.toString()
+                    binding.txtLComOfficialEmail.text= data.email
+
+
+
+
+                }
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
+
+        settingsViewModel.mmUpdateEmployeeProfileResponse.observe(this) {
+
+            if (it.status) {
+                CustomToast(this, it.message)
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
+    }
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
         }
     }
 }
