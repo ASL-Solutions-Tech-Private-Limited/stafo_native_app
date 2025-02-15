@@ -111,6 +111,7 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
+                android:id="@+id/txt_date"
                 android:fontFamily="@font/gilroy_semi_bold"
                 android:text="14-02-2025"
                 android:textColor="#565656"

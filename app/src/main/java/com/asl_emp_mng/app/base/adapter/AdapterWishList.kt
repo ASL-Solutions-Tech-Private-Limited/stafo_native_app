@@ -6,17 +6,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.asl_emp_mng.app.databinding.ItemActivityListBinding
+import com.asl_emp_mng.app.base.model.DashboardWish
 import com.asl_emp_mng.app.databinding.ItemLeaveListBinding
-import com.asl_emp_mng.app.screens.settings.dataClass.Leave
-import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class AdapterOnLeave (
-    private var list: ArrayList<Leave>,
+class AdapterWishList(
+    private var list: ArrayList<DashboardWish>,
     var context: Context
-) : RecyclerView.Adapter<AdapterOnLeave.ViewHolder>() {
+) : RecyclerView.Adapter<AdapterWishList.ViewHolder>() {
     inner class ViewHolder(val binding: ItemLeaveListBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -35,13 +33,13 @@ class AdapterOnLeave (
         with(holder) {
             with(list[position]) {
 
-                binding.tvName.text = this.employee_basic_info.name
+                binding.tvName.text = this.name
 
-                var fromDate=showDate(this.from_date)
-                var toDate=showDate(this.to_date)
-
-                binding.tvLeaveDate.text ="$fromDate - $toDate"
-
+                if (this.type == "Anniversary") {
+                    binding.tvLeaveDate.text = "${this.date_of_joining}"
+                } else {
+                    binding.tvLeaveDate.text = "${this.date_of_birth}"
+                }
             }
         }
     }
@@ -51,7 +49,7 @@ class AdapterOnLeave (
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun showDate(date:String):String{
+    private fun showDate(date: String): String {
 
         val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val outputFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")

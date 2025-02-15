@@ -101,8 +101,7 @@
                         android:fontFamily="@font/gilroy_bold"
                         android:textSize="@dimen/_15sdp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_header_greeting"
-                        tools:text="" />
+                        app:layout_constraintTop_toBottomOf="@id/tv_header_greeting" />
 
                     <LinearLayout
                         android:id="@+id/header_ll_view_profile"

@@ -18,7 +18,6 @@ import com.asl_emp_mng.app.databinding.ActivityEmployerDashboardBinding
 import com.asl_emp_mng.app.screens.settings.AddEmployeeActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
 import com.asl_emp_mng.app.screens.settings.CompanyProfileActivity
-import com.asl_emp_mng.app.screens.settings.EmployeeAttendanceRecordActivity
 import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
@@ -164,10 +163,6 @@ class EmployerDashboard : AppCompatActivity() {
 
         binding.tvProfile.setOnClickListener {
             startActivity(Intent(this, CompanyProfileActivity::class.java))
-        }
-
-        binding.tvLetsLeaveViewAll.setOnClickListener {
-            startActivity(Intent(this, EmployeeAttendanceRecordActivity::class.java))
         }
     }
 

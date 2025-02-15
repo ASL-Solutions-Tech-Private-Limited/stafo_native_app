@@ -1,7 +1,6 @@
 package com.asl_emp_mng.app.screens.settings
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -23,6 +22,9 @@ import com.asl_emp_mng.app.databinding.ActivityViewAllEmployeeBinding
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class ViewAllEmployeeActivity : AppCompatActivity() {
 
@@ -32,6 +34,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     private val settingsViewModel: SettingsViewModel by viewModels()
 
     private lateinit var rvAdapter: EmpListAdapter
+    private var mFrom = "View All"
 
 
 
@@ -40,7 +43,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     private lateinit var shiftBottomSheetDialog: BottomSheetDialog
     private lateinit var rvRadioShift: RecyclerView
     private lateinit var rvRadioShiftAdapter: RadioShiftAdapter
-
+    private val calendar = Calendar.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -51,6 +54,8 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        mFrom = intent.getStringExtra("FROM").toString()
 
         setOnClickEvents()
         observeViewModel()
@@ -64,14 +69,14 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
-        settingsViewModel.mGetAllEmployeeResponse.observe(this) {
+        settingsViewModel.mEmployeeListResponse.observe(this) {
             Log.d("res",it.message)
            if (it.status) {
 
                Log.d("res",it.data.toString())
                val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
                binding.rvViewEmpList.setLayoutManager(layoutManager)
-               rvAdapter = EmpListAdapter(it.data, this)
+               rvAdapter = EmpListAdapter(it.data, this, mFrom)
                binding.rvViewEmpList.adapter = rvAdapter
                rvAdapter.notifyDataSetChanged()
 
@@ -112,8 +117,8 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
     private fun setOnClickEvents() {
 
-
-        settingsViewModel.getAllEmployeeList(this@ViewAllEmployeeActivity)
+        val curren = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
+        settingsViewModel.getEmpList(this@ViewAllEmployeeActivity, curren)
 
 
         binding.swipeRefreshLayout.setOnRefreshListener {
