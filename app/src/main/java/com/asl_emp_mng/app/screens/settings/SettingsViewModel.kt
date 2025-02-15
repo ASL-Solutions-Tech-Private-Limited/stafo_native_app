@@ -111,10 +111,12 @@ class SettingsViewModel : BaseViewModel() {
 
     val mGetEmployeeRecordResponse: LiveData<GetEmpAttendanceRecord> get() = mGetEmployeeRecord
 
-    fun getEmployeeAttendRecord(mContext: Context,request: GetEmpAttendanceRecordBody) {
+    fun getEmployeeAttendRecord(mContext: Context,id:String,date: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                val request=GetEmpAttendanceRecordBody(id,date)
+
                 val response = ASLEmpMng.instance.apiStores()?.callEmpRecord(request)
                 Log.d("res","record: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {

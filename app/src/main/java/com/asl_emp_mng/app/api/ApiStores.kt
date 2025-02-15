@@ -168,8 +168,8 @@ interface ApiStores {
     suspend fun callAllEmpList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<GetAllEmployeeResponse>
 
 
-    @GET("api/employees-list")
-    suspend fun callEmpRecord(@Body request: GetEmpAttendanceRecordBody, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<GetEmpAttendanceRecord>
+    @POST("api/employees-list")
+    suspend fun callEmpRecord(@Body request:GetEmpAttendanceRecordBody, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<GetEmpAttendanceRecord>
 
 
 

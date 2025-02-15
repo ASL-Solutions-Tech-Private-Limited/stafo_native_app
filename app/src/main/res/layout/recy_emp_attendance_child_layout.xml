@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_60sdp"
             android:orientation="horizontal"
-            android:visibility="gone"
+            android:visibility="visible"
             android:weightSum="4">
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -38,6 +38,7 @@
                     android:orientation="vertical">
 
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/ng_header"
@@ -46,10 +47,11 @@
                         android:text="01"
                         android:textAlignment="center"
                         android:textColor="#565656"
-                        android:textSize="@dimen/_12ssp"
+                        android:textSize="@dimen/_10ssp"
                         app:drawableTint="@color/black" />
 
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_day"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/custom_day_bg"
@@ -60,7 +62,7 @@
                         android:text="wed"
                         android:textAlignment="center"
                         android:textColor="#565656"
-                        android:textSize="@dimen/_12ssp"
+                        android:textSize="@dimen/_10ssp"
                         app:drawableTint="@color/black" />
                 </LinearLayout>
 
@@ -73,6 +75,7 @@
                 android:background="@color/white" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_check_in"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ng_header"
@@ -82,9 +85,8 @@
                 android:gravity="center"
                 android:maxLines="3"
                 android:text="09:32 AM"
-
                 android:textColor="#565656"
-                android:textSize="@dimen/_12ssp"
+                android:textSize="@dimen/_10ssp"
                 app:drawableTint="@color/black" />
 
             <View
@@ -93,6 +95,7 @@
                 android:background="@color/white" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_check_out"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ng_header"
@@ -102,7 +105,7 @@
                 android:gravity="center"
                 android:text="09:32 PM"
                 android:textColor="#565656"
-                android:textSize="@dimen/_12ssp"
+                android:textSize="@dimen/_10ssp"
                 app:drawableTint="@color/black" />
 
             <View
@@ -111,6 +114,7 @@
                 android:background="@color/white" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_working_hrs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ng_header"
@@ -120,13 +124,14 @@
                 android:gravity="center"
                 android:text="10 Hrs"
                 android:textColor="#565656"
-                android:textSize="@dimen/_12ssp"
+                android:textSize="@dimen/_10ssp"
                 app:drawableTint="@color/black" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/llc_week_off"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_60sdp">
 
@@ -154,6 +159,7 @@
                         android:orientation="vertical">
 
                         <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_week_off_date"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/ng_header"
@@ -166,6 +172,7 @@
                             app:drawableTint="@color/black" />
 
                         <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_week_off_day"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/custom_week_day_bg"
