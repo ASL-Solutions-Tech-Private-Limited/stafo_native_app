@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.ActionsListAdapter
+import com.asl_emp_mng.app.base.adapter.AdapterOnLeave
 import com.asl_emp_mng.app.base.adapter.EmpListAdapter
 import com.asl_emp_mng.app.base.adapter.SliderAdapter
 import com.asl_emp_mng.app.base.model.ActionModel
@@ -17,9 +18,13 @@ import com.asl_emp_mng.app.databinding.ActivityEmployerDashboardBinding
 import com.asl_emp_mng.app.screens.settings.AddEmployeeActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
 import com.asl_emp_mng.app.screens.settings.CompanyProfileActivity
+import com.asl_emp_mng.app.screens.settings.EmployeeProfileDetails
 import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
+import com.asl_emp_mng.app.screens.ui.EmployeeAttendance
+import com.asl_emp_mng.app.screens.ui.EmployeeLeaveHistoryActivity
+import com.asl_emp_mng.app.screens.ui.EmployeePunchInActivity
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.getCompanyDetails
@@ -31,7 +36,6 @@ class EmployerDashboard : AppCompatActivity() {
     private lateinit var binding: ActivityEmployerDashboardBinding
     private lateinit var name: String
 
-    private var token: String? = null
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
     private lateinit var rvAdapter: EmpListAdapter
@@ -57,7 +61,7 @@ class EmployerDashboard : AppCompatActivity() {
             rvWishes.layoutManager =
                 LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
             llNoWishes.visibility = View.VISIBLE
-            llLeaves.visibility = View.VISIBLE
+
 
             rvActions.layoutManager =
                 LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
@@ -100,15 +104,10 @@ class EmployerDashboard : AppCompatActivity() {
                 })
             rvActions.adapter = actionsAdapter
 
-            token?.let {
-                settingsViewModel.getEmpList(this@EmployerDashboard, it)
+            //settingsViewModel.getEmpList(this@EmployerDashboard,"2025-02-07")
 
-            }
-
-            token?.let {
-                settingsViewModel.getCompanyDashboard(this@EmployerDashboard, it)
-
-            }
+            settingsViewModel.getCompanyDashboard(this@EmployerDashboard)
+            settingsViewModel.getOnLeaveList(this@EmployerDashboard)
 
         }
 
@@ -119,8 +118,23 @@ class EmployerDashboard : AppCompatActivity() {
     private fun observeViewModel() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
         settingsViewModel.mAttendanceSummaryResponse.observe(this) {
-                      binding.tvPresentEmp.text=it.presentCount.toString()
-                      binding.tvOnLeaveEmp.text=it.employeeCount.toString()
+            binding.tvPresentEmp.text = it.presentCount.toString()
+            binding.tvOnLeaveEmp.text = it.employeeCount.toString()
+
+        }
+
+        settingsViewModel.mOnLeaveResponse.observe(this) {
+
+            if (it.leave.isNotEmpty()){
+                binding.rvLeaves.layoutManager =
+                    LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
+                val rvAdapter = AdapterOnLeave(it.leave, this)
+                binding.rvLeaves.adapter = rvAdapter
+            }else{
+                binding.llLeaves.visibility = View.VISIBLE
+            }
+
+
         }
     }
 
@@ -144,13 +158,14 @@ class EmployerDashboard : AppCompatActivity() {
         }
 
         binding.tvLetsCheckViewAll.setOnClickListener {
-             startActivity(Intent(this, ViewAllEmployeeActivity::class.java))
+            startActivity(Intent(this, EmployeeAttendance::class.java))
         }
 
         binding.tvHeaderEmpName.text = name
 
         binding.tvProfile.setOnClickListener {
-            startActivity(Intent(this,CompanyProfileActivity::class.java))
+            startActivity(Intent(this, CompanyProfileActivity::class.java))
+           //startActivity(Intent(this, EmployeeLeaveHistoryActivity::class.java))
         }
     }
 

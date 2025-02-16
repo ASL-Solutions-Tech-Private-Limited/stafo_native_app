@@ -5,17 +5,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.asl_emp_mng.app.R
-import com.asl_emp_mng.app.databinding.ActivityAddBranchBinding
 import com.asl_emp_mng.app.databinding.ActivityPlaceSearchBinding
 import okhttp3.Call
 import okhttp3.Callback

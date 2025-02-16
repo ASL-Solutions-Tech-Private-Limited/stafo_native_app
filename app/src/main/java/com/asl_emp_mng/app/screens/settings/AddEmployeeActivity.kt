@@ -47,7 +47,7 @@ class AddEmployeeActivity : AppCompatActivity() {
     private lateinit var selectJobTitle: String
     private var selectBranch: Int = 1
     private var selectDepartment: Int = 1
-    private var token: String? = null
+
 
     private lateinit var branchDialog: SearchableDialog
     private lateinit var departmentDialog: SearchableDialog
@@ -75,7 +75,7 @@ class AddEmployeeActivity : AppCompatActivity() {
             rpbBasicInfo.setFilledColor(resources.getColor(R.color.primaryColor))
         }
 
-        token = getToken(this, "token")
+
 
 
         onClickListener()
@@ -83,20 +83,13 @@ class AddEmployeeActivity : AppCompatActivity() {
 
     }
 
-    private fun getToken(context: Context, key: String): String? {
-        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        return sharedPref.getString(key, null)
-    }
+
 
     private fun observeViewModel() {
 
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-        token?.let {
-
-            settingsViewModel.getBranchList(this, it)
-
-        }
+        settingsViewModel.getBranchList(this)
 
 
 
@@ -111,13 +104,9 @@ class AddEmployeeActivity : AppCompatActivity() {
             }
         }
 
+        settingsViewModel.getDepartmentList(this@AddEmployeeActivity)
 
 
-        token?.let {
-
-            settingsViewModel.getDepartmentList(this, it)
-
-        }
         settingsViewModel.mDepartmentListResponse.observe(this) {
             mDepartmentList = it.data
             binding?.let { it1 ->
@@ -294,17 +283,12 @@ class AddEmployeeActivity : AppCompatActivity() {
                         name = tieStaffName.text.toString().trim(),
                         email = tieEmailId.text.toString().trim(),
                         position = selectJobTitle,
-                        salary = 10500,
                         phone = tieMobileNo.text.toString(),
                         branch_id = selectBranch,
                         department_id = selectDepartment
                     )
 
-                    token?.let {
-
-                        settingsViewModel.addEmployee(this@AddEmployeeActivity, it, requestBody)
-
-                    }
+                    settingsViewModel.addEmployee(this@AddEmployeeActivity, requestBody)
 
                 }
             }

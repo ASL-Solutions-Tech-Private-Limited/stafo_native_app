@@ -28,7 +28,7 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
 
     private fun onClickListeners() {
         viewDataBinding?.apply {
-            tieMobileNo.setText("8754214785")
+            tieMobileNo.setText("8709305214")
             btnSignIn.setOnClickListener {
                 viewModel?.sendOTP(this@LoginWithOTPActivity, tieMobileNo.text.toString().trim())
             }

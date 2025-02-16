@@ -68,7 +68,7 @@ class DynamicHolidayAdapter(private val fields: MutableList<DynamicHolidayField>
 
         val datePickerDialog = DatePickerDialog(editText.context, { _, selectedYear, selectedMonth, selectedDay ->
             //val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-            val selectedDate = "$selectedYear/${selectedMonth + 1}/$$selectedDay"
+            val selectedDate = "$selectedYear/${selectedMonth + 1}/$selectedDay"
             editText.setText(selectedDate)
 
             // Update the corresponding field value

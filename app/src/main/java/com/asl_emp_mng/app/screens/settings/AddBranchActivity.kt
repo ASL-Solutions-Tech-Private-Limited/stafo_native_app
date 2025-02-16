@@ -29,7 +29,7 @@ import java.util.Locale
 class AddBranchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddBranchBinding
-    private var token: String? = null
+
 
     private lateinit var locationManager: LocationManager
     private var currentLocation: Location? = null
@@ -55,21 +55,18 @@ class AddBranchActivity : AppCompatActivity() {
             insets
         }
 
-        token = getToken(this, "token")
+
 
         onClickListener()
 
-        Log.d("res", "token 2: $token")
+
 
         observeViewModel()
 
 
     }
 
-    private fun getToken(context: Context, key: String): String? {
-        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        return sharedPref.getString(key, null)
-    }
+
 
     private fun observeViewModel() {
 
@@ -195,12 +192,9 @@ class AddBranchActivity : AppCompatActivity() {
 
             btnAddBranch.setOnClickListener {
                 if (isValidate()) {
-                    token?.let {
-                        settingsViewModel.createBranch(
-                            this@AddBranchActivity,
-                            it, latitude.toString(), longitude.toString()
-                        )
-                    }
+                    settingsViewModel.createBranch(
+                        this@AddBranchActivity, latitude.toString(), longitude.toString()
+                    )
                 }
             }
 

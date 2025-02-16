@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,7 +25,7 @@ import java.util.Random
 class BranchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBranchBinding
 
-    private var token: String? = null
+
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
@@ -42,7 +43,7 @@ class BranchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
         setOnClickEvents()
         observeViewModel()
     }
@@ -80,12 +81,7 @@ class BranchActivity : AppCompatActivity() {
     }
 
     private fun setOnClickEvents() {
-        token = getToken(this@BranchActivity, "token")
-
-        token?.let {
-            settingsViewModel.getViewBranchList(this@BranchActivity, it)
-
-        }
+        settingsViewModel.getViewBranchList(this@BranchActivity)
 
         binding.imageBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -95,10 +91,7 @@ class BranchActivity : AppCompatActivity() {
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.swipeRefreshLayout.isRefreshing = false
-            token?.let {
-                settingsViewModel.getViewBranchList(this@BranchActivity, it)
-
-            }
+            settingsViewModel.getViewBranchList(this@BranchActivity)
 
         }
 

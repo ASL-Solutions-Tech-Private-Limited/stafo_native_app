@@ -217,7 +217,7 @@
            android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/_6sdp"
             android:fontFamily="@font/gilroy_regular"
-           android:text="Approve"
+           android:text=""
             android:singleLine="true"
             android:textColor="@color/primaryColorDark"
             android:textSize="@dimen/_12ssp" />

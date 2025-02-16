@@ -149,9 +149,76 @@
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llc_view_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:background="@drawable/custom_date_bg"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_18sdp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:src="@drawable/ic_view_profile"
+                    android:tint="@color/black"
+                    tools:ignore="UseAppTint" />
+
+                <TextView
+                    android:id="@+id/txt_view_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:paddingVertical="@dimen/_8sdp"
+                    android:text="View Profile"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10ssp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llc_req_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_date_bg"
+                android:orientation="horizontal"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_18sdp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:src="@drawable/ic_location"
+                    android:tint="@color/black"
+                    tools:ignore="UseAppTint" />
+
+                <TextView
+                    android:id="@+id/txt_req_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:paddingVertical="@dimen/_8sdp"
+                    android:text="Request Location"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10ssp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/llc_shift_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginEnd="@dimen/_12sdp"
                 android:background="@drawable/custom_date_bg"
                 android:orientation="horizontal"
@@ -176,7 +243,7 @@
                     android:paddingVertical="@dimen/_8sdp"
                     android:text="Shift Time"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_12ssp" />
+                    android:textSize="@dimen/_10sdp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -186,6 +253,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/custom_date_bg"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
@@ -208,7 +276,7 @@
                     android:paddingVertical="@dimen/_8sdp"
                     android:text="Attendance More"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_12ssp" />
+                    android:textSize="@dimen/_10sdp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>

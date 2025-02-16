@@ -1,7 +1,12 @@
 package com.asl_emp_mng.app.screens.ui
 
+import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -12,13 +17,22 @@ import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.EmployeeAttendanceAdapter
 import com.asl_emp_mng.app.base.model.EmployeeAttendanceModel
 import com.asl_emp_mng.app.databinding.ActivityEmployeeAttendanceBinding
-import java.util.Collections
-import java.util.Random
+import com.asl_emp_mng.app.screens.settings.SettingsViewModel
+import com.asl_emp_mng.app.utils.CustomLoader
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class EmployeeAttendance : AppCompatActivity() {
     private lateinit var binding: ActivityEmployeeAttendanceBinding
     private lateinit var rvAdapter: EmployeeAttendanceAdapter
     private lateinit var attendList: List<EmployeeAttendanceModel>
+
+    private val calendar = Calendar.getInstance()
+
+    private val customLoader: CustomLoader by lazy { CustomLoader(this) }
+    private val settingsViewModel: SettingsViewModel by viewModels()
+    private var mEMPId = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -30,45 +44,92 @@ class EmployeeAttendance : AppCompatActivity() {
             insets
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
-
+        mEMPId = intent.getStringExtra("EMPID").toString()
         onClickListener()
+        observeViewModel()
 
-        loadAttendList()
+        // loadAttendList()
 
     }
 
-    private fun loadAttendList() {
-        attendList = listOf(
-            EmployeeAttendanceModel("Hamid", "09:32 AM", "confirm_check_in", "04/02/2025",true),
-            EmployeeAttendanceModel("Hamid", "09:10 AM", "confirm_check_in", "04/02/2025",true),
-            EmployeeAttendanceModel("Hamid", "09:12 AM", "confirm_check_in", "04/02/2025",false),
-            EmployeeAttendanceModel("Hamid", "09:45 AM", "confirm_check_in", "04/02/2025",false),
-            EmployeeAttendanceModel("Hamid", "09:22 AM", "confirm_check_in", "04/02/2025",true),
-            EmployeeAttendanceModel("Hamid", "10:22 AM", "confirm_check_in", "04/02/2025",true)
-
-
+    private fun showDatePicker() {
+        val datePickerDialog = DatePickerDialog(
+            this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+                val selectedDate = Calendar.getInstance()
+                selectedDate.set(year, monthOfYear, dayOfMonth)
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val formattedDate = dateFormat.format(selectedDate.time)
+                //binding.tieDateJoining.setText("$formattedDate")
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
         )
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-        binding.rvEmpAttendList.setLayoutManager(layoutManager)
-        rvAdapter = EmployeeAttendanceAdapter(attendList, this)
-        binding.rvEmpAttendList.adapter = rvAdapter
-        rvAdapter.notifyDataSetChanged()
+        datePickerDialog.show()
     }
 
     private fun onClickListener() {
         binding?.apply {
 
+
+            settingsViewModel.getEmpList(this@EmployeeAttendance,"2025-02-07")
+
+
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
-                Collections.shuffle(attendList, Random(System.currentTimeMillis()))
-                rvAdapter.notifyDataSetChanged()
+                settingsViewModel.getEmpList(this@EmployeeAttendance,"2025-02-07")
 
             }
 
+            imageBack.setOnClickListener {
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            }
+
             //progressBar.updateProgress(50.0F)
-            progressBar.updateProgress(Random().nextInt(100).toFloat())
+            //  progressBar.updateProgress(Random().nextInt(100).toFloat())
 
 
+        }
+    }
+
+
+    private fun getToken(context: Context, key: String): String? {
+        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        return sharedPref.getString(key, null)
+    }
+
+
+    private fun observeViewModel() {
+
+
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
+        settingsViewModel.mEmployeeListResponse.observe(this) {
+            Log.d("res", it.message)
+            if (it.status) {
+
+                Log.d("res", it.data.toString())
+                val layoutManager: RecyclerView.LayoutManager =
+                    LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                binding.rvEmpAttendList.setLayoutManager(layoutManager)
+                rvAdapter = EmployeeAttendanceAdapter(it.data, this)
+                binding.rvEmpAttendList.adapter = rvAdapter
+                rvAdapter.notifyDataSetChanged()
+
+            } else {
+                binding.txtMsg.visibility = View.VISIBLE
+            }
+        }
+
+
+    }
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
         }
     }
 }

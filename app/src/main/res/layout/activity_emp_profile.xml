@@ -151,7 +151,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_c_com_name1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="LLC"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -190,7 +190,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_c_com_branch1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="9098765434"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -229,7 +229,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_c_com_department1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="Software"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -307,7 +307,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_c_com_joining1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="09/05/1990"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -346,7 +346,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_c_com_leaving1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="09/05/1990"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -385,7 +385,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_c_com_emp_id1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="ABC132"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -423,7 +423,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_c_com_job_title1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="ABC132"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -462,7 +462,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_c_com_official_email1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="ABC132"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -501,7 +501,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_c_com_esi_no1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="ABC132"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -540,7 +540,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_c_com_pf_no1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="ABC132"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -581,7 +581,7 @@
                         android:layout_marginBottom="@dimen/_6sdp"
                         android:layout_toRightOf="@+id/txt_c_com_work_exp1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="ABC132"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -634,7 +634,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_l_com_name1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="LLC"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -673,7 +673,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_l_com_branch1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="9098765434"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -712,7 +712,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_l_com_department1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="Software"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -791,7 +791,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_l_com_joining1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="09/05/1990"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -831,7 +831,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_l_com_leaving1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="09/05/1990"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -871,7 +871,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_l_com_emp_id1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="ABC132"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -910,7 +910,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_l_com_job_title1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="ABC132"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -948,7 +948,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_l_com_official_email1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="ABC132"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -987,7 +987,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_l_com_esi_no1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="ABC132"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -1027,7 +1027,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_l_com_pf_no1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="ABC132"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -1068,7 +1068,7 @@
                         android:layout_marginBottom="@dimen/_6sdp"
                         android:layout_toRightOf="@+id/txt_l_com_work_exp1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="ABC132"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -1126,11 +1126,12 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="@dimen/_8sdp"
-                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="19dp"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_toRightOf="@+id/txt_empname1"
                     android:fontFamily="@font/gilroy_medium"
-                    android:text="EmpName"
+                    android:text=""
                     android:textAlignment="textEnd"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12ssp" />
@@ -1169,7 +1170,7 @@
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_toRightOf="@+id/txt_designation1"
                     android:fontFamily="@font/gilroy_medium"
-                    android:text="9098765434"
+                    android:text=""
                     android:textAlignment="textEnd"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12ssp" />
@@ -1207,7 +1208,7 @@
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_toRightOf="@+id/txt_email1"
                     android:fontFamily="@font/gilroy_medium"
-                    android:text="hamidul21@gmail.com"
+                    android:text=""
                     android:textAlignment="textEnd"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12ssp" />
@@ -1245,7 +1246,7 @@
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_toRightOf="@+id/txt_dob1"
                     android:fontFamily="@font/gilroy_medium"
-                    android:text="01/08/1909"
+                    android:text=""
                     android:textAlignment="textEnd"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12ssp" />
@@ -1283,7 +1284,7 @@
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_toRightOf="@+id/txt_address1"
                     android:fontFamily="@font/gilroy_medium"
-                    android:text="panchananda pur,mothabari,malda,733207"
+                    android:text=""
                     android:textAlignment="textEnd"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12ssp" />
@@ -1421,7 +1422,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
@@ -1497,8 +1498,8 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profile_image"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_gravity="center|top"
         android:layout_marginTop="10dp"
         android:scaleType="fitXY"

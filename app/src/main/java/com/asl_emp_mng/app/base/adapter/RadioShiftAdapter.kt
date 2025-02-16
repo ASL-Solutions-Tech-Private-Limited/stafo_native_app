@@ -10,7 +10,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.ShiftDataList
 
 class RadioShiftAdapter (
     private var shiftList: List<ShiftDataList>,
-    var context: Context
+    var context: Context,
+    var listener:ActionClickListener
 ) : RecyclerView.Adapter<RadioShiftAdapter.ViewHolder>() {
     private var selectedPosition = -1
 
@@ -44,6 +45,17 @@ class RadioShiftAdapter (
         holder.binding.txtShiftName.text = shiftData.shift_name
         holder.binding.txtShiftTime.text = "Shift Time: ${shiftData.start_time+"-"+shiftData.end_time}"
 
+        /*if (position == selectedPosition) {
+            holder.binding.llShiftTime.setBackgroundResource(R.drawable.custom_switch_card_bg)
+            holder.binding.imgRadio.setImageResource(R.drawable.ic_lv_active_radio)
+        } else {
+            holder.binding.llShiftTime.setBackgroundResource(R.drawable.custom_switch_card_bg2)
+            holder.binding.imgRadio.setImageResource(R.drawable.ic_lv_inactive_radio)
+        }
+
+
+        holder.itemView.setOnClickListener { listener.onActionClick(shiftData.id.toString()) }*/
+
         if (position == selectedPosition) {
             holder.binding.llShiftTime.setBackgroundResource(R.drawable.custom_switch_card_bg)
             holder.binding.imgRadio.setImageResource(R.drawable.ic_lv_active_radio)
@@ -51,6 +63,17 @@ class RadioShiftAdapter (
             holder.binding.llShiftTime.setBackgroundResource(R.drawable.custom_switch_card_bg2)
             holder.binding.imgRadio.setImageResource(R.drawable.ic_lv_inactive_radio)
         }
+
+        holder.itemView.setOnClickListener {
+            selectedPosition = position
+            notifyDataSetChanged()
+            listener.onActionClick(shiftData.id.toString())
+        }
+
+
+
+
+
     }
 
   /*  override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -64,6 +87,11 @@ class RadioShiftAdapter (
 
     override fun getItemCount(): Int {
         return shiftList.size
+    }
+
+    interface ActionClickListener {
+        fun onActionClick(action: String)
+
     }
 
 }

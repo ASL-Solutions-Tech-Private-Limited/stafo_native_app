@@ -16,6 +16,9 @@ import com.asl_emp_mng.app.screens.auth.dataClass.OtpVerifyResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.StatesListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.AssignShiftRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
@@ -25,16 +28,35 @@ import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.FetchEmployeeDetails
+import com.asl_emp_mng.app.screens.settings.dataClass.GetAllEmployeeResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.GetAttendanceRecordRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecord
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecordBody
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployeeLeaveHistRequestBody
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployeeLeaveHistResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.HolidayListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequestBody
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.PendingLeaveResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.PunchInResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.ShiftAssignmentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfile
+import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfileResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfile
+import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ViewBranchResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HeaderMap
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -82,7 +104,7 @@ interface ApiStores {
     ): Response<AddBranchResponse>
 
 
-    @POST("api/employees")
+    @POST("api/employees-create")
     suspend fun callAddEmp(
         @Body addEmpRequest: AddEmpRequestBody,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
@@ -96,8 +118,8 @@ interface ApiStores {
     @GET("api/shifts")
     suspend fun callShiftList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ShiftListResponse>
 
-    @GET("api/employees-list")
-    suspend fun callEmployeeList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<EmployeeListResponse>
+    @POST("api/employees-list")
+    suspend fun callEmployeeList(@Body request: GetAttendanceRecordRequest, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<EmployeeListResponse>
 
     @GET("api/branch/list")
     suspend fun callBranchViewList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ViewBranchResponse>
@@ -142,6 +164,48 @@ interface ApiStores {
     suspend fun callCompanyProfile(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<CompanyProfileResponse>
 
     @GET("api/holidays/by-company")
-    suspend fun callHolidayList(@Header("Authorization") token: String): Response<HolidayListResponse>
+    suspend fun callHolidayList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<HolidayListResponse>
+
+    @POST("api/pending-leave-request")
+    suspend fun callPendingLeaveRequestList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<PendingLeaveResponse>
+
+
+
+    @POST("api/leave-request-status-change")
+    suspend fun callAcceptLeave( @Body request:ApproveLeaveRequest,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ApproveLeaveResponse>
+
+
+    @POST("api/employeesOnLeave")
+    suspend fun callOnLeaveList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<OnLeaveResponse>
+
+    @GET("api/employees-list")
+    suspend fun callAllEmpList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<GetAllEmployeeResponse>
+
+
+    @POST("api/employees-list")
+    suspend fun callEmpRecord(@Body request:GetEmpAttendanceRecordBody, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<GetEmpAttendanceRecord>
+
+    @PUT("api/company/update")
+    suspend fun callUpdateCompany(@Body request:UpdateCompanyProfile, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<UpdateCompanyProfileResponse>
+
+    @GET("api/employee-details/{id}")
+    suspend fun callFetchEmployeeDetails(@Path("id")id:String,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<FetchEmployeeDetails>
+
+    @PUT("api/employees-update/{id}")
+    suspend fun callUpdateEmployee(@Path("id")id:String,@Body request:UpdateEmployeeProfile,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<UpdateEmployeeProfileResponse>
+
+
+    @POST("api/employee/punch")
+    suspend fun callPunchIn(@Body request: PunchInRequest, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<PunchInResponse>
+
+
+    @POST("api/employees/assign-shift")
+    suspend fun callAssignShift(@Body request: AssignShiftRequest, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ShiftAssignmentResponse>
+
+    @POST("api/leave-list")
+    suspend fun callAllLeaveList(@Body request: LeaveRequestBody, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<LeaveResponse>
+
+    @POST("api/leave-list")
+    suspend fun callGetEmpLeaveList(@Body request: GetEmployeeLeaveHistRequestBody, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<GetEmployeeLeaveHistResponse>
 
 }

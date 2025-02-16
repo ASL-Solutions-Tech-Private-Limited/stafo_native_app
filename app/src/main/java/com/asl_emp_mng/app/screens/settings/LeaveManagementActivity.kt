@@ -2,12 +2,14 @@ package com.asl_emp_mng.app.screens.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
@@ -16,64 +18,118 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
+import com.asl_emp_mng.app.base.adapter.AdapterHoliday
 import com.asl_emp_mng.app.base.adapter.LeavesManagementAdapter
 import com.asl_emp_mng.app.base.model.LeavesManagementModel
 import com.asl_emp_mng.app.databinding.ActivityLeaveManagementBinding
 import com.asl_emp_mng.app.databinding.CustomEmpDetailsBottomSheetLayoutBinding
+import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveData
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequestBody
+import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.CustomToast
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.util.Collections
 import java.util.Random
 
 class LeaveManagementActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityLeaveManagementBinding
+    private lateinit var binding: ActivityLeaveManagementBinding
     private lateinit var rvAdapter: LeavesManagementAdapter
-    private lateinit var leaveRequestList : List<LeavesManagementModel>
+
+    private val customLoader: CustomLoader by lazy { CustomLoader(this) }
+    private val settingsViewModel: SettingsViewModel by viewModels()
+
 
     //for bottom sheet
     private lateinit var bottomSheetDialog: BottomSheetDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding=ActivityLeaveManagementBinding.inflate(layoutInflater)
+        binding = ActivityLeaveManagementBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        window.statusBarColor= ContextCompat.getColor(this, R.color.primaryColorDark)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
 
         onClickListener()
-        loadLeaveRequestList()
+        observeViewModel()
 
     }
 
-    private fun loadLeaveRequestList() {
-        leaveRequestList = listOf(
-            LeavesManagementModel("Hamid" , "","04/02/2025","Pending","01/02/2025"),
-            LeavesManagementModel("Hamid2" , "","04/02/2025","Pending","01/02/2025"),
-            LeavesManagementModel("Hamid3" , "","04/02/2025","Pending","01/02/2025"),
-            LeavesManagementModel("Hamid4" , "","04/02/2025","Pending","01/02/2025"),
-            LeavesManagementModel("Hamid5" , "","04/02/2025","Pending","01/02/2025")
 
-        )
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-        binding.rvShowLeaveList.setLayoutManager(layoutManager)
-        rvAdapter = LeavesManagementAdapter(leaveRequestList,this)
-        binding.rvShowLeaveList.adapter = rvAdapter
-        rvAdapter.notifyDataSetChanged()
+    private fun observeViewModel() {
+
+
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
+
+
+        settingsViewModel.mLeaveResponse.observe(this) {
+
+            if (it.data.isNotEmpty()) {
+                val pendingLeaves = it.data.filter { leave -> leave.status == "pending" }
+
+                val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+                binding.rvShowLeaveList.setLayoutManager(layoutManager)
+                rvAdapter = LeavesManagementAdapter(pendingLeaves, this)
+                binding.rvShowLeaveList.adapter = rvAdapter
+                rvAdapter.notifyDataSetChanged()
+            } else {
+                binding.txtMsg.visibility = View.VISIBLE
+            }
+
+
+        }
+        settingsViewModel.mApproveLeaveResponse.observe(this) {
+
+            CustomToast(this, it.message)
+            val request = LeaveRequestBody(
+                companyId = "1",
+                employeeId = ""
+            )
+
+            settingsViewModel.getAllLeaveList(this@LeaveManagementActivity, request)
+
+        }
+
     }
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
+        }
+    }
+
 
     private fun onClickListener() {
         binding?.apply {
 
+            val request = LeaveRequestBody(
+                companyId = "1",
+                employeeId = ""
+            )
+
+            settingsViewModel.getAllLeaveList(this@LeaveManagementActivity, request)
+
 
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
-                Collections.shuffle(leaveRequestList, Random(System.currentTimeMillis()))
 
-                rvAdapter.notifyDataSetChanged()
+                val request = LeaveRequestBody(
+                    companyId = "1",
+                    employeeId = ""
+                )
 
+                settingsViewModel.getAllLeaveList(this@LeaveManagementActivity, request)
+
+
+                //settingsViewModel.getPendingLeaveList(this@LeaveManagementActivity)
             }
 
             imageSettings.setOnClickListener { view ->
@@ -84,9 +140,6 @@ class LeaveManagementActivity : AppCompatActivity() {
                 onBackPressedDispatcher.onBackPressed()
                 finish()
             }
-
-
-
 
 
         }
@@ -104,20 +157,22 @@ class LeaveManagementActivity : AppCompatActivity() {
         popupMenu.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 0 -> {
-                  startActivity(Intent(this, CreateLeavePolicyActivity::class.java))
+                    startActivity(Intent(this, CreateLeavePolicyActivity::class.java))
                     true
                 }
+
                 1 -> {
                     startActivity(Intent(this, LeaveRequestHistoryActivity::class.java))
                     true
                 }
+
                 else -> false
             }
         }
         popupMenu.show()
     }
 
-    fun showCustomBottomSheet() {
+    fun showCustomBottomSheet(list: List<LeaveData>, position: Int, duration: String) {
         bottomSheetDialog = BottomSheetDialog(this)
         val binding = CustomEmpDetailsBottomSheetLayoutBinding.inflate(layoutInflater)
         bottomSheetDialog.setOnShowListener { dialog ->
@@ -127,12 +182,31 @@ class LeaveManagementActivity : AppCompatActivity() {
         }
 
         bottomSheetDialog.setCancelable(false)
+        binding.txtEmpName.text = list[position].employeeBasicInfo.name
+        binding.txtDuration.text = duration
+        binding.txtLeaveDate.text = list[position].fromDate + " - " + list[position].toDate
+        binding.txtStartDate.text = list[position].fromDate
+        binding.txtEndDate.text = list[position].toDate
+        binding.txtRemarks.text = list[position].reason
+
+
         binding.bottomSheetCancel.setOnClickListener {
             bottomSheetDialog.dismiss()
         }
 
         bottomSheetDialog.setContentView(binding.root)
         bottomSheetDialog.show()
+    }
+
+
+    fun approveRequest(id: String, status: String) {
+
+        val body = ApproveLeaveRequest(
+            id = id,
+            status = status
+        )
+
+        settingsViewModel.postPendingLeave(this@LeaveManagementActivity, body)
     }
 
 }
