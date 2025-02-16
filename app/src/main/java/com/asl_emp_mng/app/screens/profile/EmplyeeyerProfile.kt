@@ -2,15 +2,16 @@ package com.asl_emp_mng.app.screens.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import com.asl_emp_mng.app.R
-import com.asl_emp_mng.app.base.model.DashboardType
 import com.asl_emp_mng.app.base.model.ProfileType
 import com.asl_emp_mng.app.databinding.ActivityEmplyeeyerProfileBinding
-import com.asl_emp_mng.app.databinding.LayoutAccountSettingsBinding
 import com.asl_emp_mng.app.screens.EmpProfileActivity
+import com.asl_emp_mng.app.screens.emp.EmpLeaveActivity
+import com.asl_emp_mng.app.screens.emp.EmployeeAttendance
 import com.asl_emp_mng.app.screens.settings.AddShiftActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
 import com.asl_emp_mng.app.screens.settings.HolidayActivity
@@ -22,13 +23,12 @@ import com.asl_emp_mng.app.utils.doLogout
 import com.asl_emp_mng.app.utils.getCompanyDetails
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
+import com.google.gson.Gson
 
 class EmplyeeyerProfile : AppCompatActivity() {
 
-    private lateinit var secondLayout: LayoutAccountSettingsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_emplyeeyer_profile)
 
         val binding = ActivityEmplyeeyerProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -39,34 +39,24 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
     private fun setupView(binding: ActivityEmplyeeyerProfileBinding) {
         binding?.apply {
+            Log.e("TAG", "setupView: ${Gson().toJson(getEmployeeDetails())}")
             if (getIsCOMPANYLogin() == true) {
                 tvHeaderEmpName.text = getCompanyDetails()?.companyName ?: "Guest"
                 tvHeaderEmpEmail.text = getCompanyDetails()?.email ?: "--"
+                binding.llCompanyProfile.visibility = View.VISIBLE
+                binding.llEmployerProfile.visibility = View.GONE
             } else {
-                tvHeaderEmpName.text = getEmployeeDetails()?.employee?.name ?: "Guest"
-                tvHeaderEmpEmail.text = getEmployeeDetails()?.employee?.email ?: "--"
+                tvHeaderEmpName.text = getEmployeeDetails()?.name ?: "Guest"
+                tvHeaderEmpEmail.text = getEmployeeDetails()?.email ?: "--"
+                binding.llCompanyProfile.visibility = View.GONE
+                binding.llEmployerProfile.visibility = View.VISIBLE
+
             }
         }
     }
 
 
     private fun setOnClickEvents(binding: ActivityEmplyeeyerProfileBinding) {
-
-
-        val dashboardType = DashboardType.valueOf(
-            intent.getStringExtra("DASHBOARD_TYPE") ?: DashboardType.EMPLOYEE.name
-        )
-
-        if (dashboardType == DashboardType.EMPLOYEE) {
-            binding.llCompanyProfile.visibility = View.GONE
-            binding.llEmployerProfile.visibility = View.VISIBLE
-
-        } else {
-            binding.llCompanyProfile.visibility = View.VISIBLE
-            binding.llEmployerProfile.visibility = View.GONE
-        }
-
-
 
         binding?.expandableAccountSetting?.setOnClickListener {
             binding.expandableAccountSetting.toggleLayout()
@@ -154,7 +144,8 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         }
 
-        binding.tvLogout.setOnClickListener {
+        binding.expandableOtherManagement.findViewById<AppCompatTextView>(R.id.tv_logout)
+            .setOnClickListener {
             doLogout(this)
         }
 
@@ -192,6 +183,9 @@ class EmplyeeyerProfile : AppCompatActivity() {
             startActivity(intent)*/
         }
 
+        binding.tvEmpLogout.setOnClickListener {
+            doLogout(this)
+        }
     }
 
 

@@ -1,7 +1,6 @@
-package com.asl_emp_mng.app.screens.ui
+package com.asl_emp_mng.app.screens.emp
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,14 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.AdapterEmployeeAllLeaveList
-import com.asl_emp_mng.app.base.adapter.LeavesManagementAdapter
 import com.asl_emp_mng.app.databinding.ActivityEmployeeLeaveHistoryBinding
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployeeLeaveHistRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveCount
-import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequestBody
 import com.asl_emp_mng.app.utils.CustomLoader
-import com.asl_emp_mng.app.utils.CustomToast
 
 class EmployeeLeaveHistoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmployeeLeaveHistoryBinding

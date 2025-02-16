@@ -1,4 +1,4 @@
-package com.asl_emp_mng.app.screens.ui
+package com.asl_emp_mng.app.screens.emp
 
 import android.app.Activity
 import android.view.LayoutInflater

@@ -46,23 +46,26 @@
         tools:replace="android:label"
         tools:targetApi="31">
         <activity
-            android:name=".screens.settings.EmployeeProfileDetails"
+            android:name=".screens.ui.WishListActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.settings.EmployeeAttendanceRecordActivity"
+            android:name=".screens.emp.EmployeeProfileDetails"
+            android:exported="false" />
+        <activity
+            android:name=".screens.emp.EmployeeAttendanceRecordActivity"
             android:exported="false" />
         <activity
             android:name=".screens.settings.OnLeaveActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.ui.EmplyeeAttendaceListActivity"
+            android:name=".screens.emp.EmplyeeAttendaceListActivity"
             android:exported="false" />
         <activity
             android:name=".screens.auth.LoginWithOTPActivity"
             android:exported="false"
             android:theme="@style/Theme.Sims.NoActionBar" />
         <activity
-            android:name=".screens.settings.CompanyProfileActivity"
+            android:name=".screens.profile.CompanyProfileActivity"
             android:exported="false" />
         <activity
             android:name=".screens.settings.AddPolicyActivity"
@@ -99,19 +102,19 @@
             android:name=".screens.EmpProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.ui.EmployeePunchInActivity"
+            android:name=".screens.emp.EmployeePunchInActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.ui.EmployeeAttendance"
+            android:name=".screens.emp.EmployeeAttendance"
             android:exported="false" />
         <activity
             android:name=".screens.auth.OtpVerifyActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.ui.EmployeeLeaveHistoryActivity"
+            android:name=".screens.emp.EmployeeLeaveHistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.ui.EmpLeaveActivity"
+            android:name=".screens.emp.EmpLeaveActivity"
             android:exported="false" />
         <activity
             android:name=".screens.settings.CreateLeavePolicyActivity"

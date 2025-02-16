@@ -1,4 +1,4 @@
-package com.asl_emp_mng.app.screens.ui
+package com.asl_emp_mng.app.screens.emp
 
 import android.Manifest
 import android.app.DatePickerDialog
@@ -19,10 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
-import com.asl_emp_mng.app.base.adapter.LeavesManagementAdapter
 import com.asl_emp_mng.app.base.model.Commonfunctions
 import com.asl_emp_mng.app.base.service.LocationForegroundService
 import com.asl_emp_mng.app.databinding.ActivityEmpLeaveBinding

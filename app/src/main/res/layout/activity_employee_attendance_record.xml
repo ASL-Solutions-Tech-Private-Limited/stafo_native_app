@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#80D3D3D3"
-    tools:context=".screens.settings.EmployeeAttendanceRecordActivity">
+    tools:context=".screens.emp.EmployeeAttendanceRecordActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -262,6 +262,7 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_weight="1"
+                android:id="@+id/txt_date"
                 android:fontFamily="@font/gilroy_semi_bold"
                 android:text="14-02-2025"
                 android:textColor="#565656"

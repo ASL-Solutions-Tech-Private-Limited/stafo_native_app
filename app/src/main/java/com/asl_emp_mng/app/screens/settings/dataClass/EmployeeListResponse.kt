@@ -22,6 +22,7 @@ data class EmployeeDataList(
     val department_name: String,
     val last_punch_in: String? = null,
     val last_punch_out: String? = null,
+    val geo_status: String? = null,
     val attendances: List<EmployeeAttendanceModel>
 )
 

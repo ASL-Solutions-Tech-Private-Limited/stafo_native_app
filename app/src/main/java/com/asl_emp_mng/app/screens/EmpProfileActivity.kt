@@ -13,6 +13,7 @@ import com.asl_emp_mng.app.databinding.ActivityEmpProfileBinding
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getEmployeeDetails
 
 class EmpProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmpProfileBinding
@@ -59,7 +60,7 @@ class EmpProfileActivity : AppCompatActivity() {
 
             imageBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
-            settingsViewModel.fetchEmployeeDetails(this@EmpProfileActivity, "11")
+            settingsViewModel.fetchEmployeeDetails(this@EmpProfileActivity, getEmployeeDetails()?.id.toString())
 
         }
     }

@@ -68,6 +68,7 @@ class AppIntro : Fragment() {
 
         //............................................................
         binding.btnSkip.setOnClickListener {
+            setIsOnBoardingScreenShown(true)
             startActivity(Intent(requireContext(), LoginWithOTPActivity::class.java))
             requireActivity().finish()
         }

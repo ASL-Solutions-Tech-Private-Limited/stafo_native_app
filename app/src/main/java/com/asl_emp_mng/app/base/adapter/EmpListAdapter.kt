@@ -7,14 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.databinding.RecyViewEmployeeItemLayoutBinding
+import com.asl_emp_mng.app.screens.emp.EmployeeProfileDetails
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDataList
-import com.asl_emp_mng.app.screens.ui.EmployeeAttendance
 
 class EmpListAdapter(
     private var list: List<EmployeeDataList>,
     var context: Activity,
-    var from: String
+    var from: String,
+    var onEmGeoClick: onGeoClick
 ) : RecyclerView.Adapter<EmpListAdapter.ViewHolder>() {
     inner class ViewHolder(val binding: RecyViewEmployeeItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -47,10 +48,24 @@ class EmpListAdapter(
                         context.startActivity(
                             Intent(
                                 context,
-                                EmployeeAttendance::class.java
+                                EmployeeProfileDetails::class.java
                             ).apply {
-                                putExtra("EmpData", list[position].emp_id)
+                                putExtra("EMP_ID", list[position].id.toString())
                             })
+                    }
+
+                    if (this.geo_status != null) {
+                        binding.txtReqLocation.text = "Request Location"
+                    } else if (this.geo_status == "1") {
+                        binding.txtReqLocation.text = "View Location"
+                    } else {
+                        binding.txtReqLocation.text = "Request Location"
+                    }
+                    binding.llcReqLocation.setOnClickListener {
+                        onEmGeoClick.onEMPClick(
+                            list[position].id.toString(),
+                            binding.txtReqLocation.text.toString()
+                        )
                     }
                 } else {
                     binding.llcViewProfile.visibility = View.GONE
@@ -79,8 +94,8 @@ class EmpListAdapter(
         return list.size
     }
 
-    interface onEMPClickListener {
-        fun onEMPClick(empID: String)
+    interface onGeoClick {
+        fun onEMPClick(empID: String, type: String)
     }
 
 

@@ -1,6 +1,7 @@
 package com.asl_emp_mng.app.utils
 
 import com.asl_emp_mng.app.screens.auth.dataClass.CompanyData
+import com.asl_emp_mng.app.screens.settings.dataClass.Employee
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeData
 import com.orhanobut.hawk.Hawk
 
@@ -46,11 +47,11 @@ fun getCompanyDetails(): CompanyData? {
     return Hawk.get(COMPANY_DETAILS, null)
 }
 
-fun setEmployeeDetails(employeeDetails: EmployeeData) {
+fun setEmployeeDetails(employeeDetails: Employee) {
     Hawk.put(EMPLOYEE_DETAILS, employeeDetails)
 }
 
-fun getEmployeeDetails(): EmployeeData? {
+fun getEmployeeDetails(): Employee? {
     return Hawk.get(EMPLOYEE_DETAILS, null)
 }
 

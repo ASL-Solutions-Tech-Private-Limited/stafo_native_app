@@ -1,5 +1,8 @@
 package com.asl_emp_mng.app.api
 
+import com.asl_emp_mng.app.base.model.EmployeeDashboardResponse
+import com.asl_emp_mng.app.base.model.MonthAttendaceResponse
+import com.asl_emp_mng.app.base.model.RequestGeoLocationResponse
 import com.asl_emp_mng.app.base.request.AddBranchRequest
 import com.asl_emp_mng.app.base.request.OtpRequestBody
 import com.asl_emp_mng.app.base.request.RegisterRequest
@@ -207,5 +210,21 @@ interface ApiStores {
 
     @POST("api/leave-list")
     suspend fun callGetEmpLeaveList(@Body request: GetEmployeeLeaveHistRequestBody, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<GetEmployeeLeaveHistResponse>
+
+    @POST("api/update-geo-status")
+    suspend fun requestGeoLocation(
+        @Body request: HashMap<String, String>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<RequestGeoLocationResponse>
+
+    @POST("api/employee-dashboard")
+    suspend fun callEmployeeDashboard(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<EmployeeDashboardResponse>
+
+    @GET("api/attendance-list")
+    suspend fun callMonthlyAttendance(
+        @Query("employee_id") employee_id: String,
+        @Query("month") month: String,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap(),
+    ): Response<MonthAttendaceResponse>
 
 }
