@@ -1,26 +1,18 @@
-package com.asl_emp_mng.app.screens.settings
+package com.asl_emp_mng.app.screens.profile
 
-import android.content.Context
-import android.content.Intent
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.RadioButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ajithvgiri.searchdialog.OnSearchItemSelected
 import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
 import com.asl_emp_mng.app.R
-import com.asl_emp_mng.app.base.adapter.BranchAdapter
 import com.asl_emp_mng.app.databinding.ActivityCompanyProfileBinding
 import com.asl_emp_mng.app.screens.auth.AuthViewModel
 import com.asl_emp_mng.app.screens.auth.dataClass.DataBusinessType
@@ -28,13 +20,13 @@ import com.asl_emp_mng.app.screens.auth.dataClass.DataCity
 import com.asl_emp_mng.app.screens.auth.dataClass.DataCompanyType
 import com.asl_emp_mng.app.screens.auth.dataClass.DataCountry
 import com.asl_emp_mng.app.screens.auth.dataClass.DataStates
+import com.asl_emp_mng.app.screens.settings.SettingsViewModel
+import com.asl_emp_mng.app.screens.settings.dataClass.Company
 import com.asl_emp_mng.app.screens.settings.dataClass.OwnerInfo
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfile
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.google.android.material.textfield.TextInputEditText
-import java.util.Collections
-import java.util.Random
 
 class CompanyProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCompanyProfileBinding
@@ -65,10 +57,7 @@ class CompanyProfileActivity : AppCompatActivity() {
     private var selectedBusinessType: Int=0
 
     private var profileType: String="company_basic"
-
-
-
-
+    private var mCompany: Company? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -79,11 +68,10 @@ class CompanyProfileActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
+
         onClickListener()
         observeViewModel()
 
-        observeAuthViewModel()
 
     }
 
@@ -91,9 +79,6 @@ class CompanyProfileActivity : AppCompatActivity() {
         binding?.apply {
 
             settingsViewModel.getCompanyDetails(this@CompanyProfileActivity)
-
-
-
 
             imageBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
@@ -137,9 +122,7 @@ class CompanyProfileActivity : AppCompatActivity() {
 
             btnCompanyProfile.setOnClickListener {
                 if (profileType=="company_basic"){
-
                     if (validateBasicInfo()){
-
                         val ownerInfo = OwnerInfo(
                             firstName = "",
                             lastName = "",
@@ -153,7 +136,7 @@ class CompanyProfileActivity : AppCompatActivity() {
                             registrationNumber = binding.tieCompanyRegNo.text.toString(),
                             gstNumber = binding.tieCompanyGstNo.text.toString(),
                             panNumber = binding.tieCompanyPanNo.text.toString(),
-                            address = binding.tieCompanyAddress.toString(),
+                            address = binding.tieCompanyAddress.text.toString(),
                             cityId = selectedCity,
                             stateId = selectedState,
                             countryId = selectedCountry,
@@ -177,7 +160,7 @@ class CompanyProfileActivity : AppCompatActivity() {
 
 
                 }else if (profileType=="company_owner"){
-                    if (isValidOwnerInfo()){
+                    if (isValidOwnerInfo()) {
                         val ownerInfo = OwnerInfo(
                             firstName = binding.tieOwnerName.text.toString(),
                             lastName = "",
@@ -185,13 +168,13 @@ class CompanyProfileActivity : AppCompatActivity() {
                             email = binding.tieOwnerEmail.text.toString()
                         )
                         val companyInfo = UpdateCompanyProfile(
-                            companyName = binding.tieCompanyName.text.toString(),
+                            companyName = tieCompanyName.text.toString(),
                             companyType = selectedCompanyType.toString(),
                             businessTypeId = selectedBusinessType,
-                            registrationNumber = binding.tieCompanyRegNo.text.toString(),
-                            gstNumber = binding.tieCompanyGstNo.text.toString(),
-                            panNumber = binding.tieCompanyPanNo.text.toString(),
-                            address = binding.tieCompanyAddress.toString(),
+                            registrationNumber = tieCompanyRegNo.text.toString(),
+                            gstNumber = tieCompanyGstNo.text.toString(),
+                            panNumber = tieCompanyPanNo.text.toString(),
+                            address = tieCompanyAddress.text.toString(),
                             cityId = selectedCity,
                             stateId = selectedState,
                             countryId = selectedCountry,
@@ -206,19 +189,20 @@ class CompanyProfileActivity : AppCompatActivity() {
                             ownerInfo = ownerInfo
                         )
 
+                        settingsViewModel.updateCompanyProfile(
+                            this@CompanyProfileActivity,
+                            companyInfo
+                        )
 
-
-                        settingsViewModel.updateCompanyProfile(this@CompanyProfileActivity,companyInfo)
-                       // CustomToast(this@CompanyProfileActivity,"Working is progress")
 
                     }
                 }else if (profileType=="company_document"){
                     CustomToast(this@CompanyProfileActivity,"Working is progress")
                 }
             }
-
-
         }
+
+
     }
 
 
@@ -231,72 +215,46 @@ class CompanyProfileActivity : AppCompatActivity() {
 
         settingsViewModel.mCompanyProfileResponse.observe(this) {
             if (it.status) {
-                  Log.d("res","data: ${it.data?.proprietor}")
                 it.data?.let { data ->
-
-                    // Company details
+                    mCompany = data.company
                     binding.tieCompanyName.setText(data.company?.companyName ?: "")
-                    if (!data.company?.companyName.isNullOrEmpty()) {
-                        isFocusableField(binding.tieCompanyName)
-                    }
-
+                    isFocusableField(binding.tieCompanyName)
                     binding.tieCompanyAddress.setText(data.company?.address ?: "")
-                    if (!data.company?.address.isNullOrEmpty()) {
-                        isFocusableField(binding.tieCompanyAddress)
-                    }
-
                     binding.tieCompanyRegNo.setText(data.company?.registrationNumber ?: "")
-                    if (!data.company?.registrationNumber.isNullOrEmpty()) {
-                        isFocusableField(binding.tieCompanyRegNo)
-                    }
-
                     binding.tieCompanyGstNo.setText(data.company?.gstNumber ?: "")
-                    if (!data.company?.gstNumber.isNullOrEmpty()) {
-                        isFocusableField(binding.tieCompanyGstNo)
-                    }
-
                     binding.tieCompanyPanNo.setText(data.company?.panNumber ?: "")
-                    if (!data.company?.panNumber.isNullOrEmpty()) {
-                        isFocusableField(binding.tieCompanyPanNo)
-                    }
-
-
-                    //owner details
-
-                    binding.tieOwnerName.setText(data.proprietor?.firstName ?: "")
-                    if (!data.proprietor?.firstName.isNullOrEmpty()) {
-                        isFocusableField(binding.tieOwnerName)
-                    }
-
-                    binding.tieOwnerMobileNo.setText(data.proprietor?.mobile ?: "")
-                    if (!data.proprietor?.mobile.isNullOrEmpty()) {
-                        isFocusableField(binding.tieOwnerMobileNo)
-                    }
-
-                    binding.tieOwnerEmail.setText(data.proprietor?.email ?: "")
-                    if (!data.proprietor?.email.isNullOrEmpty()) {
-                        isFocusableField(binding.tieOwnerEmail)
-                    }
-
+                    binding.tieSelectCountry.setText(data.countryName ?: "")
+                    binding.tieSelectState.setText(data.stateName ?: "")
+                    binding.tieSelectCity.setText(data.cityName ?: "")
+                    binding.tieOwnerEmail.setText(data.company?.email ?: "")
+                    binding.tieOwnerMobileNo.setText(data.company?.mobileNo ?: "")
+                    binding.tieOwnerName.setText(
+                        data.proprietor?.firstName ?: "" + data.proprietor?.lastName ?: ""
+                    )
                     binding.tieOwnerAddress.setText(data.proprietor?.currentAddress ?: "")
-                    if (!data.proprietor?.currentAddress.isNullOrEmpty()) {
-                        isFocusableField(binding.tieOwnerAddress)
-                    }
+
+                    selectedCompanyType = data.company?.businessTypeId ?: 0
+                    selectedBusinessType = data.company?.businessTypeId ?: 0
+                    selectedCountry = data.company?.country?.toInt() ?: 0
+                    selectedState = data.company?.state?.toInt() ?: 0
+                    selectedCity = data.company?.city?.toInt() ?: 0
 
                 }
             }else{
                 CustomToast(this,it.message)
             }
 
+            observeAuthViewModel()
+
         }
 
         settingsViewModel.mUpdateCompanyResponse.observe(this) {
-          if (it.status){
-              CustomToast(this,it.message)
-              onBackPressedDispatcher.onBackPressed()
-          }else{
-              CustomToast(this,it.message)
-          }
+            if (it.status) {
+                CustomToast(this, it.message)
+                onBackPressedDispatcher.onBackPressed()
+            } else {
+                CustomToast(this, it.message)
+            }
 
         }
 
@@ -313,8 +271,6 @@ class CompanyProfileActivity : AppCompatActivity() {
         viewModel.getCompanyType(this)
         viewModel.mCompanyTypeResponse.observe(this) {
             if (it.success) {
-
-
                 mCompanyTypeList = it.data
                 binding.let { it1 ->
                     setupSearchableDialog(
@@ -322,6 +278,11 @@ class CompanyProfileActivity : AppCompatActivity() {
                         "Company Type",
                         it1.tieCompanyType
                     )
+                    for (comType in mCompanyTypeList?.indices!!) {
+                        if (mCompany?.companyType == mCompanyTypeList?.get(comType)?.id.toString()) {
+                            binding.tieCompanyType.setText(mCompanyTypeList?.get(comType)?.company_name)
+                        }
+                    }
                 }
             }
         }
@@ -338,6 +299,15 @@ class CompanyProfileActivity : AppCompatActivity() {
                         "Business Type",
                         it1.tieBusinessType
                     )
+
+                    for (businessType in mCompanyTypeList?.indices!!) {
+                        if (mCompany?.businessTypeId.toString() == mBusinessTypeList?.get(
+                                businessType
+                            )?.id.toString()
+                        ) {
+                            binding.tieBusinessType.setText(mBusinessTypeList?.get(businessType)?.business_name)
+                        }
+                    }
                 }
             }
         }

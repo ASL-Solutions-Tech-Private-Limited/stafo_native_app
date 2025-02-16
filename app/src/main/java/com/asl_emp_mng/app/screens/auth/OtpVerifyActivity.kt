@@ -39,6 +39,7 @@ class OtpVerifyActivity : AppCompatActivity() {
         mobile = intent.extras?.getString("mobile") ?: ""
         otp = intent.extras?.getString("otp") ?: ""
 
+        binding.llOtp.setText(otp)
         onClickListener()
         observeViewModel()
     }

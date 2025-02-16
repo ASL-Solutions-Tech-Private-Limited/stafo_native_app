@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -84,7 +85,7 @@
                 android:fontFamily="@font/gilroy_medium"
                 android:gravity="center"
                 android:maxLines="3"
-                android:text="09:32 AM"
+                tools:text="09:32 AM"
                 android:textColor="#565656"
                 android:textSize="@dimen/_10ssp"
                 app:drawableTint="@color/black" />
@@ -103,7 +104,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/gilroy_medium"
                 android:gravity="center"
-                android:text="09:32 PM"
+                tools:text="09:32 PM"
                 android:textColor="#565656"
                 android:textSize="@dimen/_10ssp"
                 app:drawableTint="@color/black" />
@@ -122,7 +123,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/gilroy_medium"
                 android:gravity="center"
-                android:text="10 Hrs"
+                tools:text="10 Hrs"
                 android:textColor="#565656"
                 android:textSize="@dimen/_10ssp"
                 app:drawableTint="@color/black" />

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".screens.settings.EmployeeProfileDetails">
+    tools:context=".screens.emp.EmployeeProfileDetails">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"

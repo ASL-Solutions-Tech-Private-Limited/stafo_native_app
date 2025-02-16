@@ -1349,3 +1349,10 @@ fun doLogout(mContext: Context) {
     mContext.startActivity(intent)
 }
 
+fun getFormattedDate(date: String, dateFormat: String, returnDateFormat: String): String {
+    val inputFormat = SimpleDateFormat(dateFormat, Locale.getDefault())
+    val outputFormat = SimpleDateFormat(returnDateFormat, Locale.getDefault())
+
+    val dateObj = inputFormat.parse(date)
+    return outputFormat.format(dateObj)
+}

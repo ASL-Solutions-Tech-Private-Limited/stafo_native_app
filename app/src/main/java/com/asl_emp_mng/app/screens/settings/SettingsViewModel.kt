@@ -8,7 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.asl_emp_mng.app.ASLEmpMng
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.BaseViewModel
+import com.asl_emp_mng.app.base.model.EmployeeDashboardResponse
 import com.asl_emp_mng.app.base.model.ErrorResponse
+import com.asl_emp_mng.app.base.model.MonthAttendaceResponse
+import com.asl_emp_mng.app.base.model.RequestGeoLocationResponse
 import com.asl_emp_mng.app.base.request.AddBranchRequest
 import com.asl_emp_mng.app.screens.auth.LoginActivity
 import com.asl_emp_mng.app.screens.auth.dataClass.AddBranchResponse
@@ -150,6 +153,14 @@ class SettingsViewModel : BaseViewModel() {
     val mGetEmployeeLeaveHistResponse: LiveData<GetEmployeeLeaveHistResponse> get() = mGetEmployeeLeaveHist
 
 
+    private var mSendGeoLocation: MutableLiveData<RequestGeoLocationResponse> = MutableLiveData()
+    val mSendGeoLocationResponse: LiveData<RequestGeoLocationResponse> get() = mSendGeoLocation
+
+    private var mEmployeeDashoard: MutableLiveData<EmployeeDashboardResponse> = MutableLiveData()
+    val mEmployeeDashboardResponse: LiveData<EmployeeDashboardResponse> get() = mEmployeeDashoard
+
+    private var mAttendanceHistory:MutableLiveData<MonthAttendaceResponse> = MutableLiveData()
+    val mAttendanceHistoryResponse:LiveData<MonthAttendaceResponse> get() = mAttendanceHistory
 
     fun getEmployeeLeaveHist(mContext: Context,request: GetEmployeeLeaveHistRequestBody) {
         getLoaderLiveData().value = "load"
@@ -1169,6 +1180,136 @@ class SettingsViewModel : BaseViewModel() {
                         } else {
 
                             Log.d("res", "res error data : $it ${response.body()}")
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun sendGeoLocationRequest(mContext: Context, empID: String, permission: String) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val hashMap = HashMap<String, String>()
+                hashMap.put("employee_id", empID)
+                hashMap.put("geo_status", permission)
+                val response = ASLEmpMng.instance.apiStores()?.requestGeoLocation(hashMap)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+
+                        Log.d("res", "res first  data : $it ${response.body()}")
+                        if (it.isSuccessful) {
+                            Log.d("res", "res data : $it ${response.body()}")
+                            mSendGeoLocation.postValue(response.body())
+                        } else {
+
+                            Log.d("res", "res error data : $it ${response.body()}")
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun getEmployeDashboard(mContext: Context) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callEmployeeDashboard()
+                Log.d("res", "Leave Data: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mEmployeeDashoard.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun getMonthlyAttendance(mContext: Context,date: String,emp: String) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callMonthlyAttendance(emp,date)
+                Log.d("res", "Leave Data: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAttendanceHistory.postValue(it.body())
+                        } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
                                 CustomToast(mContext as LoginActivity, error?.message ?: "")

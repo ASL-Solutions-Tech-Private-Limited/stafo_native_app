@@ -13,14 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.BranchAdapter
-import com.asl_emp_mng.app.base.adapter.EmpListAdapter
-import com.asl_emp_mng.app.base.model.DashboardType
 import com.asl_emp_mng.app.databinding.ActivityBranchBinding
-import com.asl_emp_mng.app.databinding.ActivityEmployerDashboardBinding
-import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.utils.CustomLoader
-import java.util.Collections
-import java.util.Random
 
 class BranchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBranchBinding

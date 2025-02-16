@@ -1,4 +1,4 @@
-package com.asl_emp_mng.app.screens.settings
+package com.asl_emp_mng.app.screens.emp
 
 import android.app.DatePickerDialog
 import android.graphics.PorterDuff
@@ -19,9 +19,10 @@ import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.ActivityEmployeeProfileDetailsBinding
-import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpRequestBody
+import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.settings.dataClass.DataBranch
 import com.asl_emp_mng.app.screens.settings.dataClass.DataDepartment
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDataFetch
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfile
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
@@ -50,6 +51,8 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
     private var profileType: String = "basic_details"
     private var selectMarital: String = "Single"
+    private var mEmpID = ""
+    private var mEMPDetails: EmployeeDataFetch? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,120 +65,89 @@ class EmployeeProfileDetails : AppCompatActivity() {
             insets
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
+        mEmpID = intent.getStringExtra("EMP_ID").toString()
         onClickListener()
         observeViewModel()
 
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        settingsViewModel.fetchEmployeeDetails(this@EmployeeProfileDetails, mEmpID)
 
-    private fun observeViewModel() {
+    }
 
-
-        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+    private fun masterData() {
         settingsViewModel.getBranchList(this)
-
-
-
-        settingsViewModel.mBranchListResponse.observe(this) {
-            mBranchList = it.data
-            binding?.let { it1 ->
-                setupSearchableDialog(
-                    mBranchList,
-                    "Branch",
-                    it1.tieBranch
-                )
-            }
-        }
-
         settingsViewModel.getDepartmentList(this@EmployeeProfileDetails)
 
 
-        settingsViewModel.mDepartmentListResponse.observe(this) {
-            mDepartmentList = it.data
-            binding?.let { it1 ->
-                setupSearchableDialog(
-                    mDepartmentList,
-                    "Department",
-                    it1.tieDepartment
-                )
-            }
-        }
+    }
+    private fun observeViewModel() {
 
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
         settingsViewModel.mFetchEmployeeDetailsResponse.observe(this) {
-
             if (it.status) {
                 it.data?.let { data ->
-
+                    mEMPDetails = data
                     binding.tieStaffName.setText(data.name ?: "")
                     if (!data.name.isNullOrEmpty()) {
                         isFocusableField(binding.tieStaffName)
                     }
 
-
-
                     binding.tieMobileNo.setText(data.phone ?: "")
-
                     if (!data.phone.isNullOrEmpty()) {
                         isFocusableField(binding.tieMobileNo)
                     }
-
-
                     binding.tieEmailId.setText(data.email ?: "")
                     if (!data.email.isNullOrEmpty()) {
                         isFocusableField(binding.tieEmailId)
                     }
-
-
-
                     binding.tieDateJoining.setText(data.dateOfJoining ?: "")
-
                     if (!data.dateOfJoining.isNullOrEmpty()) {
                         isFocusableField(binding.tieDateJoining)
                     }
-
-
 
                     binding.tieAddress.setText(data.address ?: "")
                     if (!data.address.isNullOrEmpty()) {
                         isFocusableField(binding.tieAddress)
                     }
 
-
-
                     binding.tieDateOfBirth.setText(data.dateOfBirth ?: "")
-
                     if (!data.dateOfBirth.isNullOrEmpty()) {
                         isFocusableField(binding.tieDateOfBirth)
                     }
 
-
-
                     binding.tieMaritalStatus.setText(data.maritalStatus ?: "")
-
                     if (!data.maritalStatus.isNullOrEmpty()) {
                         isFocusableField(binding.tieMaritalStatus)
                     }
-
-
 
                     binding.tieBloodGroup.setText(data.bloodGroup ?: "")
                     if (!data.bloodGroup.isNullOrEmpty()) {
                         isFocusableField(binding.tieBloodGroup)
                     }
 
-
                     binding.tieGurdianName.setText(data.guardianName ?: "")
-
                     if (!data.guardianName.isNullOrEmpty()) {
                         isFocusableField(binding.tieGurdianName)
                     }
 
+                    if (data.position != null && data.position.isNotEmpty()) {
+                        val options = resources.getStringArray(R.array.position_type)
+                        for (item in options) {
+                            if (item == data.position)
+                                binding.spinnerJobTitle.setSelection(options.indexOf(item))
+                        }
+                    }
                 }
             } else {
                 CustomToast(this, it.message)
             }
+
+            masterData()
         }
 
         settingsViewModel.mmUpdateEmployeeProfileResponse.observe(this) {
@@ -188,6 +160,44 @@ class EmployeeProfileDetails : AppCompatActivity() {
                 CustomToast(this, it.message)
             }
         }
+
+
+
+        settingsViewModel.mBranchListResponse.observe(this) {
+            mBranchList = it.data
+            binding?.let { it1 ->
+                setupSearchableDialog(
+                    mBranchList,
+                    "Branch",
+                    it1.tieBranch
+                )
+
+                for (brnach in mBranchList!!) {
+                    if (mEMPDetails?.branchId == brnach.id) {
+                        selectBranch = brnach.id
+                        binding.tieBranch.setText(brnach.branch_name)
+                    }
+                }
+            }
+        }
+
+        settingsViewModel.mDepartmentListResponse.observe(this) {
+            mDepartmentList = it.data
+            binding?.let { it1 ->
+                setupSearchableDialog(
+                    mDepartmentList,
+                    "Department",
+                    it1.tieDepartment
+                )
+                for (department in mDepartmentList!!) {
+                    if (mEMPDetails?.departmentId == department.id) {
+                        selectBranch = department.id
+                        binding.tieDepartment.setText(department.name)
+                    }
+                }
+            }
+        }
+
     }
 
     private fun handleLoader(status: String) {
@@ -270,11 +280,6 @@ class EmployeeProfileDetails : AppCompatActivity() {
                 onBackPressedDispatcher.onBackPressed()
                 finish()
             }
-            settingsViewModel.fetchEmployeeDetails(this@EmployeeProfileDetails, "11")
-
-
-
-
             binding.genderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
                 val radioButton = group.findViewById<RadioButton>(R.id.male)
                 val radioButton1 = group.findViewById<RadioButton>(R.id.female)
@@ -378,7 +383,6 @@ class EmployeeProfileDetails : AppCompatActivity() {
             btnUpdateProfile.setOnClickListener {
                 if (profileType == "basic_details") {
                     if (validateBasicInfo()) {
-
                         Log.d("res","post: ")
                         val request = UpdateEmployeeProfile(
                             name = tieStaffName.text.toString(),
@@ -477,7 +481,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
             this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
                 val selectedDate = Calendar.getInstance()
                 selectedDate.set(year, monthOfYear, dayOfMonth)
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val dateFormat = SimpleDateFormat("yyy-MM-dd", Locale.getDefault())
                 val formattedDate = dateFormat.format(selectedDate.time)
                 view?.setText("$formattedDate")
             },

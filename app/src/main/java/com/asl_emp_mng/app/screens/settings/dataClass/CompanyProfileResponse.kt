@@ -3,12 +3,16 @@ import com.google.gson.annotations.SerializedName
 data class CompanyProfileResponse(
     @SerializedName("status") val status: Boolean,
     @SerializedName("message") val message: String,
-    @SerializedName("data") val data: CompanyData?
+    @SerializedName("data") val data: CompanyData?,
+
 )
 
 data class CompanyData(
     @SerializedName("company") val company: Company?,
-    @SerializedName("proprietor") val proprietor: Proprietor?
+    @SerializedName("proprietor") val proprietor: Proprietor?,
+    @SerializedName("country_name") val countryName: String?,
+    @SerializedName("state_name") val stateName: String?,
+    @SerializedName("city_name") val cityName: String?
 )
 
 data class Company(

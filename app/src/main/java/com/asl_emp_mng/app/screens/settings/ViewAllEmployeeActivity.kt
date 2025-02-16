@@ -1,7 +1,6 @@
 package com.asl_emp_mng.app.screens.settings
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -18,7 +17,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
-import com.asl_emp_mng.app.base.adapter.ActionsListAdapter
 import com.asl_emp_mng.app.base.adapter.EmpListAdapter
 import com.asl_emp_mng.app.base.adapter.RadioShiftAdapter
 import com.asl_emp_mng.app.databinding.ActivityViewAllEmployeeBinding
@@ -81,7 +79,17 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
                Log.d("res",it.data.toString())
                val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
                binding.rvViewEmpList.setLayoutManager(layoutManager)
-               rvAdapter = EmpListAdapter(it.data, this, mFrom)
+               rvAdapter = EmpListAdapter(it.data, this, mFrom, object : EmpListAdapter.onGeoClick {
+                   override fun onEMPClick(empID: String, type: String) {
+                       if (type == "Request Location") {
+                           settingsViewModel.sendGeoLocationRequest(
+                               this@ViewAllEmployeeActivity,
+                               empID, "0"
+                           )
+                       }
+                   }
+
+               })
                binding.rvViewEmpList.adapter = rvAdapter
                rvAdapter.notifyDataSetChanged()
 
@@ -126,6 +134,11 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
             }
         }
 
+        settingsViewModel.mSendGeoLocationResponse.observe(this) {
+            if (it.status) {
+                CustomToast(this, it.message)
+            }
+        }
 
 
     }
