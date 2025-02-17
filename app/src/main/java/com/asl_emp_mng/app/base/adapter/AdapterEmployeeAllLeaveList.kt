@@ -49,7 +49,8 @@ class AdapterEmployeeAllLeaveList (
                 val capitalizedStatus = this.status.replaceFirstChar { it.uppercaseChar() }
                 binding.txtStatus.text = capitalizedStatus
                 binding.txtRqstDt.text = "${formatDate(this.fromDate)}- ${formatDate(this.toDate)}"
-               // binding.txtLeaveType.text = this.leaveType.toString()
+
+
                 binding.txtDays.text = "${calculateDuration(this.fromDate, this.toDate)} days"
 
 
@@ -64,13 +65,21 @@ class AdapterEmployeeAllLeaveList (
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateDuration(fromDate: String, toDate: String): String {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return try {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val fromDateParsed = LocalDate.parse(fromDate.trim(), formatter)
+            val toDateParsed = LocalDate.parse(toDate.trim(), formatter)
+            val daysBetween = ChronoUnit.DAYS.between(fromDateParsed, toDateParsed)
+            daysBetween.toString()
+            if (daysBetween == 0L) {
+                return "1 day"
+            }
 
-        val fromDate = LocalDate.parse(fromDate, formatter)
-        val toDate = LocalDate.parse(toDate, formatter)
+            "$daysBetween"
 
-        val daysBetween = ChronoUnit.DAYS.between(fromDate, toDate)
-        return daysBetween.toString()
+        } catch (e: Exception) {
+            "Error: ${e.message}"
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -80,6 +89,8 @@ class AdapterEmployeeAllLeaveList (
 
         val date = LocalDate.parse(inputDate, inputFormatter)
         return date.format(outputFormatter)
+
+
     }
 
 }

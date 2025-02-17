@@ -66,13 +66,19 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
             if (it.status) {
                 if (it.data != null) {
                 val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+
+
                     val mMonth = getAllDatesFromMonth(mSelectedDate)
                     for (month in mMonth.indices) {
                         for (item in it.data.indices) {
+
                             if (mMonth[month].date == it.data[item].date) {
+
                                 mMonth[month].isPresent = it.data[item].attendance
                                 mMonth[month].punchIn = it.data[item].inTime
                                 mMonth[month].punchOut = it.data[item].outTime
+
+
                             }
                         }
                     }
@@ -101,6 +107,13 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
             llCalendar.setOnClickListener {
                 showDatePicker()
             }
+
+            imageBack.setOnClickListener {
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            }
+
+
 
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false

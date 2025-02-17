@@ -24,6 +24,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.AssignShiftRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.BranchRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
@@ -31,6 +32,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeePostLocationRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeePostLocationResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.FetchEmployeeDetails
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAllEmployeeResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAttendanceRecordRequest
@@ -54,6 +57,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfileRespon
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfile
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ViewBranchResponse
+import com.google.android.gms.common.internal.safeparcel.SafeParcelable.Param
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -119,18 +123,18 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<ShiftCreateResponse>
     @GET("api/shifts")
-    suspend fun callShiftList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ShiftListResponse>
+    suspend fun callShiftList(@Query("company_id") companyId: Int,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ShiftListResponse>
 
     @POST("api/employees-list")
     suspend fun callEmployeeList(@Body request: GetAttendanceRecordRequest, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<EmployeeListResponse>
 
     @GET("api/branch/list")
-    suspend fun callBranchViewList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ViewBranchResponse>
+    suspend fun callBranchViewList(@Query("company_id") companyId: Int,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ViewBranchResponse>
 
     @GET("api/departments")
-    suspend fun callDepartmentList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<DepartmentResponse>
+    suspend fun callDepartmentList(@Query("company_id") companyId: Int,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<DepartmentResponse>
     @GET("api/branch/list")
-    suspend fun callBranchList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<BranchListResponse>
+    suspend fun callBranchList(@Query("company_id") companyId: Int, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<BranchListResponse>
 
 
     @POST("api/register")
@@ -167,7 +171,7 @@ interface ApiStores {
     suspend fun callCompanyProfile(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<CompanyProfileResponse>
 
     @GET("api/holidays/by-company")
-    suspend fun callHolidayList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<HolidayListResponse>
+    suspend fun callHolidayList(@Query("company_id") companyId: Int,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<HolidayListResponse>
 
     @POST("api/pending-leave-request")
     suspend fun callPendingLeaveRequestList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<PendingLeaveResponse>
@@ -181,7 +185,7 @@ interface ApiStores {
     @POST("api/employeesOnLeave")
     suspend fun callOnLeaveList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<OnLeaveResponse>
 
-    @GET("api/employees-list")
+    @POST("api/employees-list")
     suspend fun callAllEmpList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<GetAllEmployeeResponse>
 
 
@@ -226,5 +230,10 @@ interface ApiStores {
         @Query("month") month: String,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap(),
     ): Response<MonthAttendaceResponse>
+    @POST("api/store-geo-location")
+    suspend fun callPostGeoLocation(
+       @Body request:EmployeePostLocationRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap(),
+    ): Response<EmployeePostLocationResponse>
 
 }

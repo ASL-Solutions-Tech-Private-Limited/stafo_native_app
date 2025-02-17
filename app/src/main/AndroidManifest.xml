@@ -45,6 +45,13 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:label"
         tools:targetApi="31">
+
+
+
+
+
+
+
         <activity
             android:name=".screens.ui.WishListActivity"
             android:exported="false" />
@@ -190,6 +197,11 @@
             android:name=".base.service.LocationForegroundService"
             android:foregroundServiceType="location"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
+
+
+
+
     </application>
 
 </manifest>

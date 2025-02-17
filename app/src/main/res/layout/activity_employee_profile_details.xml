@@ -163,17 +163,27 @@
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <TextView
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:text="Select Job Title*"
+                    android:paddingStart="@dimen/_2sdp"
+                    android:textSize="@dimen/_12ssp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
                 <RelativeLayout
                     android:id="@+id/rl_spn_subordinate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginTop="@dimen/_4sdp"
                     android:visibility="visible">
 
                     <Spinner
                         android:id="@+id/spinner_job_title"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_36sdp"
+                        android:layout_height="@dimen/_39sdp"
                         android:background="@drawable/edit_text_background"
                         android:dropDownVerticalOffset="@dimen/_34sdp"
                         android:gravity="center_vertical"
@@ -461,8 +471,48 @@
                         android:hint="Date of Birth" />
 
                 </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:text="Select Marital Status"
+                    android:paddingStart="@dimen/_2sdp"
+                    android:textSize="@dimen/_12ssp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <RelativeLayout
+                    android:id="@+id/rl_spn_marital_sts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:visibility="visible">
 
-                <com.google.android.material.textfield.TextInputLayout
+                    <Spinner
+                        android:id="@+id/spinner_marital_sts"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_36sdp"
+                        android:background="@drawable/edit_text_background"
+                        android:dropDownVerticalOffset="@dimen/_34sdp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dip"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12ssp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/_16sdp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_arrow_down"
+                        android:tint="@color/black"
+                        tools:ignore="UseAppTint" />
+                </RelativeLayout>
+
+
+            <!--    <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_marital_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -482,7 +532,7 @@
                         android:fontFamily="@font/gilroy_medium"
                         android:hint="Marital Status" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>-->
 
 
                 <com.google.android.material.textfield.TextInputLayout

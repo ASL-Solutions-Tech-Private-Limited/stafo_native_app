@@ -58,6 +58,11 @@
         <item>Document &amp; Certificates</item>
     </string-array>
 
+    <string-array name="marital_status">
+        <item>Single</item>
+        <item>Married</item>
+    </string-array>
+
     <string-array name="position_type">
         <item>Junior Software Developer</item>
         <item>Software Engineer</item>

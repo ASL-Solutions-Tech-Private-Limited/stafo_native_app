@@ -186,6 +186,19 @@ class AddBranchActivity : AppCompatActivity() {
         override fun onProviderDisabled(provider: String) {}
     }
 
+    private fun getAddressFromLocation(lat: Double, lon: Double) {
+        val geocoder = Geocoder(this, Locale.getDefault())
+        val addresses = geocoder.getFromLocation(lat, lon, 1)
+
+        if (!addresses.isNullOrEmpty()) {
+            val address = addresses[0].getAddressLine(0)
+
+            binding.tieBranchAddress.setText(address)
+        } else {
+            Toast.makeText(this, "Unable to get address", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun onClickListener() {
         binding?.apply {
 
@@ -211,16 +224,19 @@ class AddBranchActivity : AppCompatActivity() {
         }
     }
 
-    private fun getAddressFromLocation(lat: Double, lon: Double) {
-        val geocoder = Geocoder(this, Locale.getDefault())
-        val addresses = geocoder.getFromLocation(lat, lon, 1)
 
-        if (!addresses.isNullOrEmpty()) {
-            val address = addresses[0].getAddressLine(0)
 
-            binding.tieBranchAddress.setText(address)
-        } else {
-            Toast.makeText(this, "Unable to get address", Toast.LENGTH_SHORT).show()
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PLACE_SEARCH_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val lat = data?.getDoubleExtra("latitude", 0.0)
+            val lng = data?.getDoubleExtra("longitude", 0.0)
+            latitude = lat ?: 0.0
+            longitude = lng ?: 0.0
+            getAddressFromLocation(latitude, longitude)
         }
     }
 
@@ -241,17 +257,5 @@ class AddBranchActivity : AppCompatActivity() {
             }
         }
         return true
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == PLACE_SEARCH_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val lat = data?.getDoubleExtra("latitude", 0.0)
-            val lng = data?.getDoubleExtra("longitude", 0.0)
-            latitude = lat ?: 0.0
-            longitude = lng ?: 0.0
-            getAddressFromLocation(latitude, longitude)
-        }
     }
 }

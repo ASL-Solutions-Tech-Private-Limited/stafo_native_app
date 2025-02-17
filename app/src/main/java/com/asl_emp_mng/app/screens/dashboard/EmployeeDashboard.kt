@@ -1,12 +1,17 @@
 package com.asl_emp_mng.app.screens.dashboard
 
 import android.Manifest
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -15,6 +20,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,7 +31,9 @@ import com.asl_emp_mng.app.base.adapter.AdapterWishList
 import com.asl_emp_mng.app.base.adapter.SliderAdapter
 import com.asl_emp_mng.app.base.model.ActionModel
 import com.asl_emp_mng.app.base.model.DashboardWish
+import com.asl_emp_mng.app.base.model.GetRunningGeoLocation
 import com.asl_emp_mng.app.base.model.PunchInType
+import com.asl_emp_mng.app.base.service.LocationForegroundService
 import com.asl_emp_mng.app.databinding.ActivityEmpDashboardBinding
 import com.asl_emp_mng.app.databinding.CustomBottomSheetAttendanceLayoutBinding
 import com.asl_emp_mng.app.screens.emp.EmpLeaveActivity
@@ -36,9 +44,11 @@ import com.asl_emp_mng.app.screens.settings.BranchActivity
 import com.asl_emp_mng.app.screens.settings.PolicyActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
+import com.asl_emp_mng.app.screens.ui.PlaceSearchActivity
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 import com.asl_emp_mng.app.utils.getFormattedDate
 import com.asl_emp_mng.app.utils.getGreetingBasedOnTime
+import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -48,10 +58,21 @@ class EmployeeDashboard : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val mActionList = ArrayList<ActionModel>()
     var wishList = ArrayList<DashboardWish>()
+
     //for bottom sheet
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var bottomSheetDialogBinding: CustomBottomSheetAttendanceLayoutBinding
     private val settingsViewModel: SettingsViewModel by viewModels()
+
+    private lateinit var locationManager: LocationManager
+    private var currentLocation: Location? = null
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
+
+    private val LOCATION_PERMISSION_REQUEST_CODE = 100
+    private val PLACE_SEARCH_REQUEST_CODE = 101
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -63,6 +84,8 @@ class EmployeeDashboard : AppCompatActivity() {
             insets
         }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+
         setupViews()
         onClickListener()
         setupImageSlider()
@@ -144,8 +167,27 @@ class EmployeeDashboard : AppCompatActivity() {
         super.onResume()
         settingsViewModel.getEmployeDashboard(this)
     }
+
+
     private fun onClickListener() {
         binding?.apply {
+
+            /* tvStopService.setOnClickListener {
+                stopLocationService()
+            }
+
+              tvStartService.setOnClickListener {
+                  if (hasLocationPermission()) {
+                      startLocationService()
+                  } else {
+                      requestLocationPermission()
+                  }
+              }*/
+
+            Log.d("res","${getIsCOMPANYLogin()}")
+
+
+
 
             btnPunchIn.setOnClickListener {
                 showCustomBottomSheet()
@@ -165,8 +207,10 @@ class EmployeeDashboard : AppCompatActivity() {
                 )
             }
 
+
         }
     }
+
 
     private fun observeViewModel() {
         settingsViewModel.mEmployeeDashboardResponse.observe(this) {
@@ -233,7 +277,7 @@ class EmployeeDashboard : AppCompatActivity() {
                             it.annyversary[i].name,
                             it.annyversary[i].email,
                             it.annyversary[i].phone,
-                            it.annyversary[i].image,
+                            it.annyversary[i].image ?: "",
                             "Anniversary",
                             it.annyversary[i].date_of_joining
                         )
@@ -283,15 +327,14 @@ class EmployeeDashboard : AppCompatActivity() {
         bottomSheetDialogBinding.llGeoAttendance.setOnClickListener {
             if (!isLocationEnabled()) {
                 showLocationServicesDialog()
+                bottomSheetDialog.dismiss()
             } else {
                 checkLocationPermissionAndFind()
             }
         }
 
         bottomSheetDialogBinding.llSelfieAttendance.setOnClickListener {
-            val intent = Intent(this@EmployeeDashboard, EmployeePunchInActivity::class.java)
-            intent.putExtra("Punch_TYPE", PunchInType.SELFIE.name)
-            startActivity(intent)
+            // checkLocationPermissionAndFind()
         }
 
         bottomSheetDialogBinding.llQrAttendance.setOnClickListener {
@@ -331,9 +374,7 @@ class EmployeeDashboard : AppCompatActivity() {
     private val requestLocationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
-                val intent = Intent(this@EmployeeDashboard, EmployeePunchInActivity::class.java)
-                intent.putExtra("Punch_TYPE", PunchInType.GEO.name)
-                startActivity(intent)
+                getLocation()
             } else {
                 Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show()
             }
@@ -345,12 +386,108 @@ class EmployeeDashboard : AppCompatActivity() {
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            val intent = Intent(this@EmployeeDashboard, EmployeePunchInActivity::class.java)
-            intent.putExtra("Punch_TYPE", PunchInType.GEO.name)
-            startActivity(intent)
+            getLocation()
         } else {
             requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
+    }
+
+
+    private fun getLocation() {
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (ActivityCompat.checkSelfPermission(
+                this, android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                this, android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+            return
+        }
+
+        val hasGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        val hasNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+
+        if (hasGps || hasNetwork) {
+            if (hasGps) {
+                locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    5000,
+                    0F,
+                    gpsLocationListener
+                )
+            }
+
+            if (hasNetwork) {
+                locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    5000,
+                    0F,
+                    networkLocationListener
+                )
+            }
+
+            val lastKnownGps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            val lastKnownNetwork =
+                locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+
+            if (lastKnownGps != null && lastKnownNetwork != null) {
+                currentLocation = if (lastKnownGps.accuracy <= lastKnownNetwork.accuracy) {
+                    lastKnownGps
+                } else {
+                    lastKnownNetwork
+                }
+            } else if (lastKnownGps != null) {
+                currentLocation = lastKnownGps
+            } else if (lastKnownNetwork != null) {
+                currentLocation = lastKnownNetwork
+            }
+
+            currentLocation?.let {
+                latitude = it.latitude
+                longitude = it.longitude
+
+                val intent = Intent(this@EmployeeDashboard, EmployeePunchInActivity::class.java)
+                intent.putExtra("latitude", latitude)
+                intent.putExtra("longitude", longitude)
+                startActivityForResult(intent, PLACE_SEARCH_REQUEST_CODE)
+            }
+
+        } else {
+            Toast.makeText(this, "Please enable location services", Toast.LENGTH_LONG).show()
+            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+        }
+    }
+
+    private val gpsLocationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            currentLocation = location
+            latitude = location.latitude
+            longitude = location.longitude
+        }
+
+        override fun onProviderEnabled(provider: String) {}
+        override fun onProviderDisabled(provider: String) {}
+    }
+
+    private val networkLocationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            currentLocation = location
+            latitude = location.latitude
+            longitude = location.longitude
+
+        }
+
+        override fun onProviderEnabled(provider: String) {}
+        override fun onProviderDisabled(provider: String) {}
     }
 
     private fun actionList(): List<ActionModel> {

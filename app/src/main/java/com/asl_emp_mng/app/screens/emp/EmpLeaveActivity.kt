@@ -27,6 +27,7 @@ import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveRequestBody
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getEmployeeDetails
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -124,7 +125,7 @@ class EmpLeaveActivity : AppCompatActivity() {
                 showCalender()
             }
 
-            /* tvStopService.setOnClickListener {
+          /*   tvStopService.setOnClickListener {
                  stopLocationService()
              }
 
@@ -141,7 +142,7 @@ class EmpLeaveActivity : AppCompatActivity() {
                     Log.d("res","post :")
 
                     val request = EmployeeLeaveRequestBody(
-                        employee_id = "7",
+                        employee_id = getEmployeeDetails()?.id.toString(),
                         from_date = binding.edtFromDate.text.toString(),
                         to_date = binding.edtToDate.text.toString(),
                         reason = binding.edtDescription.text.toString()

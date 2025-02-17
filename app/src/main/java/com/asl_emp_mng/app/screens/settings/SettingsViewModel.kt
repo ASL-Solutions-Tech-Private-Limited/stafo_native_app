@@ -22,6 +22,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.AssignShiftRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.BranchRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
@@ -29,6 +30,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeePostLocationRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeePostLocationResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.FetchEmployeeDetails
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAllEmployeeResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAttendanceRecordRequest
@@ -53,12 +56,59 @@ import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfile
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ViewBranchResponse
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getUserAccessToken
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SettingsViewModel : BaseViewModel() {
+
+    private var mEmployeeGeoLocation: MutableLiveData<EmployeePostLocationResponse> =
+        MutableLiveData()
+
+    val mEmployeeGeoLocationResponse: LiveData<EmployeePostLocationResponse> get() = mEmployeeGeoLocation
+
+    fun postGeoLocation(mContext: Context, request: EmployeePostLocationRequest) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callPostGeoLocation(request)
+                Log.d("res", "Location: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mEmployeeGeoLocation.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
     private var mCreateBranch: MutableLiveData<AddBranchResponse> = MutableLiveData()
@@ -116,7 +166,6 @@ class SettingsViewModel : BaseViewModel() {
     val mApproveLeaveResponse: LiveData<ApproveLeaveResponse> get() = mApproveLeave
 
 
-
     private var mOnLeave: MutableLiveData<OnLeaveResponse> = MutableLiveData()
     val mOnLeaveResponse: LiveData<OnLeaveResponse> get() = mOnLeave
 
@@ -136,7 +185,8 @@ class SettingsViewModel : BaseViewModel() {
     val mFetchEmployeeDetailsResponse: LiveData<FetchEmployeeDetails> get() = mFetchEmployeeDetails
 
 
-    private var mUpdateEmployeeProfile: MutableLiveData<UpdateEmployeeProfileResponse> = MutableLiveData()
+    private var mUpdateEmployeeProfile: MutableLiveData<UpdateEmployeeProfileResponse> =
+        MutableLiveData()
     val mmUpdateEmployeeProfileResponse: LiveData<UpdateEmployeeProfileResponse> get() = mUpdateEmployeeProfile
 
 
@@ -149,7 +199,8 @@ class SettingsViewModel : BaseViewModel() {
     private var mLeave: MutableLiveData<LeaveResponse> = MutableLiveData()
     val mLeaveResponse: LiveData<LeaveResponse> get() = mLeave
 
-    private var mGetEmployeeLeaveHist: MutableLiveData<GetEmployeeLeaveHistResponse> = MutableLiveData()
+    private var mGetEmployeeLeaveHist: MutableLiveData<GetEmployeeLeaveHistResponse> =
+        MutableLiveData()
     val mGetEmployeeLeaveHistResponse: LiveData<GetEmployeeLeaveHistResponse> get() = mGetEmployeeLeaveHist
 
 
@@ -159,17 +210,18 @@ class SettingsViewModel : BaseViewModel() {
     private var mEmployeeDashoard: MutableLiveData<EmployeeDashboardResponse> = MutableLiveData()
     val mEmployeeDashboardResponse: LiveData<EmployeeDashboardResponse> get() = mEmployeeDashoard
 
-    private var mAttendanceHistory:MutableLiveData<MonthAttendaceResponse> = MutableLiveData()
-    val mAttendanceHistoryResponse:LiveData<MonthAttendaceResponse> get() = mAttendanceHistory
+    private var mAttendanceHistory: MutableLiveData<MonthAttendaceResponse> = MutableLiveData()
+    val mAttendanceHistoryResponse: LiveData<MonthAttendaceResponse> get() = mAttendanceHistory
 
-    fun getEmployeeLeaveHist(mContext: Context,request: GetEmployeeLeaveHistRequestBody) {
+
+    fun getEmployeeLeaveHist(mContext: Context, request: GetEmployeeLeaveHistRequestBody) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
 
                 val response = ASLEmpMng.instance.apiStores()?.callGetEmpLeaveList(request)
-                Log.d("res","Leave Data: ${response?.body().toString()}")
+                Log.d("res", "Leave Data: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -203,14 +255,14 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun getAllLeaveList(mContext: Context,request:LeaveRequestBody) {
+    fun getAllLeaveList(mContext: Context, request: LeaveRequestBody) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
 
                 val response = ASLEmpMng.instance.apiStores()?.callAllLeaveList(request)
-                Log.d("res","Leave Data: ${response?.body().toString()}")
+                Log.d("res", "Leave Data: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -245,16 +297,14 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-    fun assignShift(mContext: Context,request:AssignShiftRequest) {
+    fun assignShift(mContext: Context, request: AssignShiftRequest) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
 
                 val response = ASLEmpMng.instance.apiStores()?.callAssignShift(request)
-                Log.d("res","mPunchIn: ${response?.body().toString()}")
+                Log.d("res", "mPunchIn: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -289,15 +339,14 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-    fun punchInRequest(mContext: Context,request:PunchInRequest) {
+    fun punchInRequest(mContext: Context, request: PunchInRequest) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
 
                 val response = ASLEmpMng.instance.apiStores()?.callPunchIn(request)
-                Log.d("res","mPunchIn: ${response?.body().toString()}")
+                Log.d("res", "mPunchIn: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -332,14 +381,14 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-    fun updateEmployeeDetails(mContext: Context,id:String,request:UpdateEmployeeProfile) {
+    fun updateEmployeeDetails(mContext: Context, id: String, request: UpdateEmployeeProfile) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
 
-                val response = ASLEmpMng.instance.apiStores()?.callUpdateEmployee(id,request)
-                Log.d("res","update: ${response?.body().toString()}")
+                val response = ASLEmpMng.instance.apiStores()?.callUpdateEmployee(id, request)
+                Log.d("res", "update: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -374,17 +423,14 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-    fun fetchEmployeeDetails(mContext: Context,id:String) {
+    fun fetchEmployeeDetails(mContext: Context, id: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
 
                 val response = ASLEmpMng.instance.apiStores()?.callFetchEmployeeDetails(id)
-                Log.d("res","details: ${response?.body().toString()}")
+                Log.d("res", "details: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -419,14 +465,14 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-    fun updateCompanyProfile(mContext: Context,request: UpdateCompanyProfile) {
+    fun updateCompanyProfile(mContext: Context, request: UpdateCompanyProfile) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
 
                 val response = ASLEmpMng.instance.apiStores()?.callUpdateCompany(request)
-                Log.d("res","record: ${response?.body().toString()}")
+                Log.d("res", "record: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -461,15 +507,14 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-    fun getEmployeeAttendRecord(mContext: Context,id:String,date: String) {
+    fun getEmployeeAttendRecord(mContext: Context, id: String, date: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val request=GetEmpAttendanceRecordBody(id,date)
+                val request = GetEmpAttendanceRecordBody(id, date)
 
                 val response = ASLEmpMng.instance.apiStores()?.callEmpRecord(request)
-                Log.d("res","record: ${response?.body().toString()}")
+                Log.d("res", "record: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -504,14 +549,12 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
     fun getAllEmployeeList(mContext: Context) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callAllEmpList()
-                Log.d("res","post: ${response?.body().toString()}")
+                Log.d("res", "post: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -550,7 +593,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callOnLeaveList()
-                Log.d("res","pending: ${response?.body().toString()}")
+                Log.d("res", "pending: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -585,16 +628,12 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-    fun postPendingLeave(mContext: Context,request:ApproveLeaveRequest) {
+    fun postPendingLeave(mContext: Context, request: ApproveLeaveRequest) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callAcceptLeave(request)
-                Log.d("res","pending: ${response?.body().toString()}")
+                Log.d("res", "pending: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -633,7 +672,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callPendingLeaveRequestList()
-                Log.d("res","pending: ${response?.body().toString()}")
+                Log.d("res", "pending: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -671,8 +710,8 @@ class SettingsViewModel : BaseViewModel() {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ASLEmpMng.instance.apiStores()?.callHolidayList()
-                Log.d("res",response?.body().toString())
+                val response = ASLEmpMng.instance.apiStores()?.callHolidayList(1)
+                Log.d("res", response?.body().toString())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -705,9 +744,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
-
-
 
 
     fun getCompanyDetails(mContext: Context) {
@@ -749,14 +785,13 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-    fun requestLeaveEmp(mContext: Context,request: EmployeeLeaveRequestBody) {
+    fun requestLeaveEmp(mContext: Context, request: EmployeeLeaveRequestBody) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callEmployeeLeaveRequest(request)
 
-                Log.d("res","leave :${response?.body()}")
+                Log.d("res", "leave :${response?.body()}")
 
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
@@ -792,7 +827,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-    fun addHoliday(mContext: Context,request: CreateHolidayRequest) {
+    fun addHoliday(mContext: Context, request: CreateHolidayRequest) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -830,8 +865,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
-
 
 
     fun getCompanyDashboard(mContext: Context) {
@@ -875,16 +908,15 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-    fun getEmpList(mContext: Context,date:String) {
+    fun getEmpList(mContext: Context, date: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                 val request=GetAttendanceRecordRequest(
-                     date=date
-                 )
+                val request = GetAttendanceRecordRequest(
+                    date = date
+                )
                 val response = ASLEmpMng.instance.apiStores()?.callEmployeeList(request)
+                Log.d("res","get :${response?.body()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -922,7 +954,12 @@ class SettingsViewModel : BaseViewModel() {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ASLEmpMng.instance.apiStores()?.callBranchViewList()
+
+
+                Log.d("res", "post data : ${getUserAccessToken()}")
+                val response = ASLEmpMng.instance.apiStores()?.callBranchViewList(16)
+
+                Log.d("res", "branch: ${response?.body()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -961,7 +998,7 @@ class SettingsViewModel : BaseViewModel() {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ASLEmpMng.instance.apiStores()?.callShiftList()
+                val response = ASLEmpMng.instance.apiStores()?.callShiftList(1)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1000,7 +1037,10 @@ class SettingsViewModel : BaseViewModel() {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ASLEmpMng.instance.apiStores()?.callBranchList()
+
+                Log.d("res", "restoken  ${getUserAccessToken()}")
+
+                val response = ASLEmpMng.instance.apiStores()?.callBranchList(1)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1038,7 +1078,9 @@ class SettingsViewModel : BaseViewModel() {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ASLEmpMng.instance.apiStores()?.callDepartmentList()
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callDepartmentList(1)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1164,7 +1206,7 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun createNewShift(mContext: Context ,request: ShiftCreateRequest) {
+    fun createNewShift(mContext: Context, request: ShiftCreateRequest) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -1261,7 +1303,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
                 val response = ASLEmpMng.instance.apiStores()?.callEmployeeDashboard()
-                Log.d("res", "Leave Data: ${response?.body().toString()}")
+                Log.d("res", response?.body().toString())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1296,14 +1338,14 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-    fun getMonthlyAttendance(mContext: Context,date: String,emp: String) {
+    fun getMonthlyAttendance(mContext: Context, date: String, emp: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
 
-                val response = ASLEmpMng.instance.apiStores()?.callMonthlyAttendance(emp,date)
-                Log.d("res", "Leave Data: ${response?.body().toString()}")
+                val response = ASLEmpMng.instance.apiStores()?.callMonthlyAttendance(emp, date)
+                Log.d("res", "" + response?.body())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {

@@ -12,6 +12,7 @@ import com.asl_emp_mng.app.databinding.ActivityEmplyeeyerProfileBinding
 import com.asl_emp_mng.app.screens.EmpProfileActivity
 import com.asl_emp_mng.app.screens.emp.EmpLeaveActivity
 import com.asl_emp_mng.app.screens.emp.EmployeeAttendance
+import com.asl_emp_mng.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.asl_emp_mng.app.screens.settings.AddShiftActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
 import com.asl_emp_mng.app.screens.settings.HolidayActivity
@@ -29,10 +30,8 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val binding = ActivityEmplyeeyerProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setupView(binding)
         setOnClickEvents(binding)
     }
@@ -94,16 +93,22 @@ class EmplyeeyerProfile : AppCompatActivity() {
         val setAttendanceSetting =
             binding?.expandableAttandancenManagement?.findViewById<AppCompatTextView>(R.id.tv_set_attendance_settings)
 
+
+
+
         setAttendanceSetting?.setOnClickListener {
+
+
 
             startActivity(
                 Intent(
                     this@EmplyeeyerProfile,
                     ViewAllEmployeeActivity::class.java
                 ).apply {
-                    putExtra("FROM","SetAttendance")
+                    putExtra("FROM", "SetAttendance")
                 }
             )
+
 
         }
 
@@ -118,14 +123,16 @@ class EmplyeeyerProfile : AppCompatActivity() {
         }
 
 
-        val officePolicy = binding?.expandableLeaveManagement?.findViewById<AppCompatTextView>(R.id.tv_office_policy)
+        val officePolicy =
+            binding?.expandableLeaveManagement?.findViewById<AppCompatTextView>(R.id.tv_office_policy)
 
         officePolicy?.setOnClickListener {
             startActivity(Intent(this, PolicyActivity::class.java))
         }
 
 
-        val requestLeave = binding?.expandableLeaveManagement?.findViewById<AppCompatTextView>(R.id.tv_leaves_management)
+        val requestLeave =
+            binding?.expandableLeaveManagement?.findViewById<AppCompatTextView>(R.id.tv_leaves_management)
 
         requestLeave?.setOnClickListener {
             startActivity(Intent(this, LeaveManagementActivity::class.java))
@@ -137,7 +144,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
             startActivity(Intent(this, EmpLeaveActivity::class.java))
         }
         binding?.tvAttendance?.setOnClickListener {
-            startActivity(Intent(this, EmployeeAttendance::class.java))
+            startActivity(Intent(this,EmployeeAttendanceRecordActivity::class.java))
         }
         binding?.expandableProfile?.setOnClickListener {
             binding.expandableProfile.toggleLayout()
@@ -146,8 +153,8 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         binding.expandableOtherManagement.findViewById<AppCompatTextView>(R.id.tv_logout)
             .setOnClickListener {
-            doLogout(this)
-        }
+                doLogout(this)
+            }
 
         val basicProfile =
             binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_basic)
@@ -169,18 +176,18 @@ class EmplyeeyerProfile : AppCompatActivity() {
             binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_educational)
         educationalProfile?.setOnClickListener {
 
-            CustomToast(this,"Working is progress")
-          /*  val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
-            intent.putExtra("PROFILE_TYPE", ProfileType.EDUCATION.name)
-            startActivity(intent)*/
+            CustomToast(this, "Working is progress")
+            /*  val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
+              intent.putExtra("PROFILE_TYPE", ProfileType.EDUCATION.name)
+              startActivity(intent)*/
         }
         val documentProfile =
             binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_documents)
         documentProfile?.setOnClickListener {
-            CustomToast(this,"Working is progress")
-          /*  val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
-            intent.putExtra("PROFILE_TYPE", ProfileType.DOCUMENT.name)
-            startActivity(intent)*/
+            CustomToast(this, "Working is progress")
+            /*  val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
+              intent.putExtra("PROFILE_TYPE", ProfileType.DOCUMENT.name)
+              startActivity(intent)*/
         }
 
         binding.tvEmpLogout.setOnClickListener {

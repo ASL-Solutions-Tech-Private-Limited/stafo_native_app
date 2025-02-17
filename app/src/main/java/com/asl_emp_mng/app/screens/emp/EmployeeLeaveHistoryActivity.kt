@@ -16,6 +16,7 @@ import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployeeLeaveHistRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveCount
 import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.getEmployeeDetails
 
 class EmployeeLeaveHistoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmployeeLeaveHistoryBinding
@@ -58,9 +59,13 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
                 binding.rvEmpLeaveHist.adapter = rvAdapter
                 rvAdapter.notifyDataSetChanged()
 
-                binding.tvPrivileged.text=leaveCount[0].totalDays
-                binding.tvSick.text=leaveCount[1].totalDays
-                binding.tvCasual.text=leaveCount[2].totalDays
+                if (leaveCount.size>2){
+                    binding.tvPrivileged.text=leaveCount[0].totalDays
+                    binding.tvSick.text=leaveCount[1].totalDays
+                    binding.tvCasual.text=leaveCount[2].totalDays
+                }
+
+
 
             }
 
@@ -83,7 +88,7 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
         binding?.apply {
 
             val request = GetEmployeeLeaveHistRequestBody(
-                employeeId = "1"
+                employeeId = getEmployeeDetails()?.id.toString()
             )
 
             settingsViewModel.getEmployeeLeaveHist(this@EmployeeLeaveHistoryActivity, request)
@@ -93,7 +98,7 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
                 swipeRefreshLayout.isRefreshing = false
 
                 val request = GetEmployeeLeaveHistRequestBody(
-                    employeeId = "1"
+                    employeeId = getEmployeeDetails()?.id.toString()
                 )
 
                 settingsViewModel.getEmployeeLeaveHist(this@EmployeeLeaveHistoryActivity, request)

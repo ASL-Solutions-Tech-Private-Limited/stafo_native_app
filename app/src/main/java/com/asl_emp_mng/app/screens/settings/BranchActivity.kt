@@ -3,6 +3,7 @@ package com.asl_emp_mng.app.screens.settings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -55,12 +56,19 @@ class BranchActivity : AppCompatActivity() {
 
         settingsViewModel.mViewBranchResponse.observe(this) {
 
-            val layoutManager: RecyclerView.LayoutManager =
-                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-            binding.rvShowBranchList.setLayoutManager(layoutManager)
-            rvAdapter = BranchAdapter(it.data, this)
-            binding.rvShowBranchList.adapter = rvAdapter
-            rvAdapter.notifyDataSetChanged()
+            if (it.data.isNotEmpty()){
+                val layoutManager: RecyclerView.LayoutManager =
+                    LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                binding.rvShowBranchList.setLayoutManager(layoutManager)
+                rvAdapter = BranchAdapter(it.data, this)
+                binding.rvShowBranchList.adapter = rvAdapter
+                rvAdapter.notifyDataSetChanged()
+            }else{
+                binding.txtMsg.visibility=View.VISIBLE
+            }
+
+
+
         }
 
 

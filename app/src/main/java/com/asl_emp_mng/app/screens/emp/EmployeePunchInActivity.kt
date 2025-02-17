@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
@@ -20,30 +21,46 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.model.PunchInType
+import com.asl_emp_mng.app.base.service.LocationForegroundService
 import com.asl_emp_mng.app.databinding.ActivityEmployeePunchInBinding
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getEmployeeDetails
 import com.github.dhaval2404.imagepicker.ImagePicker
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONArray
+import org.json.JSONObject
+import org.osmdroid.config.Configuration
+import org.osmdroid.events.MapEventsReceiver
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.views.overlay.MapEventsOverlay
+import org.osmdroid.views.overlay.Marker
+import java.io.IOException
+
 
 class EmployeePunchInActivity : AppCompatActivity() {
+
+
     private lateinit var binding: ActivityEmployeePunchInBinding
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
 
-    private lateinit var latitude: String
-    private lateinit var longitude: String
+    private lateinit var mapView: org.osmdroid.views.MapView
+    private val client = OkHttpClient()
+    private var currentMarker: Marker? = null
+    private var getLati: Double? = null
+    private var getLongi: Double? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,13 +73,72 @@ class EmployeePunchInActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        onClickListener()
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    1
+                )
+            }
+        }
+
+        Configuration.getInstance()
+            .load(applicationContext, getSharedPreferences("osm_prefs", MODE_PRIVATE))
+
+
+
+
+        mapView = binding.mapView
+
+        mapView.setTileSource(TileSourceFactory.MAPNIK)
+        mapView.setMultiTouchControls(true)
+
+        val latitude = intent.getDoubleExtra("latitude", 0.0)
+        val longitude = intent.getDoubleExtra("longitude", 0.0)
+
+        getPlaceNameFromLatLng(latitude, longitude)
+
+
+
+        onClickListener()
         observeViewModel()
+        startLocationService()
     }
 
     private fun onClickListener() {
+
+
+        binding.searchButton.setOnClickListener {
+            val query = binding.searchEditText.text.toString()
+            if (query.isNotEmpty()) {
+                searchLocation(query)
+            }
+        }
+
+
+        val mapEventsReceiver = object : MapEventsReceiver {
+            override fun singleTapConfirmedHelper(p: org.osmdroid.util.GeoPoint?): Boolean {
+                p?.let {
+                    getPlaceNameFromLatLng(it.latitude, it.longitude)
+                }
+                return true
+            }
+
+            override fun longPressHelper(p: org.osmdroid.util.GeoPoint?): Boolean {
+                return false
+            }
+        }
+        val overlayEvents = MapEventsOverlay(mapEventsReceiver)
+        mapView.overlays.add(overlayEvents)
+
 
         val punchType =
             PunchInType.valueOf(intent.getStringExtra("Punch_TYPE") ?: PunchInType.SELFIE.name)
@@ -100,13 +176,13 @@ class EmployeePunchInActivity : AppCompatActivity() {
 
 
         binding.btnPunchIn.setOnClickListener {
+            val request = PunchInRequest(
+                employeeId = getEmployeeDetails()?.id.toString(),
+                latitude = getLati.toString(),
+                longitude = getLongi.toString()
+            )
 
-
-            if (!isLocationEnabled()) {
-                showLocationServicesDialog()
-            } else {
-                checkLocationPermissionAndFind()
-            }
+            settingsViewModel.punchInRequest(this, request)
 
 
         }
@@ -134,6 +210,106 @@ class EmployeePunchInActivity : AppCompatActivity() {
 
     }
 
+
+    private fun getPlaceNameFromLatLng(latitude: Double, longitude: Double) {
+        getLati = latitude
+        getLongi = longitude
+
+        val url =
+            "https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitude&lon=$longitude"
+
+        val request = Request.Builder().url(url)
+            .header("User-Agent", "YourAppName")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.body?.let { responseBody ->
+                    val responseData = responseBody.string()
+                    val jsonObject = JSONObject(responseData)
+                    val displayName = jsonObject.optString("display_name", "Unknown Location")
+
+                    runOnUiThread {
+                        updateMap(latitude, longitude, displayName)
+                    }
+                }
+            }
+        })
+    }
+
+    private fun searchLocation(query: String) {
+        val url = "https://nominatim.openstreetmap.org/search?format=json&q=$query"
+
+        val request = Request.Builder().url(url)
+            .header("User-Agent", "YourAppName")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.body?.let { responseBody ->
+                    val responseData = responseBody.string()
+                    val jsonArray = JSONArray(responseData)
+
+                    if (jsonArray.length() > 0) {
+                        val firstResult: JSONObject = jsonArray.getJSONObject(0)
+                        val lat = firstResult.getDouble("lat")
+                        val lon = firstResult.getDouble("lon")
+                        val displayName = firstResult.getString("display_name")
+
+
+                        runOnUiThread {
+                            updateMap(lat, lon, displayName)
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    private fun updateMap(latitude: Double, longitude: Double, placeName: String) {
+        getLati = latitude
+        getLongi = longitude
+
+        val geoPoint = org.osmdroid.util.GeoPoint(latitude, longitude)
+        mapView.controller.animateTo(geoPoint)
+        mapView.controller.setZoom(15.0)
+
+        // Remove the previous marker
+        currentMarker?.let {
+            mapView.overlays.remove(it)
+        }
+
+        val displayName = if (!placeName.isNullOrEmpty()) placeName else "Unknown Location"
+        // Create a new marker
+        val marker = Marker(mapView)
+        marker.position = geoPoint
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        marker.title = displayName
+        //marker.snippet = "Lat: $latitude, Lon: $longitude"
+        marker.setOnMarkerClickListener { m, _ ->
+            m.showInfoWindow() // Show place name when clicked
+            true
+        }
+
+        // Add the marker to the map
+        mapView.overlays.add(marker)
+        marker.showInfoWindow() // Show place name immediately
+        mapView.invalidate()
+
+        // Update current marker reference
+        currentMarker = marker
+
+
+    }
+
     private fun handleLoader(status: String) {
         if (status.equals("load", ignoreCase = true)) {
             if (!customLoader.isShowing) customLoader.show()
@@ -155,127 +331,11 @@ class EmployeePunchInActivity : AppCompatActivity() {
             .start(req)
     }
 
-    private fun isLocationEnabled(): Boolean {
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-    }
 
-    private fun showLocationServicesDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Enable Location Services")
-            .setMessage("This app requires location services to be enabled. Please turn on location services.")
-            .setPositiveButton("OK") { _, _ ->
-                locationSettingsLauncher.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-            }
-            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-            .create()
-            .show()
-    }
-
-    private fun checkLocationPermissionAndFind() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            findLocation()
-        } else {
-            requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
+    private fun startLocationService() {
+        val serviceIntent = Intent(this, LocationForegroundService::class.java)
+        ContextCompat.startForegroundService(this, serviceIntent)
     }
 
 
-    private val locationSettingsLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (isLocationEnabled()) {
-                checkLocationPermissionAndFind()
-            }
-        }
-
-
-    private val requestLocationPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                findLocation()
-            } else {
-                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-    private fun findLocation() {
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
-            .setWaitForAccurateLocation(false)
-            .setMinUpdateIntervalMillis(5000)
-            .setMaxUpdateDelayMillis(15000)
-            .build()
-
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-                fusedLocationClient.removeLocationUpdates(this)
-
-                if (locationResult.locations.isNotEmpty()) {
-                    val lastLocation: Location = locationResult.locations.last()
-                    latitude = lastLocation.latitude.toString()
-                    longitude = lastLocation.longitude.toString()
-
-                    val request = PunchInRequest(
-                        employeeId = "7",
-                        latitude = latitude,
-                        longitude = longitude
-                    )
-
-                    Log.d("res",request.toString())
-                    settingsViewModel.punchInRequest(this@EmployeePunchInActivity, request)
-
-
-                } else {
-                    Toast.makeText(
-                        this@EmployeePunchInActivity,
-                        "Location not found",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
-            }
-        }
-
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            fusedLocationClient.requestLocationUpdates(
-                locationRequest,
-                locationCallback,
-                Looper.getMainLooper()
-            )
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            val uri: Uri = data?.data!!
-            if (requestCode == 1101) {
-                binding.sivEmpPunch.visibility = View.VISIBLE
-                binding.sivEmpPunch.setImageURI(uri)
-
-            }
-        } else if (resultCode == ImagePicker.RESULT_ERROR) {
-            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
-        }
-
-
-    }
-
-
-    private fun openGoogleMaps(latitude: Double, longitude: Double) {
-        val mapUri = Uri.parse("https://maps.google.com/maps/search/$latitude,$longitude")
-        val intent = Intent(Intent.ACTION_VIEW, mapUri)
-        startActivity(intent)
-    }
 }

@@ -10,6 +10,7 @@ data class DepartmentResponse(
 data class DataDepartment(
     val id: Int,
     val name: String,
+    val company_id: Int,
     val description: String,
     val status: Int,
     val created_at: String,

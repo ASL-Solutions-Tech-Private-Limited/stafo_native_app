@@ -26,6 +26,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDataFetch
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfile
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getEmployeeDetails
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -54,6 +55,8 @@ class EmployeeProfileDetails : AppCompatActivity() {
     private var mEmpID = ""
     private var mEMPDetails: EmployeeDataFetch? = null
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -74,16 +77,16 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        settingsViewModel.fetchEmployeeDetails(this@EmployeeProfileDetails, mEmpID)
+        settingsViewModel.fetchEmployeeDetails(this@EmployeeProfileDetails,mEmpID )
 
     }
 
-    private fun masterData() {
+    /*private fun masterData() {
         settingsViewModel.getBranchList(this)
         settingsViewModel.getDepartmentList(this@EmployeeProfileDetails)
 
 
-    }
+    }*/
     private fun observeViewModel() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
@@ -120,10 +123,20 @@ class EmployeeProfileDetails : AppCompatActivity() {
                         isFocusableField(binding.tieDateOfBirth)
                     }
 
-                    binding.tieMaritalStatus.setText(data.maritalStatus ?: "")
-                    if (!data.maritalStatus.isNullOrEmpty()) {
-                        isFocusableField(binding.tieMaritalStatus)
+
+                    val maritalStatusFromApi = data.maritalStatus ?: ""
+
+                    if (maritalStatusFromApi.isNotEmpty()) {
+                        val mOptions = resources.getStringArray(R.array.marital_status)
+                        for (item in mOptions) {
+                            if (item == maritalStatusFromApi)
+                                binding.spinnerJobTitle.setSelection(mOptions.indexOf(item))
+                        }
                     }
+
+
+
+
 
                     binding.tieBloodGroup.setText(data.bloodGroup ?: "")
                     if (!data.bloodGroup.isNullOrEmpty()) {
@@ -147,7 +160,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                 CustomToast(this, it.message)
             }
 
-            masterData()
+
         }
 
         settingsViewModel.mmUpdateEmployeeProfileResponse.observe(this) {
@@ -164,6 +177,9 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
         settingsViewModel.mBranchListResponse.observe(this) {
+
+
+
             mBranchList = it.data
             binding?.let { it1 ->
                 setupSearchableDialog(
@@ -179,6 +195,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                     }
                 }
             }
+
         }
 
         settingsViewModel.mDepartmentListResponse.observe(this) {
@@ -191,7 +208,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                 )
                 for (department in mDepartmentList!!) {
                     if (mEMPDetails?.departmentId == department.id) {
-                        selectBranch = department.id
+                        selectDepartment = department.id
                         binding.tieDepartment.setText(department.name)
                     }
                 }
@@ -255,9 +272,18 @@ class EmployeeProfileDetails : AppCompatActivity() {
     private fun onClickListener() {
         binding?.apply {
 
+
+            settingsViewModel.getBranchList(this@EmployeeProfileDetails)
+            settingsViewModel.getDepartmentList(this@EmployeeProfileDetails)
+
+
+
+
+
+
+
             val options = resources.getStringArray(R.array.position_type)
-            val adapterTitle =
-                ArrayAdapter(this@EmployeeProfileDetails, R.layout.custom_spinner_item, options)
+            val adapterTitle = ArrayAdapter(this@EmployeeProfileDetails, R.layout.custom_spinner_item, options)
             binding.spinnerJobTitle.setAdapter(adapterTitle)
 
             binding.spinnerJobTitle.onItemSelectedListener =
@@ -275,6 +301,10 @@ class EmployeeProfileDetails : AppCompatActivity() {
                     override fun onNothingSelected(parent: AdapterView<*>) {
                     }
                 }
+
+
+
+
 
             binding.imageBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
@@ -374,7 +404,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
             binding.tieDateOfBirth.setOnClickListener {
                 showDatePicker(binding.tieDateOfBirth)
             }
-
+            initMarital()
 
             tieBranch.setOnClickListener { branchDialog.show() }
             tieDepartment.setOnClickListener { departmentDialog.show() }
@@ -408,7 +438,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
                         settingsViewModel.updateEmployeeDetails(
                             this@EmployeeProfileDetails,
-                            "11",
+                            getEmployeeDetails()?.id.toString(),
                             request
                         )
 
@@ -434,7 +464,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
                     settingsViewModel.updateEmployeeDetails(
                         this@EmployeeProfileDetails,
-                        "11",
+                        getEmployeeDetails()?.id.toString(),
                         request
                     )
                 } else if (profileType == "document_details") {
@@ -500,5 +530,27 @@ class EmployeeProfileDetails : AppCompatActivity() {
         } else {
             true
         }
+    }
+
+    private fun initMarital(){
+        val marital = resources.getStringArray(R.array.marital_status)
+        val adapterMarital = ArrayAdapter(this, R.layout.custom_spinner_item, marital)
+        binding.spinnerMaritalSts.setAdapter(adapterMarital)
+
+        binding.spinnerMaritalSts.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedItem = parent.getItemAtPosition(position).toString()
+                    selectMarital = selectedItem
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                }
+            }
     }
 }
