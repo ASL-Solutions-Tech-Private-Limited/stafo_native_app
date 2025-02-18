@@ -21,6 +21,7 @@ import com.asl_emp_mng.app.databinding.ActivityHolidayBinding
 import com.asl_emp_mng.app.databinding.ActivityLeaveRequestHistoryBinding
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getEmployeeComId
 
 class HolidayActivity : AppCompatActivity() {
 
@@ -52,11 +53,15 @@ class HolidayActivity : AppCompatActivity() {
 
     private fun onClickListener() {
         binding?.apply {
-            settingsViewModel.getHolidayList(this@HolidayActivity)
+            getEmployeeComId()?.let { settingsViewModel.getHolidayList(this@HolidayActivity, it) }
 
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
-                settingsViewModel.getHolidayList(this@HolidayActivity)
+                getEmployeeComId()?.let {
+                    settingsViewModel.getHolidayList(this@HolidayActivity,
+                        it
+                    )
+                }
 
             }
 

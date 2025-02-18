@@ -45,10 +45,13 @@ import com.asl_emp_mng.app.screens.settings.PolicyActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.screens.ui.PlaceSearchActivity
+import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 import com.asl_emp_mng.app.utils.getFormattedDate
 import com.asl_emp_mng.app.utils.getGreetingBasedOnTime
 import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
+import com.asl_emp_mng.app.utils.setCompanyDetails
+import com.asl_emp_mng.app.utils.setEmployeeComId
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -215,7 +218,39 @@ class EmployeeDashboard : AppCompatActivity() {
     private fun observeViewModel() {
         settingsViewModel.mEmployeeDashboardResponse.observe(this) {
             if (it.status) {
+
+                setEmployeeComId(it.employeeInfo.companyId.toString())
+
+
+
+
                 if (it.employeeInfo.geoStatus != null && it.employeeInfo.geoStatus == "0") {
+
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle(R.string.app_name)
+                    builder.setMessage("Your admin has requested to track your live location. Do you accept?")
+                    builder.setPositiveButton("Accept") { dialog, which ->
+
+                        settingsViewModel.sendGeoLocationRequest(
+                            this@EmployeeDashboard,
+                            getEmployeeDetails()?.id.toString(), "1"
+                        )
+
+                        dialog.dismiss()
+
+
+
+                    }
+                    builder.setNegativeButton("Reject") { dialog, which ->
+
+                        settingsViewModel.sendGeoLocationRequest(
+                            this@EmployeeDashboard,
+                            getEmployeeDetails()?.id.toString(), "2"
+                        )
+                        dialog.dismiss()
+                    }
+                    val dialog = builder.create()
+                    dialog.show()
 
                 }
                 if (it.employeeInfo.punches != null && it.employeeInfo.punches.isNotEmpty()) {
@@ -308,8 +343,35 @@ class EmployeeDashboard : AppCompatActivity() {
             }
         }
 
-    }
 
+        settingsViewModel.mSendGeoLocationResponse.observe(this) {
+            if (it.status) {
+
+
+                if (isLocationEnabled()){
+                    startLocationService()
+                }else{
+                    requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+
+
+
+
+                CustomToast(this, it.message)
+            }else{
+                CustomToast(this, it.message)
+            }
+        }
+
+
+
+
+
+    }
+    private fun startLocationService() {
+        val serviceIntent = Intent(this, LocationForegroundService::class.java)
+        ContextCompat.startForegroundService(this, serviceIntent)
+    }
     private fun showCustomBottomSheet() {
         bottomSheetDialog = BottomSheetDialog(this)
 
@@ -325,11 +387,11 @@ class EmployeeDashboard : AppCompatActivity() {
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialogBinding.llGeoAttendance.setOnClickListener {
-            if (!isLocationEnabled()) {
-                showLocationServicesDialog()
+            if (isLocationEnabled()){
                 bottomSheetDialog.dismiss()
-            } else {
-                checkLocationPermissionAndFind()
+               startActivity(Intent(this,EmployeePunchInActivity::class.java))
+            }else{
+                requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             }
         }
 

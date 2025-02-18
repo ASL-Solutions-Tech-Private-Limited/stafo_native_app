@@ -13,6 +13,7 @@ import com.asl_emp_mng.app.databinding.ActivityEmpProfileBinding
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getEmployeeComId
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 
 class EmpProfileActivity : AppCompatActivity() {
@@ -69,7 +70,7 @@ class EmpProfileActivity : AppCompatActivity() {
 
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-        settingsViewModel.getBranchList(this)
+        getEmployeeComId()?.let { settingsViewModel.getBranchList(this, it) }
 
 
 

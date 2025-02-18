@@ -34,6 +34,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.DataDepartment
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getEmployeeComId
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -89,7 +90,7 @@ class AddEmployeeActivity : AppCompatActivity() {
 
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-        settingsViewModel.getBranchList(this)
+        getEmployeeComId()?.let { settingsViewModel.getBranchList(this, it) }
 
 
 
@@ -104,7 +105,11 @@ class AddEmployeeActivity : AppCompatActivity() {
             }
         }
 
-        settingsViewModel.getDepartmentList(this@AddEmployeeActivity)
+        getEmployeeComId()?.let {
+            settingsViewModel.getDepartmentList(this@AddEmployeeActivity,
+                it
+            )
+        }
 
 
         settingsViewModel.mDepartmentListResponse.observe(this) {

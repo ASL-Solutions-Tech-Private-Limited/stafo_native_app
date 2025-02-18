@@ -7,6 +7,7 @@ data class AttendanceSummaryResponse(
     @SerializedName("message") val message: String,
     @SerializedName("employeeCount") val employeeCount: Int,
     @SerializedName("presentCount") val presentCount: Int,
+    @SerializedName("company_id") val companyId: Int,
     @SerializedName("employeesOnLeave") val employeesOnLeave: ArrayList<Leave>?,
     @SerializedName("birthday") val birthday: ArrayList<Birthday>?,
     @SerializedName("anniversary") val anniversary: ArrayList<Annyversary>?

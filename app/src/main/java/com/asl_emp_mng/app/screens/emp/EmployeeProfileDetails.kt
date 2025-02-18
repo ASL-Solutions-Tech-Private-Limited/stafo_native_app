@@ -26,6 +26,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDataFetch
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfile
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getEmployeeComId
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
@@ -273,8 +274,16 @@ class EmployeeProfileDetails : AppCompatActivity() {
         binding?.apply {
 
 
-            settingsViewModel.getBranchList(this@EmployeeProfileDetails)
-            settingsViewModel.getDepartmentList(this@EmployeeProfileDetails)
+            getEmployeeComId()?.let {
+                settingsViewModel.getBranchList(this@EmployeeProfileDetails,
+                    it
+                )
+            }
+            getEmployeeComId()?.let {
+                settingsViewModel.getDepartmentList(this@EmployeeProfileDetails,
+                    it
+                )
+            }
 
 
 

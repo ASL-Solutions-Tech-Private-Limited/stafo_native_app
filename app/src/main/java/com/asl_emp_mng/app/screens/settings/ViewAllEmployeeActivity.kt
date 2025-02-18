@@ -23,6 +23,7 @@ import com.asl_emp_mng.app.databinding.ActivityViewAllEmployeeBinding
 import com.asl_emp_mng.app.screens.settings.dataClass.AssignShiftRequest
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getEmployeeComId
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -260,7 +261,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
 
 
-        settingsViewModel.getShiftList(this)
+        getEmployeeComId()?.let { settingsViewModel.getShiftList(this, it) }
 
 
 

@@ -234,8 +234,7 @@ dependencies {
     implementation 'com.github.smarteist:Android-Image-Slider:1.4.0'
 
     //map
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.google.code.gson:gson:2.3'
+    implementation ("com.mapmyindia.sdk:mapmyindia-android-raster-sdk:2.5.1")
 
 
 }

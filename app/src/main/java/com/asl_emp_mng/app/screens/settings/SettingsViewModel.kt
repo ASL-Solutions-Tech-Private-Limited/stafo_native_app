@@ -706,11 +706,11 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun getHolidayList(mContext: Context) {
+    fun getHolidayList(mContext: Context,id: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ASLEmpMng.instance.apiStores()?.callHolidayList(1)
+                val response = ASLEmpMng.instance.apiStores()?.callHolidayList(id.toInt())
                 Log.d("res", response?.body().toString())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
@@ -875,7 +875,6 @@ class SettingsViewModel : BaseViewModel() {
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
 
-
                     response?.let {
                         if (it.isSuccessful) {
                             mAttendanceSummary.postValue(it.body())
@@ -950,14 +949,14 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun getViewBranchList(mContext: Context) {
+    fun getViewBranchList(mContext: Context,id: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
 
                 Log.d("res", "post data : ${getUserAccessToken()}")
-                val response = ASLEmpMng.instance.apiStores()?.callBranchViewList(16)
+                val response = ASLEmpMng.instance.apiStores()?.callBranchViewList(id.toInt())
 
                 Log.d("res", "branch: ${response?.body()}")
                 withContext(Dispatchers.Main) {
@@ -994,11 +993,11 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-    fun getShiftList(mContext: Context) {
+    fun getShiftList(mContext: Context,id: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ASLEmpMng.instance.apiStores()?.callShiftList(1)
+                val response = ASLEmpMng.instance.apiStores()?.callShiftList(id.toInt())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1033,14 +1032,14 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-    fun getBranchList(mContext: Context) {
+    fun getBranchList(mContext: Context,id:String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
-                Log.d("res", "restoken  ${getUserAccessToken()}")
+                Log.d("res", "id  $id")
 
-                val response = ASLEmpMng.instance.apiStores()?.callBranchList(1)
+                val response = ASLEmpMng.instance.apiStores()?.callBranchList(id.toInt())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1074,13 +1073,14 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun getDepartmentList(mContext: Context) {
+    fun getDepartmentList(mContext: Context,id:String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
-
-                val response = ASLEmpMng.instance.apiStores()?.callDepartmentList(1)
+                Log.d("res", "id  $id")
+                val response = ASLEmpMng.instance.apiStores()?.callDepartmentList(id.toInt())
+                Log.d("res", "id  $id "+response?.body())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1303,7 +1303,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
                 val response = ASLEmpMng.instance.apiStores()?.callEmployeeDashboard()
-                Log.d("res", response?.body().toString())
+                Log.d("res","dash "+response?.body().toString())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {

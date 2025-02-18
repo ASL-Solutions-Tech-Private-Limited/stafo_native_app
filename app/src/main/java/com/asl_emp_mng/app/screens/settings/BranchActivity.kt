@@ -16,6 +16,7 @@ import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.BranchAdapter
 import com.asl_emp_mng.app.databinding.ActivityBranchBinding
 import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.getEmployeeComId
 
 class BranchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBranchBinding
@@ -83,7 +84,7 @@ class BranchActivity : AppCompatActivity() {
     }
 
     private fun setOnClickEvents() {
-        settingsViewModel.getViewBranchList(this@BranchActivity)
+        getEmployeeComId()?.let { settingsViewModel.getViewBranchList(this@BranchActivity, it) }
 
         binding.imageBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -93,7 +94,7 @@ class BranchActivity : AppCompatActivity() {
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.swipeRefreshLayout.isRefreshing = false
-            settingsViewModel.getViewBranchList(this@BranchActivity)
+            getEmployeeComId()?.let { settingsViewModel.getViewBranchList(this@BranchActivity, it) }
 
         }
 

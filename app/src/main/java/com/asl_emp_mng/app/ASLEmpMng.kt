@@ -6,6 +6,7 @@ import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.asl_emp_mng.app.api.ApiClient
 import com.asl_emp_mng.app.api.ApiStores
+import com.mmi.services.account.MapmyIndiaAccountManager
 import com.orhanobut.hawk.Hawk
 
 class ASLEmpMng : MultiDexApplication() {
@@ -30,10 +31,20 @@ class ASLEmpMng : MultiDexApplication() {
         StrictMode.setVmPolicy(builder.build())
       //  FirebaseApp.initializeApp(this)
 
+        initMapMyIndia()
+
     }
 
     fun apiStores(): ApiStores? {
         return ApiClient.retrofit(applicationContext, BuildConfig.ENDPOINT)
             ?.create(ApiStores::class.java)
+    }
+
+    private fun initMapMyIndia() {
+        MapmyIndiaAccountManager.getInstance().setRestAPIKey("b99061448178b709d1b24054f7ea218d")
+        MapmyIndiaAccountManager.getInstance().setMapSDKKey("b99061448178b709d1b24054f7ea218d")
+        MapmyIndiaAccountManager.getInstance().setAtlasGrantType("client_credentials")
+        MapmyIndiaAccountManager.getInstance().setAtlasClientId("96dHZVzsAuveHJyb4fsrVuXD0YNPrFaochM2cB-f7hG7DijsK6wuIGwWgAo7ksFFxTVpPm2mORP_XLz9OkWc1Q==")
+        MapmyIndiaAccountManager.getInstance().setAtlasClientSecret("lrFxI-iSEg9UFw9ZECaYSUPOvunPyH3qtIQyBP0lo-8yMBn9fNnEUP8xU44RbKPf-yq4d7x-H1T6fo1qyZRdt7x6r4gib2ys")
     }
 }

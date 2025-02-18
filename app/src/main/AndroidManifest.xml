@@ -198,7 +198,9 @@
             android:foregroundServiceType="location"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
 
 

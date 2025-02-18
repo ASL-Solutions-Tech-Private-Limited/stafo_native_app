@@ -30,6 +30,7 @@ import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.getCompanyDetails
 import com.asl_emp_mng.app.utils.getGreetingBasedOnTime
 import com.asl_emp_mng.app.utils.getTodayDate
+import com.asl_emp_mng.app.utils.setEmployeeComId
 import com.google.gson.Gson
 
 class EmployerDashboard : AppCompatActivity() {
@@ -119,6 +120,10 @@ class EmployerDashboard : AppCompatActivity() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
         settingsViewModel.mAttendanceSummaryResponse.observe(this) {
             if (it.status) {
+
+
+                setEmployeeComId(it.companyId.toString())
+
                 binding.tvPresentEmp.text = it.presentCount.toString()
                 if (it.birthday != null && it.birthday.isNotEmpty()) {
                     for (i in it.birthday.indices) {

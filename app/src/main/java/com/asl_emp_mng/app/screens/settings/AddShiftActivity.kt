@@ -27,6 +27,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftDataList
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getEmployeeComId
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -76,7 +77,7 @@ class AddShiftActivity : AppCompatActivity() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
-        settingsViewModel.getShiftList(this)
+        getEmployeeComId()?.let { settingsViewModel.getShiftList(this, it) }
 
         settingsViewModel.mShiftListResponse.observe(this) {
 
@@ -120,7 +121,11 @@ class AddShiftActivity : AppCompatActivity() {
 
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
-                settingsViewModel.getShiftList(this@AddShiftActivity)
+                getEmployeeComId()?.let {
+                    settingsViewModel.getShiftList(this@AddShiftActivity,
+                        it
+                    )
+                }
 
             }
 

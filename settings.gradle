@@ -17,6 +17,9 @@ dependencyResolutionManagement {
         maven {
             url 'https://storage.googleapis.com/r8-releases/raw'
         }
+        maven {
+            url 'https://maven.mapmyindia.com/repository/mapmyindia/'
+        }
     }
 }
 rootProject.name = "Asl EMP  1.0"

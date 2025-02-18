@@ -14,6 +14,7 @@ private val isOnBoardingShown = "is_onboarding_shown"
 private val TOKEN = "token"
 private val COMPANY_DETAILS = "company_details"
 private val EMPLOYEE_DETAILS = "employee_details"
+private val COM_ID = "com_id"
 
 fun isOnBoardingScreenShown(): Boolean {
     return Hawk.get(isOnBoardingShown, false)
@@ -63,4 +64,11 @@ fun getUserAccessToken(): String? {
     return Hawk.get(TOKEN, null)
 }
 
+fun setEmployeeComId(com_id: String) {
+    Hawk.put(COM_ID, com_id)
+}
+
+fun getEmployeeComId(): String? {
+    return Hawk.get(COM_ID, null)
+}
 
