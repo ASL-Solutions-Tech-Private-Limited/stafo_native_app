@@ -72,6 +72,9 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -1355,4 +1358,49 @@ fun getFormattedDate(date: String, dateFormat: String, returnDateFormat: String)
 
     val dateObj = inputFormat.parse(date)
     return outputFormat.format(dateObj)
+}
+
+fun extractDayNameDateAndMonth(inputDate: String): Triple<String, Int, Int> {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val date = LocalDate.parse(inputDate, formatter)
+    val dayName = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+    val day = date.dayOfMonth
+    val month = date.monthValue
+    return Triple(dayName, day, month)
+}
+
+fun calculateHours(inTime: String, outTime: String): String {
+    val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+    val inDate = timeFormat.parse(inTime)
+    val outDate = timeFormat.parse(outTime)
+    val differenceInMillis = outDate.time - inDate.time
+    val differenceInHours = (differenceInMillis / (1000 * 60 * 60)).toInt()
+    val differenceInMinutes = ((differenceInMillis % (1000 * 60 * 60)) / (1000 * 60)).toInt()
+
+    return "$differenceInHours:$differenceInMinutes"
+}
+
+fun calculateMinutes(inTime: String, outTime: String): Int {
+    val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+
+    try {
+        val inDate = timeFormat.parse(inTime)
+        val outDate = timeFormat.parse(outTime)
+
+        if (inDate != null && outDate != null) {
+            var differenceInMillis = outDate.time - inDate.time
+
+            // In case outTime is before inTime (negative time difference)
+            if (differenceInMillis < 0) {
+                differenceInMillis += 24 * 60 * 60 * 1000 // Adding 24 hours to account for overnight work
+            }
+
+            val differenceInMinutes = (differenceInMillis / (1000 * 60)).toInt() // Convert to minutes
+            return differenceInMinutes
+        }
+    } catch (e: Exception) {
+        e.printStackTrace() // Handle parsing errors
+    }
+
+    return 0 // Return 0 minutes if there's an error
 }

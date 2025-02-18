@@ -3,6 +3,7 @@ package com.asl_emp_mng.app.screens.emp
 import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -19,6 +20,7 @@ import com.asl_emp_mng.app.base.model.DateItem
 import com.asl_emp_mng.app.databinding.ActivityEmployeeAttendanceRecordBinding
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.calculateMinutes
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -28,6 +30,7 @@ import java.util.Locale
 import java.util.Random
 
 class EmployeeAttendanceRecordActivity : AppCompatActivity() {
+    private val TAG = "EmployeeAttendanceRecor"
     private lateinit var binding:ActivityEmployeeAttendanceRecordBinding
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
@@ -66,22 +69,35 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
             if (it.status) {
                 if (it.data != null) {
                 val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-
-
+                    var mPresentCount = 0
+                    var mTotalWorkingHour = 0
                     val mMonth = getAllDatesFromMonth(mSelectedDate)
                     for (month in mMonth.indices) {
                         for (item in it.data.indices) {
-
                             if (mMonth[month].date == it.data[item].date) {
-
                                 mMonth[month].isPresent = it.data[item].attendance
                                 mMonth[month].punchIn = it.data[item].inTime
                                 mMonth[month].punchOut = it.data[item].outTime
-
-
+                                if (it.data[item].attendance == "Present") {
+                                    mPresentCount++
+                                }
+                                if (!it.data[item].inTime.isNullOrEmpty()) {
+                                    mTotalWorkingHour += calculateMinutes(
+                                        it.data[item].inTime,
+                                        it.data[item].outTime
+                                    ).toInt()
+                                }
                             }
                         }
                     }
+                    Log.e(TAG, "observeViewModel: $mPresentCount")
+                    val totalHours = mTotalWorkingHour / 60
+                    val totalMinutes = mTotalWorkingHour % 60
+
+// Display the total time in "hh:mm" format
+                    val totalWorkingTime = String.format("%02d:%02d", totalHours, totalMinutes)
+                    binding.txtTotalPresent.text = mPresentCount.toString() ?: "0"
+                    binding.txtTotalWorking.text = totalWorkingTime ?: "00:00"
                 binding.rvEmpAttendList.setLayoutManager(layoutManager)
                     val rvAdapter = AdapterEmployeeRecord(mMonth, this)
                 binding.rvEmpAttendList.adapter = rvAdapter

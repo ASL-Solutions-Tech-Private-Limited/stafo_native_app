@@ -80,7 +80,7 @@
             android:layout_marginTop="@dimen/_12sdp"
             android:background="@color/tea_green"
             android:orientation="horizontal"
-            android:weightSum="4">
+            android:weightSum="3">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
@@ -127,6 +127,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/gilroy_medium"
                 android:gravity="center"
+                android:visibility="gone"
                 android:paddingVertical="@dimen/_5sdp"
                 android:text="Logged"
                 android:textColor="#565656"
@@ -137,6 +138,7 @@
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:layout_marginVertical="@dimen/_4sdp"
+                android:visibility="gone"
                 android:background="@color/gray_colour" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -157,7 +159,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:weightSum="4">
+            android:weightSum="3">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
@@ -166,7 +168,8 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/gilroy_medium"
                 android:gravity="center"
-                android:text="10 days"
+                android:id="@+id/txt_total_present"
+                tools:text="10 days"
                 android:textColor="#565656"
                 android:textSize="@dimen/_11ssp"
                 app:drawableTint="@color/black" />
@@ -179,6 +182,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/gilroy_medium"
                 android:gravity="center"
+                android:id="@+id/txt_total_working"
                 android:text="20hrs"
                 android:textColor="#565656"
                 android:textSize="@dimen/_11ssp"
@@ -193,6 +197,7 @@
                 android:fontFamily="@font/gilroy_medium"
                 android:gravity="center"
                 android:text="50hrs"
+                android:visibility="gone"
                 android:textColor="#565656"
                 android:textSize="@dimen/_11ssp"
                 app:drawableTint="@color/black" />
