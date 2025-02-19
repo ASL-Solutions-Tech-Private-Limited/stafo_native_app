@@ -1280,22 +1280,14 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-    fun createBranch(mContext: Context, latitude: String, longitude: String) {
+    fun createBranch(mContext: Context,request:AddBranchRequest) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
 
-                val addBranchRequest = AddBranchRequest(
-                    company_id = 1,
-                    branch_name = "Cafe 5",
-                    branch_address = "Kolkata",
-                    latitute = latitude,
-                    longtitute = longitude,
-                    radar = "200"
-                )
-                val response =
-                    ASLEmpMng.instance.apiStores()?.callCreateBranch(addBranchRequest)
+
+                val response = ASLEmpMng.instance.apiStores()?.callCreateBranch(request)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {

@@ -18,12 +18,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.asl_emp_mng.app.base.request.AddBranchRequest
 import com.asl_emp_mng.app.databinding.ActivityAddBranchBinding
 import com.asl_emp_mng.app.screens.auth.AuthViewModel
 import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
 import com.asl_emp_mng.app.screens.ui.PlaceSearchActivity
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getCompanyDetails
+import com.asl_emp_mng.app.utils.getEmployeeComId
 import java.util.Locale
 
 class AddBranchActivity : AppCompatActivity() {
@@ -205,9 +208,18 @@ class AddBranchActivity : AppCompatActivity() {
 
             btnAddBranch.setOnClickListener {
                 if (isValidate()) {
-                    settingsViewModel.createBranch(
-                        this@AddBranchActivity, latitude.toString(), longitude.toString()
-                    )
+                     getEmployeeComId()?.let { it1 ->
+                         val request =  AddBranchRequest(
+                            company_id = it1.toInt(),
+                            branch_name = binding.tieBranchName.text.toString(),
+                            branch_address = binding.tieBranchAddress.text.toString(),
+                            latitute = latitude.toString(),
+                            longtitute = longitude.toString(),
+                            radar = binding.tieBranchRadius.text.toString()
+                        )
+                        settingsViewModel.createBranch(this@AddBranchActivity, request)
+                    }
+
                 }
             }
 

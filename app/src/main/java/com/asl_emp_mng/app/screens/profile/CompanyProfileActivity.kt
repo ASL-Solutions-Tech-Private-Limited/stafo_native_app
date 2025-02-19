@@ -229,12 +229,27 @@ class CompanyProfileActivity : AppCompatActivity() {
 
                     if (documentInfo()){
 
+                        val image1 = binding.tieCompanyCertificate.text.toString()
+                        val image2 = binding.tieCompanyGstCertificate.text.toString()
+                        val image3 = binding.tieCompanyPanCertificate.text.toString()
+                        val image4 = binding.tieCompanyAadhaarCertificate.text.toString()
+                        val image5 = binding.tieCompanyBankStatement.text.toString()
+
+
+                        val image1Uri = Uri.parse(image1)
+                        val image2Uri = Uri.parse(image2)
+                        val image3Uri = Uri.parse(image3)
+                        val image4Uri = Uri.parse(image4)
+                        val image5Uri = Uri.parse(image5)
+
+
+
                         val imageUris = listOf(
-                           tieCompanyCertificate.text.toString(),
-                           tieCompanyGstCertificate.text.toString(),
-                           tieCompanyPanCertificate.text.toString(),
-                           tieCompanyAadhaarCertificate.text.toString(),
-                           tieCompanyBankStatement.text.toString()
+                            image1Uri,
+                            image2Uri,
+                            image3Uri,
+                            image4Uri,
+                            image5Uri
 
                         )
 
@@ -243,7 +258,7 @@ class CompanyProfileActivity : AppCompatActivity() {
                         Log.d("res", "post document $documentTypeIds $imageUris ")
 
 
-                        settingsViewModel.postCompanyUpdateDocument(this@CompanyProfileActivity, imageUris,documentTypeIds)
+                        //settingsViewModel.postCompanyUpdateDocument(this@CompanyProfileActivity, imageUris,documentTypeIds)
 
 
 

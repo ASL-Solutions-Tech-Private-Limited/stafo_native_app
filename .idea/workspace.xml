@@ -429,43 +429,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1eeb3fca-a4a9-48ce-a4f9-f3fda60e9524" name="Changes" comment="Update Add Staff API">
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/checksums/md5-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/checksums/sha1-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/api/ApiStores.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/api/ApiStores.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterEmployeeAllLeaveList.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterEmployeeAllLeaveList.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterRequestLeaveHistory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterRequestLeaveHistory.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/EmployeeAttendanceAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/EmployeeAttendanceAdapter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/LeavesManagementAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/LeavesManagementAdapter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/DashboardWish.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/DashboardWish.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/service/LocationForegroundService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/service/LocationForegroundService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployeeDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployeeDashboard.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployerDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployerDashboard.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmpLeaveActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmpLeaveActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeAttendanceRecordActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeAttendanceRecordActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeProfileDetails.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeProfileDetails.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmplyeeAttendaceListActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmplyeeAttendaceListActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/profile/CompanyProfileActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/profile/CompanyProfileActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddEmployeeActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddEmployeeActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddBranchActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddBranchActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/SettingsViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/SettingsViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/AddEmpRequestBody.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/AddEmpRequestBody.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/AddEmpResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/AddEmpResponse.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/UpdateEmployeeProfile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/UpdateEmployeeProfile.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_add_employee.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_add_employee.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_company_profile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_company_profile.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_emp_leave.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_emp_leave.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/recy_view_employee_item_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/recy_view_employee_item_layout.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
