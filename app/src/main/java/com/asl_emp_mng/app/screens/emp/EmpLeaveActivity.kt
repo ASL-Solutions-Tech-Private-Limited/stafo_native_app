@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -13,6 +14,7 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -30,6 +32,10 @@ import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Locale
 
@@ -47,6 +53,7 @@ class EmpLeaveActivity : AppCompatActivity() {
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -93,6 +100,7 @@ class EmpLeaveActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun onClickListener() {
 
 
@@ -209,6 +217,7 @@ class EmpLeaveActivity : AppCompatActivity() {
         return true
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun showCalender() {
 
         try {
@@ -235,69 +244,65 @@ class EmpLeaveActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun onDateSet() {
         val myFormat = "yyyy/MM/dd"
         val sdf = SimpleDateFormat(myFormat, Locale.US)
+
         if (!setToDate) {
             fromdate = sdf.format(cal.time)
-
             binding.edtFromDate.setText(fromdate)
-
-
-        } else if (setToDate) {
+        } else {
             todate = sdf.format(cal.time)
             binding.edtToDate.setText(todate)
             setNoDay()
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setNoDay() {
         try {
-            fromdate = binding.edtFromDate.text.toString().trim()
-            todate = binding.edtToDate.text.toString().trim()
+            val myFormat = "yyyy/MM/dd"
+            val sdf = SimpleDateFormat(myFormat, Locale.US)
 
-            if (fromdate != null && fromdate != "" && todate != null && todate != "") {
+            val fromDateStr = binding.edtFromDate.text.toString().trim()
+            val toDateStr = binding.edtToDate.text.toString().trim()
 
-                val myFormat = "yyyy/MM/dd"
-                val mDateFormat = SimpleDateFormat(myFormat)
-                val mDate11 = mDateFormat.parse(fromdate)
-                val mDate22 = mDateFormat.parse(todate)
-
-
-                if (mDate22.before(mDate11)) {
-
-                    val alertDialog = AlertDialog.Builder(this@EmpLeaveActivity)
-                        .setTitle("Invalid Date Range")
-                        .setMessage("The to date cannot be earlier than the from date.")
-                        .setPositiveButton("OK") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .create()
-
-                    alertDialog.show()
-
-                } else {
-                    this.nodays = (Commonfunctions.differanceInDays(todate, fromdate) + 1).toFloat()
-
-                    if (nodays <= 0) {
-
-                    } else {
-                        val formattedNoDays = if (nodays == nodays.toInt().toFloat()) {
-                            nodays.toInt().toString()
-                        } else {
-                            nodays.toString()
-                        }
-
-                        binding.nodTxt.text = "No of leave : $formattedNoDays days"
-                    }
-                }
-
-
+            if (fromDateStr.isEmpty() || toDateStr.isEmpty()) {
+                return // Exit if either date is empty
             }
+
+            val fromDate = sdf.parse(fromDateStr)
+            val toDate = sdf.parse(toDateStr)
+
+            if (fromDate == null || toDate == null) {
+                return
+            }
+
+
+            if (toDate.before(fromDate)) {
+                binding.nodTxt.text = "No of leave: 0 days"
+                AlertDialog.Builder(this@EmpLeaveActivity)
+                    .setTitle("Invalid Date Range")
+                    .setMessage("The 'To Date' cannot be earlier than the 'From Date'.")
+                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                    .show()
+                return
+            }
+
+            val daysBetween = ChronoUnit.DAYS.between(
+                fromDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                toDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+            ) + 1
+
+            val formattedNoDays = daysBetween.toInt().toString()
+            binding.nodTxt.text = "No of leave: $formattedNoDays days"
+
         } catch (e: ParseException) {
             e.printStackTrace()
         }
     }
+
 
 
     private fun hasLocationPermission(): Boolean {

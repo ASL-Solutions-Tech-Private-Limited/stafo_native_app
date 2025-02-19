@@ -214,6 +214,8 @@
                     android:textSize="@dimen/_10ssp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/llc_shift_time"
                 android:layout_width="wrap_content"

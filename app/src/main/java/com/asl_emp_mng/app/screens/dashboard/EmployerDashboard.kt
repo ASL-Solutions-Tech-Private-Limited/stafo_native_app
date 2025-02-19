@@ -3,6 +3,7 @@ package com.asl_emp_mng.app.screens.dashboard
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.window.OnBackInvokedDispatcher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,7 @@ import com.asl_emp_mng.app.base.adapter.SliderAdapter
 import com.asl_emp_mng.app.base.model.ActionModel
 import com.asl_emp_mng.app.base.model.DashboardType
 import com.asl_emp_mng.app.base.model.DashboardWish
+import com.asl_emp_mng.app.base.service.LocationForegroundService
 import com.asl_emp_mng.app.databinding.ActivityEmployerDashboardBinding
 import com.asl_emp_mng.app.screens.settings.AddEmployeeActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
@@ -24,6 +26,7 @@ import com.asl_emp_mng.app.screens.settings.PolicyActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
 import com.asl_emp_mng.app.screens.emp.EmplyeeAttendaceListActivity
+import com.asl_emp_mng.app.screens.ui.AutoSearchPlaceActivity
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.screens.ui.WishListActivity
 import com.asl_emp_mng.app.utils.CustomLoader
@@ -122,6 +125,8 @@ class EmployerDashboard : AppCompatActivity() {
             if (it.status) {
 
 
+
+
                 setEmployeeComId(it.companyId.toString())
 
                 binding.tvPresentEmp.text = it.presentCount.toString()
@@ -194,8 +199,17 @@ class EmployerDashboard : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
-
+    private fun stopLocationService() {
+        val intent = Intent(this, LocationForegroundService::class.java)
+        stopService(intent)
+    }
     private fun setOnClickEvents() {
+
+        stopLocationService()
+
+
+
+
         binding.tvHeaderSetting.setOnClickListener {
             val intent = Intent(this@EmployerDashboard, EmplyeeyerProfile::class.java)
             intent.putExtra("DASHBOARD_TYPE", DashboardType.EMPLOYEE.name)
@@ -203,7 +217,8 @@ class EmployerDashboard : AppCompatActivity() {
         }
 
         binding.addEmp.setOnClickListener {
-            startActivity(Intent(this, AddEmployeeActivity::class.java))
+           startActivity(Intent(this, AddEmployeeActivity::class.java))
+            //startActivity(Intent(this, AutoSearchPlaceActivity::class.java))
         }
 
         binding.tvLetsCheckViewAll.setOnClickListener {
@@ -239,5 +254,11 @@ class EmployerDashboard : AppCompatActivity() {
         imageList.add(R.drawable.banner_one)
         imageList.add(R.drawable.banner_two)
         binding.imageSlider.setSliderAdapter(SliderAdapter(this, imageList))
+    }
+
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
     }
 }

@@ -386,17 +386,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:weightSum="2"
                     android:orientation="horizontal"
                     android:padding="2dp">
 
                     <RadioButton
                         android:id="@+id/rd_full_leave"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="1dp"
-                        android:layout_weight="1"
                         android:button="@drawable/custom_radio_button"
                         android:checked="true"
+                        android:layout_weight="1"
                         android:fontFamily="@font/poppins_regular"
                         android:gravity="center"
                         android:text="Full day"
@@ -405,12 +406,12 @@
 
                     <RadioButton
                         android:id="@+id/rd_half_leave"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
-                        android:layout_weight="1"
                         android:button="@drawable/custom_radio_button"
                         android:checked="false"
+                        android:layout_weight="1"
                         android:fontFamily="@font/poppins_regular"
                         android:gravity="center"
                         android:text="Half day"

@@ -26,6 +26,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.CompanyUpdateDocumentRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.CompanyUpdateDocumentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
@@ -35,6 +37,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeePostLocationRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeePostLocationResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.FetchEmployeeDetails
+import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResquest
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAllEmployeeResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAttendanceRecordRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecord
@@ -42,6 +46,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecordBody
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployeeLeaveHistRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployeeLeaveHistResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.HolidayListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.JobTitleResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
@@ -58,12 +63,16 @@ import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfile
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ViewBranchResponse
 import com.google.android.gms.common.internal.safeparcel.SafeParcelable.Param
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.HeaderMap
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -101,8 +110,8 @@ interface ApiStores {
     @GET("api/states/{state_id}/cities")
     suspend fun callCityList(@Path("state_id") stateId: String): Response<CitiesListResponse>
 
-   /* @POST("api/branch/create")
-    suspend fun callCreateBranch(@Body addBranchRequest: AddBranchRequest): Response<AddBranchResponse>*/
+    /* @POST("api/branch/create")
+     suspend fun callCreateBranch(@Body addBranchRequest: AddBranchRequest): Response<AddBranchResponse>*/
 
     @POST("api/branch/create")
     suspend fun callCreateBranch(
@@ -122,19 +131,39 @@ interface ApiStores {
         @Body request: ShiftCreateRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<ShiftCreateResponse>
+
     @GET("api/shifts")
-    suspend fun callShiftList(@Query("company_id") companyId: Int,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ShiftListResponse>
+    suspend fun callShiftList(
+        @Query("company_id") companyId: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ShiftListResponse>
 
     @POST("api/employees-list")
-    suspend fun callEmployeeList(@Body request: GetAttendanceRecordRequest, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<EmployeeListResponse>
+    suspend fun callEmployeeList(
+        @Body request: GetAttendanceRecordRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EmployeeListResponse>
 
     @GET("api/branch/list")
-    suspend fun callBranchViewList(@Query("company_id") companyId: Int,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ViewBranchResponse>
+    suspend fun callBranchViewList(
+        @Query("company_id") companyId: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ViewBranchResponse>
 
     @GET("api/departments")
-    suspend fun callDepartmentList(@Query("company_id") companyId: Int,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<DepartmentResponse>
+    suspend fun callDepartmentList(
+        @Query("company_id") companyId: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DepartmentResponse>
+
     @GET("api/branch/list")
-    suspend fun callBranchList(@Query("company_id") companyId: Int, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<BranchListResponse>
+    suspend fun callBranchList(
+        @Query("company_id") companyId: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<BranchListResponse>
+
+    @POST("api/jobtitle-list")
+    suspend fun callJobTitleList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<JobTitleResponse>
 
 
     @POST("api/register")
@@ -171,15 +200,20 @@ interface ApiStores {
     suspend fun callCompanyProfile(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<CompanyProfileResponse>
 
     @GET("api/holidays/by-company")
-    suspend fun callHolidayList(@Query("company_id") companyId: Int,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<HolidayListResponse>
+    suspend fun callHolidayList(
+        @Query("company_id") companyId: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<HolidayListResponse>
 
     @POST("api/pending-leave-request")
     suspend fun callPendingLeaveRequestList(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<PendingLeaveResponse>
 
 
-
     @POST("api/leave-request-status-change")
-    suspend fun callAcceptLeave( @Body request:ApproveLeaveRequest,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ApproveLeaveResponse>
+    suspend fun callAcceptLeave(
+        @Body request: ApproveLeaveRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ApproveLeaveResponse>
 
 
     @POST("api/employeesOnLeave")
@@ -190,30 +224,55 @@ interface ApiStores {
 
 
     @POST("api/employees-list")
-    suspend fun callEmpRecord(@Body request:GetEmpAttendanceRecordBody, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<GetEmpAttendanceRecord>
+    suspend fun callEmpRecord(
+        @Body request: GetEmpAttendanceRecordBody,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<GetEmpAttendanceRecord>
 
     @PUT("api/company/update")
-    suspend fun callUpdateCompany(@Body request:UpdateCompanyProfile, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<UpdateCompanyProfileResponse>
+    suspend fun callUpdateCompany(
+        @Body request: UpdateCompanyProfile,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateCompanyProfileResponse>
 
     @GET("api/employee-details/{id}")
-    suspend fun callFetchEmployeeDetails(@Path("id")id:String,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<FetchEmployeeDetails>
+    suspend fun callFetchEmployeeDetails(
+        @Path("id") id: String,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<FetchEmployeeDetails>
 
-    @PUT("api/employees-update/{id}")
-    suspend fun callUpdateEmployee(@Path("id")id:String,@Body request:UpdateEmployeeProfile,@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<UpdateEmployeeProfileResponse>
+    @POST("api/employees-update/{id}")
+    suspend fun callUpdateEmployee(
+        @Path("id") id: String,
+        @Body request: UpdateEmployeeProfile,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateEmployeeProfileResponse>
 
 
     @POST("api/employee/punch")
-    suspend fun callPunchIn(@Body request: PunchInRequest, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<PunchInResponse>
+    suspend fun callPunchIn(
+        @Body request: PunchInRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<PunchInResponse>
 
 
     @POST("api/employees/assign-shift")
-    suspend fun callAssignShift(@Body request: AssignShiftRequest, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<ShiftAssignmentResponse>
+    suspend fun callAssignShift(
+        @Body request: AssignShiftRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ShiftAssignmentResponse>
 
     @POST("api/leave-list")
-    suspend fun callAllLeaveList(@Body request: LeaveRequestBody, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<LeaveResponse>
+    suspend fun callAllLeaveList(
+        @Body request: LeaveRequestBody,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<LeaveResponse>
 
     @POST("api/leave-list")
-    suspend fun callGetEmpLeaveList(@Body request: GetEmployeeLeaveHistRequestBody, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<GetEmployeeLeaveHistResponse>
+    suspend fun callGetEmpLeaveList(
+        @Body request: GetEmployeeLeaveHistRequestBody,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<GetEmployeeLeaveHistResponse>
 
     @POST("api/update-geo-status")
     suspend fun requestGeoLocation(
@@ -230,10 +289,27 @@ interface ApiStores {
         @Query("month") month: String,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap(),
     ): Response<MonthAttendaceResponse>
+
     @POST("api/store-geo-location")
     suspend fun callPostGeoLocation(
-       @Body request:EmployeePostLocationRequest,
+        @Body request: EmployeePostLocationRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap(),
     ): Response<EmployeePostLocationResponse>
+
+
+    @POST("api/get-geo-location")
+    suspend fun callGeoLocationHist(
+        @Body request: GeoLocationHistResquest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap(),
+    ): Response<GeoLocationHistResponse>
+
+    @Multipart
+    @POST("api/update-document/1")
+    suspend fun callCompanyUpdateDocument(
+        @Part("document_type_id") documentTypeIds: List<RequestBody>,
+        @Part documents: List<MultipartBody.Part>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<CompanyUpdateDocumentResponse>
+
 
 }

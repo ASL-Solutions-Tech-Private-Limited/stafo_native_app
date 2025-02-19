@@ -7,7 +7,7 @@ data class DashboardWish(
     var name: String,
     var email: String,
     var phone: String,
-    var image: String,
+    var image: String?,
     var type: String,
     var date_of_joining: String
 )

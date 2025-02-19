@@ -1,6 +1,8 @@
 package com.asl_emp_mng.app.screens.dashboard
 
 import android.Manifest
+import android.app.ActivityManager
+import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -98,7 +100,7 @@ class EmployeeDashboard : AppCompatActivity() {
         binding?.apply {
             tvHeaderGreeting.text = getGreetingBasedOnTime()
             tvHeaderEmpName.text = getEmployeeDetails()?.name ?: " Guest"
-            tvHeaderEmpNo.text = getEmployeeDetails()?.empId ?: "--"
+            tvHeaderEmpNo.text = getEmployeeDetails()?.emp_id ?: "--"
             rvLeaves.layoutManager =
                 LinearLayoutManager(this@EmployeeDashboard, LinearLayoutManager.HORIZONTAL, false)
             rvWishes.layoutManager = LinearLayoutManager(
@@ -187,7 +189,7 @@ class EmployeeDashboard : AppCompatActivity() {
                   }
               }*/
 
-            Log.d("res","${getIsCOMPANYLogin()}")
+            Log.d("res", "${getIsCOMPANYLogin()}")
 
 
 
@@ -239,7 +241,6 @@ class EmployeeDashboard : AppCompatActivity() {
                         dialog.dismiss()
 
 
-
                     }
                     builder.setNegativeButton("Reject") { dialog, which ->
 
@@ -252,7 +253,31 @@ class EmployeeDashboard : AppCompatActivity() {
                     val dialog = builder.create()
                     dialog.show()
 
+                }else if (it.employeeInfo.geoStatus != null && it.employeeInfo.geoStatus == "1"){
+
+                    if (isServiceRunning(LocationForegroundService::class.java)) {
+                        stopLocationService()
+                        if (isLocationEnabled()) {
+                            startLocationService()
+                        } else {
+                            requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                        }
+
+
+                    } else {
+                        if (isLocationEnabled()) {
+                            startLocationService()
+                        } else {
+                            requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                        }
+                    }
+
+
+
                 }
+
+
+
                 if (it.employeeInfo.punches != null && it.employeeInfo.punches.isNotEmpty()) {
                     if (it.employeeInfo.punches.get(0).punchIn != null) {
                         binding.btnPunchIn.setText("Punch Out")
@@ -348,30 +373,64 @@ class EmployeeDashboard : AppCompatActivity() {
             if (it.status) {
 
 
-                if (isLocationEnabled()){
-                    startLocationService()
-                }else{
-                    requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                if (isServiceRunning(LocationForegroundService::class.java)) {
+                    stopLocationService()
+                    if (isLocationEnabled()) {
+                        startLocationService()
+                    } else {
+                        requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                    }
+
+
+                } else {
+                    if (isLocationEnabled()) {
+                        startLocationService()
+                    } else {
+                        requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                    }
                 }
 
 
 
 
+
+
+
+
+
                 CustomToast(this, it.message)
-            }else{
+            } else {
                 CustomToast(this, it.message)
             }
         }
 
 
-
-
-
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
+    }
+    private fun isServiceRunning(serviceClass: Class<out Service>): Boolean {
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in activityManager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun stopLocationService() {
+        val intent = Intent(this, LocationForegroundService::class.java)
+        stopService(intent)
+    }
+
     private fun startLocationService() {
         val serviceIntent = Intent(this, LocationForegroundService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
     }
+
     private fun showCustomBottomSheet() {
         bottomSheetDialog = BottomSheetDialog(this)
 
@@ -387,10 +446,10 @@ class EmployeeDashboard : AppCompatActivity() {
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialogBinding.llGeoAttendance.setOnClickListener {
-            if (isLocationEnabled()){
+            if (isLocationEnabled()) {
                 bottomSheetDialog.dismiss()
-               startActivity(Intent(this,EmployeePunchInActivity::class.java))
-            }else{
+                startActivity(Intent(this, EmployeePunchInActivity::class.java))
+            } else {
                 requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             }
         }

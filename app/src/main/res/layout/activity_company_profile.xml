@@ -515,7 +515,7 @@
                         app:endIconMode="custom">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_company_aadhar_certificate"
+                            android:id="@+id/tie_company_aadhaar_certificate"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"

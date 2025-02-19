@@ -1,12 +1,16 @@
 package com.asl_emp_mng.app.base.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.ItemEmpAttendaceLayoutBinding
+import com.asl_emp_mng.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDataList
+import com.asl_emp_mng.app.screens.ui.AutoSearchPlaceActivity
+import com.asl_emp_mng.app.utils.getEmployeeDetails
 
 class EmployeeAttendanceAdapter(
     private var attendList: List<EmployeeDataList>,
@@ -37,6 +41,21 @@ class EmployeeAttendanceAdapter(
                     binding.tvCheckIn.text = "Absent"
                     binding.tvCheckIn.setTextColor(context.resources.getColor(R.color.reject))
                     binding.tvCheckOut.text = ""
+                }
+
+                holder.itemView.setOnClickListener {
+                     val id=this.id
+                    context.startActivity(
+                        Intent(
+                            context,
+                            EmployeeAttendanceRecordActivity::class.java
+                        ).apply {
+                            putExtra("EMP_ID", "$id")
+                        }
+                    )
+
+
+                    context.startActivity(Intent(context,AutoSearchPlaceActivity::class.java))
                 }
 
 

@@ -39,7 +39,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
     private val calendar = Calendar.getInstance()
 
     private  var selectGender: String="male"
-    private lateinit var selectJobTitle: String
+    private  var selectJobTitle: String=""
     private var selectBranch: Int = 1
     private var selectDepartment: Int = 1
     private lateinit var branchDialog: SearchableDialog
@@ -286,12 +286,50 @@ class EmployeeProfileDetails : AppCompatActivity() {
             }
 
 
+            settingsViewModel.getJobTitleList(this@EmployeeProfileDetails)
+
+
+            settingsViewModel.mJobTitleResponse.observe(this@EmployeeProfileDetails) {
+                if (it.status){
+
+                     val jobTitles = it.data.map { it.name }
+                   // val jobTitles = mutableListOf("Select Job Title") + it.data.map { it.name }
+
+                    val adapterTitle =
+                        ArrayAdapter(this@EmployeeProfileDetails, R.layout.custom_spinner_item, jobTitles)
+                    binding.spinnerJobTitle.setAdapter(adapterTitle)
+
+                    binding.spinnerJobTitle.onItemSelectedListener =
+                        object : AdapterView.OnItemSelectedListener {
+                            override fun onItemSelected(
+                                parent: AdapterView<*>,
+                                view: View?,
+                                position: Int,
+                                id: Long
+                            ) {
+                                val selectedItem = parent.getItemAtPosition(position).toString()
+                                selectJobTitle = selectedItem
+                            }
+
+                            override fun onNothingSelected(parent: AdapterView<*>) {
+                            }
+                        }
+
+
+
+                }else{
+                    CustomToast(this@EmployeeProfileDetails,it.message)
+                }
+
+            }
 
 
 
 
 
-            val options = resources.getStringArray(R.array.position_type)
+
+
+           /* val options = resources.getStringArray(R.array.position_type)
             val adapterTitle = ArrayAdapter(this@EmployeeProfileDetails, R.layout.custom_spinner_item, options)
             binding.spinnerJobTitle.setAdapter(adapterTitle)
 
@@ -309,7 +347,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
                     override fun onNothingSelected(parent: AdapterView<*>) {
                     }
-                }
+                }*/
 
 
 
@@ -437,7 +475,16 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             dateOfJoining = tieDateJoining.text.toString(),
                             dateOfBirth = " ",
                             gender = selectGender,
-                            address = tieAddress.text.toString()
+                            address = tieAddress.text.toString(),
+                            country = 0,
+                            state = 0,
+                            city = 0,
+                            job_title_id = 0,
+                            employee_type_id = 0,
+                            official_email_id = "",
+                            pf_number = "",
+                            esi_number = "",
+                            date_of_leaving = "",
                         )
 
 
@@ -467,7 +514,16 @@ class EmployeeProfileDetails : AppCompatActivity() {
                         dateOfJoining = tieDateJoining.text.toString(),
                         dateOfBirth = tieDateOfBirth.text.toString(),
                         gender = selectGender,
-                        address = tieAddress.text.toString()
+                        address = tieAddress.text.toString(),
+                        country = 0,
+                        state = 0,
+                        city = 0,
+                        job_title_id = 0,
+                        employee_type_id = 0,
+                        official_email_id = "",
+                        pf_number = "",
+                        esi_number = "",
+                        date_of_leaving = "",
                     )
 
 

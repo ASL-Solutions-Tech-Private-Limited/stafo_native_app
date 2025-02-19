@@ -1,7 +1,9 @@
 package com.asl_emp_mng.app.base.service
 
 import android.Manifest
+import android.app.ActivityManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
@@ -266,6 +268,22 @@ class LocationForegroundService : Service() {
         private val LOCATION_UPDATES_INTERVAL_MS = 1.seconds.inWholeMilliseconds
         private val TICKER_PERIOD_SECONDS = 5.seconds
     }
+
+
+
+    private fun isLocationServiceRunning(serviceClass: Class<out Service>): Boolean {
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in activityManager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
+
+
+
 }
 
 

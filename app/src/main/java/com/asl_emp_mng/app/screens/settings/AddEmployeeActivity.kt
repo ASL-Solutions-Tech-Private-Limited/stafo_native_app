@@ -44,7 +44,7 @@ class AddEmployeeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddEmployeeBinding
     private val calendar = Calendar.getInstance()
     private var mSteps = 1
-    private lateinit var selectGender: String
+    private var selectGender: String="male"
     private lateinit var selectJobTitle: String
     private var selectBranch: Int = 1
     private var selectDepartment: Int = 1
@@ -58,6 +58,7 @@ class AddEmployeeActivity : AppCompatActivity() {
 
     private var mDepartmentList: ArrayList<DataDepartment>? = ArrayList()
     private var mBranchList: ArrayList<DataBranch>? = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -134,6 +135,44 @@ class AddEmployeeActivity : AppCompatActivity() {
         }
 
 
+        settingsViewModel.getJobTitleList(this)
+
+
+        settingsViewModel.mJobTitleResponse.observe(this) {
+          if (it.status){
+
+             val jobTitles = it.data.map { it.name }
+             // val jobTitles = mutableListOf("Select Job Title") + it.data.map { it.name }
+
+              val adapterTitle =
+                  ArrayAdapter(this@AddEmployeeActivity, R.layout.custom_spinner_item, jobTitles)
+              binding.spinnerJobTitle.setAdapter(adapterTitle)
+
+              binding.spinnerJobTitle.onItemSelectedListener =
+                  object : AdapterView.OnItemSelectedListener {
+                      override fun onItemSelected(
+                          parent: AdapterView<*>,
+                          view: View?,
+                          position: Int,
+                          id: Long
+                      ) {
+                          val selectedItem = parent.getItemAtPosition(position).toString()
+                          selectJobTitle = selectedItem
+                      }
+
+                      override fun onNothingSelected(parent: AdapterView<*>) {
+                      }
+                  }
+
+
+
+          }else{
+              CustomToast(this,it.message)
+          }
+
+        }
+
+
     }
 
     private fun setupSearchableDialog(
@@ -187,9 +226,11 @@ class AddEmployeeActivity : AppCompatActivity() {
     }
 
     private fun onClickListener() {
+
+
         binding?.apply {
 
-            val options = resources.getStringArray(R.array.position_type)
+         /*   val options = resources.getStringArray(R.array.position_type)
             val adapterTitle =
                 ArrayAdapter(this@AddEmployeeActivity, R.layout.custom_spinner_item, options)
             binding.spinnerJobTitle.setAdapter(adapterTitle)
@@ -208,7 +249,12 @@ class AddEmployeeActivity : AppCompatActivity() {
 
                     override fun onNothingSelected(parent: AdapterView<*>) {
                     }
-                }
+                }*/
+
+
+
+
+
 
             ivBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
@@ -290,8 +336,13 @@ class AddEmployeeActivity : AppCompatActivity() {
                         position = selectJobTitle,
                         phone = tieMobileNo.text.toString(),
                         branch_id = selectBranch,
-                        department_id = selectDepartment
+                        department_id = selectDepartment,
+                        date_of_joining = tieDateJoining.text.toString(),
+                        gender = selectGender,
+                        address = tieAddress.text.toString()
                     )
+
+                    Log.d("res","post add : "+requestBody)
 
                     settingsViewModel.addEmployee(this@AddEmployeeActivity, requestBody)
 
@@ -377,7 +428,7 @@ class AddEmployeeActivity : AppCompatActivity() {
             this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
                 val selectedDate = Calendar.getInstance()
                 selectedDate.set(year, monthOfYear, dayOfMonth)
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
                 val formattedDate = dateFormat.format(selectedDate.time)
                 binding.tieDateJoining.setText("$formattedDate")
             },

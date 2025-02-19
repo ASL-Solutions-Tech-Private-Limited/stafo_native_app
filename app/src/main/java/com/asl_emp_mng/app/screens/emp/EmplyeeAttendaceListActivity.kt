@@ -1,6 +1,7 @@
 package com.asl_emp_mng.app.screens.emp
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.base.adapter.EmployeeAttendanceAdapter
 import com.asl_emp_mng.app.base.model.EmployeeAttendanceModel
 import com.asl_emp_mng.app.databinding.ActivityEmployeeAttendanceBinding
+import com.asl_emp_mng.app.screens.dashboard.EmployeeDashboard
+import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.utils.CustomLoader
 import java.text.SimpleDateFormat
@@ -58,6 +61,12 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
         datePickerDialog.show()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this@EmplyeeAttendaceListActivity, EmployerDashboard::class.java))
+        finish()
+    }
+
     private fun onClickListener() {
         binding?.apply {
             settingsViewModel.getEmpList(this@EmplyeeAttendaceListActivity, mSelectedDate)
@@ -69,7 +78,7 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
             }
 
             imageBack.setOnClickListener {
-                onBackPressedDispatcher.onBackPressed()
+                startActivity(Intent(this@EmplyeeAttendaceListActivity, EmployerDashboard::class.java))
                 finish()
             }
 

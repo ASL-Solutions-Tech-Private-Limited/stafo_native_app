@@ -1,6 +1,7 @@
 package com.asl_emp_mng.app.screens.emp
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +19,7 @@ import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.AdapterEmployeeRecord
 import com.asl_emp_mng.app.base.model.DateItem
 import com.asl_emp_mng.app.databinding.ActivityEmployeeAttendanceRecordBinding
+import com.asl_emp_mng.app.screens.dashboard.EmployeeDashboard
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.calculateMinutes
@@ -125,7 +127,7 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
             }
 
             imageBack.setOnClickListener {
-                onBackPressedDispatcher.onBackPressed()
+               onBackPressedDispatcher.onBackPressed()
                 finish()
             }
 

@@ -52,13 +52,23 @@ class AdapterRequestLeaveHistory(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateDuration(fromDate: String, toDate: String): String {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return try {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val fromDateParsed = LocalDate.parse(fromDate.trim(), formatter)
+            val toDateParsed = LocalDate.parse(toDate.trim(), formatter)
+            // val daysBetween = ChronoUnit.DAYS.between(fromDateParsed, toDateParsed)
 
-        val fromDate = LocalDate.parse(fromDate, formatter)
-        val toDate = LocalDate.parse(toDate, formatter)
+            val daysBetween = ChronoUnit.DAYS.between(fromDateParsed, toDateParsed) + 1
+            /*  daysBetween.toString()
+              if (daysBetween == 0L) {
+                  return "1 day"
+              }*/
 
-        val daysBetween = ChronoUnit.DAYS.between(fromDate, toDate)
-        return daysBetween.toString()
+            "$daysBetween"
+
+        } catch (e: Exception) {
+            "Error: ${e.message}"
+        }
     }
 
 }

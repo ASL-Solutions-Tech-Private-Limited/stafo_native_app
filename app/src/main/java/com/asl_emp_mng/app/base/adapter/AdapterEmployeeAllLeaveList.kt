@@ -69,11 +69,13 @@ class AdapterEmployeeAllLeaveList (
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             val fromDateParsed = LocalDate.parse(fromDate.trim(), formatter)
             val toDateParsed = LocalDate.parse(toDate.trim(), formatter)
-            val daysBetween = ChronoUnit.DAYS.between(fromDateParsed, toDateParsed)
-            daysBetween.toString()
+           // val daysBetween = ChronoUnit.DAYS.between(fromDateParsed, toDateParsed)
+
+            val daysBetween = ChronoUnit.DAYS.between(fromDateParsed, toDateParsed) + 1
+          /*  daysBetween.toString()
             if (daysBetween == 0L) {
                 return "1 day"
-            }
+            }*/
 
             "$daysBetween"
 

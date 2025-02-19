@@ -1,6 +1,7 @@
 package com.asl_emp_mng.app.screens.settings
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -24,6 +25,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.CompanyUpdateDocumentRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.CompanyUpdateDocumentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
@@ -33,6 +36,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeePostLocationRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeePostLocationResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.FetchEmployeeDetails
+import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResquest
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAllEmployeeResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAttendanceRecordRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecord
@@ -40,6 +45,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpAttendanceRecordBody
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployeeLeaveHistRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployeeLeaveHistResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.HolidayListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.JobTitleResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
@@ -61,6 +67,13 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
 class SettingsViewModel : BaseViewModel() {
 
@@ -212,6 +225,158 @@ class SettingsViewModel : BaseViewModel() {
 
     private var mAttendanceHistory: MutableLiveData<MonthAttendaceResponse> = MutableLiveData()
     val mAttendanceHistoryResponse: LiveData<MonthAttendaceResponse> get() = mAttendanceHistory
+
+
+    private var mJobTitle: MutableLiveData<JobTitleResponse> = MutableLiveData()
+
+    val mJobTitleResponse: LiveData<JobTitleResponse> get() = mJobTitle
+
+    private var mGeoLocationHist: MutableLiveData<GeoLocationHistResponse> = MutableLiveData()
+
+    val mGeoLocationHistResponse: LiveData<GeoLocationHistResponse> get() = mGeoLocationHist
+
+    private var mCompanyUpdateDocument: MutableLiveData<CompanyUpdateDocumentResponse> = MutableLiveData()
+
+    val mCompanyUpdateDocumentResponse: LiveData<CompanyUpdateDocumentResponse> get() = mCompanyUpdateDocument
+
+
+    fun postCompanyUpdateDocument(mContext: Context, imageUris: List<String>, documentTypeIds: List<Int>) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val documentTypeParts = documentTypeIds.map { id ->
+                    id.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+                }
+
+                val documentParts = imageUris.map { filePath ->
+                    val file = File(filePath)
+                    val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+                    MultipartBody.Part.createFormData("documents", file.name, requestFile)
+                }
+
+                val response = ASLEmpMng.instance.apiStores()?.callCompanyUpdateDocument(
+                    documentTypeIds = documentTypeParts,
+                    documents = documentParts
+                )
+
+                Log.d("res", "document "+response?.body().toString())
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mCompanyUpdateDocument.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+    fun getGeoLocationHist(mContext: Context,request: GeoLocationHistResquest) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callGeoLocationHist(request)
+                Log.d("res", "geo hist "+response?.body().toString())
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mGeoLocationHist.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+    fun getJobTitleList(mContext: Context) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callJobTitleList()
+                Log.d("res", "job "+response?.body().toString())
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mJobTitle.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
     fun getEmployeeLeaveHist(mContext: Context, request: GetEmployeeLeaveHistRequestBody) {
@@ -386,7 +551,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
-
+                Log.d("res", "update: $id ${getUserAccessToken()}")
                 val response = ASLEmpMng.instance.apiStores()?.callUpdateEmployee(id, request)
                 Log.d("res", "update: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {

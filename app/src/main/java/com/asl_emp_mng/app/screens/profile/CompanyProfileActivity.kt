@@ -1,5 +1,9 @@
 package com.asl_emp_mng.app.screens.profile
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -27,7 +31,10 @@ import com.asl_emp_mng.app.screens.settings.dataClass.OwnerInfo
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfile
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputEditText
+import java.io.File
+import java.io.FileOutputStream
 
 class CompanyProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCompanyProfileBinding
@@ -79,6 +86,26 @@ class CompanyProfileActivity : AppCompatActivity() {
 
     private fun onClickListener() {
         binding?.apply {
+
+
+            tieCompanyCertificate.setOnClickListener {
+                openPicker(1101)
+            }
+            tieCompanyGstCertificate.setOnClickListener {
+                openPicker(1102)
+            }
+            tieCompanyPanCertificate.setOnClickListener {
+                openPicker(1103)
+            }
+            tieCompanyAadhaarCertificate.setOnClickListener {
+                openPicker(1104)
+            }
+            tieCompanyBankStatement.setOnClickListener {
+                openPicker(1105)
+            }
+
+
+
 
             settingsViewModel.getCompanyDetails(this@CompanyProfileActivity)
 
@@ -199,7 +226,30 @@ class CompanyProfileActivity : AppCompatActivity() {
 
                     }
                 }else if (profileType=="company_document"){
-                    CustomToast(this@CompanyProfileActivity,"Working is progress")
+
+                    if (documentInfo()){
+
+                        val imageUris = listOf(
+                           tieCompanyCertificate.text.toString(),
+                           tieCompanyGstCertificate.text.toString(),
+                           tieCompanyPanCertificate.text.toString(),
+                           tieCompanyAadhaarCertificate.text.toString(),
+                           tieCompanyBankStatement.text.toString()
+
+                        )
+
+                        val documentTypeIds = listOf(1, 2, 3,4,5)
+
+                        Log.d("res", "post document $documentTypeIds $imageUris ")
+
+
+                        settingsViewModel.postCompanyUpdateDocument(this@CompanyProfileActivity, imageUris,documentTypeIds)
+
+
+
+                    }
+
+
                 }
             }
         }
@@ -207,7 +257,17 @@ class CompanyProfileActivity : AppCompatActivity() {
 
     }
 
+    private fun openPicker(req: Int) {
 
+        ImagePicker.with(this)
+            .crop()
+            .compress(1024)
+            .maxResultSize(
+                1080,
+                1080
+            )
+            .start(req)
+    }
 
 
     private fun observeViewModel() {
@@ -509,4 +569,65 @@ class CompanyProfileActivity : AppCompatActivity() {
         }
     }
 
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+
+            //Image Uri will not be null for RESULT_OK
+            val uri: Uri = data?.data!!
+            if (requestCode == 1101) {
+                binding.tieCompanyCertificate.setText(uri.toString())
+            } else if (requestCode == 1102) {
+                binding.tieCompanyGstCertificate.setText(uri.toString())
+            }
+            else if (requestCode == 1103) {
+                binding.tieCompanyPanCertificate.setText(uri.toString())
+            }
+            else if (requestCode == 1104) {
+                binding.tieCompanyAadhaarCertificate.setText(uri.toString())
+            }
+            else if (requestCode == 1105) {
+                binding.tieCompanyBankStatement.setText(uri.toString())
+            }
+
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun documentInfo(): Boolean {
+        return listOf(
+            binding.tieCompanyCertificate to "Please select company registration certificate",
+            binding.tieCompanyGstCertificate to "Please select company gst certificate",
+            binding.tieCompanyPanCertificate to "Please select company pan card",
+            binding.tieCompanyAadhaarCertificate to "Please select company aadhaar or voter id",
+            binding.tieCompanyBankStatement to "Please select company bank statement",
+        ).all { validateField(it.first, it.second) }
+    }
+
+    fun getFileFromUri(context: Context, uri: Uri): File? {
+        return try {
+            if (uri.scheme == "content") {
+                val inputStream = context.contentResolver.openInputStream(uri)
+                val file = File(context.cacheDir, "temp_file_${System.currentTimeMillis()}")
+                inputStream?.use { input ->
+                    FileOutputStream(file).use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                file
+            } else if (uri.scheme == "file") {
+                File(uri.path ?: return null)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
 }
