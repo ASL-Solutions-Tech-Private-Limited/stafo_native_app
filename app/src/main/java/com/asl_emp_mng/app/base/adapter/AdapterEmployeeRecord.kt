@@ -40,6 +40,8 @@ class AdapterEmployeeRecord(
                 if (this.isPresent == "Absent") {
                     binding.llcAttend.visibility = View.GONE
                     binding.llcWeekOff.visibility = View.VISIBLE
+                    binding.tvWeekOffDay.text = extractDayNameDateAndMonth(this.date).first
+                    binding.tvWeekOffDate.text = extractDayNameDateAndMonth(this.date).second.toString()
 
                 } else if (this.isPresent == "Present") {
                     binding.llcAttend.visibility = View.VISIBLE

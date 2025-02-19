@@ -3,10 +3,8 @@ package com.asl_emp_mng.app.screens.dashboard
 import android.Manifest
 import android.app.ActivityManager
 import android.app.Service
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -33,8 +31,6 @@ import com.asl_emp_mng.app.base.adapter.AdapterWishList
 import com.asl_emp_mng.app.base.adapter.SliderAdapter
 import com.asl_emp_mng.app.base.model.ActionModel
 import com.asl_emp_mng.app.base.model.DashboardWish
-import com.asl_emp_mng.app.base.model.GetRunningGeoLocation
-import com.asl_emp_mng.app.base.model.PunchInType
 import com.asl_emp_mng.app.base.service.LocationForegroundService
 import com.asl_emp_mng.app.databinding.ActivityEmpDashboardBinding
 import com.asl_emp_mng.app.databinding.CustomBottomSheetAttendanceLayoutBinding
@@ -46,13 +42,11 @@ import com.asl_emp_mng.app.screens.settings.BranchActivity
 import com.asl_emp_mng.app.screens.settings.PolicyActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
-import com.asl_emp_mng.app.screens.ui.PlaceSearchActivity
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 import com.asl_emp_mng.app.utils.getFormattedDate
 import com.asl_emp_mng.app.utils.getGreetingBasedOnTime
 import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
-import com.asl_emp_mng.app.utils.setCompanyDetails
 import com.asl_emp_mng.app.utils.setEmployeeComId
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -262,8 +256,6 @@ class EmployeeDashboard : AppCompatActivity() {
                         } else {
                             requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                         }
-
-
                     } else {
                         if (isLocationEnabled()) {
                             startLocationService()
@@ -277,7 +269,7 @@ class EmployeeDashboard : AppCompatActivity() {
                 }
 
 
-
+                wishList.clear()
                 if (it.employeeInfo.punches != null && it.employeeInfo.punches.isNotEmpty()) {
                     if (it.employeeInfo.punches.get(0).punchIn != null) {
                         binding.btnPunchIn.setText("Punch Out")
@@ -433,7 +425,6 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private fun showCustomBottomSheet() {
         bottomSheetDialog = BottomSheetDialog(this)
-
         bottomSheetDialogBinding = CustomBottomSheetAttendanceLayoutBinding.inflate(layoutInflater)
         bottomSheetDialog.setOnShowListener { dialog ->
             val bottomSheet = (dialog as BottomSheetDialog)

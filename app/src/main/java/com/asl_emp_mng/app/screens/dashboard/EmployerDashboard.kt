@@ -3,7 +3,6 @@ package com.asl_emp_mng.app.screens.dashboard
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.window.OnBackInvokedDispatcher
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,16 +16,15 @@ import com.asl_emp_mng.app.base.model.DashboardType
 import com.asl_emp_mng.app.base.model.DashboardWish
 import com.asl_emp_mng.app.base.service.LocationForegroundService
 import com.asl_emp_mng.app.databinding.ActivityEmployerDashboardBinding
+import com.asl_emp_mng.app.screens.emp.EmplyeeAttendaceListActivity
+import com.asl_emp_mng.app.screens.profile.CompanyProfileActivity
 import com.asl_emp_mng.app.screens.settings.AddEmployeeActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
-import com.asl_emp_mng.app.screens.profile.CompanyProfileActivity
 import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 import com.asl_emp_mng.app.screens.settings.LeaveRequestHistoryActivity
 import com.asl_emp_mng.app.screens.settings.PolicyActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
-import com.asl_emp_mng.app.screens.emp.EmplyeeAttendaceListActivity
-import com.asl_emp_mng.app.screens.ui.AutoSearchPlaceActivity
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.screens.ui.WishListActivity
 import com.asl_emp_mng.app.utils.CustomLoader
@@ -123,12 +121,8 @@ class EmployerDashboard : AppCompatActivity() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
         settingsViewModel.mAttendanceSummaryResponse.observe(this) {
             if (it.status) {
-
-
-
-
                 setEmployeeComId(it.companyId.toString())
-
+                wishList.clear()
                 binding.tvPresentEmp.text = it.presentCount.toString()
                 if (it.birthday != null && it.birthday.isNotEmpty()) {
                     for (i in it.birthday.indices) {
@@ -204,11 +198,7 @@ class EmployerDashboard : AppCompatActivity() {
         stopService(intent)
     }
     private fun setOnClickEvents() {
-
         stopLocationService()
-
-
-
 
         binding.tvHeaderSetting.setOnClickListener {
             val intent = Intent(this@EmployerDashboard, EmplyeeyerProfile::class.java)
@@ -224,7 +214,6 @@ class EmployerDashboard : AppCompatActivity() {
         binding.tvLetsCheckViewAll.setOnClickListener {
             startActivity(Intent(this, EmplyeeAttendaceListActivity::class.java))
         }
-
 
         binding.tvProfile.setOnClickListener {
             startActivity(Intent(this, CompanyProfileActivity::class.java))
