@@ -1,7 +1,16 @@
 package com.asl_emp_mng.app.screens.auth
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.BaseActivity
@@ -15,30 +24,40 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
     override val viewModel: AuthViewModel by lazy { AuthViewModel() }
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewDataBinding?.lifecycleOwner = this
 
-
+        requestPermissions()
         validateField()
         onClickListeners()
-        obversers()
+        observers()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Check permissions again when the user returns from settings
+        if (arePermissionsGranted()) {
+            enableLoginButton()
+        }
     }
 
     private fun onClickListeners() {
         viewDataBinding?.apply {
-            tieMobileNo.setText("8709305214")
+            tieMobileNo.setText("9593464714")
+
             btnSignIn.setOnClickListener {
-                viewModel?.sendOTP(this@LoginWithOTPActivity, tieMobileNo.text.toString().trim())
+                if (arePermissionsGranted()) {
+                    viewModel?.sendOTP(this@LoginWithOTPActivity, tieMobileNo.text.toString().trim())
+                } else {
+                    requestPermissions()
+                }
             }
 
             tvRegisterNow.setOnClickListener {
                 startActivity(Intent(this@LoginWithOTPActivity, MobileSignUp::class.java))
             }
         }
-
-
     }
 
     private fun validateField() {
@@ -55,15 +74,12 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
         }
     }
 
-
-    private fun obversers() {
+    private fun observers() {
         viewModel.getLoaderLiveData().observe(this) {
             if (it.equals("load", ignoreCase = true)) {
-                if (!customLoader.isShowing)
-                    customLoader.show()
+                if (!customLoader.isShowing) customLoader.show()
             } else if (it.equals("stop", ignoreCase = true)) {
-                if (customLoader.isShowing)
-                    customLoader.dismiss()
+                if (customLoader.isShowing) customLoader.dismiss()
             }
         }
 
@@ -71,13 +87,104 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
             if (it.success) {
                 val mobile = viewDataBinding?.tieMobileNo?.text.toString().trim()
                 val otp = it.otp
-                val i = Intent(this@LoginWithOTPActivity, OtpVerifyActivity::class.java)
-                i.putExtra("mobile", mobile)
-                i.putExtra("otp", otp)
-                startActivity(i)
-
+                val intent = Intent(this@LoginWithOTPActivity, OtpVerifyActivity::class.java)
+                intent.putExtra("mobile", mobile)
+                intent.putExtra("otp", otp)
+                startActivity(intent)
             }
         }
     }
 
+    private fun arePermissionsGranted(): Boolean {
+        val locationGranted = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(
+                    this, Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+
+        val notificationGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                this, Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
+
+        return locationGranted && notificationGranted
+    }
+
+    private val permissionRequest = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val fineLocationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
+        val coarseLocationGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
+        val notificationGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions[Manifest.permission.POST_NOTIFICATIONS] ?: false
+        } else {
+            true
+        }
+
+        if (fineLocationGranted && coarseLocationGranted && notificationGranted) {
+            enableLoginButton()
+        } else {
+            if (isPermissionPermanentlyDenied()) {
+                showSettingsDialog()
+            } else {
+                Toast.makeText(this, "Permissions required to continue", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun requestPermissions() {
+        val permissions = mutableListOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS)
+        }
+
+        permissionRequest.launch(permissions.toTypedArray())
+    }
+
+    private fun isPermissionPermanentlyDenied(): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (
+                shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION).not() &&
+                        shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION).not() &&
+                        (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS).not())
+                )
+    }
+
+    private fun showSettingsDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Permissions Required")
+            .setMessage("To continue, please allow location and notification permissions in settings.")
+            .setPositiveButton("Go to Settings") { _, _ ->
+                openAppSettings()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun openAppSettings() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.fromParts("package", packageName, null)
+        }
+        startActivity(intent)
+    }
+
+    private fun enableLoginButton() {
+        viewDataBinding?.btnSignIn?.apply {
+            isEnabled = true
+            alpha = 1f
+            setOnClickListener {
+                viewModel?.sendOTP(this@LoginWithOTPActivity, viewDataBinding?.tieMobileNo?.text.toString().trim())
+            }
+        }
+    }
 }

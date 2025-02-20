@@ -99,7 +99,7 @@ class LocationForegroundService : Service() {
                     longitude = long
                 )
 
-                Log.d("res", "post geo: $request")
+              //  Log.d("res", "post geo: $request")
 
                 val token = getUserAccessToken()
                 if (token == null) {
@@ -115,9 +115,9 @@ class LocationForegroundService : Service() {
                 withContext(Dispatchers.Main) {
                     if (response != null && response.isSuccessful) {
                         val locationResponse = response.body()
-                        Log.d("res", "Location updated successfully: $locationResponse")
+                       // Log.d("res", "Location updated successfully: $locationResponse")
                     } else {
-                        Log.e("res", "Failed to update location. Code: ${response?.code()}, Message: ${response?.message()}")
+                      //  Log.e("res", "Failed to update location. Code: ${response?.code()}, Message: ${response?.message()}")
                     }
                 }
 
@@ -135,7 +135,7 @@ class LocationForegroundService : Service() {
         handler = Handler(Looper.getMainLooper())
         runnable = object : Runnable {
             override fun run() {
-                Log.d("res", "15 seconds passed")
+               // Log.d("res", "15 seconds passed")
 
                 postGeoLocation(lat.toString(),longi.toString())
 
@@ -170,7 +170,7 @@ class LocationForegroundService : Service() {
         timerJob?.cancel() // Cancel ticker job
         coroutineScope.coroutineContext.cancelChildren() // Cancel coroutines
 
-        Toast.makeText(this, "Foreground Service destroyed", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "Foreground Service destroyed", Toast.LENGTH_SHORT).show()
     }
 
     private fun startAsForegroundService() {

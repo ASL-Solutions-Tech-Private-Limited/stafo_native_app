@@ -2,6 +2,7 @@ package com.asl_emp_mng.app.base.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -34,28 +35,40 @@ class EmployeeAttendanceAdapter(
             with(attendList[position]) {
                 binding.tvEmpName.text = this.name
                 binding.tvEmpJobTitle.text = this.position
-                if (this.attendances.isNotEmpty()) {
-                    binding.tvCheckIn.text = this.attendances[0].in_time
-                    binding.tvCheckOut.text = this.attendances[0].out_time
-                } else {
-                    binding.tvCheckIn.text = "Absent"
+                if (this.attendances[0].attendance=="Absent") {
+
+                    binding.tvCheckIn.text = this.attendances[0].attendance
                     binding.tvCheckIn.setTextColor(context.resources.getColor(R.color.reject))
                     binding.tvCheckOut.text = ""
+
+                } else {
+                    binding.tvCheckIn.text = this.attendances[0].in_time
+                    binding.tvCheckOut.text = this.attendances[0].out_time
                 }
 
                 holder.itemView.setOnClickListener {
-                     val id=this.id
-                    context.startActivity(
+                     val employeeId=this.id
+                    Log.d("res","emp :$employeeId")
+
+
+                    val intent = Intent(context, AutoSearchPlaceActivity::class.java).apply {
+                        putExtra("EMP_ID", employeeId.toString())
+                    }
+                    Log.d("res", "Sending EMP_ID: ${intent.getStringExtra("EMP_ID")}")
+                    context.startActivity(intent)
+
+
+                   /* context.startActivity(
                         Intent(
                             context,
-                            EmployeeAttendanceRecordActivity::class.java
+                            AutoSearchPlaceActivity::class.java
                         ).apply {
-                            putExtra("EMP_ID", "$id")
+                            putExtra("EMP_ID", employeeId)
                         }
-                    )
+                    )*/
 
 
-                    context.startActivity(Intent(context,AutoSearchPlaceActivity::class.java))
+                   // context.startActivity(Intent(context,AutoSearchPlaceActivity::class.java))
                 }
 
 

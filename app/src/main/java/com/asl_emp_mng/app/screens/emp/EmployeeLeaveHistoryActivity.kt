@@ -1,6 +1,7 @@
 package com.asl_emp_mng.app.screens.emp
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -67,7 +68,10 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
 
 
 
+            }else{
+               binding.txtMsg.visibility=View.VISIBLE
             }
+
 
 
         }

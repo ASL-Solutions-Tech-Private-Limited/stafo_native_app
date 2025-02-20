@@ -263,5 +263,17 @@
             tools:listitem="@layout/recy_emp_leave_history_child_layout"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-
+    <TextView
+        android:id="@+id/txt_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        android:text="No apply leave present"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

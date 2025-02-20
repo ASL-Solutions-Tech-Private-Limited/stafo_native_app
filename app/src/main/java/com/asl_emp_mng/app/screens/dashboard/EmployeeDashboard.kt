@@ -34,6 +34,7 @@ import com.asl_emp_mng.app.base.model.DashboardWish
 import com.asl_emp_mng.app.base.service.LocationForegroundService
 import com.asl_emp_mng.app.databinding.ActivityEmpDashboardBinding
 import com.asl_emp_mng.app.databinding.CustomBottomSheetAttendanceLayoutBinding
+import com.asl_emp_mng.app.screens.emp.EmpBranchDetailsActivity
 import com.asl_emp_mng.app.screens.emp.EmpLeaveActivity
 import com.asl_emp_mng.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.asl_emp_mng.app.screens.emp.EmployeeProfileDetails
@@ -45,8 +46,10 @@ import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 import com.asl_emp_mng.app.utils.getFormattedDate
+import com.asl_emp_mng.app.utils.getFormattedDate2
 import com.asl_emp_mng.app.utils.getGreetingBasedOnTime
 import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
+import com.asl_emp_mng.app.utils.setEmployeeBranchId
 import com.asl_emp_mng.app.utils.setEmployeeComId
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -142,7 +145,7 @@ class EmployeeDashboard : AppCompatActivity() {
                             startActivity(
                                 Intent(
                                     this@EmployeeDashboard,
-                                    BranchActivity::class.java
+                                    EmpBranchDetailsActivity::class.java
                                 )
                             )
                         }
@@ -189,7 +192,35 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
             btnPunchIn.setOnClickListener {
-                showCustomBottomSheet()
+
+                if (binding.btnPunchIn.text=="Punch Out"){
+                    binding.btnPunchIn.isEnabled = true
+
+
+                    val builder = AlertDialog.Builder(this@EmployeeDashboard)
+                    builder.setTitle(R.string.app_name)
+                    builder.setMessage("Are you sure? Yuo want to punch out!")
+
+                    builder.setPositiveButton("Yes") { dialog, which ->
+
+                        showCustomBottomSheet()
+
+                        dialog.dismiss()
+
+
+                    }
+                    builder.setNegativeButton("No") { dialog, which ->
+                        dialog.dismiss()
+                    }
+                    val dialog = builder.create()
+                    dialog.show()
+
+                }else{
+                    showCustomBottomSheet()
+                }
+
+
+
             }
 
             tvHeaderViewProfile.setOnClickListener {
@@ -215,7 +246,13 @@ class EmployeeDashboard : AppCompatActivity() {
         settingsViewModel.mEmployeeDashboardResponse.observe(this) {
             if (it.status) {
 
+
+
+
+
                 setEmployeeComId(it.employeeInfo.companyId.toString())
+
+                setEmployeeBranchId(it.employeeInfo.branchId.toString())
 
 
 
@@ -273,11 +310,27 @@ class EmployeeDashboard : AppCompatActivity() {
                 if (it.employeeInfo.punches != null && it.employeeInfo.punches.isNotEmpty()) {
                     if (it.employeeInfo.punches.get(0).punchIn != null) {
                         binding.btnPunchIn.setText("Punch Out")
-                        binding.btnPunchIn.isEnabled = false
-                        binding.tvOfficeTiming.text = "Punched In At ${
+                        binding.btnPunchIn.isEnabled = true
+
+
+
+
+                        Log.d("res",""+binding.btnPunchIn.text)
+                      /*  binding.tvOfficeTiming.text = "Punched In At ${
                             getFormattedDate(
                                 it.employeeInfo.punches.get(0).punchIn ?: "",
                                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                                "hh:mm a dd-MMM-yyyy"
+                            )
+                        }"*/
+
+                        binding.tvOfficeTiming.text = "Punched In At ${
+                            getFormattedDate2(
+                                it.employeeInfo.punches.get(0).punchIn ?: "",
+                                listOf(
+                                    "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", 
+                                    "yyyy-MM-dd HH:mm:ss"         
+                                ),
                                 "hh:mm a dd-MMM-yyyy"
                             )
                         }"
@@ -287,13 +340,27 @@ class EmployeeDashboard : AppCompatActivity() {
                     ) {
                         binding.btnPunchIn.setText("Already Punched Out")
                         binding.btnPunchIn.isEnabled = false
-                        binding.tvOfficeTiming.text = "Punched Out At ${
+                        binding.tvOfficeTiming.text ="Punched Out At${
+                            getFormattedDate2(
+                                it.employeeInfo.punches.get(0).punchIn ?: "",
+                                listOf(
+                                    "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                                    "yyyy-MM-dd HH:mm:ss"
+                                ),
+                                "hh:mm a dd-MMM-yyyy"
+                            )
+                        }"
+
+
+
+
+                        /*"Punched Out At ${
                             getFormattedDate(
                                 it.employeeInfo.punches.get(0).punchOut ?: "",
                                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
                                 "hh:mm a dd-MMM-yyyy"
                             )
-                        }"
+                        }"*/
                     } else {
                         binding.btnPunchIn.setText("Punch In")
                         binding.btnPunchIn.isEnabled = true

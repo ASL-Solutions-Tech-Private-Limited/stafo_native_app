@@ -16,6 +16,7 @@ import com.asl_emp_mng.app.screens.dashboard.EmployeeDashboard
 import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.getUserAccessToken
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -102,7 +103,7 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
             Log.d("res", it.message)
             if (it.status) {
 
-                Log.d("res", it.data.toString())
+                Log.d("res", "token ${getUserAccessToken()}")
                 val layoutManager: RecyclerView.LayoutManager =
                     LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                 binding.rvEmpAttendList.setLayoutManager(layoutManager)

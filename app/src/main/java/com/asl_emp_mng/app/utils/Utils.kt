@@ -1360,6 +1360,21 @@ fun getFormattedDate(date: String, dateFormat: String, returnDateFormat: String)
     return outputFormat.format(dateObj)
 }
 
+fun getFormattedDate2(date: String, possibleFormats: List<String>, returnDateFormat: String): String {
+    val outputFormat = SimpleDateFormat(returnDateFormat, Locale.getDefault())
+
+    for (format in possibleFormats) {
+        try {
+            val inputFormat = SimpleDateFormat(format, Locale.getDefault())
+            val dateObj = inputFormat.parse(date)
+            return outputFormat.format(dateObj)
+        } catch (e: ParseException) {
+
+        }
+    }
+    return "Invalid Date"
+}
+
 fun extractDayNameDateAndMonth(inputDate: String): Triple<String, Int, Int> {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val date = LocalDate.parse(inputDate, formatter)

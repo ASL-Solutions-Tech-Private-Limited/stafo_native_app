@@ -15,6 +15,7 @@ private val TOKEN = "token"
 private val COMPANY_DETAILS = "company_details"
 private val EMPLOYEE_DETAILS = "employee_details"
 private val COM_ID = "com_id"
+private val EMP_BRANCH_ID = "emp_branch_id"
 
 fun isOnBoardingScreenShown(): Boolean {
     return Hawk.get(isOnBoardingShown, false)
@@ -71,4 +72,9 @@ fun setEmployeeComId(com_id: String) {
 fun getEmployeeComId(): String? {
     return Hawk.get(COM_ID, null)
 }
-
+fun setEmployeeBranchId(emp_branch_id: String) {
+    Hawk.put(EMP_BRANCH_ID, emp_branch_id)
+}
+fun getEmployeeBranchId(): String? {
+    return Hawk.get(EMP_BRANCH_ID, null)
+}

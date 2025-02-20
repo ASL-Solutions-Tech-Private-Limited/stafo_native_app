@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -33,7 +34,7 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
     private lateinit var binding:ActivityAutoSearchPlaceBinding
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
-    private var mEMPID = ""
+    private lateinit var mEMPID:String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,7 +46,7 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
             insets
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
-        mEMPID = intent.getStringExtra("EMP_ID").toString()
+        mEMPID = intent.getStringExtra("EMP_ID") ?: ""
 
 
         onClickListener()
@@ -66,12 +67,16 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
             if (it.status) {
 
                 if (it.data.isNotEmpty()){
+                    binding.idMapView.visibility=View.VISIBLE
+                    binding.txtSts.visibility=View.GONE
                     val geoPoints = it.data.map {
                         GeoPoint(it.latitude.toDouble(), it.longitude.toDouble())
                     }
 
-                    // Add polyline to the map
                     addMarkersAndPath(geoPoints)
+                }else{
+                    binding.idMapView.visibility=View.GONE
+                    binding.txtSts.visibility=View.VISIBLE
                 }
 
 
@@ -99,8 +104,9 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
         binding?.apply {
 
             val request = GeoLocationHistResquest(
-               employee_id ="1"
+               employee_id =mEMPID
             )
+            Log.d("res","emp get :$request")
 
             settingsViewModel.getGeoLocationHist(this@AutoSearchPlaceActivity, request)
 
@@ -125,33 +131,68 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
-
-
     private fun addMarkersAndPath(geoPoints: List<GeoPoint>) {
-
         val mapmyIndiaMapView = findViewById<MapmyIndiaMapView>(R.id.idMapView)
         val mapView = mapmyIndiaMapView.mapView
 
-        // Convert List<GeoPoint> to ArrayList<GeoPoint>
+        if (geoPoints.isEmpty()) return // Prevent errors if the list is empty
+
         val geoPointsArrayList = ArrayList(geoPoints)
 
-        geoPoints.forEach { point ->
-            val marker = Marker(mapView)
-            marker.position = point
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
-            mapView.overlays.add(marker)
+        // Add Start Marker (First Point)
+        val startMarker = Marker(mapView).apply {
+            position = geoPointsArrayList.first()
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM) // Default anchor
+            title = "Start Point"
         }
+        mapView.overlays.add(startMarker)
 
+        // Add End Marker (Last Point)
+        val endMarker = Marker(mapView).apply {
+            position = geoPointsArrayList.last()
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM) // Default anchor
+            title = "End Point"
+        }
+        mapView.overlays.add(endMarker)
+
+        // Draw polyline between points
         val pathOverlay = PathOverlay(this).apply {
-            color = ContextCompat.getColor(this@AutoSearchPlaceActivity, R.color.primaryColorDark)
+            color = ContextCompat.getColor(this@AutoSearchPlaceActivity,android.R.color.holo_red_dark)
             width = 10f
-            points = geoPointsArrayList // Convert List to ArrayList
+            points = geoPointsArrayList
         }
 
         mapView.overlays.add(pathOverlay)
-        mapView.setBounds(geoPointsArrayList)
+        mapView.setBounds(geoPointsArrayList) // Adjust camera to show full path
         mapView.invalidate()
     }
+
+
+
+    /* private fun addMarkersAndPath(geoPoints: List<GeoPoint>) {
+
+         val mapmyIndiaMapView = findViewById<MapmyIndiaMapView>(R.id.idMapView)
+         val mapView = mapmyIndiaMapView.mapView
+
+         val geoPointsArrayList = ArrayList(geoPoints)
+
+         geoPoints.forEach { point ->
+             val marker = Marker(mapView)
+             marker.position = point
+             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+             mapView.overlays.add(marker)
+         }
+
+         val pathOverlay = PathOverlay(this).apply {
+             color = ContextCompat.getColor(this@AutoSearchPlaceActivity, R.color.primaryColorDark)
+             width = 10f
+             points = geoPointsArrayList
+         }
+
+         mapView.overlays.add(pathOverlay)
+         mapView.setBounds(geoPointsArrayList)
+         mapView.invalidate()
+     }*/
 
 
     /*private fun addMarkersAndPath(geoPoints: List<GeoPoint>) {

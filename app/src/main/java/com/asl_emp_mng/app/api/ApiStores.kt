@@ -24,9 +24,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.AssignShiftRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchListResponse
-import com.asl_emp_mng.app.screens.settings.dataClass.BranchRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
-import com.asl_emp_mng.app.screens.settings.dataClass.CompanyUpdateDocumentRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyUpdateDocumentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
@@ -62,7 +60,6 @@ import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfileRespon
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfile
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ViewBranchResponse
-import com.google.android.gms.common.internal.safeparcel.SafeParcelable.Param
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -73,6 +70,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
+import retrofit2.http.PartMap
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -304,9 +302,9 @@ interface ApiStores {
     ): Response<GeoLocationHistResponse>
 
     @Multipart
-    @POST("api/update-document/1")
+    @POST("api/upload-document")
     suspend fun callCompanyUpdateDocument(
-        @Part("document_type_id") documentTypeIds: List<RequestBody>,
+        @PartMap documentTypeIds: Map<String, @JvmSuppressWildcards RequestBody>,
         @Part documents: List<MultipartBody.Part>,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<CompanyUpdateDocumentResponse>

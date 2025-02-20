@@ -120,7 +120,7 @@ class EmployeePunchInActivity : AppCompatActivity() {
         userLocationOverlay.runOnFirstFix {
             val userLocation = userLocationOverlay.myLocation
             getLati=userLocation.latitude
-            getLongi=userLocation.latitude
+            getLongi=userLocation.longitude
             if (userLocation != null) {
                 runOnUiThread {
                     val marker = Marker(mapView)
@@ -202,6 +202,8 @@ class EmployeePunchInActivity : AppCompatActivity() {
 
             if (it.status) {
                 CustomToast(this, it.message)
+                onBackPressedDispatcher.onBackPressed()
+                finish()
             } else {
                 CustomToast(this, it.message)
             }

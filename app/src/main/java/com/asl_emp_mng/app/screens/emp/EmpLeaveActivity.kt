@@ -87,6 +87,8 @@ class EmpLeaveActivity : AppCompatActivity() {
         settingsViewModel.mEmpLeaveRequestResponse.observe(this) {
 
             CustomToast(this, it.message)
+            onBackPressedDispatcher.onBackPressed()
+            finish()
 
         }
 

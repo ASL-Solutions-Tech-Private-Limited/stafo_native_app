@@ -1,7 +1,6 @@
 package com.asl_emp_mng.app.base.request
 
 import com.google.gson.annotations.SerializedName
-
 data class AddBranchRequest(
     @SerializedName("company_id")
     var company_id: Int,
@@ -10,11 +9,11 @@ data class AddBranchRequest(
     @SerializedName("branch_address")
     var branch_address: String,
 
-    @SerializedName("latitute")
-    var latitute: String,
+    @SerializedName("latitude")
+    var latitude: String,
 
-    @SerializedName("longtitute")
-    var longtitute: String,
+    @SerializedName("longitude")
+    var longitude: String,
 
     @SerializedName("radar")
     var radar: String

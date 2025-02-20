@@ -58,13 +58,13 @@ class CompanyProfileActivity : AppCompatActivity() {
     private lateinit var countryDialog: SearchableDialog
     private lateinit var stateDialog: SearchableDialog
     private lateinit var cityDialog: SearchableDialog
-    private var selectedCountry: Int=0
-    private var selectedState: Int=0
-    private var selectedCity: Int=0
-    private var selectedCompanyType: Int=0
-    private var selectedBusinessType: Int=0
+    private var selectedCountry: Int = 0
+    private var selectedState: Int = 0
+    private var selectedCity: Int = 0
+    private var selectedCompanyType: Int = 0
+    private var selectedBusinessType: Int = 0
 
-    private var profileType: String="company_basic"
+    private var profileType: String = "company_basic"
     private var mCompany: Company? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,21 +117,21 @@ class CompanyProfileActivity : AppCompatActivity() {
             binding.rdgpProfile.setOnCheckedChangeListener { group, checkedId ->
                 when (checkedId) {
                     R.id.radio_basic -> {
-                        profileType="company_basic"
+                        profileType = "company_basic"
                         binding.llBasicInfo.visibility = View.VISIBLE
                         binding.llOwnerInfo.visibility = View.GONE
                         binding.llDocumentinfo.visibility = View.GONE
                     }
 
                     R.id.radio_owner -> {
-                        profileType="company_owner"
+                        profileType = "company_owner"
                         binding.llBasicInfo.visibility = View.GONE
                         binding.llOwnerInfo.visibility = View.VISIBLE
                         binding.llDocumentinfo.visibility = View.GONE
                     }
 
                     R.id.radio_document -> {
-                        profileType="company_document"
+                        profileType = "company_document"
                         binding.llBasicInfo.visibility = View.GONE
                         binding.llOwnerInfo.visibility = View.GONE
                         binding.llDocumentinfo.visibility = View.VISIBLE
@@ -150,8 +150,8 @@ class CompanyProfileActivity : AppCompatActivity() {
 
 
             btnCompanyProfile.setOnClickListener {
-                if (profileType=="company_basic"){
-                    if (validateBasicInfo()){
+                if (profileType == "company_basic") {
+                    if (validateBasicInfo()) {
                         val ownerInfo = OwnerInfo(
                             firstName = "",
                             lastName = "",
@@ -182,13 +182,16 @@ class CompanyProfileActivity : AppCompatActivity() {
 
 
 
-                        settingsViewModel.updateCompanyProfile(this@CompanyProfileActivity,companyInfo)
+                        settingsViewModel.updateCompanyProfile(
+                            this@CompanyProfileActivity,
+                            companyInfo
+                        )
 
 
                     }
 
 
-                }else if (profileType=="company_owner"){
+                } else if (profileType == "company_owner") {
                     if (isValidOwnerInfo()) {
                         val ownerInfo = OwnerInfo(
                             firstName = binding.tieOwnerName.text.toString(),
@@ -225,41 +228,25 @@ class CompanyProfileActivity : AppCompatActivity() {
 
 
                     }
-                }else if (profileType=="company_document"){
+                } else if (profileType == "company_document") {
 
-                    if (documentInfo()){
-
-                        val image1 = binding.tieCompanyCertificate.text.toString()
-                        val image2 = binding.tieCompanyGstCertificate.text.toString()
-                        val image3 = binding.tieCompanyPanCertificate.text.toString()
-                        val image4 = binding.tieCompanyAadhaarCertificate.text.toString()
-                        val image5 = binding.tieCompanyBankStatement.text.toString()
-
-
-                        val image1Uri = Uri.parse(image1)
-                        val image2Uri = Uri.parse(image2)
-                        val image3Uri = Uri.parse(image3)
-                        val image4Uri = Uri.parse(image4)
-                        val image5Uri = Uri.parse(image5)
-
-
+                    if (documentInfo()) {
 
                         val imageUris = listOf(
-                            image1Uri,
-                            image2Uri,
-                            image3Uri,
-                            image4Uri,
-                            image5Uri
-
+                            Uri.parse(binding.tieCompanyCertificate.text.toString()),
+                            Uri.parse(binding.tieCompanyGstCertificate.text.toString()),
+                            Uri.parse(binding.tieCompanyPanCertificate.text.toString()),
+                            Uri.parse(binding.tieCompanyAadhaarCertificate.text.toString()),
+                            Uri.parse(binding.tieCompanyBankStatement.text.toString())
                         )
 
-                        val documentTypeIds = listOf(1, 2, 3,4,5)
+                        val documentTypeIds = listOf(1, 2, 3, 4, 5)
 
-                        Log.d("res", "post document $documentTypeIds $imageUris ")
-
-
-                        //settingsViewModel.postCompanyUpdateDocument(this@CompanyProfileActivity, imageUris,documentTypeIds)
-
+                        settingsViewModel.postCompanyUpdateDocument(
+                            this@CompanyProfileActivity,
+                            imageUris,
+                            documentTypeIds
+                        )
 
 
                     }
@@ -317,8 +304,8 @@ class CompanyProfileActivity : AppCompatActivity() {
                     selectedCity = data.company?.city?.toInt() ?: 0
 
                 }
-            }else{
-                CustomToast(this,it.message)
+            } else {
+                CustomToast(this, it.message)
             }
 
             observeAuthViewModel()
@@ -335,6 +322,16 @@ class CompanyProfileActivity : AppCompatActivity() {
 
         }
 
+        settingsViewModel.mCompanyUpdateDocumentResponse.observe(this) {
+            if (it.status) {
+                CustomToast(this, it.message)
+                onBackPressedDispatcher.onBackPressed()
+            } else {
+                CustomToast(this, it.message)
+            }
+
+        }
+
 
     }
 
@@ -342,6 +339,7 @@ class CompanyProfileActivity : AppCompatActivity() {
         view?.isFocusable = false
         view?.isFocusableInTouchMode = false
     }
+
     private fun observeAuthViewModel() {
         viewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
@@ -398,7 +396,7 @@ class CompanyProfileActivity : AppCompatActivity() {
             if (it.success) {
                 mCountryList = it.data
 
-                Log.d("API_",mCountryList.toString())
+                Log.d("API_", mCountryList.toString())
                 binding.let { it1 ->
                     setupSearchableDialog(
                         mCountryList,
@@ -493,24 +491,23 @@ class CompanyProfileActivity : AppCompatActivity() {
             override fun onClick(position: Int, searchListItem: SearchListItem) {
                 field.setText(searchListItem.title)
 
-                if (title=="Company Type"){
-                    selectedCompanyType=searchListItem.id
-                    Log.d("res","get : $selectedCompanyType $searchListItem.title")
+                if (title == "Company Type") {
+                    selectedCompanyType = searchListItem.id
+                    Log.d("res", "get : $selectedCompanyType $searchListItem.title")
 
-                }else if (title=="Business Type"){
-                    selectedBusinessType=searchListItem.id
-                    Log.d("res","get : $selectedBusinessType $searchListItem.title")
-                }else if (title=="Country"){
-                    selectedCountry=searchListItem.id
-                    Log.d("res","get : $selectedCountry $searchListItem.title")
-                }
-                else if (title=="State"){
-                    selectedState=searchListItem.id
-                    Log.d("res","get : $selectedState $searchListItem.title")
+                } else if (title == "Business Type") {
+                    selectedBusinessType = searchListItem.id
+                    Log.d("res", "get : $selectedBusinessType $searchListItem.title")
+                } else if (title == "Country") {
+                    selectedCountry = searchListItem.id
+                    Log.d("res", "get : $selectedCountry $searchListItem.title")
+                } else if (title == "State") {
+                    selectedState = searchListItem.id
+                    Log.d("res", "get : $selectedState $searchListItem.title")
 
-                }else if (title=="City"){
-                    selectedCity=searchListItem.id
-                    Log.d("res","get : $selectedCity $searchListItem.title")
+                } else if (title == "City") {
+                    selectedCity = searchListItem.id
+                    Log.d("res", "get : $selectedCity $searchListItem.title")
 
                 }
 
@@ -542,6 +539,7 @@ class CompanyProfileActivity : AppCompatActivity() {
             "City" -> cityDialog = dialog
         }
     }
+
     fun getCountryName(code: Int): String {
         for (country in mCountryList!!) {
             if (country.id == code) {
@@ -585,7 +583,6 @@ class CompanyProfileActivity : AppCompatActivity() {
     }
 
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -596,14 +593,11 @@ class CompanyProfileActivity : AppCompatActivity() {
                 binding.tieCompanyCertificate.setText(uri.toString())
             } else if (requestCode == 1102) {
                 binding.tieCompanyGstCertificate.setText(uri.toString())
-            }
-            else if (requestCode == 1103) {
+            } else if (requestCode == 1103) {
                 binding.tieCompanyPanCertificate.setText(uri.toString())
-            }
-            else if (requestCode == 1104) {
+            } else if (requestCode == 1104) {
                 binding.tieCompanyAadhaarCertificate.setText(uri.toString())
-            }
-            else if (requestCode == 1105) {
+            } else if (requestCode == 1105) {
                 binding.tieCompanyBankStatement.setText(uri.toString())
             }
 

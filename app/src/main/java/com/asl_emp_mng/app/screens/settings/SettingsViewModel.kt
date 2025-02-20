@@ -1,7 +1,9 @@
 package com.asl_emp_mng.app.screens.settings
 
 import android.content.Context
+import android.database.Cursor
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,9 +25,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.AssignShiftRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchListResponse
-import com.asl_emp_mng.app.screens.settings.dataClass.BranchRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
-import com.asl_emp_mng.app.screens.settings.dataClass.CompanyUpdateDocumentRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyUpdateDocumentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
@@ -67,13 +67,14 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import java.io.FileOutputStream
 
 class SettingsViewModel : BaseViewModel() {
 
@@ -235,32 +236,54 @@ class SettingsViewModel : BaseViewModel() {
 
     val mGeoLocationHistResponse: LiveData<GeoLocationHistResponse> get() = mGeoLocationHist
 
-    private var mCompanyUpdateDocument: MutableLiveData<CompanyUpdateDocumentResponse> = MutableLiveData()
+    private var mCompanyUpdateDocument: MutableLiveData<CompanyUpdateDocumentResponse> =
+        MutableLiveData()
 
     val mCompanyUpdateDocumentResponse: LiveData<CompanyUpdateDocumentResponse> get() = mCompanyUpdateDocument
 
 
-    fun postCompanyUpdateDocument(mContext: Context, imageUris: List<String>, documentTypeIds: List<Int>) {
+    fun postCompanyUpdateDocument(
+        mContext: Context,
+        imageUris: List<Uri>,
+        documentTypeIds: List<Int>
+    ) {
         getLoaderLiveData().value = "load"
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                val documentTypeParts = mutableMapOf<String, RequestBody>()
 
-                val documentTypeParts = documentTypeIds.map { id ->
-                    id.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+                documentTypeIds.forEachIndexed { index, id ->
+                    documentTypeParts["document_type_id[$index]"] =
+                        id.toString().toRequestBody("text/plain".toMediaTypeOrNull())
                 }
 
-                val documentParts = imageUris.map { filePath ->
-                    val file = File(filePath)
-                    val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-                    MultipartBody.Part.createFormData("documents", file.name, requestFile)
+
+                val documentParts = imageUris.mapIndexedNotNull { index, uri ->
+                    val file = getFileFromUri(mContext, uri) ?: return@mapIndexedNotNull null
+                    val requestFile = file.asRequestBody("multipart/form-data".toMediaTypeOrNull())
+                    MultipartBody.Part.createFormData("document[$index]", file.name, requestFile)
                 }
+
+
+                if (documentParts.isEmpty()) {
+                    Log.e("UploadError", "No valid files to upload.")
+                    withContext(Dispatchers.Main) {
+                        getLoaderLiveData().value = "stop"
+                        CustomToast(mContext, "No valid files found.")
+                    }
+                    return@launch
+                }
+
 
                 val response = ASLEmpMng.instance.apiStores()?.callCompanyUpdateDocument(
                     documentTypeIds = documentTypeParts,
                     documents = documentParts
                 )
 
-                Log.d("res", "document "+response?.body().toString())
+
+
+
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -269,7 +292,7 @@ class SettingsViewModel : BaseViewModel() {
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                CustomToast(mContext, error?.message ?: "Error occurred")
                             } ?: run {
                                 CustomToast(
                                     mContext,
@@ -288,20 +311,35 @@ class SettingsViewModel : BaseViewModel() {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
-                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                    CustomToast(mContext, "Something went wrong!")
                 }
             }
         }
     }
 
 
+    fun getFileFromUri(context: Context, uri: Uri): File? {
+        try {
+            val inputStream = context.contentResolver.openInputStream(uri) ?: return null
+            val file = File(context.cacheDir, "temp_${System.currentTimeMillis()}.jpg")
+            file.outputStream().use { output ->
+                inputStream.copyTo(output)
+            }
+            inputStream.close()
+            return file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+    }
 
-    fun getGeoLocationHist(mContext: Context,request: GeoLocationHistResquest) {
+
+    fun getGeoLocationHist(mContext: Context, request: GeoLocationHistResquest) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callGeoLocationHist(request)
-                Log.d("res", "geo hist "+response?.body().toString())
+                Log.d("res", "geo hist " + response?.body().toString())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -336,15 +374,12 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
     fun getJobTitleList(mContext: Context) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callJobTitleList()
-                Log.d("res", "job "+response?.body().toString())
+                Log.d("res", "job " + response?.body().toString())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -871,7 +906,7 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun getHolidayList(mContext: Context,id: String) {
+    fun getHolidayList(mContext: Context, id: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -1080,7 +1115,7 @@ class SettingsViewModel : BaseViewModel() {
                     date = date
                 )
                 val response = ASLEmpMng.instance.apiStores()?.callEmployeeList(request)
-                Log.d("res","get :${response?.body()}")
+                Log.d("res", "get :${response?.body()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1114,7 +1149,7 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun getViewBranchList(mContext: Context,id: String) {
+    fun getViewBranchList(mContext: Context, id: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -1158,7 +1193,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-    fun getShiftList(mContext: Context,id: String) {
+    fun getShiftList(mContext: Context, id: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -1197,7 +1232,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-    fun getBranchList(mContext: Context,id:String) {
+    fun getBranchList(mContext: Context, id: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -1238,14 +1273,14 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun getDepartmentList(mContext: Context,id:String) {
+    fun getDepartmentList(mContext: Context, id: String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
                 Log.d("res", "id  $id")
                 val response = ASLEmpMng.instance.apiStores()?.callDepartmentList(id.toInt())
-                Log.d("res", "id  $id "+response?.body())
+                Log.d("res", "id  $id " + response?.body())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1280,14 +1315,14 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-    fun createBranch(mContext: Context,request:AddBranchRequest) {
+    fun createBranch(mContext: Context, request: AddBranchRequest) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
 
-
                 val response = ASLEmpMng.instance.apiStores()?.callCreateBranch(request)
+                Log.d("res", "branch  " + response?.body())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1460,7 +1495,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
                 val response = ASLEmpMng.instance.apiStores()?.callEmployeeDashboard()
-                Log.d("res","dash "+response?.body().toString())
+                Log.d("res", "dash " + response?.body().toString())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {

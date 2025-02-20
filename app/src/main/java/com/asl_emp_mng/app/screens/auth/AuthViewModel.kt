@@ -179,54 +179,7 @@ class AuthViewModel() : BaseViewModel() {
         }
     }
 
-    fun createBranch(mContext: Context,token:String,latitude:String,longitude:String) {
-        getLoaderLiveData().value = "load"
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
 
-                val bearerToken = "Bearer $token"
-
-                val addBranchRequest = AddBranchRequest(
-                    company_id = 1,
-                    branch_name = "Cafe 5",
-                    branch_address = "Kolkata",
-                    latitute = latitude,
-                    longtitute = longitude,
-                    radar = "200"
-                )
-                val response = ASLEmpMng.instance.apiStores()?.callCreateBranch(addBranchRequest)
-                withContext(Dispatchers.Main) {
-                    getLoaderLiveData().value = "stop"
-                    response?.let {
-                        if (it.isSuccessful) {
-                            mCreateBranch.postValue(response.body())
-                        } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
-                            }
-                        }
-                    } ?: run {
-                        CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
-                        )
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                withContext(Dispatchers.Main) {
-                    getLoaderLiveData().value = "stop"
-                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
-                }
-            }
-        }
-    }
 
 
 

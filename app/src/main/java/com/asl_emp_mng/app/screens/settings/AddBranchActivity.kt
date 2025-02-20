@@ -213,8 +213,8 @@ class AddBranchActivity : AppCompatActivity() {
                             company_id = it1.toInt(),
                             branch_name = binding.tieBranchName.text.toString(),
                             branch_address = binding.tieBranchAddress.text.toString(),
-                            latitute = latitude.toString(),
-                            longtitute = longitude.toString(),
+                            latitude = latitude.toString(),
+                            longitude = longitude.toString(),
                             radar = binding.tieBranchRadius.text.toString()
                         )
                         settingsViewModel.createBranch(this@AddBranchActivity, request)
