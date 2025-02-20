@@ -197,7 +197,7 @@ interface ApiStores {
     @GET("api/company/profile")
     suspend fun callCompanyProfile(@HeaderMap headers: Map<String, String> = ApiClient.headerMap()): Response<CompanyProfileResponse>
 
-    @GET("api/holidays/by-company")
+    @GET("api/holidays")
     suspend fun callHolidayList(
         @Query("company_id") companyId: Int,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()

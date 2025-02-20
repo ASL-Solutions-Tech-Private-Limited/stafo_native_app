@@ -3,15 +3,25 @@ package com.asl_emp_mng.app.screens.ui
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.asl_emp_mng.app.R
+import com.asl_emp_mng.app.base.model.PunchInType
 import com.asl_emp_mng.app.databinding.ActivityPlaceSearchBinding
+import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
+import com.asl_emp_mng.app.utils.getEmployeeDetails
+import com.mmi.MapmyIndiaMapView
+import com.mmi.layers.UserLocationOverlay
+import com.mmi.layers.location.GpsLocationProvider
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -27,15 +37,18 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import java.io.IOException
+import java.util.Locale
 
 class PlaceSearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlaceSearchBinding
-    private lateinit var mapView: MapView
+  /*  private lateinit var mapView: MapView
     private val client = OkHttpClient()
 
-    private var currentMarker: Marker? = null
+    private var currentMarker: Marker? = null*/
     private var getLati: Double? = null
     private var getLongi: Double? = null
+
+    private lateinit var userLocationOverlay: UserLocationOverlay
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +61,7 @@ class PlaceSearchActivity : AppCompatActivity() {
             insets
         }
 
-
+/*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(
                     this,
@@ -64,11 +77,10 @@ class PlaceSearchActivity : AppCompatActivity() {
             }
         }
 
-        Configuration.getInstance()
-            .load(applicationContext, getSharedPreferences("osm_prefs", MODE_PRIVATE))
+        Configuration.getInstance().load(applicationContext, getSharedPreferences("osm_prefs", MODE_PRIVATE))*/
 
 
-
+/*
 
         mapView = binding.mapView
 
@@ -103,8 +115,47 @@ class PlaceSearchActivity : AppCompatActivity() {
             }
         }
         val overlayEvents = MapEventsOverlay(mapEventsReceiver)
-        mapView.overlays.add(overlayEvents)
+        mapView.overlays.add(overlayEvents)*/
 
+
+        onClickListener()
+
+
+
+    }
+
+
+    private fun onClickListener() {
+
+        val mapmyIndiaMapView = findViewById<MapmyIndiaMapView>(R.id.idMapView)
+        val mapView = mapmyIndiaMapView.mapView
+
+        // Enable User Location Tracking
+        userLocationOverlay = UserLocationOverlay(GpsLocationProvider(this), mapView)
+        userLocationOverlay.enableMyLocation()
+        mapView.overlays.add(userLocationOverlay)
+        mapView.invalidate()
+
+        // Set Marker at User's Location
+        userLocationOverlay.runOnFirstFix {
+            val userLocation = userLocationOverlay.myLocation
+            getLati=userLocation.latitude
+            getLongi=userLocation.longitude
+
+            getAddressFromLocation(userLocation.latitude, userLocation.longitude)
+
+            if (userLocation != null) {
+                runOnUiThread {
+                    val marker = com.mmi.layers.Marker(mapView)
+                    marker.position = userLocation
+                    marker.setAnchor(com.mmi.layers.Marker.ANCHOR_CENTER, com.mmi.layers.Marker.ANCHOR_BOTTOM)
+                    mapView.overlays.add(marker)
+                    mapView.invalidate()
+                    mapView.setCenter(userLocation)
+                    mapView.setZoom(13)
+                }
+            }
+        }
 
         binding.btnAddAddress.setOnClickListener {
             val returnIntent = Intent()
@@ -113,10 +164,33 @@ class PlaceSearchActivity : AppCompatActivity() {
             setResult(Activity.RESULT_OK, returnIntent)
             finish()
         }
+
+
+
     }
 
 
-    private fun getPlaceNameFromLatLng(latitude: Double, longitude: Double) {
+    private fun getAddressFromLocation(latitude: Double, longitude: Double) {
+        val geocoder = Geocoder(this, Locale.getDefault())
+        try {
+            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+            if (addresses != null && addresses.isNotEmpty()) {
+                val address = addresses[0].getAddressLine(0)
+                runOnUiThread {
+                    Log.d("Location", "Address: $address")
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e("Location", "Geocoder failed: ${e.message}")
+        }
+    }
+
+
+
+
+
+   /* private fun getPlaceNameFromLatLng(latitude: Double, longitude: Double) {
         val url =
             "https://nominatim.openstreetmap.org/reverse?format=json&lat=$latitude&lon=$longitude"
 
@@ -210,5 +284,5 @@ class PlaceSearchActivity : AppCompatActivity() {
         currentMarker = marker
 
 
-    }
+    }*/
 }

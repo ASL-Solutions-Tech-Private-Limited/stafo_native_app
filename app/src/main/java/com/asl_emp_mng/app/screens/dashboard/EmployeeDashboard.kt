@@ -243,8 +243,12 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
     private fun observeViewModel() {
+
+
         settingsViewModel.mEmployeeDashboardResponse.observe(this) {
             if (it.status) {
+
+
 
 
 
@@ -286,24 +290,42 @@ class EmployeeDashboard : AppCompatActivity() {
 
                 }else if (it.employeeInfo.geoStatus != null && it.employeeInfo.geoStatus == "1"){
 
-                    if (isServiceRunning(LocationForegroundService::class.java)) {
+                    val punches = it.employeeInfo.punches
+                    if (punches != null && punches[0].punchOut != null) {
+                        Log.d("res",""+punches[0].punchOut)
                         stopLocationService()
-                        if (isLocationEnabled()) {
-                            startLocationService()
+                    }else{
+                        if (isServiceRunning(LocationForegroundService::class.java)) {
+                            stopLocationService()
+                            if (isLocationEnabled()) {
+                                startLocationService()
+                            } else {
+                                requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                            }
                         } else {
-                            requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                        }
-                    } else {
-                        if (isLocationEnabled()) {
-                            startLocationService()
-                        } else {
-                            requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                            if (isLocationEnabled()) {
+                                startLocationService()
+                            } else {
+                                requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                            }
                         }
                     }
 
 
 
+
+
+
+
+
+
+
+
                 }
+
+
+
+
 
 
                 wishList.clear()

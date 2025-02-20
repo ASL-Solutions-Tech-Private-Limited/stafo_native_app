@@ -93,14 +93,20 @@ class HolidayActivity : AppCompatActivity() {
             Log.d("res",it.data.toString())
 
             if (it.status) {
-                val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-                binding.rvHolidayList.setLayoutManager(layoutManager)
-                rvAdapter = AdapterHoliday(it.data, this@HolidayActivity)
-                binding.rvHolidayList.adapter = rvAdapter
-                rvAdapter.notifyDataSetChanged()
+
+                if (it.data.isNotEmpty()){
+                    val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+                    binding.rvHolidayList.setLayoutManager(layoutManager)
+                    rvAdapter = AdapterHoliday(it.data, this@HolidayActivity)
+                    binding.rvHolidayList.adapter = rvAdapter
+                    rvAdapter.notifyDataSetChanged()
+                }else {
+                    binding.txtMsg.visibility=View.VISIBLE
+                }
+
 
             } else {
-               binding.txtMsg.visibility=View.GONE
+               binding.txtMsg.visibility=View.VISIBLE
             }
         }
 
