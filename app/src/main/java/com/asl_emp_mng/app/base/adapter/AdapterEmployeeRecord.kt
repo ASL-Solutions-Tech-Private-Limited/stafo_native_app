@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.base.model.DateItem
 import com.asl_emp_mng.app.databinding.RecyEmpAttendanceChildLayoutBinding
 import com.asl_emp_mng.app.utils.calculateHours
+import com.asl_emp_mng.app.utils.calculateHours2
 import com.asl_emp_mng.app.utils.extractDayNameDateAndMonth
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -48,7 +49,18 @@ class AdapterEmployeeRecord(
                     binding.llcWeekOff.visibility = View.GONE
                     binding.tvCheckIn.text = this.punchIn
                     binding.tvCheckOut.text = this.punchOut
-                    binding.tvWorkingHrs.text = calculateHours(this.punchIn, this.punchOut)
+
+                    /*if (this.punchIn !=null && this.punchOut !=null){
+                        binding.tvWorkingHrs.text = calculateHours(this.punchIn, this.punchOut)
+                    }*/
+
+                    if (!this.punchIn.isNullOrEmpty() && !this.punchOut.isNullOrEmpty()) {
+                        binding.tvWorkingHrs.text = calculateHours2(this.punchIn, this.punchOut)
+                    } else {
+                        binding.tvWorkingHrs.text = "--"
+                    }
+
+
                 } else {
 
                 }

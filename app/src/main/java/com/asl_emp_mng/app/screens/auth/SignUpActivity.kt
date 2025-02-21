@@ -19,6 +19,9 @@ import com.asl_emp_mng.app.screens.auth.dataClass.DataCompanyType
 import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.setCompanyDetails
+import com.asl_emp_mng.app.utils.setIsCOMPANYLogin
+import com.asl_emp_mng.app.utils.setUserAccessToken
 import com.google.android.material.textfield.TextInputEditText
 
 class SignUpActivity : AppCompatActivity() {
@@ -45,12 +48,16 @@ class SignUpActivity : AppCompatActivity() {
             insets
         }
         mMobile = intent.extras?.getString("mobile")
+
+        binding.tieCompanyMobile.setText(mMobile)
+
         observeViewModel()
         setupOnClickListener()
     }
 
     private fun setupOnClickListener() {
         binding?.apply {
+
 
             btnNext.setOnClickListener {
                 if (validateBasicInfo()) {
@@ -141,11 +148,14 @@ class SignUpActivity : AppCompatActivity() {
         }
         authViewModel.mRegisterResponse.observe(this) {
             if (it.success) {
+
+                setUserAccessToken(it.token)
+                setIsCOMPANYLogin(true)
+                setCompanyDetails(it.company)
                 saveToken(this, "token", it?.token ?: "")
                 CustomToast(this, it.message)
                 startActivity(Intent(this@SignUpActivity, EmployerDashboard::class.java))
             }else{
-
                 CustomToast(this, it.message)
             }
         }

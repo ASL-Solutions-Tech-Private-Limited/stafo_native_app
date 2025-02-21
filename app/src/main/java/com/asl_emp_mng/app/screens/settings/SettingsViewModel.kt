@@ -1537,7 +1537,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
                 val response = ASLEmpMng.instance.apiStores()?.callMonthlyAttendance(emp, date)
-                Log.d("res", "" + response?.body())
+                Log.d("res", "monthly " + response?.body())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {

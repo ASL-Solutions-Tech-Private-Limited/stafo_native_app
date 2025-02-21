@@ -167,9 +167,7 @@ class EmpLeaveActivity : AppCompatActivity() {
                 }
             }
 
-            imageSettings.setOnClickListener { view ->
-                showPopupMenu(view)
-            }
+
 
 
         }

@@ -44,18 +44,6 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14ssp" />
 
-            <ImageView
-                android:id="@+id/image_settings"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/_4sdp"
-                android:scaleType="fitXY"
-                android:src="@drawable/drop_down_menu"
-                android:tint="@color/white"
-                tools:ignore="UseAppTint" />
-
         </RelativeLayout>
 
     </com.google.android.material.appbar.AppBarLayout>

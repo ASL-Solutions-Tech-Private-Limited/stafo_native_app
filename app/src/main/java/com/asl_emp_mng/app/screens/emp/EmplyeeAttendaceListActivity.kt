@@ -51,6 +51,7 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
         observeViewModel()
         setupSearchListener()
 
+
     }
 
     private fun showDatePicker() {
@@ -147,6 +148,25 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
                 }
 
 
+
+
+               /* if (it.data.isNotEmpty()) {
+                    binding.etDirSearch.isFocusable = true
+                    binding.etDirSearch.isFocusableInTouchMode = true
+
+                    attendList = it.data
+                    filteredList = attendList
+
+                    rvAdapter.updateList(filteredList)
+                } else {
+                    binding.etDirSearch.isFocusable = false
+                    binding.etDirSearch.isFocusableInTouchMode = false
+                    binding.txtMsg.visibility = View.VISIBLE
+
+                    rvAdapter.updateList(emptyList())
+                }*/
+
+
             } else {
                 binding.etDirSearch.isFocusable = false
                 binding.etDirSearch.isFocusableInTouchMode = false
@@ -192,6 +212,15 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
 
         rvAdapter.updateList(filteredList)
     }
+
+
+   /* private fun setupRecyclerView() {
+        val layoutManager: RecyclerView.LayoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.rvEmpAttendList.layoutManager = layoutManager
+        rvAdapter = EmployeeAttendanceAdapter(emptyList(), this)
+        binding.rvEmpAttendList.adapter = rvAdapter
+    }*/
 
 
 }

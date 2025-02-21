@@ -24,6 +24,7 @@ import com.asl_emp_mng.app.base.adapter.RadioShiftAdapter
 import com.asl_emp_mng.app.databinding.ActivityViewAllEmployeeBinding
 import com.asl_emp_mng.app.screens.settings.dataClass.AssignShiftRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDataList
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployee
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveData
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
@@ -44,8 +45,8 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     private lateinit var shiftID: String
     private var mFrom = "View All"
 
-    private var empList: List<EmployeeDataList> = listOf()
-    private var filteredList: List<EmployeeDataList> = listOf()
+    private var empList: List<GetEmployee> = listOf()
+    private var filteredList: List<GetEmployee> = listOf()
 
     //for bottom sheet
     private lateinit var bottomSheetDialog: BottomSheetDialog
@@ -79,7 +80,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
-        settingsViewModel.mEmployeeListResponse.observe(this) {
+        settingsViewModel.mGetAllEmployeeResponse.observe(this) {
 
            if (it.status) {
 
@@ -180,8 +181,9 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
     private fun setOnClickEvents() {
 
-        val curren = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
-        settingsViewModel.getEmpList(this@ViewAllEmployeeActivity, curren)
+
+
+        settingsViewModel.getAllEmployeeList(this@ViewAllEmployeeActivity)
 
 
         binding.swipeRefreshLayout.setOnRefreshListener {

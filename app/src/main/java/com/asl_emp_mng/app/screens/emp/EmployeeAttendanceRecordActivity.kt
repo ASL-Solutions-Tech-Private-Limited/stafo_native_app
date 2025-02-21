@@ -89,15 +89,15 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
                         for (item in it.data.indices) {
                             if (mMonth[month].date == it.data[item].date) {
                                 mMonth[month].isPresent = it.data[item].attendance
-                                mMonth[month].punchIn = it.data[item].inTime
-                                mMonth[month].punchOut = it.data[item].outTime
+                                mMonth[month].punchIn = it.data[item].in_time.toString()
+                                mMonth[month].punchOut = it.data[item].out_time.toString()
                                 if (it.data[item].attendance == "Present") {
                                     mPresentCount++
                                 }
-                                if (!it.data[item].inTime.isNullOrEmpty()) {
+                                if (!it.data[item].in_time.isNullOrEmpty()) {
                                     mTotalWorkingHour += calculateMinutes(
-                                        it.data[item].inTime,
-                                        it.data[item].outTime
+                                        it.data[item].in_time.toString(),
+                                        it.data[item].out_time.toString()
                                     ).toInt()
                                 }
                             }

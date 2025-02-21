@@ -10,11 +10,12 @@ import com.asl_emp_mng.app.databinding.RecyViewEmployeeItemLayoutBinding
 import com.asl_emp_mng.app.screens.emp.EmployeeProfileDetails
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDataList
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployee
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveData
 import com.asl_emp_mng.app.screens.ui.AutoSearchPlaceActivity
 
 class EmpListAdapter(
-    private var list: List<EmployeeDataList>,
+    private var list: List<GetEmployee>,
     var context: Activity,
     var from: String,
     var onEmGeoClick: onGeoClick
@@ -133,7 +134,7 @@ class EmpListAdapter(
         fun onEMPClick(empID: String, type: String)
     }
 
-    fun updateList(newList: List<EmployeeDataList>) {
+    fun updateList(newList: List<GetEmployee>) {
         list = newList
         notifyDataSetChanged()
     }

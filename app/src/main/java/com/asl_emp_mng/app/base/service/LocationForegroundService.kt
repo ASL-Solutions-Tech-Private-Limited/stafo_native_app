@@ -99,7 +99,7 @@ class LocationForegroundService : Service() {
                     longitude = long
                 )
 
-              //  Log.d("res", "post geo: $request")
+                Log.d("res", "post geo: $request")
 
                 val token = getUserAccessToken()
                 if (token == null) {
@@ -115,7 +115,7 @@ class LocationForegroundService : Service() {
                 withContext(Dispatchers.Main) {
                     if (response != null && response.isSuccessful) {
                         val locationResponse = response.body()
-                       // Log.d("res", "Location updated successfully: $locationResponse")
+                        Log.d("res", "Location updated successfully: $locationResponse")
                     } else {
                       //  Log.e("res", "Failed to update location. Code: ${response?.code()}, Message: ${response?.message()}")
                     }

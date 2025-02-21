@@ -42,7 +42,7 @@
     <string-array name="leave_type">
         <item>Sick Leave</item>
         <item>Casual Leave</item>
-        <item> Earned Leave</item>
+        <item>Previllage  Leave</item>
     </string-array>
     <string-array name="leave_settings">
         <item>Create Leave Policy</item>

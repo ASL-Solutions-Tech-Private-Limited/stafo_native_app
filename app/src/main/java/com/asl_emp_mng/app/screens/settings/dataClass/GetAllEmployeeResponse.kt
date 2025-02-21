@@ -12,20 +12,19 @@ data class GetEmployee(
     val name: String,
     val email: String,
     val phone: String,
-    val position: String? = null,
-    val salary: String? = null,
+    val position: String,
+    val salary: String?,
     val company_id: Int,
     val branch_name: String,
     val department_name: String,
-    val last_punch_in: String? = null,
-    val last_punch_out: String? = null,
-    val attendances: List<Attendance> = emptyList()
+    val geo_status: String?,
+    val attendances: List<Attendance>
 )
 
 data class Attendance(
     val attendance: String,
     val halfday: Int,
     val date: String,
-    val in_time: String,
-    val out_time: String
+    val in_time: String?,
+    val out_time: String?
 )

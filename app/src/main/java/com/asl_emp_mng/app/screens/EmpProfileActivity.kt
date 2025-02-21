@@ -81,36 +81,75 @@ class EmpProfileActivity : AppCompatActivity() {
                 it.data?.let { data ->
 
                     Log.d("res","data: ${it.data}")
-                    //basic details
-                    binding.txtName.text=data.name
-                    binding.txtMobile.text=data.phone
-                    binding.txtEmail.text=data.email
-                    binding.txtAddress.text=data.address
-                    binding.txtDob.text=data.dateOfBirth
 
-                    //professional details
-                    binding.txtCComName.text= data.companyId.toString()
-                    binding.txtCComBranch.text= data.branchId.toString()
-                    binding.txtCComDepartment.text= data.departmentId.toString()
-                    binding.txtCComEmpType.text= data.employeeTypeId.toString()
-                    binding.txtCComJoining.text= data.dateOfJoining.toString()
-                    binding.txtCComLeaving.text= data.dateOfLeaving.toString()
-                    binding.txtCComEmpId.text= data.empId
-                    binding.txtCComJobTitle.text= data.position.toString()
-                    binding.txtCComPfNo.text= data.pfNumber.toString()
-                    binding.txtCComOfficialEmail.text= data.email
+                    // Extension function to handle null or empty values
+                    fun String?.orDash(): String = if (this.isNullOrEmpty()) "-" else this
 
-                    //last company
-                    binding.txtLComName.text= data.companyId.toString()
-                    binding.txtLComBranch.text= data.branchId.toString()
-                    binding.txtLComDepartment.text= data.departmentId.toString()
-                    binding.txtLComEmpType.text= data.employeeTypeId.toString()
-                    binding.txtLComJoining.text= data.dateOfJoining.toString()
-                    binding.txtLComLeaving.text= data.dateOfLeaving.toString()
-                    binding.txtLComEmpId.text= data.empId
-                    binding.txtLComJobTitle.text= data.position.toString()
-                    binding.txtLComPfNo.text= data.pfNumber.toString()
-                    binding.txtLComOfficialEmail.text= data.email
+                   // Basic details
+                    binding.txtName.text = data.name.orDash()
+                    binding.txtMobile.text = data.phone.orDash()
+                    binding.txtEmail.text = data.email.orDash()
+                    binding.txtAddress.text = data.address.orDash()
+                    binding.txtDob.text = data.dateOfBirth.orDash()
+
+                   // Professional details
+                    binding.txtCComName.text = data.companyId?.toString().orDash()
+                    binding.txtCComBranch.text = data.branchId?.toString().orDash()
+                    binding.txtCComDepartment.text = data.departmentId?.toString().orDash()
+                    binding.txtCComEmpType.text = data.employeeTypeId?.toString().orDash()
+                    binding.txtCComJoining.text = data.dateOfJoining.orDash()
+                    binding.txtCComLeaving.text = data.dateOfLeaving.orDash()
+                    binding.txtCComEmpId.text = data.empId.orDash()
+                    binding.txtCComJobTitle.text = data.position.orDash()
+                    binding.txtCComPfNo.text = data.pfNumber?.toString().orDash()
+                    binding.txtCComOfficialEmail.text = data.email.orDash()
+
+                     // Last company details
+                    binding.txtLComName.text = data.companyId?.toString().orDash()
+                    binding.txtLComBranch.text = data.branchId?.toString().orDash()
+                    binding.txtLComDepartment.text = data.departmentId?.toString().orDash()
+                    binding.txtLComEmpType.text = data.employeeTypeId?.toString().orDash()
+                    binding.txtLComJoining.text = data.dateOfJoining.orDash()
+                    binding.txtLComLeaving.text = data.dateOfLeaving.orDash()
+                    binding.txtLComEmpId.text = data.empId.orDash()
+                    binding.txtLComJobTitle.text = data.position.orDash()
+                    binding.txtLComPfNo.text = data.pfNumber?.toString().orDash()
+                    binding.txtLComOfficialEmail.text = data.email.orDash()
+
+
+
+
+
+                    /*    //basic details
+                        binding.txtName.text=data.name
+                        binding.txtMobile.text=data.phone
+                        binding.txtEmail.text=data.email
+                        binding.txtAddress.text=data.address
+                        binding.txtDob.text=data.dateOfBirth
+
+                        //professional details
+                        binding.txtCComName.text= data.companyId.toString()
+                        binding.txtCComBranch.text= data.branchId.toString()
+                        binding.txtCComDepartment.text= data.departmentId.toString()
+                        binding.txtCComEmpType.text= data.employeeTypeId.toString()
+                        binding.txtCComJoining.text= data.dateOfJoining.toString()
+                        binding.txtCComLeaving.text= data.dateOfLeaving.toString()
+                        binding.txtCComEmpId.text= data.empId
+                        binding.txtCComJobTitle.text= data.position.toString()
+                        binding.txtCComPfNo.text= data.pfNumber.toString()
+                        binding.txtCComOfficialEmail.text= data.email
+
+                        //last company
+                        binding.txtLComName.text= data.companyId.toString()
+                        binding.txtLComBranch.text= data.branchId.toString()
+                        binding.txtLComDepartment.text= data.departmentId.toString()
+                        binding.txtLComEmpType.text= data.employeeTypeId.toString()
+                        binding.txtLComJoining.text= data.dateOfJoining.toString()
+                        binding.txtLComLeaving.text= data.dateOfLeaving.toString()
+                        binding.txtLComEmpId.text= data.empId
+                        binding.txtLComJobTitle.text= data.position.toString()
+                        binding.txtLComPfNo.text= data.pfNumber.toString()
+                        binding.txtLComOfficialEmail.text= data.email*/
 
 
 

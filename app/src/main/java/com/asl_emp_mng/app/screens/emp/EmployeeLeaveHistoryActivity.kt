@@ -1,7 +1,9 @@
 package com.asl_emp_mng.app.screens.emp
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -91,6 +93,15 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
     private fun onClickListener() {
         binding?.apply {
 
+
+            val options = resources.getStringArray(R.array.leave_type)
+            val adapterSpinner = ArrayAdapter(this@EmployeeLeaveHistoryActivity, R.layout.custom_spinner_item, options)
+            binding.spinnerSearchType.setAdapter(adapterSpinner)
+
+
+
+
+
             val request = GetEmployeeLeaveHistRequestBody(
                 employeeId = getEmployeeDetails()?.id.toString()
             )
@@ -113,6 +124,11 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
             imageBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
                 finish()
+            }
+
+
+            imgLeaveRequest.setOnClickListener {
+                startActivity(Intent(this@EmployeeLeaveHistoryActivity, EmpLeaveActivity::class.java))
             }
 
 

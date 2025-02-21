@@ -1395,6 +1395,27 @@ fun calculateHours(inTime: String, outTime: String): String {
     return "$differenceInHours:$differenceInMinutes"
 }
 
+fun calculateHours2(punchIn: String?, punchOut: String?): String {
+    if (punchIn.isNullOrEmpty() || punchOut.isNullOrEmpty()) return "Invalid Data"
+
+    return try {
+        val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val inTime = format.parse(punchIn)
+        val outTime = format.parse(punchOut)
+
+        val diff = outTime.time - inTime.time
+        val hours = (diff / (1000 * 60 * 60)).toInt()
+        val minutes = ((diff / (1000 * 60)) % 60).toInt()
+
+        "$hours hrs $minutes min"
+    } catch (e: Exception) {
+        "Error" // Handle unexpected parsing issues
+    }
+}
+
+
+
+
 fun calculateMinutes(inTime: String, outTime: String): Int {
     val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 

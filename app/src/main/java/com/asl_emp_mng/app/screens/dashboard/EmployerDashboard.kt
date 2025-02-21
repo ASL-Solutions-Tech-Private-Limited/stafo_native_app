@@ -198,6 +198,7 @@ class EmployerDashboard : AppCompatActivity() {
         stopService(intent)
     }
     private fun setOnClickEvents() {
+
         stopLocationService()
 
         binding.tvHeaderSetting.setOnClickListener {
