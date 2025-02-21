@@ -11,9 +11,11 @@ import com.asl_emp_mng.app.databinding.RecyLeaveManagementChildLayoutBinding
 import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveData
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequest
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 class LeavesManagementAdapter(
     private var list: List<LeaveData>,
@@ -39,11 +41,21 @@ class LeavesManagementAdapter(
 
 
                 binding.txtEmpName.text = this.employeeBasicInfo.name
-                binding.txtLeaveDate.text = this.fromDate + "-" + this.toDate
-                binding.txtStartDate.text = this.fromDate
-                binding.txtEndDate.text = this.toDate
-                binding.txtAppliedDate.text = this.fromDate
-                //binding.txtLeaveType.text = this.leaveType
+                binding.txtLeaveDate.text =
+                    "${formatDate(this.fromDate)} - ${formatDate(this.toDate)}"
+                binding.txtStartDate.text = "${formatDate(this.fromDate)}"
+                binding.txtEndDate.text = "${formatDate(this.toDate)}"
+                binding.txtAppliedDate.text = "${formatDate(this.fromDate)}"
+
+                if (this.leaveType == "1") {
+                    binding.txtLeaveType.text = "Casual Leave"
+                } else if (this.leaveType == "2") {
+                    binding.txtLeaveType.text = "Sick Leave"
+                } else {
+                    binding.txtLeaveType.text = "Previllage Leave"
+                }
+
+
                 binding.txtDuration.text = calculateDuration(this.fromDate, this.toDate)
                 binding.txtInfo.setOnClickListener {
                     (context as LeaveManagementActivity).showCustomBottomSheet(
@@ -75,6 +87,10 @@ class LeavesManagementAdapter(
         return list.size
     }
 
+    fun updateList(newList: List<LeaveData>) {
+        list = newList
+        notifyDataSetChanged()
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateDuration(fromDate: String, toDate: String): String {
@@ -97,4 +113,11 @@ class LeavesManagementAdapter(
         }
     }
 
+    private fun formatDate(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+
+        val date = inputFormat.parse(inputDate)
+        return outputFormat.format(date!!)
+    }
 }

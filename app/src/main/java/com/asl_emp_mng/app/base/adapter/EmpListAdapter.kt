@@ -10,6 +10,8 @@ import com.asl_emp_mng.app.databinding.RecyViewEmployeeItemLayoutBinding
 import com.asl_emp_mng.app.screens.emp.EmployeeProfileDetails
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDataList
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveData
+import com.asl_emp_mng.app.screens.ui.AutoSearchPlaceActivity
 
 class EmpListAdapter(
     private var list: List<EmployeeDataList>,
@@ -41,7 +43,6 @@ class EmpListAdapter(
 
                 if (from == "View All") {
                     binding.llcViewProfile.visibility = View.VISIBLE
-                    binding.llcReqLocation.visibility = View.VISIBLE
                     binding.llcAddAttendance.visibility = View.GONE
                     binding.llcShiftTime.visibility = View.GONE
                     binding.llcViewProfile.setOnClickListener {
@@ -54,13 +55,46 @@ class EmpListAdapter(
                             })
                     }
 
-                    if (this.geo_status != null) {
-                        binding.txtReqLocation.text = "Request Location"
-                    } else if (this.geo_status == "1") {
-                        binding.txtReqLocation.text = "View Location"
+
+                    if (this.geo_status == "1") {
+                        // Case when geo_status is "1"
+                        binding.llcReqLocation.visibility = View.GONE
+                        binding.llcViewMap.visibility = View.VISIBLE
+                    } else if (!this.geo_status.isNullOrEmpty()) {
+                        // Case when geo_status is NOT NULL and NOT "1"
+                        binding.llcReqLocation.visibility = View.VISIBLE
+                        binding.llcViewMap.visibility = View.GONE
                     } else {
-                        binding.txtReqLocation.text = "Request Location"
+                        // Case when geo_status is NULL or EMPTY
+                        binding.llcViewMap.visibility = View.GONE
+                        binding.llcReqLocation.visibility = View.VISIBLE
                     }
+
+
+
+                    binding.llcViewMap.setOnClickListener {
+                        context.startActivity(
+                            Intent(
+                                context,
+                                AutoSearchPlaceActivity::class.java
+                            ).apply {
+                                putExtra("EMP_ID", list[position].id.toString())
+                            })
+                    }
+
+                /*    if (this.geo_status != null) {
+                        binding.llcReqLocation.visibility = View.VISIBLE
+                        binding.llcViewMap.visibility = View.GONE
+                       // binding.txtReqLocation.text = "Request Location"
+                    } else if (this.geo_status == "1") {
+                        binding.llcReqLocation.visibility = View.GONE
+                        binding.llcViewMap.visibility = View.VISIBLE
+                       // binding.txtReqLocation.text = "View Location"
+                    } else {
+                        binding.llcViewMap.visibility = View.GONE
+                        binding.llcReqLocation.visibility = View.VISIBLE
+                       // binding.txtReqLocation.text = "Request Location"
+                    }*/
                     binding.llcReqLocation.setOnClickListener {
                         onEmGeoClick.onEMPClick(
                             list[position].id.toString(),
@@ -70,7 +104,8 @@ class EmpListAdapter(
                 } else {
                     binding.llcViewProfile.visibility = View.GONE
                     binding.llcReqLocation.visibility = View.GONE
-                    binding.llcAddAttendance.visibility = View.VISIBLE
+                    binding.llcViewMap.visibility = View.GONE
+                    binding.llcAddAttendance.visibility = View.GONE
                     binding.llcShiftTime.visibility = View.VISIBLE
                     binding.llcViewProfile.setOnClickListener {
 
@@ -98,5 +133,9 @@ class EmpListAdapter(
         fun onEMPClick(empID: String, type: String)
     }
 
+    fun updateList(newList: List<EmployeeDataList>) {
+        list = newList
+        notifyDataSetChanged()
+    }
 
 }

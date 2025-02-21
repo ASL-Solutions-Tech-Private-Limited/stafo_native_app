@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.databinding.RecyBranchItemLayoutBinding
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchItem
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveData
 
 class BranchAdapter (
     private var list: List<BranchItem>,
@@ -29,7 +30,6 @@ class BranchAdapter (
             with(list[position]) {
                 binding.txtBranchName.text = this.branch_name
                 binding.txtBranchAddress.text = this.branch_address
-                binding.txtBranchRadius.text = this.radar.toString()
             }
         }
     }
@@ -37,5 +37,8 @@ class BranchAdapter (
     override fun getItemCount(): Int {
         return list.size
     }
-
+    fun updateList(newList: List<BranchItem>) {
+        list = newList
+        notifyDataSetChanged()
+    }
 }

@@ -259,8 +259,8 @@ class AddBranchActivity : AppCompatActivity() {
                 tieBranchName.requestFocus()
                 return false
             } else if (tieBranchAddress.text.isNullOrEmpty()) {
-                tieBranchAddress.error = "Please enter branch address"
-                tieBranchAddress.requestFocus()
+
+                CustomToast(this@AddBranchActivity,"Please enter branch address")
                 return false
             } else if (tieBranchRadius.text.isNullOrEmpty()) {
                 tieBranchRadius.error = "Please enter radius"

@@ -9,6 +9,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.model.DynamicHolidayField
+import com.google.android.material.imageview.ShapeableImageView
 import java.util.Calendar
 
 class DynamicHolidayAdapter(private val fields: MutableList<DynamicHolidayField>) :
@@ -18,6 +19,7 @@ class DynamicHolidayAdapter(private val fields: MutableList<DynamicHolidayField>
         val editText: AppCompatEditText = view.findViewById(R.id.editText)
         val editText2: AppCompatEditText = view.findViewById(R.id.editText2)
         val editText3: AppCompatEditText = view.findViewById(R.id.editText3)
+        val img_remove: ShapeableImageView = view.findViewById(R.id.img_remove)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DynamicViewHolder {
@@ -55,6 +57,10 @@ class DynamicHolidayAdapter(private val fields: MutableList<DynamicHolidayField>
             showDatePicker(holder.editText3, field)
         }
 
+        holder.img_remove.setOnClickListener {
+            removeField(position)
+        }
+
 
     }
 
@@ -89,6 +95,14 @@ class DynamicHolidayAdapter(private val fields: MutableList<DynamicHolidayField>
 
     fun getAllFields(): List<DynamicHolidayField> {
         return fields
+    }
+
+    fun removeField(position: Int) {
+        if (position in fields.indices) {
+            fields.removeAt(position)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, fields.size)
+        }
     }
 
     fun addField(newField: DynamicHolidayField) {

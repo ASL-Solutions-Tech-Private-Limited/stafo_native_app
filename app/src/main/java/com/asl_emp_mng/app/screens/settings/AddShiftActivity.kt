@@ -70,6 +70,15 @@ class AddShiftActivity : AppCompatActivity() {
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        getEmployeeComId()?.let {
+            settingsViewModel.getShiftList(this@AddShiftActivity,
+                it
+            )
+        }
+    }
+
 
 
     private fun observeViewModel() {

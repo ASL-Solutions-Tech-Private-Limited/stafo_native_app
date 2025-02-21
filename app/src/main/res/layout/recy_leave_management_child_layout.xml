@@ -45,7 +45,7 @@
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_toRightOf="@+id/approve_lv_emp_image"
                 android:fontFamily="@font/gilroy_regular"
-                android:hint="Employee Name"
+                android:text=""
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12ssp" />
@@ -58,7 +58,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:fontFamily="@font/gilroy_regular"
-                android:hint="Applied On:"
+                android:text="Applied On:"
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11ssp" />
@@ -71,7 +71,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:fontFamily="@font/gilroy_regular"
-                android:hint="2 Jan,2025"
+                android:text=""
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11ssp" />
@@ -88,7 +88,7 @@
             android:layout_marginTop="@dimen/_8sdp"
             android:background="@drawable/custom_leave_type_bg"
             android:fontFamily="@font/gilroy_medium"
-            android:hint="Casual Leave"
+            android:text="Casual Leave"
             android:textAlignment="center"
             android:paddingHorizontal="@dimen/_6sdp"
             android:paddingVertical="@dimen/_3sdp"
@@ -105,7 +105,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_medium"
-            android:hint="Leave Date"
+            android:text="Leave Date"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -120,7 +120,7 @@
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_toRightOf="@+id/txt_leave_date1"
             android:fontFamily="@font/gilroy_regular"
-            android:hint="02/11/2024-03/11/2024"
+            android:text=""
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -134,7 +134,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="@dimen/_6sdp"
             android:fontFamily="@font/gilroy_medium"
-            android:hint="Duration"
+            android:text="Duration"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -145,10 +145,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/txt_leave_date"
             android:layout_alignStart="@+id/txt_leave_date"
-            android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_6sdp"
             android:fontFamily="@font/gilroy_regular"
-            android:hint="2 days"
+            android:text=""
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -162,10 +161,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/txt_duration"
             android:layout_alignStart="@+id/txt_leave_date"
-            android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_6sdp"
             android:fontFamily="@font/gilroy_regular"
-            android:hint="2 jan,2024"
+            android:text=""
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -178,7 +176,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="@dimen/_6sdp"
             android:fontFamily="@font/gilroy_medium"
-            android:hint="Start Date"
+            android:text="Start Date"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -189,10 +187,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/txt_start_date"
             android:layout_alignStart="@+id/txt_leave_date"
-            android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_6sdp"
             android:fontFamily="@font/gilroy_regular"
-            android:hint="2 jan,2024"
+            android:text=""
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -205,7 +202,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="@dimen/_6sdp"
             android:fontFamily="@font/gilroy_medium"
-            android:hint="Start Date"
+            android:text="End Date"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />

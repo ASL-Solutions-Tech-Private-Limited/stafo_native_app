@@ -45,6 +45,8 @@ class EmployeeAttendance : AppCompatActivity() {
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
         mEMPId = intent.getStringExtra("EMPID").toString()
+
+
         onClickListener()
         observeViewModel()
 
@@ -71,13 +73,15 @@ class EmployeeAttendance : AppCompatActivity() {
     private fun onClickListener() {
         binding?.apply {
 
+            val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
+            binding.txtDate.setText(currentDate)
 
-            settingsViewModel.getEmpList(this@EmployeeAttendance,"2025-02-07")
+            settingsViewModel.getEmpList(this@EmployeeAttendance,currentDate)
 
 
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
-                settingsViewModel.getEmpList(this@EmployeeAttendance,"2025-02-07")
+                settingsViewModel.getEmpList(this@EmployeeAttendance,currentDate)
 
             }
 
@@ -94,10 +98,7 @@ class EmployeeAttendance : AppCompatActivity() {
     }
 
 
-    private fun getToken(context: Context, key: String): String? {
-        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        return sharedPref.getString(key, null)
-    }
+
 
 
     private fun observeViewModel() {

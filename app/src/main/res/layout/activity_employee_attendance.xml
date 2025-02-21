@@ -123,7 +123,7 @@
     </RelativeLayout>
 
     <EditText
-        android:id="@+id/edt_search"
+        android:id="@+id/etDirSearch"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
         android:layout_marginStart="@dimen/_12sdp"
@@ -131,7 +131,7 @@
         android:layout_marginEnd="@dimen/_12sdp"
         android:background="@drawable/edit_text_background"
         android:drawableEnd="@drawable/ic_search"
-        android:drawablePadding="@dimen/_12sdp"
+        android:drawablePadding="@dimen/_14sdp"
         android:fontFamily="@font/gilroy_semi_bold"
         android:hint="Search"
         android:padding="@dimen/_12sdp"
@@ -149,7 +149,7 @@
         android:weightSum="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edt_search">
+        app:layout_constraintTop_toBottomOf="@id/etDirSearch">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="0dp"

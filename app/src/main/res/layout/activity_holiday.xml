@@ -50,40 +50,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
-        android:id="@+id/llSearchHead"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/_10sdp"
-        android:layout_marginHorizontal="@dimen/_10sdp"
-        android:background="@drawable/search_edit_text_bg"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
 
-        >
-
-
-        <EditText
-            android:id="@+id/etDirSearch"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:background="@android:color/transparent"
-            android:drawableStart="@drawable/ic_search_grey"
-            android:drawablePadding="@dimen/_5sdp"
-            android:fontFamily="@font/gilroy_regular"
-            android:hint="Search holiday here"
-            android:imeOptions="actionSearch"
-            android:paddingStart="5dp"
-            android:paddingLeft="5dp"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp" />
-
-
-    </LinearLayout>
 
 
 
@@ -94,7 +61,7 @@
         android:id="@+id/swipeRefreshLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/llSearchHead"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
         android:layout_height="0dp"

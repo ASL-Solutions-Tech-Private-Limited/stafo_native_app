@@ -54,10 +54,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_10sdp"
-        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
         android:background="@drawable/search_edit_text_bg"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toStartOf="@+id/ll_filter_list"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
 
@@ -73,7 +73,7 @@
             android:drawableStart="@drawable/ic_search_grey"
             android:drawablePadding="@dimen/_5sdp"
             android:fontFamily="@font/gilroy_regular"
-            android:hint="Search employee here"
+            android:hint="Search employee by name,mobile,branch"
             android:imeOptions="actionSearch"
             android:paddingStart="5dp"
             android:paddingLeft="5dp"
@@ -84,7 +84,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/ll_filter_list"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -115,7 +115,7 @@
             android:textSize="@dimen/_12ssp" />
 
 
-    </LinearLayout>
+    </LinearLayout>-->
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"

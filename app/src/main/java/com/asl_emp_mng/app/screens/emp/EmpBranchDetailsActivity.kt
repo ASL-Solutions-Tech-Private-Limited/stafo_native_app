@@ -63,7 +63,6 @@ class EmpBranchDetailsActivity : AppCompatActivity() {
 
                     binding.txtBranchName.text = branchDetails.branch_name
                     binding.txtBranchAddress.text = branchDetails.branch_address
-                    binding.txtBranchRadius.text = branchDetails.radar.toString()
                 } else {
                     Log.e("Branch", "No branch found with ID: $branchId")
                 }

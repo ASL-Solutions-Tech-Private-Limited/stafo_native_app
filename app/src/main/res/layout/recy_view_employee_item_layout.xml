@@ -45,7 +45,6 @@
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_toRightOf="@+id/approve_lv_emp_image"
                 android:fontFamily="@font/gilroy_regular"
-                android:hint="Employee Name"
                 android:singleLine="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12ssp" />
@@ -63,7 +62,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_medium"
-            android:hint="Mobile"
+            android:text="Mobile"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -78,7 +77,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_regular"
-            android:hint="Date"
+            android:text=""
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -92,7 +91,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_medium"
-            android:hint="Email"
+            android:text="Email"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -106,7 +105,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_regular"
-            android:hint="Status"
+            android:text=""
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -120,7 +119,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_medium"
-            android:hint="Position"
+            android:text="Position"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -134,7 +133,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_regular"
-            android:hint="Status"
+            android:text=""
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -279,6 +278,40 @@
                     android:text="Attendance More"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_10sdp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llc_view_map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_date_bg"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_18sdp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:src="@drawable/ic_location_pin"
+                    android:tint="@color/black"
+                    tools:ignore="UseAppTint" />
+
+                <TextView
+                    android:id="@+id/txt_view_map"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_4sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:paddingVertical="@dimen/_8sdp"
+                    android:text="View Map"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10ssp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>

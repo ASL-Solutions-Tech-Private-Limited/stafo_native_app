@@ -71,7 +71,7 @@
             android:drawableStart="@drawable/ic_search_grey"
             android:drawablePadding="@dimen/_5sdp"
             android:fontFamily="@font/gilroy_regular"
-            android:hint="search by name"
+            android:hint="search by branch name"
             android:imeOptions="actionSearch"
             android:paddingStart="5dp"
             android:paddingLeft="5dp"

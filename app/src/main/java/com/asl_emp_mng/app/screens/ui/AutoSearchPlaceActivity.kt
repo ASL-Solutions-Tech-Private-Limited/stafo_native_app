@@ -95,10 +95,10 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        startActivity(Intent(this@AutoSearchPlaceActivity, EmplyeeAttendaceListActivity::class.java))
-        finish()
         super.onBackPressed()
+        finish()
     }
+
 
     private fun onClickListener() {
         binding?.apply {
@@ -112,8 +112,7 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
 
 
             imageBack.setOnClickListener {
-
-                startActivity(Intent(this@AutoSearchPlaceActivity, EmplyeeAttendaceListActivity::class.java))
+                onBackPressedDispatcher.onBackPressed()
                 finish()
             }
 

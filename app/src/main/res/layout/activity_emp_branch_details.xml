@@ -115,31 +115,7 @@
             android:textSize="@dimen/_12ssp" />
 
 
-        <TextView
-            android:id="@+id/txt_branch_radius1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_branch_address"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:fontFamily="@font/gilroy_medium"
-            android:text="Radius"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp" />
 
-        <TextView
-            android:id="@+id/txt_branch_radius"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_branch_address"
-            android:layout_alignStart="@+id/txt_branch_name"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:fontFamily="@font/gilroy_regular"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp" />
 
 
     </RelativeLayout>

@@ -28,7 +28,6 @@ class AddHolidayActivity : AppCompatActivity() {
     private lateinit var adapter: DynamicHolidayAdapter
     private val dynamicFields = mutableListOf<DynamicHolidayField>()
 
-    private var token: String? = null
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
 
@@ -51,10 +50,7 @@ class AddHolidayActivity : AppCompatActivity() {
 
 
 
-    private fun getToken(context: Context, key: String): String? {
-        val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        return sharedPref.getString(key, null)
-    }
+
 
 
     private fun observeViewModel() {
@@ -98,7 +94,7 @@ class AddHolidayActivity : AppCompatActivity() {
     private fun onClickListener() {
         binding?.apply {
 
-            token = getToken(this@AddHolidayActivity, "token")
+
 
 
 
@@ -117,39 +113,33 @@ class AddHolidayActivity : AppCompatActivity() {
             }
 
             btnAddHoliday.setOnClickListener {
-                if (adapter.isValid()) {
-                    val allFields = adapter.getAllFields()
 
-                    val holidaysList = allFields.map { field ->
-                        HolidayPostData(
-                            title = field.userInput,
-                            description = "",
-                            start_date = field.userInput2,
-                            end_date = field.userInput3
-                        )
+
+                if (dynamicFields.size>0){
+                    if (adapter.isValid()) {
+                        val allFields = adapter.getAllFields()
+
+                        val holidaysList = allFields.map { field ->
+                            HolidayPostData(
+                                title = field.userInput,
+                                description = "",
+                                start_date = field.userInput2,
+                                end_date = field.userInput3
+                            )
+                        }
+
+                        val request = CreateHolidayRequest(holidaysList)
+
+                        Log.d("post",request.holidays.toString())
+
+                        settingsViewModel.addHoliday(this@AddHolidayActivity,request)
+                }else {
+                        CustomToast(this@AddHolidayActivity, "Please fill blank field!")
                     }
 
-                    val request = CreateHolidayRequest(holidaysList)
-
-                    Log.d("post",request.holidays.toString())
-
-                  /*  for (field in allFields) {
-
-
-                       val request=HolidayPostData(
-                           title=field.userInput,
-                           description = "",
-                           start_date = field.userInput2,
-                           end_date = field.userInput3
-                       )
-
-
-                    }*/
-
-                    settingsViewModel.addHoliday(this@AddHolidayActivity,request)
 
                 } else {
-                    CustomToast(this@AddHolidayActivity, "Please fill blank field!")
+                    CustomToast(this@AddHolidayActivity, "Please add holiday!")
                 }
             }
 
@@ -169,4 +159,6 @@ class AddHolidayActivity : AppCompatActivity() {
             binding.recyclerView.adapter = adapter
         }
     }
+
+
 }

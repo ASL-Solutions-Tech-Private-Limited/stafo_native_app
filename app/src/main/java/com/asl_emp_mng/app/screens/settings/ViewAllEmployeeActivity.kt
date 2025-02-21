@@ -2,6 +2,8 @@ package com.asl_emp_mng.app.screens.settings
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -21,6 +23,8 @@ import com.asl_emp_mng.app.base.adapter.EmpListAdapter
 import com.asl_emp_mng.app.base.adapter.RadioShiftAdapter
 import com.asl_emp_mng.app.databinding.ActivityViewAllEmployeeBinding
 import com.asl_emp_mng.app.screens.settings.dataClass.AssignShiftRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDataList
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveData
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeComId
@@ -40,7 +44,8 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     private lateinit var shiftID: String
     private var mFrom = "View All"
 
-
+    private var empList: List<EmployeeDataList> = listOf()
+    private var filteredList: List<EmployeeDataList> = listOf()
 
     //for bottom sheet
     private lateinit var bottomSheetDialog: BottomSheetDialog
@@ -63,6 +68,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
         setOnClickEvents()
         observeViewModel()
+        setupSearchListener()
     }
 
 
@@ -74,28 +80,48 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
         settingsViewModel.mEmployeeListResponse.observe(this) {
-            Log.d("res",it.message)
+
            if (it.status) {
 
-               Log.d("res",it.data.toString())
-               val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
-               binding.rvViewEmpList.setLayoutManager(layoutManager)
-               rvAdapter = EmpListAdapter(it.data, this, mFrom, object : EmpListAdapter.onGeoClick {
-                   override fun onEMPClick(empID: String, type: String) {
-                       if (type == "Request Location") {
-                           settingsViewModel.sendGeoLocationRequest(
-                               this@ViewAllEmployeeActivity,
-                               empID, "0"
-                           )
-                       }
-                   }
 
-               })
-               binding.rvViewEmpList.adapter = rvAdapter
-               rvAdapter.notifyDataSetChanged()
+               if (it.data.isNotEmpty()){
+
+                   binding.etDirSearch.isFocusable = true
+                   binding.etDirSearch.isFocusableInTouchMode = true
+
+                   empList=it.data
+                   filteredList=empList
+
+                   val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+                   binding.rvViewEmpList.setLayoutManager(layoutManager)
+                   rvAdapter = EmpListAdapter(empList, this, mFrom, object : EmpListAdapter.onGeoClick {
+                       override fun onEMPClick(empID: String, type: String) {
+                           if (type == "Request Location") {
+                               settingsViewModel.sendGeoLocationRequest(
+                                   this@ViewAllEmployeeActivity,
+                                   empID, "0"
+                               )
+                           }
+                       }
+
+                   })
+                   binding.rvViewEmpList.adapter = rvAdapter
+                   rvAdapter.notifyDataSetChanged()
+
+
+               }else{
+                   binding.etDirSearch.isFocusable = false
+                   binding.etDirSearch.isFocusableInTouchMode = false
+                   binding.txtMsg.visibility = View.VISIBLE
+               }
+
+
+
 
            } else {
-              binding.txtMsg.visibility=View.VISIBLE
+               binding.etDirSearch.isFocusable = false
+               binding.etDirSearch.isFocusableInTouchMode = false
+               binding.txtMsg.visibility = View.VISIBLE
            }
        }
 
@@ -278,5 +304,33 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         shiftBottomSheetDialog.show()
 
 
+    }
+
+
+
+    private fun setupSearchListener() {
+        binding.etDirSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterList(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    private fun filterList(query: String) {
+        filteredList = if (query.isEmpty()) {
+            empList
+        } else {
+            empList.filter {
+                it.name.contains(query, ignoreCase = true) ||
+                        it.phone.contains(query, ignoreCase = true) ||
+                        it.branch_name.contains(query, ignoreCase = true)
+            }
+        }
+
+        rvAdapter.updateList(filteredList)
     }
 }

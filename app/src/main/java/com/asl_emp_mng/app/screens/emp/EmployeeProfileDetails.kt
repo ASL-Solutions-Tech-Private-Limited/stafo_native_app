@@ -124,6 +124,25 @@ class EmployeeProfileDetails : AppCompatActivity() {
                         isFocusableField(binding.tieDateOfBirth)
                     }
 
+                    selectBranch = data.branchId
+
+                    if (selectBranch != null) {
+                        val index = mBranchList?.indexOfFirst { it.id == selectBranch }
+                        if (index != -1) {
+                            binding.tieBranch.setText(index?.let { it1 -> mBranchList?.get(it1)?.branch_name })
+                        }
+                    }
+
+
+                    selectDepartment = data.departmentId
+
+                    if (selectDepartment != null) {
+                        val index = mDepartmentList?.indexOfFirst { it.id == selectDepartment }
+                        if (index != -1) {
+                            binding.tieDepartment.setText(index?.let { it1 -> mDepartmentList?.get(it1)?.name })
+                        }
+                    }
+
 
                     val maritalStatusFromApi = data.maritalStatus ?: ""
 

@@ -2,6 +2,8 @@ package com.asl_emp_mng.app.screens.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -29,6 +31,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequestBody
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getEmployeeComId
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.util.Collections
 import java.util.Random
@@ -39,7 +42,8 @@ class LeaveManagementActivity : AppCompatActivity() {
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
-
+    private var leaveList: List<LeaveData> = listOf()
+    private var filteredList: List<LeaveData> = listOf()
 
     //for bottom sheet
     private lateinit var bottomSheetDialog: BottomSheetDialog
@@ -58,75 +62,34 @@ class LeaveManagementActivity : AppCompatActivity() {
         onClickListener()
         observeViewModel()
 
-    }
-
-
-    private fun observeViewModel() {
-
-
-        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-
-
-
-        settingsViewModel.mLeaveResponse.observe(this) {
-
-            if (it.data.isNotEmpty()) {
-                val pendingLeaves = it.data.filter { leave -> leave.status == "pending" }
-
-                val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-                binding.rvShowLeaveList.setLayoutManager(layoutManager)
-                rvAdapter = LeavesManagementAdapter(pendingLeaves, this)
-                binding.rvShowLeaveList.adapter = rvAdapter
-                rvAdapter.notifyDataSetChanged()
-            } else {
-                binding.txtMsg.visibility = View.VISIBLE
-            }
-
-
-        }
-        settingsViewModel.mApproveLeaveResponse.observe(this) {
-
-            CustomToast(this, it.message)
-            val request = LeaveRequestBody(
-                companyId = "1",
-                employeeId = ""
-            )
-
-            settingsViewModel.getAllLeaveList(this@LeaveManagementActivity, request)
-
-        }
+        setupSearchListener()
 
     }
-
-    private fun handleLoader(status: String) {
-        if (status.equals("load", ignoreCase = true)) {
-            if (!customLoader.isShowing) customLoader.show()
-        } else if (status.equals("stop", ignoreCase = true)) {
-            if (customLoader.isShowing) customLoader.dismiss()
-        }
-    }
-
 
     private fun onClickListener() {
         binding?.apply {
 
-            val request = LeaveRequestBody(
-                companyId = "1",
-                employeeId = ""
-            )
+            getEmployeeComId()?.let {
+                val request = LeaveRequestBody(
+                    companyId = it,
+                    employeeId = ""
+                )
+                settingsViewModel.getAllLeaveList(this@LeaveManagementActivity, request)
+            }
 
-            settingsViewModel.getAllLeaveList(this@LeaveManagementActivity, request)
+
 
 
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
 
-                val request = LeaveRequestBody(
-                    companyId = "1",
-                    employeeId = ""
-                )
-
-                settingsViewModel.getAllLeaveList(this@LeaveManagementActivity, request)
+                getEmployeeComId()?.let {
+                    val request = LeaveRequestBody(
+                        companyId = it,
+                        employeeId = ""
+                    )
+                    settingsViewModel.getAllLeaveList(this@LeaveManagementActivity, request)
+                }
 
 
                 //settingsViewModel.getPendingLeaveList(this@LeaveManagementActivity)
@@ -143,6 +106,95 @@ class LeaveManagementActivity : AppCompatActivity() {
 
 
         }
+    }
+
+    private fun observeViewModel() {
+
+
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
+
+
+        settingsViewModel.mLeaveResponse.observe(this) {
+
+            if (it.data.isNotEmpty()) {
+
+                leaveList = it.data.filter { leave -> leave.status == "pending" }
+                filteredList = leaveList
+
+                if (leaveList.isNotEmpty()) {
+
+                    binding.etDirSearch.isFocusable = true
+                    binding.etDirSearch.isFocusableInTouchMode = true
+
+                    val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+                    binding.rvShowLeaveList.setLayoutManager(layoutManager)
+                    rvAdapter = LeavesManagementAdapter(leaveList, this)
+                    binding.rvShowLeaveList.adapter = rvAdapter
+                    rvAdapter.notifyDataSetChanged()
+                } else {
+                    binding.etDirSearch.isFocusable = false
+                    binding.etDirSearch.isFocusableInTouchMode = false
+                    binding.txtMsg.visibility = View.VISIBLE
+                }
+
+
+            } else {
+                binding.etDirSearch.isFocusable = false
+                binding.etDirSearch.isFocusableInTouchMode = false
+                binding.txtMsg.visibility = View.VISIBLE
+            }
+
+
+        }
+        settingsViewModel.mApproveLeaveResponse.observe(this) {
+
+            CustomToast(this, it.message)
+            getEmployeeComId()?.let {
+                val request = LeaveRequestBody(
+                    companyId = it,
+                    employeeId = ""
+                )
+                settingsViewModel.getAllLeaveList(this@LeaveManagementActivity, request)
+            }
+
+        }
+
+    }
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
+        }
+    }
+
+
+    private fun setupSearchListener() {
+        binding.etDirSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterList(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    private fun filterList(query: String) {
+        filteredList = if (query.isEmpty()) {
+            leaveList
+        } else {
+            leaveList.filter {
+                it.employeeBasicInfo.name.contains(query, ignoreCase = true) ||
+                        it.employeeBasicInfo.email.contains(query, ignoreCase = true) ||
+                        it.employeeBasicInfo.phone.contains(query, ignoreCase = true)
+            }
+        }
+
+        rvAdapter.updateList(filteredList)
     }
 
 

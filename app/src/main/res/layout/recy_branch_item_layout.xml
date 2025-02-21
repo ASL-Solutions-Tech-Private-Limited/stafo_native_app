@@ -27,7 +27,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:fontFamily="@font/gilroy_medium"
-            android:hint="Branch Name"
+            android:text="Branch Name"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -41,7 +41,7 @@
             android:layout_marginStart="@dimen/_6sdp"
             android:layout_toRightOf="@+id/txt_branch_name1"
             android:fontFamily="@font/gilroy_regular"
-            android:hint="Employee Name"
+            android:text=""
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -54,7 +54,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_medium"
-            android:hint="Address"
+            android:text="Address"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -68,38 +68,13 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_regular"
-            android:hint="Date"
-            android:singleLine="true"
+            android:text=""
+            android:maxLines="2"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
 
-        <TextView
-            android:id="@+id/txt_branch_radius1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_branch_address"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:fontFamily="@font/gilroy_medium"
-            android:hint="Radius"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp" />
 
-        <TextView
-            android:id="@+id/txt_branch_radius"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_branch_address"
-            android:layout_alignStart="@+id/txt_branch_name"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:fontFamily="@font/gilroy_regular"
-            android:hint="Status"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp" />
 
 
     </RelativeLayout>

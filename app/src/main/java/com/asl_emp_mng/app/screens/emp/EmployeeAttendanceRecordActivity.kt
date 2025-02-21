@@ -54,15 +54,26 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
         val curren = SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(calendar.time)
         mSelectedDate = curren
 
-        mEMPID = intent.getStringExtra("EMP_ID").toString()
+        mEMPID = intent.getStringExtra("EMP_ID") ?: ""
+
+        Log.d("res","get :$mEMPID")
+
         onClickListener()
         observeViewModel()
 
+
+
+
+    }
+
+    private fun fetchAttendanceData() {
+        val employeeId = mEMPID.ifEmpty { getEmployeeDetails()?.id.toString() }
+
         settingsViewModel.getMonthlyAttendance(
             this@EmployeeAttendanceRecordActivity,
-            mSelectedDate, getEmployeeDetails()?.id.toString()
+            mSelectedDate,
+            employeeId
         )
-
     }
 
     private fun observeViewModel() {
@@ -122,6 +133,13 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
     private fun onClickListener() {
         binding?.apply {
+
+            val currentDate =
+                SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(calendar.time)
+            binding.txtDate.setText(currentDate)
+
+            fetchAttendanceData()
+
             llCalendar.setOnClickListener {
                 showDatePicker()
             }
@@ -135,11 +153,12 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
+                fetchAttendanceData()
 
-                settingsViewModel.getMonthlyAttendance(
+                /*settingsViewModel.getMonthlyAttendance(
                     this@EmployeeAttendanceRecordActivity,
                     mSelectedDate, getEmployeeDetails()?.id.toString()
-                )
+                )*/
 
             }
             //progressBar.updateProgress(50.0F)

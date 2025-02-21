@@ -10,6 +10,7 @@ import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.ItemEmpAttendaceLayoutBinding
 import com.asl_emp_mng.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDataList
+import com.asl_emp_mng.app.screens.settings.dataClass.LeaveData
 import com.asl_emp_mng.app.screens.ui.AutoSearchPlaceActivity
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 
@@ -47,28 +48,14 @@ class EmployeeAttendanceAdapter(
                 }
 
                 holder.itemView.setOnClickListener {
-                     val employeeId=this.id
-                    Log.d("res","emp :$employeeId")
+                     val employeeId=attendList[position].id
+                    Log.d("res","$employeeId")
 
-
-                    val intent = Intent(context, AutoSearchPlaceActivity::class.java).apply {
+                    val intent = Intent(context, EmployeeAttendanceRecordActivity::class.java).apply {
                         putExtra("EMP_ID", employeeId.toString())
                     }
-                    Log.d("res", "Sending EMP_ID: ${intent.getStringExtra("EMP_ID")}")
+
                     context.startActivity(intent)
-
-
-                   /* context.startActivity(
-                        Intent(
-                            context,
-                            AutoSearchPlaceActivity::class.java
-                        ).apply {
-                            putExtra("EMP_ID", employeeId)
-                        }
-                    )*/
-
-
-                   // context.startActivity(Intent(context,AutoSearchPlaceActivity::class.java))
                 }
 
 
@@ -78,6 +65,11 @@ class EmployeeAttendanceAdapter(
 
     override fun getItemCount(): Int {
         return attendList.size
+    }
+
+    fun updateList(newList: List<EmployeeDataList>) {
+        attendList = newList
+        notifyDataSetChanged()
     }
 
 }

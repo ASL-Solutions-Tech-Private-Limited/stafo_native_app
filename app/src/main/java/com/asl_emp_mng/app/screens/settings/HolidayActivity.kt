@@ -51,6 +51,15 @@ class HolidayActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        getEmployeeComId()?.let {
+            settingsViewModel.getHolidayList(this@HolidayActivity,
+                it
+            )
+        }
+    }
+
     private fun onClickListener() {
         binding?.apply {
             getEmployeeComId()?.let { settingsViewModel.getHolidayList(this@HolidayActivity, it) }

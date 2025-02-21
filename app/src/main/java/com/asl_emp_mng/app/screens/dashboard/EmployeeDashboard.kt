@@ -40,9 +40,11 @@ import com.asl_emp_mng.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.asl_emp_mng.app.screens.emp.EmployeeProfileDetails
 import com.asl_emp_mng.app.screens.emp.EmployeePunchInActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
+import com.asl_emp_mng.app.screens.settings.LeaveRequestHistoryActivity
 import com.asl_emp_mng.app.screens.settings.PolicyActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
+import com.asl_emp_mng.app.screens.ui.WishListActivity
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 import com.asl_emp_mng.app.utils.getFormattedDate
@@ -54,6 +56,10 @@ import com.asl_emp_mng.app.utils.setEmployeeComId
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.Gson
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class EmployeeDashboard : AppCompatActivity() {
     private lateinit var binding: ActivityEmpDashboardBinding
@@ -73,6 +79,8 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 100
     private val PLACE_SEARCH_REQUEST_CODE = 101
+
+    private val calendar = Calendar.getInstance()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -173,6 +181,19 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private fun onClickListener() {
         binding?.apply {
+
+
+            binding.tvLeaveViewAll.setOnClickListener {
+                startActivity(Intent(this@EmployeeDashboard, LeaveRequestHistoryActivity::class.java))
+            }
+
+            tvWishViewAll.setOnClickListener {
+                startActivity(Intent(this@EmployeeDashboard, WishListActivity::class.java).apply {
+                    putExtra("WishList", Gson().toJson(wishList))
+                })
+            }
+
+
 
             /* tvStopService.setOnClickListener {
                 stopLocationService()
@@ -291,9 +312,12 @@ class EmployeeDashboard : AppCompatActivity() {
                 }else if (it.employeeInfo.geoStatus != null && it.employeeInfo.geoStatus == "1"){
 
                     val punches = it.employeeInfo.punches
+
                     if (punches != null && punches[0].punchOut != null) {
-                        Log.d("res",""+punches[0].punchOut)
+
                         stopLocationService()
+
+
                     }else{
                         if (isServiceRunning(LocationForegroundService::class.java)) {
                             stopLocationService()
@@ -329,7 +353,9 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
                 wishList.clear()
-                if (it.employeeInfo.punches != null && it.employeeInfo.punches.isNotEmpty()) {
+             /*   if (it.employeeInfo.punches != null && it.employeeInfo.punches.isNotEmpty()) {
+
+
                     if (it.employeeInfo.punches.get(0).punchIn != null) {
                         binding.btnPunchIn.setText("Punch Out")
                         binding.btnPunchIn.isEnabled = true
@@ -338,13 +364,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
                         Log.d("res",""+binding.btnPunchIn.text)
-                      /*  binding.tvOfficeTiming.text = "Punched In At ${
-                            getFormattedDate(
-                                it.employeeInfo.punches.get(0).punchIn ?: "",
-                                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-                                "hh:mm a dd-MMM-yyyy"
-                            )
-                        }"*/
+
 
                         binding.tvOfficeTiming.text = "Punched In At ${
                             getFormattedDate2(
@@ -364,7 +384,7 @@ class EmployeeDashboard : AppCompatActivity() {
                         binding.btnPunchIn.isEnabled = false
                         binding.tvOfficeTiming.text ="Punched Out At${
                             getFormattedDate2(
-                                it.employeeInfo.punches.get(0).punchIn ?: "",
+                                it.employeeInfo.punches.get(0).punchOut ?: "",
                                 listOf(
                                     "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
                                     "yyyy-MM-dd HH:mm:ss"
@@ -375,19 +395,73 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
 
-
-                        /*"Punched Out At ${
-                            getFormattedDate(
-                                it.employeeInfo.punches.get(0).punchOut ?: "",
-                                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-                                "hh:mm a dd-MMM-yyyy"
-                            )
-                        }"*/
                     } else {
                         binding.btnPunchIn.setText("Punch In")
                         binding.btnPunchIn.isEnabled = true
                     }
+                }*/
+
+                if (!it.employeeInfo.punches.isNullOrEmpty()) {
+                    val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
+
+
+                    if (currentDate==getFormattedDate2(
+                            System.currentTimeMillis().toString(),
+                            listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
+                            "yyyy-MM-dd"
+                        )){
+
+                        val punchData = it.employeeInfo.punches[0]
+                        val punchInTime = punchData.punchIn
+                        val punchOutTime = punchData.punchOut
+
+
+                        if (punchInTime !=null && punchOutTime != null){
+                            binding.btnPunchIn.text = "Punched Out"
+                            binding.btnPunchIn.isEnabled = false
+
+                            binding.btnPunchIn.setBackgroundResource(R.drawable.disable_btn_punch)
+
+
+                            binding.tvOfficeTiming.text = "Punched Out At ${
+                                getFormattedDate2(
+                                    punchOutTime,
+                                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
+                                    "hh:mm a dd-MMM-yyyy"
+                                )
+                            }"
+                        }else if (punchInTime !=null){
+                            binding.btnPunchIn.text = "Punch Out"
+                            binding.btnPunchIn.isEnabled = true
+                            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+                            binding.tvOfficeTiming.text = "Punched In At ${
+                                getFormattedDate2(
+                                    punchInTime,
+                                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
+                                    "hh:mm a dd-MMM-yyyy"
+                                )
+                            }"
+                        }else{
+                            binding.btnPunchIn.text = "Punch In"
+                            binding.btnPunchIn.isEnabled = true
+                            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+                        }
+
+
+
+
+                    }
+
+
+
                 }
+
+
+
+
+
+
+
             }
 
             if (it.birthday != null && it.birthday.isNotEmpty()) {
@@ -443,7 +517,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
                 val rvAdapter = AdapterOnLeave(it.employeesOnLeave, this)
                 binding.rvLeaves.adapter = rvAdapter
-                binding.tvLeaveViewAll.text = it.employeesOnLeave.size.toString()
+               // binding.tvLeaveViewAll.text = it.employeesOnLeave.size.toString()
             } else {
                 binding.llLeaves.visibility = View.VISIBLE
             }
