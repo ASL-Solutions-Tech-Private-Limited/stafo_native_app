@@ -2,53 +2,34 @@ package com.asl_emp_mng.app.screens.ui
 
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Geocoder
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.asl_emp_mng.app.R
-import com.asl_emp_mng.app.base.model.PunchInType
 import com.asl_emp_mng.app.databinding.ActivityPlaceSearchBinding
-import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
-import com.asl_emp_mng.app.utils.getEmployeeDetails
+import java.util.Locale
+import com.mmi.MapView
 import com.mmi.MapmyIndiaMapView
+import com.mmi.layers.MapEventsOverlay
+import com.mmi.layers.MapEventsReceiver
+import com.mmi.layers.Marker
 import com.mmi.layers.UserLocationOverlay
 import com.mmi.layers.location.GpsLocationProvider
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import org.json.JSONArray
-import org.json.JSONObject
-import org.osmdroid.config.Configuration
-import org.osmdroid.events.MapEventsReceiver
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
-import org.osmdroid.util.GeoPoint
-import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.MapEventsOverlay
-import org.osmdroid.views.overlay.Marker
-import java.io.IOException
-import java.util.Locale
+import com.mmi.util.GeoPoint
 
 class PlaceSearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlaceSearchBinding
-  /*  private lateinit var mapView: MapView
-    private val client = OkHttpClient()
-
-    private var currentMarker: Marker? = null*/
     private var getLati: Double? = null
     private var getLongi: Double? = null
 
     private lateinit var userLocationOverlay: UserLocationOverlay
+    private lateinit var mapView: MapView
+    private lateinit var marker: Marker
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,7 +108,7 @@ class PlaceSearchActivity : AppCompatActivity() {
 
     private fun onClickListener() {
 
-        val mapmyIndiaMapView = findViewById<MapmyIndiaMapView>(R.id.idMapView)
+      /*  val mapmyIndiaMapView = findViewById<MapmyIndiaMapView>(R.id.idMapView)
         val mapView = mapmyIndiaMapView.mapView
 
         // Enable User Location Tracking
@@ -155,7 +136,40 @@ class PlaceSearchActivity : AppCompatActivity() {
                     mapView.setZoom(13)
                 }
             }
+        }*/
+
+
+
+        val mapmyIndiaMapView = findViewById<MapmyIndiaMapView>(R.id.idMapView)
+        mapView = mapmyIndiaMapView.mapView
+        userLocationOverlay = UserLocationOverlay(GpsLocationProvider(this), mapView)
+        userLocationOverlay.enableMyLocation()
+        mapView.overlays.add(userLocationOverlay)
+        mapView.invalidate()
+        marker = Marker(mapView)
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        mapView.overlays.add(marker)
+
+        userLocationOverlay.runOnFirstFix {
+            val userLocation = userLocationOverlay.myLocation
+            getLati=userLocation.latitude
+            getLongi=userLocation.longitude
+            if (userLocation != null) {
+                runOnUiThread {
+                    moveMarker(userLocation)
+                }
+            }
         }
+        setUpMapClickListener()
+
+
+
+
+
+
+
+
+
 
         binding.btnAddAddress.setOnClickListener {
             val returnIntent = Intent()
@@ -167,6 +181,40 @@ class PlaceSearchActivity : AppCompatActivity() {
 
 
 
+    }
+
+
+
+    private fun setUpMapClickListener() {
+        val mapEventsReceiver = object :MapEventsReceiver {
+            override fun singleTapConfirmedHelper(p:GeoPoint?): Boolean {
+                p?.let {
+
+
+                    getLati=it.latitude
+                    getLongi=it.longitude
+
+                    Log.d("MapTap", "Tapped Location: Lat=${getLati}, Lng=${getLongi}")
+                    moveMarker(it)
+                }
+                return true
+            }
+
+            override fun longPressHelper(p:GeoPoint?): Boolean {
+                return false
+            }
+        }
+
+        val mapEventsOverlay = MapEventsOverlay(this, mapEventsReceiver)
+        mapView.overlays.add(mapEventsOverlay)
+    }
+
+
+    private fun moveMarker(location:GeoPoint) {
+        marker.position = location
+        mapView.invalidate()
+        mapView.setCenter(location)
+        mapView.setZoom(13)
     }
 
 

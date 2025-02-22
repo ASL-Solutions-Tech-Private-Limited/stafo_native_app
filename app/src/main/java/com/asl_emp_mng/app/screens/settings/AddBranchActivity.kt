@@ -36,8 +36,9 @@ class AddBranchActivity : AppCompatActivity() {
 
     private lateinit var locationManager: LocationManager
     private var currentLocation: Location? = null
-    private var latitude: Double = 0.0
-    private var longitude: Double = 0.0
+
+    private var latitude: Double? = null
+    private var longitude: Double? = null
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 100
     private val PLACE_SEARCH_REQUEST_CODE = 101
@@ -151,12 +152,9 @@ class AddBranchActivity : AppCompatActivity() {
             }
 
             currentLocation?.let {
-                latitude = it.latitude
-                longitude = it.longitude
-
                 val intent = Intent(this@AddBranchActivity, PlaceSearchActivity::class.java)
-                intent.putExtra("latitude", latitude)
-                intent.putExtra("longitude", longitude)
+                intent.putExtra("latitude", it.latitude)
+                intent.putExtra("longitude", it.longitude)
                 startActivityForResult(intent, PLACE_SEARCH_REQUEST_CODE)
             }
 
@@ -169,8 +167,6 @@ class AddBranchActivity : AppCompatActivity() {
     private val gpsLocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             currentLocation = location
-            latitude = location.latitude
-            longitude = location.longitude
         }
 
         override fun onProviderEnabled(provider: String) {}
@@ -180,8 +176,6 @@ class AddBranchActivity : AppCompatActivity() {
     private val networkLocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             currentLocation = location
-            latitude = location.latitude
-            longitude = location.longitude
 
         }
 
@@ -195,7 +189,6 @@ class AddBranchActivity : AppCompatActivity() {
 
         if (!addresses.isNullOrEmpty()) {
             val address = addresses[0].getAddressLine(0)
-
             binding.tieBranchAddress.setText(address)
         } else {
             Toast.makeText(this, "Unable to get address", Toast.LENGTH_SHORT).show()
@@ -217,7 +210,10 @@ class AddBranchActivity : AppCompatActivity() {
                             longitude = longitude.toString(),
                             radar = binding.tieBranchRadius.text.toString()
                         )
-                        settingsViewModel.createBranch(this@AddBranchActivity, request)
+
+                         Log.d("MapTap", "main Location: Lat=${latitude}, Lng=${longitude}")
+
+                       settingsViewModel.createBranch(this@AddBranchActivity, request)
                     }
 
                 }
@@ -248,7 +244,7 @@ class AddBranchActivity : AppCompatActivity() {
             val lng = data?.getDoubleExtra("longitude", 0.0)
             latitude = lat ?: 0.0
             longitude = lng ?: 0.0
-            getAddressFromLocation(latitude, longitude)
+            getAddressFromLocation(latitude!!, longitude!!)
         }
     }
 
