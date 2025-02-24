@@ -85,6 +85,7 @@ class BranchActivity : AppCompatActivity() {
         settingsViewModel.mViewBranchResponse.observe(this) {
 
             if (it.data.isNotEmpty()){
+                binding.txtMsg.visibility = View.GONE
                 branchList=it.data
                 filteredList=branchList
 

@@ -35,8 +35,10 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import org.osmdroid.config.Configuration
 import com.mmi.MapmyIndiaMapView
 import com.mmi.layers.Marker
+import com.mmi.layers.Polygon
 import com.mmi.layers.UserLocationOverlay
 import com.mmi.layers.location.GpsLocationProvider
+import com.mmi.util.GeoPoint
 
 
 class EmployeePunchInActivity : AppCompatActivity() {
@@ -127,9 +129,30 @@ class EmployeePunchInActivity : AppCompatActivity() {
                     marker.position = userLocation
                     marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                     mapView.overlays.add(marker)
+
+                    val circle = Polygon(this@EmployeePunchInActivity)
+                    circle.fillColor = 0x3000FF00
+                    circle.strokeColor = 0xFF00FF00.toInt()
+                    circle.strokeWidth = 4f
+
+                    val radiusInMeters = 500.0
+                    val circlePoints = ArrayList<GeoPoint>()
+                    for (i in 0 until 360 step 10) {
+                        val radian = Math.toRadians(i.toDouble())
+                        val newLat = getLati!! + (radiusInMeters / 111000) * Math.sin(radian)
+                        val newLon = getLongi!! + (radiusInMeters / (111000 * Math.cos(Math.toRadians(getLati!!)))) * Math.cos(radian)
+                        circlePoints.add(GeoPoint(newLat, newLon))
+                    }
+
+                    circle.points = circlePoints
+                    mapView.overlays.add(circle)
+
+
+
+
                     mapView.invalidate()
                     mapView.setCenter(userLocation)
-                    mapView.setZoom(13)
+                    mapView.setZoom(15)
                 }
             }
         }

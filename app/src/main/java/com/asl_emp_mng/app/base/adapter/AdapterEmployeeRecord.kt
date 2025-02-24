@@ -48,7 +48,14 @@ class AdapterEmployeeRecord(
                     binding.llcAttend.visibility = View.VISIBLE
                     binding.llcWeekOff.visibility = View.GONE
                     binding.tvCheckIn.text = this.punchIn
-                    binding.tvCheckOut.text = this.punchOut
+
+                    if (this.punchOut=="null"){
+                        binding.tvCheckOut.text =""
+                    }else{
+                        binding.tvCheckOut.text = this.punchOut
+                    }
+
+
 
                     /*if (this.punchIn !=null && this.punchOut !=null){
                         binding.tvWorkingHrs.text = calculateHours(this.punchIn, this.punchOut)

@@ -73,12 +73,12 @@ class AddShiftActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         getEmployeeComId()?.let {
-            settingsViewModel.getShiftList(this@AddShiftActivity,
+            settingsViewModel.getShiftList(
+                this@AddShiftActivity,
                 it
             )
         }
     }
-
 
 
     private fun observeViewModel() {
@@ -109,6 +109,12 @@ class AddShiftActivity : AppCompatActivity() {
             if (it.success) {
                 CustomToast(this, it.message)
                 bottomSheetDialog.dismiss()
+                getEmployeeComId()?.let {
+                    settingsViewModel.getShiftList(
+                        this@AddShiftActivity,
+                        it
+                    )
+                }
             } else {
                 CustomToast(this, it.message)
             }
@@ -131,7 +137,8 @@ class AddShiftActivity : AppCompatActivity() {
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
                 getEmployeeComId()?.let {
-                    settingsViewModel.getShiftList(this@AddShiftActivity,
+                    settingsViewModel.getShiftList(
+                        this@AddShiftActivity,
                         it
                     )
                 }
@@ -171,10 +178,10 @@ class AddShiftActivity : AppCompatActivity() {
         val btnCancel = view.findViewById<AppCompatImageView>(R.id.bottom_sheet_cancel)
 
         edtShiftStartTime.setOnClickListener {
-            timePickerDialog(edtShiftStartTime)
+            timePickerDialog(edtShiftStartTime, true)
         }
         edtShiftEndTime.setOnClickListener {
-            timePickerDialog(edtShiftEndTime)
+            timePickerDialog(edtShiftEndTime, false)
         }
 
 
@@ -185,12 +192,27 @@ class AddShiftActivity : AppCompatActivity() {
 
         btnSubmit.setOnClickListener {
             if (isValidate()) {
-                val requestBody = ShiftCreateRequest(
-                    shift_name = edtShiftName.text.toString(),
-                    start_time = edtShiftStartTime.text.toString(),
-                    end_time = edtShiftEndTime.text.toString()
-                )
-                settingsViewModel.createNewShift(this, requestBody)
+
+                val startTime = edtShiftStartTime.text.toString()
+                val endTime = edtShiftEndTime.text.toString()
+
+                if (!isEndTimeValid(startTime, endTime)) {
+                    CustomToast(this, "End time cannot be earlier than start time!")
+                    return@setOnClickListener
+                } else {
+                    val formattedStartTime = convertTo24HourFormat(startTime)
+                    val formattedEndTime = convertTo24HourFormat(endTime)
+
+
+                    val requestBody = ShiftCreateRequest(
+                        shift_name = edtShiftName.text.toString(),
+                        start_time = formattedStartTime,
+                        end_time = formattedEndTime
+                    )
+                    settingsViewModel.createNewShift(this, requestBody)
+                }
+
+
             }
         }
 
@@ -200,6 +222,38 @@ class AddShiftActivity : AppCompatActivity() {
         bottomSheetDialog.show()
 
 
+    }
+
+
+    private fun convertTo24HourFormat(time: String): String {
+        return try {
+            val inputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+            val date = inputFormat.parse(time)!!
+            outputFormat.format(date)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            time
+        }
+    }
+
+    private fun isEndTimeValid(startTime: String, endTime: String): Boolean {
+        if (startTime.isEmpty() || endTime.isEmpty()) return false
+
+        val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+        val startCal = Calendar.getInstance()
+        val endCal = Calendar.getInstance()
+
+        try {
+            startCal.time = timeFormat.parse(startTime)!!
+            endCal.time = timeFormat.parse(endTime)!!
+            return !endCal.before(startCal)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return false
     }
 
 
@@ -222,24 +276,64 @@ class AddShiftActivity : AppCompatActivity() {
         return true
     }
 
-    private fun timePickerDialog(view: AppCompatEditText) {
+    /*  private fun timePickerDialog(view: AppCompatEditText, isStartTime: Boolean) {
+          val cal = Calendar.getInstance()
+          val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+              cal.set(Calendar.HOUR_OF_DAY, hour)
+              cal.set(Calendar.MINUTE, minute)
 
+              // Convert to 12-hour format with AM/PM
+              val timeFormat = SimpleDateFormat("hh:mm a", Locale.ENGLISH)
+              view.setText(timeFormat.format(cal.time))
+
+
+
+          }
+
+          TimePickerDialog(
+              view.context, // Use view's context
+              timeSetListener,
+              cal.get(Calendar.HOUR_OF_DAY),
+              cal.get(Calendar.MINUTE),
+              false // Keeps the picker in 24-hour mode
+          ).show()
+      }*/
+
+
+    private fun timePickerDialog(view: AppCompatEditText, isStartTime: Boolean) {
         val cal = Calendar.getInstance()
         val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
             cal.set(Calendar.HOUR_OF_DAY, hour)
             cal.set(Calendar.MINUTE, minute)
 
-            val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-            view.setText(timeFormat.format(cal.time))
+            val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+            val selectedTime = timeFormat.format(cal.time)
+
+            if (isStartTime) {
+                view.setText(selectedTime)
+            } else {
+                val startTimeText = edtShiftStartTime.text.toString()
+                if (startTimeText.isNotEmpty()) {
+                    val startCal = Calendar.getInstance()
+                    startCal.time = timeFormat.parse(startTimeText)!!
+
+                    if (cal.before(startCal)) {
+                        CustomToast(this, "End time cannot be earlier than start time!")
+                        return@OnTimeSetListener
+                    }
+                }
+                view.setText(selectedTime)
+            }
         }
+
         TimePickerDialog(
-            this,
+            view.context,
             timeSetListener,
             cal.get(Calendar.HOUR_OF_DAY),
             cal.get(Calendar.MINUTE),
-            true
+            false
         ).show()
-
     }
+
 
 }

@@ -314,8 +314,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                      val jobTitles = it.data.map { it.name }
                    // val jobTitles = mutableListOf("Select Job Title") + it.data.map { it.name }
 
-                    val adapterTitle =
-                        ArrayAdapter(this@EmployeeProfileDetails, R.layout.custom_spinner_item, jobTitles)
+                    val adapterTitle = ArrayAdapter(this@EmployeeProfileDetails, R.layout.custom_spinner_item, jobTitles)
                     binding.spinnerJobTitle.setAdapter(adapterTitle)
 
                     binding.spinnerJobTitle.onItemSelectedListener =

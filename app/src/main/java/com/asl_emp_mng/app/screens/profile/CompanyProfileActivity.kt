@@ -297,11 +297,24 @@ class CompanyProfileActivity : AppCompatActivity() {
                     )
                     binding.tieOwnerAddress.setText(data.proprietor?.currentAddress ?: "")
 
-                    selectedCompanyType = data.company?.businessTypeId ?: 0
-                    selectedBusinessType = data.company?.businessTypeId ?: 0
+
+
+                    val companyTypeId = data.company?.companyType?.toIntOrNull() ?: 0
+                    selectedCompanyType=companyTypeId
+                    val companyTypeName = mCompanyTypeList?.find { it.id == companyTypeId }?.company_name?: ""
+                    binding.tieCompanyType.setText(companyTypeName)
+
+                    val businessTypeId = data.company?.businessTypeId ?: 0
+                    selectedBusinessType=businessTypeId
+                    val businessTypeName = mBusinessTypeList?.find { it.id == businessTypeId }?.business_name ?: ""
+                    binding.tieBusinessType.setText(businessTypeName)
+
                     selectedCountry = data.company?.country?.toInt() ?: 0
                     selectedState = data.company?.state?.toInt() ?: 0
                     selectedCity = data.company?.city?.toInt() ?: 0
+
+
+
 
                 }
             } else {

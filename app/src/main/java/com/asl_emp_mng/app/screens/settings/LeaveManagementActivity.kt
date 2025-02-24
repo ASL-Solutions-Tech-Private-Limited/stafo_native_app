@@ -123,6 +123,7 @@ class LeaveManagementActivity : AppCompatActivity() {
                 filteredList = leaveList
 
                 if (leaveList.isNotEmpty()) {
+                    binding.txtMsg.visibility = View.GONE
 
                     binding.etDirSearch.isFocusable = true
                     binding.etDirSearch.isFocusableInTouchMode = true

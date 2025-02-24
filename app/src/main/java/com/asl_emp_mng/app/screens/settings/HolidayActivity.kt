@@ -104,6 +104,7 @@ class HolidayActivity : AppCompatActivity() {
             if (it.status) {
 
                 if (it.data.isNotEmpty()){
+                    binding.txtMsg.visibility = View.GONE
                     val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
                     binding.rvHolidayList.setLayoutManager(layoutManager)
                     rvAdapter = AdapterHoliday(it.data, this@HolidayActivity)

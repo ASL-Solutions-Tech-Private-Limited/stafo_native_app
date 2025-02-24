@@ -418,6 +418,8 @@ class EmployeeDashboard : AppCompatActivity() {
                     val punchInTime = punchData.punchIn
                     val punchOutTime = punchData.punchOut
 
+                    val shiftEndTime = it.employeeInfo.shift?.endTime
+
                     val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(
                         Date()
                     )
@@ -473,6 +475,17 @@ class EmployeeDashboard : AppCompatActivity() {
                             binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
                         }
 
+                        if (shiftEndTime != null) {
+                            val currentDateTime = Calendar.getInstance().time
+                            val shiftEndDateTime = SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
+
+                            if (shiftEndDateTime != null && currentDateTime.after(shiftEndDateTime) && punchOutTime == null) {
+                                if (isServiceRunning(LocationForegroundService::class.java)) {
+                                    stopLocationService()
+                                }
+                            }
+                        }
+
 
                     }else{
                         binding.btnPunchIn.text = "Punch In"
@@ -483,6 +496,9 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
                 }
+
+
+
 
 
 

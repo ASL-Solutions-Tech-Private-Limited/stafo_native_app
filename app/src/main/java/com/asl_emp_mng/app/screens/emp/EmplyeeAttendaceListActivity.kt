@@ -127,6 +127,8 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
 
 
                 if (it.data.isNotEmpty()) {
+                    binding.txtMsg.visibility = View.GONE
+
                     binding.etDirSearch.isFocusable = true
                     binding.etDirSearch.isFocusableInTouchMode = true
 

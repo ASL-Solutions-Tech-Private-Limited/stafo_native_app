@@ -109,7 +109,7 @@ class EmployeeAttendance : AppCompatActivity() {
         settingsViewModel.mEmployeeListResponse.observe(this) {
             Log.d("res", it.message)
             if (it.status) {
-
+                binding.txtMsg.visibility = View.GONE
                 Log.d("res", it.data.toString())
                 val layoutManager: RecyclerView.LayoutManager =
                     LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)

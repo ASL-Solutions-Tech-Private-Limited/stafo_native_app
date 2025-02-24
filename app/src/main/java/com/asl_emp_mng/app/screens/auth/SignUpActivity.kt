@@ -151,7 +151,7 @@ class SignUpActivity : AppCompatActivity() {
 
                 setUserAccessToken(it.token)
                 setIsCOMPANYLogin(true)
-                setCompanyDetails(it.company)
+                it.company?.let { it1 -> setCompanyDetails(it1) }
                 saveToken(this, "token", it?.token ?: "")
                 CustomToast(this, it.message)
                 startActivity(Intent(this@SignUpActivity, EmployerDashboard::class.java))
@@ -198,7 +198,7 @@ class SignUpActivity : AppCompatActivity() {
                 field.setText(searchListItem.title)
                 if (title == "Company Type") {
                     userSelectCTypeId = searchListItem.id.toString()
-                } else {
+                } else if (title == "Business Type"){
                     userSelectBTypeId = searchListItem.id.toString()
                 }
 

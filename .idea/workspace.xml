@@ -443,8 +443,23 @@
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddBranchActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddBranchActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/PlaceSearchActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/PlaceSearchActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/EmployeeDashboardResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/EmployeeDashboardResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/SignUpActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/SignUpActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/CompanyRegistrationResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/CompanyRegistrationResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployeeDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployeeDashboard.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeAttendance.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeAttendance.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeAttendanceRecordActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeAttendanceRecordActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeLeaveHistoryActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeLeaveHistoryActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeProfileDetails.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeProfileDetails.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeePunchInActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeePunchInActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmplyeeAttendaceListActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmplyeeAttendaceListActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/profile/CompanyProfileActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/profile/CompanyProfileActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddShiftActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddShiftActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/BranchActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/BranchActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/HolidayActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/HolidayActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/LeaveManagementActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/LeaveManagementActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/LeaveRequestHistoryActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/LeaveRequestHistoryActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/custom_bottom_sheet_add_shift_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/custom_bottom_sheet_add_shift_layout.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -454,7 +469,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[13911499310008M]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\ASUS\.android\avd\Pixel_3a_API_33_x86_64.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />

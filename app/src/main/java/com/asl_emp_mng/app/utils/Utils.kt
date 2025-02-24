@@ -1409,7 +1409,7 @@ fun calculateHours2(punchIn: String?, punchOut: String?): String {
 
         "$hours hrs $minutes min"
     } catch (e: Exception) {
-        "Error" // Handle unexpected parsing issues
+        ""
     }
 }
 

@@ -55,6 +55,9 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
         settingsViewModel.mGetEmployeeLeaveHistResponse.observe(this) {
 
             if (it.data.isNotEmpty()) {
+
+                binding.txtMsg.visibility = View.GONE
+
                 leaveCount=it.leaveCount
                 val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
                 binding.rvEmpLeaveHist.setLayoutManager(layoutManager)

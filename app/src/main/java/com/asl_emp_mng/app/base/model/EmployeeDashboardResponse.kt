@@ -100,7 +100,7 @@ data class EmployeeInfo(
     @SerializedName("updated_at")
     val updatedAt: String,
     val branch: Branch,
-    val shift: Any?,
+    @SerializedName("shift") val shift: Shift,
     val punches: List<Punch>?,
 )
 
@@ -134,4 +134,13 @@ data class Punch(
     val createdAt: String,
     @SerializedName("updated_at")
     val updatedAt: String,
+)
+data class Shift(
+    @SerializedName("id") val id: Int,
+    @SerializedName("shift_name") val shiftName: String,
+    @SerializedName("start_time") val startTime: String,
+    @SerializedName("end_time") val endTime: String,
+    @SerializedName("company_id") val companyId: Int,
+    @SerializedName("created_at") val createdAt: String,
+    @SerializedName("updated_at") val updatedAt: String
 )

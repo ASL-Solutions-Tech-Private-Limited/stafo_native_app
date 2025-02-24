@@ -81,6 +81,7 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
         settingsViewModel.mAttendanceHistoryResponse.observe(this) {
             if (it.status) {
                 if (it.data != null) {
+                    binding.txtMsg.visibility = View.GONE
                 val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
                     var mPresentCount = 0
                     var mTotalWorkingHour = 0

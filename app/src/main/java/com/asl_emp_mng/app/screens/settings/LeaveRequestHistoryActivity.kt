@@ -66,6 +66,8 @@ class LeaveRequestHistoryActivity : AppCompatActivity() {
 
 
             if (it.data.isNotEmpty()) {
+
+                binding.txtMsg.visibility = View.GONE
                 val approvedLeaves = it.data.filter { leave -> leave.status == "approved" }
                 val rejectedLeaves = it.data.filter { leave -> leave.status == "rejected" }
                 leaveList = approvedLeaves + rejectedLeaves
