@@ -29,7 +29,10 @@ import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyUpdateDocumentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDocumentUploadResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
@@ -50,6 +53,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PendingLeaveResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.PolicyCreateResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.PolicyFetchResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.PunchInResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftAssignmentResponse
@@ -67,6 +72,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -240,6 +246,241 @@ class SettingsViewModel : BaseViewModel() {
         MutableLiveData()
 
     val mCompanyUpdateDocumentResponse: LiveData<CompanyUpdateDocumentResponse> get() = mCompanyUpdateDocument
+
+
+    private var mPolicyFetch: MutableLiveData<PolicyFetchResponse> = MutableLiveData()
+
+    val mPolicyFetchResponse: LiveData<PolicyFetchResponse> get() = mPolicyFetch
+
+
+    private var mPolicyCreate: MutableLiveData<PolicyCreateResponse> = MutableLiveData()
+
+    val mPolicyCreateResponse: LiveData<PolicyCreateResponse> get() = mPolicyCreate
+
+    private var mEmployeeDocumentUpload: MutableLiveData<EmployeeDocumentUploadResponse> =
+        MutableLiveData()
+
+    val mEmployeeDocumentUploadResponse: LiveData<EmployeeDocumentUploadResponse> get() = mEmployeeDocumentUpload
+
+
+    private var mDepartmentCreate: MutableLiveData<DepartmentCreateResponse> = MutableLiveData()
+
+    val mDepartmentCreateResponse: LiveData<DepartmentCreateResponse> get() = mDepartmentCreate
+
+
+    fun createDepartment(
+        mContext: Context,
+        request: DepartmentCreateRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callCreateDepartment(request)
+                Log.d("res", "department c :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mDepartmentCreate.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun postEmpUploadDocument(
+        mContext: Context,
+        employeeId: String,
+        documents: List<Triple<String, String, File>>
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val employeeIdBody = employeeId.toRequestBody("text/plain".toMediaTypeOrNull())
+
+                val documentParts = mutableListOf<MultipartBody.Part>()
+
+                documents.forEachIndexed { index, (documentName, documentTypeId, file) ->
+
+                    val documentNameBody =
+                        documentName.toRequestBody("text/plain".toMediaTypeOrNull())
+                    documentParts.add(
+                        MultipartBody.Part.createFormData(
+                            "documents[$index][document_name]",
+                            documentName
+                        )
+                    )
+
+                    val documentTypeIdBody =
+                        documentTypeId.toRequestBody("text/plain".toMediaTypeOrNull())
+                    documentParts.add(
+                        MultipartBody.Part.createFormData(
+                            "documents[$index][document_type_id]",
+                            documentTypeId
+                        )
+                    )
+
+                    val requestFile = file.asRequestBody("application/pdf".toMediaTypeOrNull())
+                    documentParts.add(
+                        MultipartBody.Part.createFormData(
+                            "documents[$index][file]",
+                            file.name,
+                            requestFile
+                        )
+                    )
+                }
+
+                val response = ASLEmpMng.instance.apiStores()?.callEmployeeUploadDocument(
+                    employeeId = employeeIdBody,
+                    documents = documentParts
+                )
+                Log.d("res", "emp doc :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mEmployeeDocumentUpload.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun uploadPolicy(mContext: Context, title: String, description: String, file: File) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val titlePart = RequestBody.create("text/plain".toMediaTypeOrNull(), title)
+                val descPart = RequestBody.create("text/plain".toMediaTypeOrNull(), description)
+
+                val requestFile = RequestBody.create("application/pdf".toMediaTypeOrNull(), file)
+                val filePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
+
+                val response =
+                    ASLEmpMng.instance.apiStores()?.createPolicy(titlePart, descPart, filePart)
+
+                Log.d("res", "policy create " + response?.body().toString())
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mPolicyCreate.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun fetchPolicy(mContext: Context) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callFetchPolicy()
+                Log.d("res", "policy " + response?.body().toString())
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mPolicyFetch.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
     fun postCompanyUpdateDocument(

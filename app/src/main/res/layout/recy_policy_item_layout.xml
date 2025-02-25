@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -38,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_marginStart="@dimen/_8sdp"
             android:layout_toRightOf="@+id/txt_policy_name1"
             android:fontFamily="@font/gilroy_regular"
             android:text="Employee Name"
@@ -46,17 +47,39 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
-        <TextView
-            android:layout_below="@+id/txt_policy_name"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:text="View File"
-            android:fontFamily="@font/gilroy_regular"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llc_view_policy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/custom_date_bg"
+            android:orientation="horizontal"
+            android:layout_below="@+id/txt_policy_name">
 
+            <ImageView
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:src="@drawable/ic_view_profile"
+                android:tint="@color/black"
+                tools:ignore="UseAppTint" />
+
+            <TextView
+                android:id="@+id/txt_view_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:fontFamily="@font/gilroy_medium"
+                android:paddingVertical="@dimen/_8sdp"
+                android:text="View Policy"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
 
 

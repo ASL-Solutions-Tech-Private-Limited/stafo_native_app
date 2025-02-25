@@ -413,7 +413,7 @@ class EmployeeDashboard : AppCompatActivity() {
                     }
                 }*/
 
-                if (!it.employeeInfo.punches.isNullOrEmpty()) {
+                /*if (!it.employeeInfo.punches.isNullOrEmpty()) {
                     val punchData = it.employeeInfo.punches[0]
                     val punchInTime = punchData.punchIn
                     val punchOutTime = punchData.punchOut
@@ -495,7 +495,94 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
 
+                }*/
+
+
+                if (!it.employeeInfo.punches.isNullOrEmpty()) {
+                    val punchData = it.employeeInfo.punches[0]
+                    val punchInTime = punchData.punchIn
+                    val punchOutTime = punchData.punchOut
+                    val shiftEndTime = it.employeeInfo.shift?.endTime
+
+                    val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+                    val punchInDate = punchInTime?.let {
+                        SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(it)
+                    }?.let {
+                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
+                    }
+
+                    if (punchInDate == currentDate) {
+
+                        if (punchInTime != null && punchOutTime != null) {
+                            if (isServiceRunning(LocationForegroundService::class.java)) {
+                                stopLocationService()
+                            }
+                            binding.btnPunchIn.text = "Punched Out"
+                            binding.btnPunchIn.isEnabled = false
+                            binding.btnPunchIn.setBackgroundResource(R.drawable.disable_btn_punch)
+
+                            binding.tvOfficeTiming.text = "Punched Out At ${
+                                getFormattedDate2(
+                                    punchOutTime,
+                                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
+                                    "hh:mm a dd-MMM-yyyy"
+                                )
+                            }"
+
+                        } else if (punchInTime != null) {
+                            binding.btnPunchIn.text = "Punch Out"
+                            binding.btnPunchIn.isEnabled = true
+                            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+                            binding.tvOfficeTiming.text = "Punched In At ${
+                                getFormattedDate2(
+                                    punchInTime,
+                                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
+                                    "hh:mm a dd-MMM-yyyy"
+                                )
+                            }"
+
+                            if (!isServiceRunning(LocationForegroundService::class.java)) {
+                                startLocationService()
+                            }
+
+                        } else {
+                            binding.btnPunchIn.text = "Punch In"
+                            binding.btnPunchIn.isEnabled = true
+                            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+                        }
+
+
+                        if (shiftEndTime != null) {
+                            val currentDateTime = Calendar.getInstance()
+                            val shiftEndCalendar = Calendar.getInstance()
+                            val shiftEndTimeDate = SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
+
+                            shiftEndTimeDate?.let {
+                                shiftEndCalendar.set(Calendar.HOUR_OF_DAY, it.hours)
+                                shiftEndCalendar.set(Calendar.MINUTE, it.minutes)
+                                shiftEndCalendar.set(Calendar.SECOND, 0)
+                            }
+
+                            if (currentDateTime.after(shiftEndCalendar) && punchOutTime == null) {
+                                if (isServiceRunning(LocationForegroundService::class.java)) {
+                                    stopLocationService()
+                                }
+                            }
+                        }
+
+                    } else {
+
+                        binding.btnPunchIn.text = "Punch In"
+                        binding.btnPunchIn.isEnabled = true
+                        binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+
+                        if (isServiceRunning(LocationForegroundService::class.java)) {
+                            stopLocationService()
+                        }
+                    }
                 }
+
 
 
 

@@ -1,13 +1,19 @@
 package com.asl_emp_mng.app.screens.emp
 
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.graphics.PorterDuff
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +34,9 @@ import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeComId
 import com.asl_emp_mng.app.utils.getEmployeeDetails
+import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputEditText
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -38,8 +46,8 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
     private val calendar = Calendar.getInstance()
 
-    private  var selectGender: String="male"
-    private  var selectJobTitle: String=""
+    private var selectGender: String = "male"
+    private var selectJobTitle: String = ""
     private var selectBranch: Int = 1
     private var selectDepartment: Int = 1
     private lateinit var branchDialog: SearchableDialog
@@ -56,7 +64,10 @@ class EmployeeProfileDetails : AppCompatActivity() {
     private var mEmpID = ""
     private var mEMPDetails: EmployeeDataFetch? = null
 
-
+    private var aadhaarFile: File? = null
+    private var panFile: File? = null
+    private var licenceFile: File? = null
+    private var voterIdFile: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +89,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        settingsViewModel.fetchEmployeeDetails(this@EmployeeProfileDetails,mEmpID )
+        settingsViewModel.fetchEmployeeDetails(this@EmployeeProfileDetails, mEmpID)
 
     }
 
@@ -139,7 +150,11 @@ class EmployeeProfileDetails : AppCompatActivity() {
                     if (selectDepartment != null) {
                         val index = mDepartmentList?.indexOfFirst { it.id == selectDepartment }
                         if (index != -1) {
-                            binding.tieDepartment.setText(index?.let { it1 -> mDepartmentList?.get(it1)?.name })
+                            binding.tieDepartment.setText(index?.let { it1 ->
+                                mDepartmentList?.get(
+                                    it1
+                                )?.name
+                            })
                         }
                     }
 
@@ -175,6 +190,28 @@ class EmployeeProfileDetails : AppCompatActivity() {
                                 binding.spinnerJobTitle.setSelection(options.indexOf(item))
                         }
                     }
+
+                    if (!data.dateOfLeaving.isNullOrBlank()) {
+                        binding.tieDateOfLeaving.setText(data.dateOfLeaving)
+                        isFocusableField(binding.tieDateOfLeaving)
+                    }
+
+                    if (!data.esiNumber.isNullOrBlank()) {
+                        binding.tieEsiNumber.setText(data.esiNumber)
+                        isFocusableField(binding.tieEsiNumber)
+                    }
+
+                    if (!data.pfNumber.isNullOrBlank()) {
+                        binding.tiePfNumber.setText(data.pfNumber)
+                        isFocusableField(binding.tiePfNumber)
+                    }
+
+                    if (!data.officialEmailId.isNullOrBlank()) {
+                        binding.tieOfficialEmail.setText(data.officialEmailId)
+                        isFocusableField(binding.tieOfficialEmail)
+                    }
+
+
                 }
             } else {
                 CustomToast(this, it.message)
@@ -195,9 +232,20 @@ class EmployeeProfileDetails : AppCompatActivity() {
         }
 
 
+        settingsViewModel.mEmployeeDocumentUploadResponse.observe(this) {
+
+            if (it.status) {
+                CustomToast(this, it.message)
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
+
+
 
         settingsViewModel.mBranchListResponse.observe(this) {
-
 
 
             mBranchList = it.data
@@ -288,18 +336,22 @@ class EmployeeProfileDetails : AppCompatActivity() {
     }
 
 
-
     private fun onClickListener() {
         binding?.apply {
 
 
+
+
+
             getEmployeeComId()?.let {
-                settingsViewModel.getBranchList(this@EmployeeProfileDetails,
+                settingsViewModel.getBranchList(
+                    this@EmployeeProfileDetails,
                     it
                 )
             }
             getEmployeeComId()?.let {
-                settingsViewModel.getDepartmentList(this@EmployeeProfileDetails,
+                settingsViewModel.getDepartmentList(
+                    this@EmployeeProfileDetails,
                     it
                 )
             }
@@ -309,12 +361,16 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
             settingsViewModel.mJobTitleResponse.observe(this@EmployeeProfileDetails) {
-                if (it.status){
+                if (it.status) {
 
-                     val jobTitles = it.data.map { it.name }
-                   // val jobTitles = mutableListOf("Select Job Title") + it.data.map { it.name }
+                    val jobTitles = it.data.map { it.name }
+                    // val jobTitles = mutableListOf("Select Job Title") + it.data.map { it.name }
 
-                    val adapterTitle = ArrayAdapter(this@EmployeeProfileDetails, R.layout.custom_spinner_item, jobTitles)
+                    val adapterTitle = ArrayAdapter(
+                        this@EmployeeProfileDetails,
+                        R.layout.custom_spinner_item,
+                        jobTitles
+                    )
                     binding.spinnerJobTitle.setAdapter(adapterTitle)
 
                     binding.spinnerJobTitle.onItemSelectedListener =
@@ -334,38 +390,32 @@ class EmployeeProfileDetails : AppCompatActivity() {
                         }
 
 
-
-                }else{
-                    CustomToast(this@EmployeeProfileDetails,it.message)
+                } else {
+                    CustomToast(this@EmployeeProfileDetails, it.message)
                 }
 
             }
 
 
+            /* val options = resources.getStringArray(R.array.position_type)
+             val adapterTitle = ArrayAdapter(this@EmployeeProfileDetails, R.layout.custom_spinner_item, options)
+             binding.spinnerJobTitle.setAdapter(adapterTitle)
 
+             binding.spinnerJobTitle.onItemSelectedListener =
+                 object : AdapterView.OnItemSelectedListener {
+                     override fun onItemSelected(
+                         parent: AdapterView<*>,
+                         view: View?,
+                         position: Int,
+                         id: Long
+                     ) {
+                         val selectedItem = parent.getItemAtPosition(position).toString()
+                         selectJobTitle = selectedItem
+                     }
 
-
-
-
-           /* val options = resources.getStringArray(R.array.position_type)
-            val adapterTitle = ArrayAdapter(this@EmployeeProfileDetails, R.layout.custom_spinner_item, options)
-            binding.spinnerJobTitle.setAdapter(adapterTitle)
-
-            binding.spinnerJobTitle.onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parent: AdapterView<*>,
-                        view: View?,
-                        position: Int,
-                        id: Long
-                    ) {
-                        val selectedItem = parent.getItemAtPosition(position).toString()
-                        selectJobTitle = selectedItem
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>) {
-                    }
-                }*/
+                     override fun onNothingSelected(parent: AdapterView<*>) {
+                     }
+                 }*/
 
 
 
@@ -466,6 +516,10 @@ class EmployeeProfileDetails : AppCompatActivity() {
                 showDatePicker(binding.tieDateJoining)
             }
 
+            binding.tieDateOfLeaving.setOnClickListener {
+                showDatePicker(binding.tieDateOfLeaving)
+            }
+
             binding.tieDateOfBirth.setOnClickListener {
                 showDatePicker(binding.tieDateOfBirth)
             }
@@ -475,10 +529,28 @@ class EmployeeProfileDetails : AppCompatActivity() {
             tieDepartment.setOnClickListener { departmentDialog.show() }
 
 
+
+
+
+            tieAadhaar.setOnClickListener {
+                openPicker(1101)
+            }
+            tiePan.setOnClickListener {
+                openPicker(1102)
+            }
+            tieLicence.setOnClickListener {
+                openPicker(1103)
+            }
+            tieVoterId.setOnClickListener {
+                openPicker(1104)
+            }
+
+
+
             btnUpdateProfile.setOnClickListener {
                 if (profileType == "basic_details") {
                     if (validateBasicInfo()) {
-                        Log.d("res","post: ")
+                        Log.d("res", "post: ")
                         val request = UpdateEmployeeProfile(
                             name = tieStaffName.text.toString(),
                             email = tieEmailId.text.toString(),
@@ -507,7 +579,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
 
-                        Log.d("res","post: $request")
+                        Log.d("res", "post: $request")
 
 
                         settingsViewModel.updateEmployeeDetails(
@@ -518,46 +590,215 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
                     }
                 } else if (profileType == "personal_details") {
-                    val request = UpdateEmployeeProfile(
-                        name = tieStaffName.text.toString(),
-                        email = tieEmailId.text.toString(),
-                        phone = tieMobileNo.text.toString(),
-                        position = selectJobTitle,
-                        salary = 0,
-                        branchId = selectBranch,
-                        departmentId = selectDepartment,
-                        maritalStatus = selectMarital,
-                        guardianName = tieGurdianName.text.toString(),
-                        bloodGroup = tieBloodGroup.text.toString(),
-                        dateOfJoining = tieDateJoining.text.toString(),
-                        dateOfBirth = tieDateOfBirth.text.toString(),
-                        gender = selectGender,
-                        address = tieAddress.text.toString(),
-                        country = 0,
-                        state = 0,
-                        city = 0,
-                        job_title_id = 0,
-                        employee_type_id = 0,
-                        official_email_id = "",
-                        pf_number = "",
-                        esi_number = "",
-                        date_of_leaving = "",
-                    )
+
+                    if (validatePersonalInfo()) {
+                        val request = UpdateEmployeeProfile(
+                            name = tieStaffName.text.toString(),
+                            email = tieEmailId.text.toString(),
+                            phone = tieMobileNo.text.toString(),
+                            position = selectJobTitle,
+                            salary = 0,
+                            branchId = selectBranch,
+                            departmentId = selectDepartment,
+                            maritalStatus = selectMarital,
+                            guardianName = tieGurdianName.text.toString(),
+                            bloodGroup = tieBloodGroup.text.toString(),
+                            dateOfJoining = tieDateJoining.text.toString(),
+                            dateOfBirth = tieDateOfBirth.text.toString(),
+                            gender = selectGender,
+                            address = tieAddress.text.toString(),
+                            country = 0,
+                            state = 0,
+                            city = 0,
+                            job_title_id = 0,
+                            employee_type_id = 0,
+                            official_email_id = "",
+                            pf_number = "",
+                            esi_number = "",
+                            date_of_leaving = "",
+                        )
 
 
-                    settingsViewModel.updateEmployeeDetails(
-                        this@EmployeeProfileDetails,
-                        getEmployeeDetails()?.id.toString(),
-                        request
-                    )
+                        settingsViewModel.updateEmployeeDetails(
+                            this@EmployeeProfileDetails,
+                            getEmployeeDetails()?.id.toString(),
+                            request
+                        )
+                    }
+
                 } else if (profileType == "document_details") {
-                    CustomToast(this@EmployeeProfileDetails, "Working is progress")
+
+
+                    if (documentInfo()) {
+
+                        val documentList = mutableListOf<Triple<String, String, File>>()
+
+                        aadhaarFile?.let { documentList.add(Triple("aadhaar", "2", it)) }
+                        panFile?.let { documentList.add(Triple("Pan card", "1", it)) }
+                        licenceFile?.let { documentList.add(Triple("Driving Licence", "3", it)) }
+                        voterIdFile?.let { documentList.add(Triple("Voter ID", "4", it)) }
+
+                        settingsViewModel.postEmpUploadDocument(
+                            this@EmployeeProfileDetails,
+                            mEmpID,
+                            documentList
+                        )
+
+
+                    }
+
+
                 } else if (profileType == "employee_details") {
-                    CustomToast(this@EmployeeProfileDetails, "Working is progress")
+
+                    if (validateWorkDetails()) {
+                        val request = UpdateEmployeeProfile(
+                            name = tieStaffName.text.toString(),
+                            email = tieEmailId.text.toString(),
+                            phone = tieMobileNo.text.toString(),
+                            position = selectJobTitle,
+                            salary = 0,
+                            branchId = selectBranch,
+                            departmentId = selectDepartment,
+                            maritalStatus = selectMarital,
+                            guardianName = tieGurdianName.text.toString(),
+                            bloodGroup = tieBloodGroup.text.toString(),
+                            dateOfJoining = tieDateJoining.text.toString(),
+                            dateOfBirth = tieDateOfBirth.text.toString(),
+                            gender = selectGender,
+                            address = tieAddress.text.toString(),
+                            country = 0,
+                            state = 0,
+                            city = 0,
+                            job_title_id = 0,
+                            employee_type_id = 0,
+                            official_email_id = tieOfficialEmail.text.toString(),
+                            pf_number = tiePfNumber.text.toString(),
+                            esi_number = tieEsiNumber.text.toString(),
+                            date_of_leaving = tieDateOfLeaving.text.toString(),
+                        )
+
+
+                        settingsViewModel.updateEmployeeDetails(
+                            this@EmployeeProfileDetails,
+                            getEmployeeDetails()?.id.toString(),
+                            request
+                        )
+                    }
+
+
                 }
             }
 
 
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && data?.data != null) {
+            val uri: Uri = data.data!!
+
+            val file = getFileFromUri(uri)
+
+            if (file != null) {
+                val fileName = file.name
+
+                when (requestCode) {
+                    1101 -> {
+                        binding.tieAadhaar.setText(fileName)
+                        aadhaarFile = file
+                    }
+
+                    1102 -> {
+                        binding.tiePan.setText(fileName)
+                        panFile = file
+                    }
+
+                    1103 -> {
+                        binding.tieLicence.setText(fileName)
+                        licenceFile = file
+                    }
+
+                    1104 -> {
+                        binding.tieVoterId.setText(fileName)
+                        voterIdFile = file
+                    }
+                }
+            } else {
+                CustomToast(this, "File selection failed")
+
+            }
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            CustomToast(this, ImagePicker.getError(data))
+
+        } else {
+            CustomToast(this, "Task Cancelled")
+
+        }
+    }
+
+    private fun getFileFromUri(uri: Uri): File? {
+        val fileName = getFileName(uri) ?: return null
+        val file = File(cacheDir, fileName)
+
+        return try {
+            contentResolver.openInputStream(uri)?.use { inputStream ->
+                file.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+            file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    private fun getFileName(uri: Uri): String? {
+        var name: String? = null
+
+        if (uri.scheme == "content") {
+            contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    if (nameIndex != -1) {
+                        name = cursor.getString(nameIndex)
+                    }
+                }
+            }
+        }
+
+        if (name.isNullOrEmpty()) {
+            name = uri.path?.let { path ->
+                val cut = path.lastIndexOf('/')
+                if (cut != -1) {
+                    path.substring(cut + 1)
+                } else {
+                    path
+                }
+            }
+        }
+
+        return name ?: "unknown_file"
+    }
+
+
+
+    private fun documentInfo(): Boolean {
+        return listOf(
+            binding.tieAadhaar to "Please select aadhaar",
+            binding.tiePan to "Please select pan card",
+            binding.tieLicence to "Please select driving licence",
+            binding.tieVoterId to "Please select  voter id",
+        ).all { validateField2(it.first, it.second) }
+    }
+
+    private fun validateField2(view: TextInputEditText?, errorMsg: String): Boolean {
+        return if (view?.text.isNullOrEmpty()) {
+            CustomToast(this, errorMsg)
+            false
+        } else {
+            true
         }
     }
 
@@ -589,6 +830,16 @@ class EmployeeProfileDetails : AppCompatActivity() {
     }
 
 
+    private fun validateWorkDetails(): Boolean {
+        return listOf(
+            binding.tieDateOfLeaving to "Please enter  date of leaving",
+            binding.tieOfficialEmail to "Please enter official email ",
+            binding.tieEsiNumber to "Please enter esi number",
+            binding.tiePfNumber to "Please enter pf number ",
+        ).all { validateField(it.first, it.second) }
+    }
+
+
     private fun showDatePicker(view: TextInputEditText?) {
         val datePickerDialog = DatePickerDialog(
             this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
@@ -615,7 +866,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
         }
     }
 
-    private fun initMarital(){
+    private fun initMarital() {
         val marital = resources.getStringArray(R.array.marital_status)
         val adapterMarital = ArrayAdapter(this, R.layout.custom_spinner_item, marital)
         binding.spinnerMaritalSts.setAdapter(adapterMarital)
@@ -636,4 +887,18 @@ class EmployeeProfileDetails : AppCompatActivity() {
                 }
             }
     }
+
+    private fun openPicker(req: Int) {
+
+        ImagePicker.with(this)
+            .crop()
+            .compress(1024)
+            .maxResultSize(
+                1080,
+                1080
+            )
+            .start(req)
+    }
+
+
 }

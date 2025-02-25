@@ -49,7 +49,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+   <!-- <LinearLayout
         android:id="@+id/llSearchHead"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
             android:textSize="@dimen/_12ssp" />
 
 
-    </LinearLayout>
+    </LinearLayout>-->
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -96,14 +96,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/llSearchHead">
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_policy_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/include_01"
-            tools:listitem="@layout/recy_leave_management_child_layout" />
+            tools:listitem="@layout/recy_policy_item_layout" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
@@ -111,7 +111,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="No applied leave Present"
+        android:text="No available policy"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:visibility="gone"

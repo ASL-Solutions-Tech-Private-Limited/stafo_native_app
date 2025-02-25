@@ -80,6 +80,7 @@ class AddBranchActivity : AppCompatActivity() {
         settingsViewModel.mCreateBranchResponse.observe(this) {
             CustomToast(this, it.message)
             onBackPressedDispatcher.onBackPressed()
+            finish()
         }
 
 

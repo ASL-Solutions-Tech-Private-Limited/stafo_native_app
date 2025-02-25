@@ -24,7 +24,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="/private/var/folders/7g/5dtc9d8x7x9djvt99ljntynm0000gn/T/ic_android_black_24dp.xml" />
+                                                <entry key="imagePath" value="C:\Users\ASUS\AppData\Local\Temp\ic_android_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -67,7 +67,8 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="imagePath" value="/private/var/folders/7g/5dtc9d8x7x9djvt99ljntynm0000gn/T/ic_android_black_24dp.xml" />
+                                                <entry key="color" value="000000" />
+                                                <entry key="imagePath" value="C:\Users\ASUS\AppData\Local\Temp\ic_android_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -79,8 +80,8 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="$USER_HOME$/Downloads/splash_.png" />
-                                                <entry key="scalingPercent" value="55" />
+                                                <entry key="imagePath" value="C:\Users\ASUS\Downloads\app_icon.jpg" />
+                                                <entry key="scalingPercent" value="70" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -130,7 +131,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="/private/var/folders/7g/5dtc9d8x7x9djvt99ljntynm0000gn/T/ic_android_black_24dp.xml" />
+                                                <entry key="imagePath" value="C:\Users\ASUS\AppData\Local\Temp\ic_android_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -174,7 +175,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="/private/var/folders/7g/5dtc9d8x7x9djvt99ljntynm0000gn/T/ic_android_black_24dp.xml" />
+                                                <entry key="imagePath" value="C:\Users\ASUS\AppData\Local\Temp\ic_android_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -238,7 +239,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="imagePath" value="/private/var/folders/7g/5dtc9d8x7x9djvt99ljntynm0000gn/T/ic_android_black_24dp.xml" />
+                                                <entry key="imagePath" value="C:\Users\ASUS\AppData\Local\Temp\ic_android_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -317,8 +318,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="baseline_close_24" />
-                            <entry key="sourceFile" value="C:\Users\ASUS\Downloads\beach.svg" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="asl_icon" />
+                            <entry key="sourceFile" value="C:\Users\ASUS\Downloads\asl_icon.svg" />
                           </map>
                         </option>
                       </PersistentState>

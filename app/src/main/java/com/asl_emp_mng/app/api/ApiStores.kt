@@ -28,7 +28,10 @@ import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyUpdateDocumentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDocumentUploadResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
@@ -49,6 +52,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PendingLeaveResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.PolicyCreateResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.PolicyFetchResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.PunchInResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftAssignmentResponse
@@ -309,5 +314,33 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<CompanyUpdateDocumentResponse>
 
+    @GET("api/policy")
+    suspend fun callFetchPolicy(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap(),
+    ): Response<PolicyFetchResponse>
 
+
+    @Multipart
+    @POST("api/policy-create")
+    suspend fun createPolicy(
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody,
+        @Part file: MultipartBody.Part,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<PolicyCreateResponse>
+
+
+    @Multipart
+    @POST("api/employee-documents/create")
+    suspend fun callEmployeeUploadDocument(
+        @Part("employee_id") employeeId: RequestBody,
+        @Part documents: List<MultipartBody.Part>, // Must match Postman structure
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EmployeeDocumentUploadResponse>
+
+    @POST("api/departments")
+    suspend fun callCreateDepartment(
+        @Body request: DepartmentCreateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap(),
+    ): Response<DepartmentCreateResponse>
 }

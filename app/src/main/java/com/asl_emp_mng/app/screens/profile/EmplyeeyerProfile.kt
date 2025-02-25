@@ -13,6 +13,7 @@ import com.asl_emp_mng.app.screens.EmpProfileActivity
 import com.asl_emp_mng.app.screens.emp.EmpLeaveActivity
 import com.asl_emp_mng.app.screens.emp.EmployeeAttendance
 import com.asl_emp_mng.app.screens.emp.EmployeeAttendanceRecordActivity
+import com.asl_emp_mng.app.screens.settings.AddDepartmentActivity
 import com.asl_emp_mng.app.screens.settings.AddShiftActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
 import com.asl_emp_mng.app.screens.settings.HolidayActivity
@@ -73,6 +74,15 @@ class EmplyeeyerProfile : AppCompatActivity() {
         binding?.expandableOtherManagement?.setOnClickListener {
             binding.expandableOtherManagement.toggleLayout()
         }
+
+        val departmentSettings = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_department_settings)
+
+        departmentSettings?.setOnClickListener {
+            startActivity(Intent(this, AddDepartmentActivity::class.java))
+        }
+
+
+
 
         val holidaySettings =
             binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_holiday_settings)

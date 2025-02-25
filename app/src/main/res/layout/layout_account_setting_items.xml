@@ -21,6 +21,25 @@
         android:text="Branch"
         android:textColor="@color/white"
         android:textSize="@dimen/_12sdp" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_department_settings"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_44sdp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:background="@drawable/button_normal_bg"
+        android:drawableLeft="@drawable/ic_policy"
+        android:drawablePadding="@dimen/_12sdp"
+        android:drawableTint="@color/white"
+        android:fontFamily="@font/gilroy_bold"
+        android:gravity="center_vertical"
+        android:padding="@dimen/_12sdp"
+        android:text="Department"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12sdp" />
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_holiday_settings"
         android:layout_width="match_parent"
