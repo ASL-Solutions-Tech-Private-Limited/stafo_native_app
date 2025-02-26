@@ -79,7 +79,13 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        settingsViewModel.fetchEmployeeDetails(this@EmplyeeyerProfile, getEmployeeDetails()?.id.toString())
+
+        if (getIsCOMPANYLogin() == true) {
+
+        } else {
+            settingsViewModel.fetchEmployeeDetails(this@EmplyeeyerProfile, getEmployeeDetails()?.id.toString())
+
+        }
 
     }
 
@@ -101,19 +107,25 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         settingsViewModel.mFetchEmployeeDetailsResponse.observe(this) {
             if (it.status) {
-                if (!it.imageUrl.isNullOrEmpty()) {
-                    val imageUrl = it.imageUrl
 
-                    Glide.with(this)
-                        .load(imageUrl)
-                        .placeholder(R.drawable.demo_avatar)
-                        .error(R.drawable.demo_avatar)
-                        .into(binding.ivHeaderProfilePic)
+                if (getIsCOMPANYLogin() == true){
 
-                    Log.d("res","get iamge url $imageUrl")
-                } else {
-                    CustomToast(this, "No image available")
+                }else{
+                    if (!it.imageUrl.isNullOrEmpty()) {
+                        val imageUrl = it.imageUrl
+
+                        Glide.with(this)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.demo_avatar)
+                            .error(R.drawable.demo_avatar)
+                            .into(binding.ivHeaderProfilePic)
+
+                        Log.d("res","get iamge url $imageUrl")
+                    } else {
+                        CustomToast(this, "No image available")
+                    }
                 }
+
             } else {
                 CustomToast(this, it.message)
             }

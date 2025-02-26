@@ -15,6 +15,8 @@ import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeComId
 import com.asl_emp_mng.app.utils.getEmployeeDetails
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class EmpProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmpProfileBinding
@@ -90,15 +92,15 @@ class EmpProfileActivity : AppCompatActivity() {
                     binding.txtMobile.text = data.phone.orDash()
                     binding.txtEmail.text = data.email.orDash()
                     binding.txtAddress.text = data.address.orDash()
-                    binding.txtDob.text = data.dateOfBirth.orDash()
+                    binding.txtDob.text = formatDate(data.dateOfBirth.orDash())
 
                    // Professional details
                     binding.txtCComName.text = data.companyId?.toString().orDash()
                     binding.txtCComBranch.text = data.branchId?.toString().orDash()
                     binding.txtCComDepartment.text = data.departmentId?.toString().orDash()
                     binding.txtCComEmpType.text = data.employeeTypeId?.toString().orDash()
-                    binding.txtCComJoining.text = data.dateOfJoining.orDash()
-                    binding.txtCComLeaving.text = data.dateOfLeaving.orDash()
+                    binding.txtCComJoining.text = formatDate(data.dateOfJoining.orDash())
+                    binding.txtCComLeaving.text =formatDate(data.dateOfLeaving.orDash())
                     binding.txtCComEmpId.text = data.empId.orDash()
                     binding.txtCComJobTitle.text = data.position.orDash()
                     binding.txtCComPfNo.text = data.pfNumber?.toString().orDash()
@@ -109,8 +111,8 @@ class EmpProfileActivity : AppCompatActivity() {
                     binding.txtLComBranch.text = data.branchId?.toString().orDash()
                     binding.txtLComDepartment.text = data.departmentId?.toString().orDash()
                     binding.txtLComEmpType.text = data.employeeTypeId?.toString().orDash()
-                    binding.txtLComJoining.text = data.dateOfJoining.orDash()
-                    binding.txtLComLeaving.text = data.dateOfLeaving.orDash()
+                    binding.txtLComJoining.text = formatDate(data.dateOfJoining.orDash())
+                    binding.txtLComLeaving.text = formatDate(data.dateOfLeaving.orDash())
                     binding.txtLComEmpId.text = data.empId.orDash()
                     binding.txtLComJobTitle.text = data.position.orDash()
                     binding.txtLComPfNo.text = data.pfNumber?.toString().orDash()
@@ -178,5 +180,13 @@ class EmpProfileActivity : AppCompatActivity() {
         } else if (status.equals("stop", ignoreCase = true)) {
             if (customLoader.isShowing) customLoader.dismiss()
         }
+    }
+
+    private fun formatDate(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
+
+        val date = inputFormat.parse(inputDate)
+        return outputFormat.format(date!!)
     }
 }
