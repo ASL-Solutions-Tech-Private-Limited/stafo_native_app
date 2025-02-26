@@ -38,6 +38,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeePostLocationRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeePostLocationResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeUploadImageResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.FetchEmployeeDetails
 import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResquest
@@ -266,6 +267,75 @@ class SettingsViewModel : BaseViewModel() {
     private var mDepartmentCreate: MutableLiveData<DepartmentCreateResponse> = MutableLiveData()
 
     val mDepartmentCreateResponse: LiveData<DepartmentCreateResponse> get() = mDepartmentCreate
+
+    private var mEmployeeUploadImage: MutableLiveData<EmployeeUploadImageResponse> = MutableLiveData()
+
+    val mEmployeeUploadImageResponse: LiveData<EmployeeUploadImageResponse> get() = mEmployeeUploadImage
+
+
+    fun changeEmpProfileImage(
+        mContext: Context,
+        employeeId: Int,
+        file: File?
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                Log.d("res", "emp change image call method :")
+                if (file == null) {
+                    Log.d("res", "emp change image null file :")
+                    withContext(Dispatchers.Main) {
+                        getLoaderLiveData().postValue("stop")
+                        CustomToast(mContext, "File is null, cannot upload image.")
+                    }
+                    return@launch
+                }
+
+                val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+                val imagePart = MultipartBody.Part.createFormData("image", file.name, requestFile)
+
+                val response = ASLEmpMng.instance.apiStores()?.updateEmployeeImage(
+                    employeeId, imagePart)
+
+
+                Log.d("res", "emp change image :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mEmployeeUploadImage.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
 
 
     fun createDepartment(

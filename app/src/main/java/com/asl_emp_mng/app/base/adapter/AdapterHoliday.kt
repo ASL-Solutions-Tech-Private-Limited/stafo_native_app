@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.databinding.RecyHolidayItemLayoutBinding
 import com.asl_emp_mng.app.screens.settings.dataClass.Holiday
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class AdapterHoliday (
     private var list: List<Holiday>,
@@ -28,8 +30,8 @@ class AdapterHoliday (
          with(holder) {
              with(list[position]) {
                  binding.txtHolidayName.text = this.title
-                 binding.txtStartDate.text = this.start_date
-                 binding.txtEndDate.text = this.end_date
+                 binding.txtStartDate.text = getFormatDate(this.start_date)
+                 binding.txtEndDate.text = getFormatDate(this.end_date)
              }
          }
     }
@@ -37,5 +39,11 @@ class AdapterHoliday (
     override fun getItemCount(): Int {
         return list.size
     }
+    private fun getFormatDate(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
 
+        val date = inputFormat.parse(inputDate)
+        return outputFormat.format(date!!)
+    }
 }

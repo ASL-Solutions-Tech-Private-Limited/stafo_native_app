@@ -8,8 +8,11 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.base.model.DashboardWish
 import com.asl_emp_mng.app.databinding.ItemLeaveListBinding
+import com.asl_emp_mng.app.utils.getFormattedDate
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class AdapterWishList(
     private var list: ArrayList<DashboardWish>,
@@ -36,9 +39,11 @@ class AdapterWishList(
                 binding.tvName.text = this.name
 
                 if (this.type == "Anniversary") {
-                    binding.tvLeaveDate.text = "${this.date_of_joining}"
+                   // binding.tvLeaveDate.text = "${this.date_of_joining}"
+                    binding.tvLeaveDate.text = getFormatDate(this.date_of_joining)
                 } else {
-                    binding.tvLeaveDate.text = "${this.date_of_birth}"
+                    //binding.tvLeaveDate.text = "${this.date_of_birth}"
+                    binding.tvLeaveDate.text = getFormatDate(this.date_of_birth)
                 }
             }
         }
@@ -55,6 +60,14 @@ class AdapterWishList(
         val outputFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
         val formatDate = LocalDate.parse(date, inputFormatter).format(outputFormatter)
         return formatDate
+    }
+
+    private fun getFormatDate(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
+
+        val date = inputFormat.parse(inputDate)
+        return outputFormat.format(date!!)
     }
 
 }

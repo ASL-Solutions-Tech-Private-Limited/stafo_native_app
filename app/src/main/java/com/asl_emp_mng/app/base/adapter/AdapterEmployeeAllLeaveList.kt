@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.RecyEmpLeaveHistoryChildLayoutBinding
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpLeaveData
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 class AdapterEmployeeAllLeaveList (
     private var list: List<GetEmpLeaveData>,
@@ -46,9 +48,19 @@ class AdapterEmployeeAllLeaveList (
                     binding.txtStatus.setBackgroundResource(R.drawable.capsule_reject_button)
                 }
 
+                if (this.leaveType==1){
+                    binding.txtLeaveType.text="Casual Leave"
+                }else if (this.leaveType==2){
+                    binding.txtLeaveType.text="Sick Leave"
+                }else if (this.leaveType==3){
+                    binding.txtLeaveType.text="Privillage Leave"
+                }else{
+                    binding.txtLeaveType.text="Casual Leave"
+                }
+
                 val capitalizedStatus = this.status.replaceFirstChar { it.uppercaseChar() }
                 binding.txtStatus.text = capitalizedStatus
-                binding.txtRqstDt.text = "${formatDate(this.fromDate)}- ${formatDate(this.toDate)}"
+                binding.txtRqstDt.text = "${getFormatDate(this.fromDate)} - ${getFormatDate(this.toDate)}"
 
 
                 binding.txtDays.text = "${calculateDuration(this.fromDate, this.toDate)} days"
@@ -84,15 +96,12 @@ class AdapterEmployeeAllLeaveList (
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun formatDate(inputDate: String): String {
-        val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        val outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    private fun getFormatDate(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
 
-        val date = LocalDate.parse(inputDate, inputFormatter)
-        return date.format(outputFormatter)
-
-
+        val date = inputFormat.parse(inputDate)
+        return outputFormat.format(date!!)
     }
 
 }

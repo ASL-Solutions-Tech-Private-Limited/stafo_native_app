@@ -10,8 +10,10 @@ import com.asl_emp_mng.app.databinding.ItemActivityListBinding
 import com.asl_emp_mng.app.databinding.ItemLeaveListBinding
 import com.asl_emp_mng.app.screens.settings.dataClass.Leave
 import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class AdapterOnLeave (
     private var list: List<Leave>,
@@ -37,8 +39,8 @@ class AdapterOnLeave (
 
                 binding.tvName.text = this.employee_basic_info.name
 
-                var fromDate=showDate(this.from_date)
-                var toDate=showDate(this.to_date)
+                var fromDate=getFormatDate(this.from_date)
+                var toDate=getFormatDate(this.to_date)
 
                 binding.tvLeaveDate.text ="$fromDate - $toDate"
 
@@ -50,13 +52,19 @@ class AdapterOnLeave (
         return list.size
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+  /*  @RequiresApi(Build.VERSION_CODES.O)
     private fun showDate(date:String):String{
 
         val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val outputFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
         val formatDate = LocalDate.parse(date, inputFormatter).format(outputFormatter)
         return formatDate
-    }
+    }*/
+    private fun getFormatDate(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
 
+        val date = inputFormat.parse(inputDate)
+        return outputFormat.format(date!!)
+    }
 }

@@ -45,6 +45,15 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        val request = GetEmployeeLeaveHistRequestBody(
+            employeeId = getEmployeeDetails()?.id.toString()
+        )
+
+        settingsViewModel.getEmployeeLeaveHist(this@EmployeeLeaveHistoryActivity, request)
+    }
+
     private fun observeViewModel() {
 
 

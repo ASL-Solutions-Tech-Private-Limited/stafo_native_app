@@ -369,7 +369,7 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <RadioGroup
+              <!--  <RadioGroup
                     android:id="@+id/rg_leave"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -405,7 +405,7 @@
                         android:text="Half day"
                         android:textColor="@color/black"
                         android:textSize="12sp" />
-                </RadioGroup>
+                </RadioGroup>-->
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/nod_Txt"

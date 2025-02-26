@@ -37,6 +37,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeePostLocationRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeePostLocationResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeUploadImageResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.FetchEmployeeDetails
 import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResquest
@@ -341,6 +342,14 @@ interface ApiStores {
     @POST("api/departments")
     suspend fun callCreateDepartment(
         @Body request: DepartmentCreateRequest,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap(),
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DepartmentCreateResponse>
+
+    @Multipart
+    @POST("api/employees-update/{id}")
+    suspend fun updateEmployeeImage(
+        @Path("id") employeeId: Int,
+        @Part image: MultipartBody.Part,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EmployeeUploadImageResponse>
 }

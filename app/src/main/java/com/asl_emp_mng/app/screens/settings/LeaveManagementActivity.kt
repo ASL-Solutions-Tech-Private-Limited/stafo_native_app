@@ -33,7 +33,9 @@ import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeComId
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.text.SimpleDateFormat
 import java.util.Collections
+import java.util.Locale
 import java.util.Random
 
 class LeaveManagementActivity : AppCompatActivity() {
@@ -237,9 +239,9 @@ class LeaveManagementActivity : AppCompatActivity() {
         bottomSheetDialog.setCancelable(false)
         binding.txtEmpName.text = list[position].employeeBasicInfo.name
         binding.txtDuration.text = duration
-        binding.txtLeaveDate.text = list[position].fromDate + " - " + list[position].toDate
-        binding.txtStartDate.text = list[position].fromDate
-        binding.txtEndDate.text = list[position].toDate
+        binding.txtLeaveDate.text = formatDate(list[position].fromDate) + " - " + formatDate(list[position].toDate)
+        binding.txtStartDate.text = formatDate(list[position].fromDate)
+        binding.txtEndDate.text = formatDate(list[position].toDate)
         binding.txtRemarks.text = list[position].reason
 
 
@@ -260,6 +262,15 @@ class LeaveManagementActivity : AppCompatActivity() {
         )
 
         settingsViewModel.postPendingLeave(this@LeaveManagementActivity, body)
+    }
+
+
+    private fun formatDate(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
+
+        val date = inputFormat.parse(inputDate)
+        return outputFormat.format(date!!)
     }
 
 }

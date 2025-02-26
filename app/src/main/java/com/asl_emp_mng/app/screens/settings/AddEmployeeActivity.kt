@@ -49,6 +49,8 @@ class AddEmployeeActivity : AppCompatActivity() {
     private var selectBranch: Int = 1
     private var selectDepartment: Int = 1
 
+    private var mDateOfJoining: String = ""
+
 
     private lateinit var branchDialog: SearchableDialog
     private lateinit var departmentDialog: SearchableDialog
@@ -430,7 +432,12 @@ class AddEmployeeActivity : AppCompatActivity() {
                 selectedDate.set(year, monthOfYear, dayOfMonth)
                 val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
                 val formattedDate = dateFormat.format(selectedDate.time)
-                binding.tieDateJoining.setText("$formattedDate")
+                mDateOfJoining=formattedDate
+
+                val displayFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
+                val formattedDisplayDate = displayFormat.format(selectedDate.time)
+
+                binding.tieDateJoining.setText("$formattedDisplayDate")
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),

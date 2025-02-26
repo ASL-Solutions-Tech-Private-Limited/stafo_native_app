@@ -69,6 +69,10 @@ class EmployeeProfileDetails : AppCompatActivity() {
     private var licenceFile: File? = null
     private var voterIdFile: File? = null
 
+    private var mDateOfBirth: String = ""
+    private var mDateOfJoining: String = ""
+    private var mDateOfLeaving: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -120,7 +124,8 @@ class EmployeeProfileDetails : AppCompatActivity() {
                     if (!data.email.isNullOrEmpty()) {
                         isFocusableField(binding.tieEmailId)
                     }
-                    binding.tieDateJoining.setText(data.dateOfJoining ?: "")
+                    //binding.tieDateJoining.setText(data.dateOfJoining ?: "")
+                    binding.tieDateJoining.setText("${formatDate(data.dateOfJoining?:"")}")
                     if (!data.dateOfJoining.isNullOrEmpty()) {
                         isFocusableField(binding.tieDateJoining)
                     }
@@ -130,7 +135,8 @@ class EmployeeProfileDetails : AppCompatActivity() {
                         isFocusableField(binding.tieAddress)
                     }
 
-                    binding.tieDateOfBirth.setText(data.dateOfBirth ?: "")
+                   // binding.tieDateOfBirth.setText(data.dateOfBirth ?: "")
+                    binding.tieDateOfBirth.setText("${formatDate(data.dateOfBirth?:"")}")
                     if (!data.dateOfBirth.isNullOrEmpty()) {
                         isFocusableField(binding.tieDateOfBirth)
                     }
@@ -192,7 +198,8 @@ class EmployeeProfileDetails : AppCompatActivity() {
                     }
 
                     if (!data.dateOfLeaving.isNullOrBlank()) {
-                        binding.tieDateOfLeaving.setText(data.dateOfLeaving)
+                       // binding.tieDateOfLeaving.setText(data.dateOfLeaving)
+                        binding.tieDateOfLeaving.setText("${formatDate(data.dateOfLeaving)}")
                         isFocusableField(binding.tieDateOfLeaving)
                     }
 
@@ -512,7 +519,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
 
-            binding.tieDateJoining.setOnClickListener {
+            /*binding.tieDateJoining.setOnClickListener {
                 showDatePicker(binding.tieDateJoining)
             }
 
@@ -522,11 +529,28 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
             binding.tieDateOfBirth.setOnClickListener {
                 showDatePicker(binding.tieDateOfBirth)
+            }*/
+
+
+            binding.tieDateOfBirth.setOnClickListener {
+                showDatePicker(binding.tieDateOfBirth, "dob")
             }
+
+            binding.tieDateJoining.setOnClickListener {
+                showDatePicker(binding.tieDateJoining, "joining")
+            }
+
+            binding.tieDateOfLeaving.setOnClickListener {
+                showDatePicker(binding.tieDateOfLeaving, "leaving")
+            }
+
+
+
             initMarital()
 
             tieBranch.setOnClickListener { branchDialog.show() }
             tieDepartment.setOnClickListener { departmentDialog.show() }
+
 
 
 
@@ -544,6 +568,8 @@ class EmployeeProfileDetails : AppCompatActivity() {
             tieVoterId.setOnClickListener {
                 openPicker(1104)
             }
+
+            tieEmployeeId.setText(getEmployeeDetails()?.emp_id)
 
 
 
@@ -840,7 +866,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
     }
 
 
-    private fun showDatePicker(view: TextInputEditText?) {
+/*    private fun showDatePicker(view: TextInputEditText?) {
         val datePickerDialog = DatePickerDialog(
             this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
                 val selectedDate = Calendar.getInstance()
@@ -854,7 +880,44 @@ class EmployeeProfileDetails : AppCompatActivity() {
             calendar.get(Calendar.DAY_OF_MONTH)
         )
         datePickerDialog.show()
+    }*/
+private fun formatDate(inputDate: String): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
+
+    val date = inputFormat.parse(inputDate)
+    return outputFormat.format(date!!)
+}
+    private fun showDatePicker(view: TextInputEditText?, fieldType: String) {
+        val calendar = Calendar.getInstance()
+
+        val datePickerDialog = DatePickerDialog(
+            this, { _, year, month, dayOfMonth ->
+                val selectedDate = Calendar.getInstance().apply {
+                    set(year, month, dayOfMonth)
+                }
+
+                val displayFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
+                val formattedDisplayDate = displayFormat.format(selectedDate.time)
+
+                val apiFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val formattedApiDate = apiFormat.format(selectedDate.time)
+
+                view?.setText(formattedDisplayDate)
+                when (fieldType) {
+                    "dob" -> mDateOfBirth = formattedApiDate
+                    "joining" -> mDateOfJoining = formattedApiDate
+                    "leaving" -> mDateOfLeaving = formattedApiDate
+                }
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+
+        datePickerDialog.show()
     }
+
 
     private fun validateField(view: TextInputEditText?, errorMsg: String): Boolean {
         return if (view?.text.isNullOrEmpty()) {

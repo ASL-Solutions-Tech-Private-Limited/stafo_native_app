@@ -4,7 +4,8 @@ import com.google.gson.annotations.SerializedName
 data class FetchEmployeeDetails(
     @SerializedName("status") val status: Boolean,
     @SerializedName("message") val message: String,
-    @SerializedName("data") val data: EmployeeDataFetch?
+    @SerializedName("data") val data: EmployeeDataFetch?,
+    @SerializedName("image_url") val imageUrl: String?
 )
 
 data class EmployeeDataFetch(

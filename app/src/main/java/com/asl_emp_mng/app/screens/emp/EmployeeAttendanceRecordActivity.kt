@@ -39,6 +39,7 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
     private var mEMPID = ""
     private val calendar = Calendar.getInstance()
     private var mSelectedDate = ""
+    private var avgWork: Float? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -110,6 +111,18 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
 // Display the total time in "hh:mm" format
                     val totalWorkingTime = String.format("%02d:%02d", totalHours, totalMinutes)
+
+                   // Calculate the average working hours per day
+
+                    val officeHoursPerDay = 8.0
+                    val totalWorkingHours = mTotalWorkingHour / 60.0
+                    avgWork = calculateAverageHours(totalWorkingHours, mPresentCount)
+                    Log.d("res", "get avg: $avgWork")
+                    avgWork?.let {
+                        val progress = ((it / officeHoursPerDay) * 100).toFloat()
+                        binding.cpb.updateProgress(progress.coerceIn(0f, 100f))
+                    }
+
                     binding.txtTotalPresent.text = mPresentCount.toString() ?: "0"
                     binding.txtTotalWorking.text = totalWorkingTime ?: "00:00"
                 binding.rvEmpAttendList.setLayoutManager(layoutManager)
@@ -136,7 +149,7 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
         binding?.apply {
 
             val currentDate =
-                SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(calendar.time)
+                SimpleDateFormat("dd/MMM/yy", Locale.getDefault()).format(calendar.time)
             binding.txtDate.setText(currentDate)
 
             fetchAttendanceData()
@@ -163,7 +176,14 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
             }
             //progressBar.updateProgress(50.0F)
-            binding.cpb.updateProgress(Random().nextInt(100).toFloat())
+
+
+
+
+
+           // binding.cpb.updateProgress(Random().nextInt(100).toFloat())
+
+
 
 
         }
@@ -191,7 +211,7 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
             this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
                 val selectedDate = Calendar.getInstance()
                 selectedDate.set(year, monthOfYear, dayOfMonth)
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val dateFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
                 val formattedDate = dateFormat.format(selectedDate.time)
                 binding.txtDate.setText("$formattedDate")
                 mSelectedDate =
@@ -231,6 +251,14 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
         return dateList
     }
+
+
+
+    fun calculateAverageHours(totalHours: Double, presentDays: Int): Float? {
+        if (presentDays == 0) return 0f
+        return (totalHours / presentDays).toFloat()
+    }
+
 
 
 }

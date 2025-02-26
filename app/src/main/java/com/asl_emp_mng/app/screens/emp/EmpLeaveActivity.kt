@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
 import android.widget.Toast
@@ -47,7 +48,11 @@ class EmpLeaveActivity : AppCompatActivity() {
     private var todate = ""
     private var fromdate: String = ""
     private var reason: String = ""
+    private var leaveType:Int=2
     private var nodays = 0f
+
+    private var postFromDate: String = ""
+    private var postToDate: String = ""
 
     var cal = Calendar.getInstance()
 
@@ -109,6 +114,26 @@ class EmpLeaveActivity : AppCompatActivity() {
         val options = resources.getStringArray(R.array.leave_type)
         val adapter = ArrayAdapter(this, R.layout.custom_spinner_item, options)
         binding.spinnerLeaveType.setAdapter(adapter)
+        binding.spinnerLeaveType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selectedValue = parent.getItemAtPosition(position).toString()
+
+                if (selectedValue=="Casual Leave"){
+                    leaveType=1
+
+                }else if (selectedValue=="Sick Leave"){
+                    leaveType=2
+                }else if (selectedValue=="Previllage Leave"){
+                    leaveType=3
+                }
+
+                Log.d("res","leavetype: $leaveType  $selectedValue")
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+            }
+        }
 
 
 
@@ -135,31 +160,20 @@ class EmpLeaveActivity : AppCompatActivity() {
                 showCalender()
             }
 
-          /*   tvStopService.setOnClickListener {
-                 stopLocationService()
-             }
-
-               tvStartService.setOnClickListener {
-                   if (hasLocationPermission()) {
-                       startLocationService()
-                   } else {
-                       requestLocationPermission()
-                   }
-               }*/
 
             btnLeave.setOnClickListener {
                 if (isValidate()) {
-                    Log.d("res","post :")
+
 
                     val request = EmployeeLeaveRequestBody(
                         employee_id = getEmployeeDetails()?.id.toString(),
-                        from_date = binding.edtFromDate.text.toString(),
-                        to_date = binding.edtToDate.text.toString(),
-                        reason = binding.edtDescription.text.toString()
+                        from_date = postFromDate,
+                        to_date = postToDate,
+                        reason = binding.edtDescription.text.toString(),
+                        leave_type = leaveType
 
                     )
 
-                    Log.d("res","post :${request}")
 
                     settingsViewModel.requestLeaveEmp(this@EmpLeaveActivity, request)
 
@@ -201,12 +215,10 @@ class EmpLeaveActivity : AppCompatActivity() {
     private fun isValidate(): Boolean {
         binding?.apply {
             if (edtFromDate.text.isNullOrEmpty()) {
-                edtFromDate.error = "Please enter from date"
-                edtFromDate.requestFocus()
+                CustomToast(this@EmpLeaveActivity,"Please enter from date")
                 return false
             } else if (edtToDate.text.isNullOrEmpty()) {
-                edtToDate.error = "Please enter to date"
-                edtToDate.requestFocus()
+                CustomToast(this@EmpLeaveActivity,"Please enter to date")
                 return false
             } else if (edtDescription.text.isNullOrEmpty()) {
                 edtDescription.error = "Please enter description"
@@ -244,9 +256,9 @@ class EmpLeaveActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    /*@RequiresApi(Build.VERSION_CODES.O)
     private fun onDateSet() {
-        val myFormat = "yyyy/MM/dd"
+        val myFormat = "dd/MMM/yy"
         val sdf = SimpleDateFormat(myFormat, Locale.US)
 
         if (!setToDate) {
@@ -257,12 +269,35 @@ class EmpLeaveActivity : AppCompatActivity() {
             binding.edtToDate.setText(todate)
             setNoDay()
         }
+    }*/
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun onDateSet() {
+        val displayFormat = "dd/MMM/yy"
+        val postFormat = "yyyy/MM/dd"
+
+        val displaySdf = SimpleDateFormat(displayFormat, Locale.US)
+        val postSdf = SimpleDateFormat(postFormat, Locale.US)
+
+        val selectedDate = cal.time
+
+        if (!setToDate) {
+            fromdate = displaySdf.format(selectedDate)
+            postFromDate = postSdf.format(selectedDate)
+            binding.edtFromDate.setText(fromdate)
+        } else {
+            todate = displaySdf.format(selectedDate)
+            postToDate = postSdf.format(selectedDate)
+            binding.edtToDate.setText(todate)
+            setNoDay()
+        }
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setNoDay() {
         try {
-            val myFormat = "yyyy/MM/dd"
+            val myFormat = "dd/MMM/yy"
             val sdf = SimpleDateFormat(myFormat, Locale.US)
 
             val fromDateStr = binding.edtFromDate.text.toString().trim()

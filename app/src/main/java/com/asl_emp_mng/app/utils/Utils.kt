@@ -1416,6 +1416,10 @@ fun calculateHours2(punchIn: String?, punchOut: String?): String {
 
 
 
+
+
+
+
 fun calculateMinutes(inTime: String, outTime: String): Int {
     val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 

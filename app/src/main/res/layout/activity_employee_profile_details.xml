@@ -991,6 +991,7 @@
                     android:layout_marginTop="@dimen/_12sdp">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_employee_id"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_text_background"
