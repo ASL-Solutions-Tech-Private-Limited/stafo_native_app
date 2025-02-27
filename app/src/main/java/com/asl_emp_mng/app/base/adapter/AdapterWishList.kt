@@ -64,10 +64,11 @@ class AdapterWishList(
 
     private fun getFormatDate(inputDate: String): String {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd MMM", Locale.getDefault())
 
         val date = inputFormat.parse(inputDate)
         return outputFormat.format(date!!)
     }
+
 
 }

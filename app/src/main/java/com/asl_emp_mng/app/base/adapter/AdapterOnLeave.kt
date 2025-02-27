@@ -6,13 +6,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.asl_emp_mng.app.databinding.ItemActivityListBinding
 import com.asl_emp_mng.app.databinding.ItemLeaveListBinding
 import com.asl_emp_mng.app.screens.settings.dataClass.Leave
-import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class AdapterOnLeave (
@@ -42,7 +38,9 @@ class AdapterOnLeave (
                 var fromDate=getFormatDate(this.from_date)
                 var toDate=getFormatDate(this.to_date)
 
-                binding.tvLeaveDate.text ="$fromDate - $toDate"
+                if (fromDate == toDate) {
+                    binding.tvLeaveDate.text = fromDate
+                } else binding.tvLeaveDate.text = "$fromDate - $toDate"
 
             }
         }
@@ -62,7 +60,7 @@ class AdapterOnLeave (
     }*/
     private fun getFormatDate(inputDate: String): String {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
+      val outputFormat = SimpleDateFormat("dd MMM", Locale.getDefault())
 
         val date = inputFormat.parse(inputDate)
         return outputFormat.format(date!!)
