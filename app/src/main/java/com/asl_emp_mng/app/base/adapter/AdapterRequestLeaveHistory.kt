@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.RecyCompanyLeaveHistoryItemLayoutBinding
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveData
 import java.text.SimpleDateFormat
@@ -50,7 +51,15 @@ class AdapterRequestLeaveHistory(
                 }
 
                 //binding.txtLeaveType.text = this.leaveType
-                binding.txtLeaveStatus.text = this.status
+                if (this.status=="approved"){
+                    binding.txtLeaveStatus.setTextColor(context.getColor(R.color.primaryColor))
+                }else if (this.status=="rejected"){
+                    binding.txtLeaveStatus.setTextColor(context.getColor(R.color.reject))
+                }else{
+                    binding.txtLeaveStatus.setTextColor(context.getColor(R.color.reject))
+                }
+
+                binding.txtLeaveStatus.text = this.status.replaceFirstChar { it.uppercase() }
                 binding.txtDuration.text = calculateDuration(this.fromDate, this.toDate)
 
             }

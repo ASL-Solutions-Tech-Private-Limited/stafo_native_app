@@ -54,6 +54,7 @@ import com.asl_emp_mng.app.utils.getGreetingBasedOnTime
 import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
 import com.asl_emp_mng.app.utils.setEmployeeBranchId
 import com.asl_emp_mng.app.utils.setEmployeeComId
+import com.bumptech.glide.Glide
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -179,12 +180,16 @@ class EmployeeDashboard : AppCompatActivity() {
         super.onResume()
         settingsViewModel.getEmployeDashboard(this)
         startLocationService()
+
+        settingsViewModel.fetchEmployeeDetails(this@EmployeeDashboard, getEmployeeDetails()?.id.toString())
+
     }
 
 
     private fun onClickListener() {
         binding?.apply {
 
+            settingsViewModel.fetchEmployeeDetails(this@EmployeeDashboard, getEmployeeDetails()?.id.toString())
 
             binding.tvLeaveViewAll.setOnClickListener {
                 startActivity(Intent(this@EmployeeDashboard, LeaveRequestHistoryActivity::class.java))
@@ -680,6 +685,29 @@ class EmployeeDashboard : AppCompatActivity() {
             } else {
                 CustomToast(this, it.message)
             }
+        }
+
+        settingsViewModel.mFetchEmployeeDetailsResponse.observe(this) {
+            if (it.status) {
+                if (!it.imageUrl.isNullOrEmpty()) {
+                    val imageUrl = it.imageUrl
+
+                    Glide.with(this)
+                        .load(imageUrl)
+                        .placeholder(R.drawable.demo_avatar)
+                        .error(R.drawable.demo_avatar)
+                        .into(binding.ivHeaderProfilePic)
+
+                    Log.d("res","get iamge url $imageUrl")
+                } else {
+                    CustomToast(this, "No image available")
+                }
+
+            } else {
+                CustomToast(this, it.message)
+            }
+
+
         }
 
 

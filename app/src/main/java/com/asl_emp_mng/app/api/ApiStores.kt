@@ -352,4 +352,11 @@ interface ApiStores {
         @Part image: MultipartBody.Part,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<EmployeeUploadImageResponse>
+
+    @Multipart
+    @POST("api/company/update")
+    suspend fun updateCompanyImage(
+        @Part image: MultipartBody.Part,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateCompanyProfileResponse>
 }

@@ -28,10 +28,12 @@ import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.screens.ui.WishListActivity
 import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getCompanyDetails
 import com.asl_emp_mng.app.utils.getGreetingBasedOnTime
 import com.asl_emp_mng.app.utils.getTodayDate
 import com.asl_emp_mng.app.utils.setEmployeeComId
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 
 class EmployerDashboard : AppCompatActivity() {
@@ -184,6 +186,33 @@ class EmployerDashboard : AppCompatActivity() {
 
         }
 
+
+
+        settingsViewModel.mCompanyProfileResponse.observe(this) {
+            if (it.status) {
+
+                it.data?.companyLogo?.let { imageUrl ->
+                    Glide.with(this)
+                        .load(imageUrl)
+                        .placeholder(R.drawable.demo_avatar)
+                        .error(R.drawable.demo_avatar)
+                        .into(binding.ivHeaderProfilePic)
+                } ?: run {
+                    CustomToast(this, "No image available")
+                }
+
+
+            } else {
+                CustomToast(this, it.message)
+            }
+
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        settingsViewModel.getCompanyDetails(this@EmployerDashboard)
     }
 
     private fun handleLoader(status: String) {
@@ -200,6 +229,8 @@ class EmployerDashboard : AppCompatActivity() {
     private fun setOnClickEvents() {
 
         stopLocationService()
+
+        settingsViewModel.getCompanyDetails(this@EmployerDashboard)
 
         binding.tvHeaderSetting.setOnClickListener {
             val intent = Intent(this@EmployerDashboard, EmplyeeyerProfile::class.java)

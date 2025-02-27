@@ -273,6 +273,76 @@ class SettingsViewModel : BaseViewModel() {
     val mEmployeeUploadImageResponse: LiveData<EmployeeUploadImageResponse> get() = mEmployeeUploadImage
 
 
+    private var mCompanyUploadImage: MutableLiveData<UpdateCompanyProfileResponse> = MutableLiveData()
+
+    val mCompanyUploadImageResponse: LiveData<UpdateCompanyProfileResponse> get() = mCompanyUploadImage
+
+
+    fun changeCompanyProfileImage(
+        mContext: Context,
+        file: File?
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                if (file == null) {
+                    withContext(Dispatchers.Main) {
+                        getLoaderLiveData().postValue("stop")
+                        CustomToast(mContext, "File is null, cannot upload image.")
+                    }
+                    return@launch
+                }
+
+                val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+
+                val imagePart = MultipartBody.Part.createFormData("image_name", file.name, requestFile)
+
+                val response = ASLEmpMng.instance.apiStores()?.updateCompanyImage(imagePart)
+
+
+                Log.d("res", "company change image :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mCompanyUploadImage.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
     fun changeEmpProfileImage(
         mContext: Context,
         employeeId: Int,
@@ -1222,7 +1292,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callHolidayList(id.toInt())
-                Log.d("res", response?.body().toString())
+                Log.d("res","holiday: ${response?.body()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {

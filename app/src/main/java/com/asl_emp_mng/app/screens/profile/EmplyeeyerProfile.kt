@@ -29,6 +29,7 @@ import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.doLogout
 import com.asl_emp_mng.app.utils.getCompanyDetails
+import com.asl_emp_mng.app.utils.getEmployeeComId
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
 import com.bumptech.glide.Glide
@@ -58,11 +59,14 @@ class EmplyeeyerProfile : AppCompatActivity() {
         binding?.apply {
             Log.e("TAG", "setupView: ${Gson().toJson(getEmployeeDetails())}")
             if (getIsCOMPANYLogin() == true) {
+
+                settingsViewModel.getCompanyDetails(this@EmplyeeyerProfile)
+
                 tvHeaderEmpName.text = getCompanyDetails()?.companyName ?: "Guest"
                 tvHeaderEmpEmail.text = getCompanyDetails()?.email ?: "--"
                 binding.llCompanyProfile.visibility = View.VISIBLE
                 binding.llEmployerProfile.visibility = View.GONE
-                binding.ivChangePicture.visibility = View.GONE
+
             } else {
 
                 settingsViewModel.fetchEmployeeDetails(this@EmplyeeyerProfile, getEmployeeDetails()?.id.toString())
@@ -71,21 +75,19 @@ class EmplyeeyerProfile : AppCompatActivity() {
                 tvHeaderEmpEmail.text = getEmployeeDetails()?.email ?: "--"
                 binding.llCompanyProfile.visibility = View.GONE
                 binding.llEmployerProfile.visibility = View.VISIBLE
-                binding.ivChangePicture.visibility = View.VISIBLE
 
             }
         }
     }
 
     override fun onResume() {
-        super.onResume()
-
         if (getIsCOMPANYLogin() == true) {
-
+            settingsViewModel.getCompanyDetails(this@EmplyeeyerProfile)
         } else {
             settingsViewModel.fetchEmployeeDetails(this@EmplyeeyerProfile, getEmployeeDetails()?.id.toString())
 
         }
+        super.onResume()
 
     }
 
@@ -107,29 +109,55 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         settingsViewModel.mFetchEmployeeDetailsResponse.observe(this) {
             if (it.status) {
+                if (!it.imageUrl.isNullOrEmpty()) {
+                    val imageUrl = it.imageUrl
 
-                if (getIsCOMPANYLogin() == true){
+                    Glide.with(this)
+                        .load(imageUrl)
+                        .placeholder(R.drawable.demo_avatar)
+                        .error(R.drawable.demo_avatar)
+                        .into(binding.ivHeaderProfilePic)
 
-                }else{
-                    if (!it.imageUrl.isNullOrEmpty()) {
-                        val imageUrl = it.imageUrl
-
-                        Glide.with(this)
-                            .load(imageUrl)
-                            .placeholder(R.drawable.demo_avatar)
-                            .error(R.drawable.demo_avatar)
-                            .into(binding.ivHeaderProfilePic)
-
-                        Log.d("res","get iamge url $imageUrl")
-                    } else {
-                        CustomToast(this, "No image available")
-                    }
+                    Log.d("res","get iamge url $imageUrl")
+                } else {
+                    CustomToast(this, "No image available")
                 }
 
             } else {
                 CustomToast(this, it.message)
             }
 
+
+        }
+
+        // company profile
+
+        settingsViewModel.mCompanyProfileResponse.observe(this) {
+            if (it.status) {
+
+                it.data?.companyLogo?.let { imageUrl ->
+                    Glide.with(this)
+                        .load(imageUrl)
+                        .placeholder(R.drawable.demo_avatar)
+                        .error(R.drawable.demo_avatar)
+                        .into(binding.ivHeaderProfilePic)
+                } ?: run {
+                    CustomToast(this, "No image available")
+                }
+
+
+            } else {
+                CustomToast(this, it.message)
+            }
+
+        }
+
+        settingsViewModel.mCompanyUploadImageResponse.observe(this) {
+            if (it.status) {
+                CustomToast(this, it.message)
+            } else {
+                CustomToast(this, it.message)
+            }
 
         }
 
@@ -323,12 +351,22 @@ class EmplyeeyerProfile : AppCompatActivity() {
                 when (requestCode) {
                     1101 -> {
                         profileImage = file
-                        Log.d("res", "File selected: ${file.absolutePath}")
-                        val id = getEmployeeDetails()?.id
 
-                        id?.let {
-                            settingsViewModel.changeEmpProfileImage(this, it, file)
-                        } ?: Log.e("res", "Employee ID is null")
+
+                        if (getIsCOMPANYLogin() == true) {
+                            Log.d("res", "com File selected: ${file.absolutePath}")
+                            settingsViewModel.changeCompanyProfileImage(this,file)
+                        } else {
+                            Log.d("res", "emp File selected: ${file.absolutePath}")
+                            val id = getEmployeeDetails()?.id
+
+                            id?.let {
+                                settingsViewModel.changeEmpProfileImage(this, it, file)
+                            } ?: Log.e("res", "Employee ID is null")
+                        }
+
+
+
                     }
 
                 }

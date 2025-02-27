@@ -2,11 +2,13 @@ package com.asl_emp_mng.app.screens.settings
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -22,6 +24,11 @@ import com.asl_emp_mng.app.databinding.ActivityLeaveRequestHistoryBinding
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeComId
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Locale
 
 class HolidayActivity : AppCompatActivity() {
 
@@ -67,9 +74,7 @@ class HolidayActivity : AppCompatActivity() {
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
                 getEmployeeComId()?.let {
-                    settingsViewModel.getHolidayList(this@HolidayActivity,
-                        it
-                    )
+                    settingsViewModel.getHolidayList(this@HolidayActivity, it)
                 }
 
             }
@@ -96,10 +101,7 @@ class HolidayActivity : AppCompatActivity() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
 
-
         settingsViewModel.mHolidayListResponse.observe(this) {
-
-            Log.d("res",it.data.toString())
 
             if (it.status) {
 
@@ -122,7 +124,40 @@ class HolidayActivity : AppCompatActivity() {
 
 
     }
+    private fun generateHolidayDates(startDateStr: String, endDateStr: String): List<String> {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        val outputFormat = SimpleDateFormat("MMMM d, EEEE", Locale.ENGLISH)
+        val holidayDates = mutableListOf<String>()
 
+        try {
+            val startDate = inputFormat.parse(startDateStr) ?: return emptyList()
+            val endDate = inputFormat.parse(endDateStr) ?: return emptyList()
+            val calendar = Calendar.getInstance()
+            calendar.time = startDate
+
+            while (!calendar.time.after(endDate)) {
+                holidayDates.add(outputFormat.format(calendar.time))
+                calendar.add(Calendar.DAY_OF_MONTH, 1)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return holidayDates
+    }
+
+    private fun isFutureDate(dateStr: String): Boolean {
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+            val givenDate = inputFormat.parse(dateStr) ?: return false
+            val today = Calendar.getInstance().time
+
+            // Return true if given date is today or in the future
+            !givenDate.before(today)
+        } catch (e: Exception) {
+            false
+        }
+    }
     private fun handleLoader(status: String) {
         if (status.equals("load", ignoreCase = true)) {
             if (!customLoader.isShowing) customLoader.show()
@@ -130,6 +165,9 @@ class HolidayActivity : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
+
+
+
 
 
 }

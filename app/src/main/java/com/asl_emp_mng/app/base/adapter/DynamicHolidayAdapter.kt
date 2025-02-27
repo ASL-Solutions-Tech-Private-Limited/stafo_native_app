@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.model.DynamicHolidayField
 import com.google.android.material.imageview.ShapeableImageView
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class DynamicHolidayAdapter(private val fields: MutableList<DynamicHolidayField>) :
     RecyclerView.Adapter<DynamicHolidayAdapter.DynamicViewHolder>() {
@@ -66,14 +68,13 @@ class DynamicHolidayAdapter(private val fields: MutableList<DynamicHolidayField>
 
 
 
-    private fun showDatePicker(editText: AppCompatEditText, field: DynamicHolidayField) {
+   /* private fun showDatePicker(editText: AppCompatEditText, field: DynamicHolidayField) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         val datePickerDialog = DatePickerDialog(editText.context, { _, selectedYear, selectedMonth, selectedDay ->
-            //val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
             val selectedDate = "$selectedYear/${selectedMonth + 1}/$selectedDay"
             editText.setText(selectedDate)
 
@@ -82,6 +83,42 @@ class DynamicHolidayAdapter(private val fields: MutableList<DynamicHolidayField>
                 field.userInput2 = selectedDate
             } else if (editText.id == R.id.editText3) {
                 field.userInput3 = selectedDate
+            }
+
+        }, year, month, day)
+
+        datePickerDialog.show()
+    }*/
+
+
+    private fun showDatePicker(editText: AppCompatEditText, field: DynamicHolidayField) {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(editText.context, { _, selectedYear, selectedMonth, selectedDay ->
+
+            // Convert selected date to Date object
+            calendar.set(selectedYear, selectedMonth, selectedDay)
+            val date = calendar.time
+
+            // Format for user display (27/Feb/25)
+            val displayFormat = SimpleDateFormat("dd/MMM/yy", Locale.ENGLISH)
+            val formattedDisplayDate = displayFormat.format(date)
+
+            // Format for API (2025-02-27)
+            val apiFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+            val formattedApiDate = apiFormat.format(date)
+
+            // Set display format in EditText
+            editText.setText(formattedDisplayDate)
+
+            // Store API format in the respective field
+            if (editText.id == R.id.editText2) {
+                field.userInput2 = formattedApiDate
+            } else if (editText.id == R.id.editText3) {
+                field.userInput3 = formattedApiDate
             }
 
         }, year, month, day)
