@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -27,6 +28,7 @@ class OtpVerifyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOtpVerifyBinding
     private lateinit var mobile: String
     private lateinit var otp: String
+    private lateinit var deviceID: String
 
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
@@ -38,6 +40,8 @@ class OtpVerifyActivity : AppCompatActivity() {
         setContentView(binding.root)
         mobile = intent.extras?.getString("mobile") ?: ""
         otp = intent.extras?.getString("otp") ?: ""
+
+        deviceID = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
 
         binding.llOtp.setText(otp)
         onClickListener()
@@ -73,7 +77,7 @@ class OtpVerifyActivity : AppCompatActivity() {
                 }
             })
             btnOtpVerify.setOnClickListener {
-                authViewModel.verifyOTP(this@OtpVerifyActivity, mobile, otp)
+                authViewModel.verifyOTP(this@OtpVerifyActivity, mobile, otp,deviceID)
             }
 
             ivBack.setOnClickListener { _ ->

@@ -1,13 +1,19 @@
 package com.asl_emp_mng.app.base.adapter
 
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.RecyHolidayItemLayoutBinding
 import com.asl_emp_mng.app.screens.settings.dataClass.Holiday
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Locale
+
 
 class AdapterHoliday (
     private var list: List<Holiday>,
@@ -29,9 +35,18 @@ class AdapterHoliday (
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
          with(holder) {
              with(list[position]) {
+
+                 if (position % 2 == 0) {
+                     binding.llDate.setBackgroundResource(R.drawable.holiday_item_bg2)
+                 } else {
+                     binding.llDate.setBackgroundResource(R.drawable.holiday_item_bg)
+                 }
+
                  binding.txtHolidayName.text = this.title
-                 binding.txtStartDate.text = getFormatDate(this.start_date)
-                 binding.txtEndDate.text = getFormatDate(this.end_date)
+                 binding.txtHolidayDay.text = formatDay(this.start_date)
+                 binding.txtHolidayDate.text = formatDate(this.start_date)
+                 binding.txtHolidayMonth.text = formatMonthDate(this.start_date)
+
              }
          }
     }
@@ -39,11 +54,50 @@ class AdapterHoliday (
     override fun getItemCount(): Int {
         return list.size
     }
-    private fun getFormatDate(inputDate: String): String {
+  private fun getFormatDate(inputDate: String): String {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
 
         val date = inputFormat.parse(inputDate)
         return outputFormat.format(date!!)
     }
+
+
+    private fun formatMonthDate(dateStr: String): String {
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+            val outputFormat = SimpleDateFormat("MMM", Locale.ENGLISH)
+
+            val date = inputFormat.parse(dateStr)
+            outputFormat.format(date ?: return dateStr)
+        } catch (e: Exception) {
+            dateStr
+        }
+    }
+
+    private fun formatDate(dateStr: String): String {
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+            val outputFormat = SimpleDateFormat("d", Locale.ENGLISH)
+
+            val date = inputFormat.parse(dateStr)
+            outputFormat.format(date ?: return dateStr)
+        } catch (e: Exception) {
+            dateStr
+        }
+    }
+
+
+    private fun formatDay(dateStr: String): String {
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+            val outputFormat = SimpleDateFormat("EEEE", Locale.ENGLISH)
+
+            val date = inputFormat.parse(dateStr)
+            outputFormat.format(date ?: return dateStr)
+        } catch (e: Exception) {
+            dateStr
+        }
+    }
+
 }

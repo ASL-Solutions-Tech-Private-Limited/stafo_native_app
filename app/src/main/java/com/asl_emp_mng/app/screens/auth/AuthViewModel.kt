@@ -72,11 +72,11 @@ class AuthViewModel() : BaseViewModel() {
 
 
 
-    fun verifyOTP(mContext: Context, mobileNumber: String,otp:String) {
+    fun verifyOTP(mContext: Context, mobileNumber: String,otp:String,deviceId:String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val request = VerifyOtpRequestBody(mobile_number = mobileNumber, otp = otp)
+                val request = VerifyOtpRequestBody(mobile_number = mobileNumber, otp = otp,device_id=deviceId)
                 val response = ASLEmpMng.instance.apiStores()?.verifyUserOtp(request)
 
                 withContext(Dispatchers.Main) {

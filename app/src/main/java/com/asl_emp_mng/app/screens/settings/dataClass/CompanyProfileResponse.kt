@@ -9,6 +9,7 @@ data class CompanyProfileResponse(
 
 data class CompanyData(
     @SerializedName("company") val company: Company?,
+    @SerializedName("company_logo") val companyLogo: String,
     @SerializedName("proprietor") val proprietor: Proprietor?,
     @SerializedName("country_name") val countryName: String?,
     @SerializedName("state_name") val stateName: String?,

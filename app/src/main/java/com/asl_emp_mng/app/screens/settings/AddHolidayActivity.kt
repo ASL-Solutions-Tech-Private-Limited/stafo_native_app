@@ -130,8 +130,6 @@ class AddHolidayActivity : AppCompatActivity() {
 
                         val request = CreateHolidayRequest(holidaysList)
 
-                        Log.d("post",request.holidays.toString())
-
                         settingsViewModel.addHoliday(this@AddHolidayActivity,request)
                 }else {
                         CustomToast(this@AddHolidayActivity, "Please fill blank field!")
