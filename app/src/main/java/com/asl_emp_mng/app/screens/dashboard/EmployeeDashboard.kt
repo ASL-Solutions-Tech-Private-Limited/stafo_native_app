@@ -96,6 +96,7 @@ class EmployeeDashboard : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
 
@@ -179,9 +180,10 @@ class EmployeeDashboard : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         settingsViewModel.getEmployeDashboard(this)
-        startLocationService()
-
-        settingsViewModel.fetchEmployeeDetails(this@EmployeeDashboard, getEmployeeDetails()?.id.toString())
+        settingsViewModel.fetchEmployeeDetails(
+            this@EmployeeDashboard,
+            getEmployeeDetails()?.id.toString()
+        )
 
     }
 
@@ -189,10 +191,18 @@ class EmployeeDashboard : AppCompatActivity() {
     private fun onClickListener() {
         binding?.apply {
 
-            settingsViewModel.fetchEmployeeDetails(this@EmployeeDashboard, getEmployeeDetails()?.id.toString())
+            settingsViewModel.fetchEmployeeDetails(
+                this@EmployeeDashboard,
+                getEmployeeDetails()?.id.toString()
+            )
 
             binding.tvLeaveViewAll.setOnClickListener {
-                startActivity(Intent(this@EmployeeDashboard, LeaveRequestHistoryActivity::class.java))
+                startActivity(
+                    Intent(
+                        this@EmployeeDashboard,
+                        LeaveRequestHistoryActivity::class.java
+                    )
+                )
             }
 
             tvWishViewAll.setOnClickListener {
@@ -200,7 +210,6 @@ class EmployeeDashboard : AppCompatActivity() {
                     putExtra("WishList", Gson().toJson(wishList))
                 })
             }
-
 
 
             /* tvStopService.setOnClickListener {
@@ -222,7 +231,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
             btnPunchIn.setOnClickListener {
 
-                if (binding.btnPunchIn.text=="Punch Out"){
+                if (binding.btnPunchIn.text == "Punch Out") {
                     binding.btnPunchIn.isEnabled = true
 
 
@@ -244,10 +253,9 @@ class EmployeeDashboard : AppCompatActivity() {
                     val dialog = builder.create()
                     dialog.show()
 
-                }else{
+                } else {
                     showCustomBottomSheet()
                 }
-
 
 
             }
@@ -276,11 +284,6 @@ class EmployeeDashboard : AppCompatActivity() {
 
         settingsViewModel.mEmployeeDashboardResponse.observe(this) {
             if (it.status) {
-
-
-
-
-
 
 
                 setEmployeeComId(it.employeeInfo.companyId.toString())
@@ -317,190 +320,13 @@ class EmployeeDashboard : AppCompatActivity() {
                     val dialog = builder.create()
                     dialog.show()
 
-                }else if(it.employeeInfo.geoStatus == "1") {
-
-                    if (isLocationEnabled()) {
-                        startLocationService()
-                    } else {
-                        requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                    }
-
                 }
-
-
-
-
-
-
-
-
-
-                /* if (it.employeeInfo.geoStatus != null && it.employeeInfo.geoStatus == "1"){
-
-                val punches = it.employeeInfo.punches
-
-                if (punches != null && punches[0].punchOut != null) {
-
-                    stopLocationService()
-
-
-                }else{
-                    if (isServiceRunning(LocationForegroundService::class.java)) {
-                        stopLocationService()
-                        if (isLocationEnabled()) {
-                            startLocationService()
-                        } else {
-                            requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                        }
-                    } else {
-                        if (isLocationEnabled()) {
-                            startLocationService()
-                        } else {
-                            requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                        }
-                    }
-                }
-
-
-            }*/
-
-
-
 
 
 
                 wishList.clear()
-             /*   if (it.employeeInfo.punches != null && it.employeeInfo.punches.isNotEmpty()) {
 
 
-                    if (it.employeeInfo.punches.get(0).punchIn != null) {
-                        binding.btnPunchIn.setText("Punch Out")
-                        binding.btnPunchIn.isEnabled = true
-
-
-
-
-                        Log.d("res",""+binding.btnPunchIn.text)
-
-
-                        binding.tvOfficeTiming.text = "Punched In At ${
-                            getFormattedDate2(
-                                it.employeeInfo.punches.get(0).punchIn ?: "",
-                                listOf(
-                                    "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", 
-                                    "yyyy-MM-dd HH:mm:ss"         
-                                ),
-                                "hh:mm a dd-MMM-yyyy"
-                            )
-                        }"
-
-                    } else if (it.employeeInfo.punches.get(0).punchIn != null &&
-                        it.employeeInfo.punches.get(0).punchOut != null
-                    ) {
-                        binding.btnPunchIn.setText("Already Punched Out")
-                        binding.btnPunchIn.isEnabled = false
-                        binding.tvOfficeTiming.text ="Punched Out At${
-                            getFormattedDate2(
-                                it.employeeInfo.punches.get(0).punchOut ?: "",
-                                listOf(
-                                    "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-                                    "yyyy-MM-dd HH:mm:ss"
-                                ),
-                                "hh:mm a dd-MMM-yyyy"
-                            )
-                        }"
-
-
-
-                    } else {
-                        binding.btnPunchIn.setText("Punch In")
-                        binding.btnPunchIn.isEnabled = true
-                    }
-                }*/
-
-                /*if (!it.employeeInfo.punches.isNullOrEmpty()) {
-                    val punchData = it.employeeInfo.punches[0]
-                    val punchInTime = punchData.punchIn
-                    val punchOutTime = punchData.punchOut
-
-                    val shiftEndTime = it.employeeInfo.shift?.endTime
-
-                    val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(
-                        Date()
-                    )
-
-                    val punchInDate = punchInTime?.let {
-                        SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(it)
-                    }?.let {
-                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
-                    }
-
-                    if (punchInDate == currentDate){
-
-                        if (punchInTime !=null && punchOutTime != null){
-
-                            if (isServiceRunning(LocationForegroundService::class.java)) {
-                                stopLocationService()
-                            }
-
-                            binding.btnPunchIn.text = "Punched Out"
-                            binding.btnPunchIn.isEnabled = false
-
-                            binding.btnPunchIn.setBackgroundResource(R.drawable.disable_btn_punch)
-
-
-                            binding.tvOfficeTiming.text = "Punched Out At ${
-                                getFormattedDate2(
-                                    punchOutTime,
-                                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
-                                    "hh:mm a dd-MMM-yyyy"
-                                )
-                            }"
-
-
-                        }
-
-                        else if (punchInTime !=null){
-                            binding.btnPunchIn.text = "Punch Out"
-                            binding.btnPunchIn.isEnabled = true
-                            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-                            binding.tvOfficeTiming.text = "Punched In At ${
-                                getFormattedDate2(
-                                    punchInTime,
-                                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
-                                    "hh:mm a dd-MMM-yyyy"
-                                )
-                            }"
-                        }
-
-
-                        else{
-                            binding.btnPunchIn.text = "Punch In"
-                            binding.btnPunchIn.isEnabled = true
-                            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-                        }
-
-                        if (shiftEndTime != null) {
-                            val currentDateTime = Calendar.getInstance().time
-                            val shiftEndDateTime = SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
-
-                            if (shiftEndDateTime != null && currentDateTime.after(shiftEndDateTime) && punchOutTime == null) {
-                                if (isServiceRunning(LocationForegroundService::class.java)) {
-                                    stopLocationService()
-                                }
-                            }
-                        }
-
-
-                    }else{
-                        binding.btnPunchIn.text = "Punch In"
-                        binding.btnPunchIn.isEnabled = true
-                        binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-                    }
-
-
-
-                }*/
 
 
                 if (!it.employeeInfo.punches.isNullOrEmpty()) {
@@ -508,8 +334,10 @@ class EmployeeDashboard : AppCompatActivity() {
                     val punchInTime = punchData.punchIn
                     val punchOutTime = punchData.punchOut
                     val shiftEndTime = it.employeeInfo.shift?.endTime
+                    val geoStatus = it.employeeInfo.geoStatus
 
-                    val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                    val currentDate =
+                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
                     val punchInDate = punchInTime?.let {
                         SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(it)
@@ -519,10 +347,14 @@ class EmployeeDashboard : AppCompatActivity() {
 
                     if (punchInDate == currentDate) {
 
-                        if (punchInTime != null && punchOutTime != null) {
-                            if (isServiceRunning(LocationForegroundService::class.java)) {
-                                stopLocationService()
+                        if (punchInTime != null && geoStatus == "1") {
+                            if (!isServiceRunning(LocationForegroundService::class.java)) {
+                                startService(Intent(this, LocationForegroundService::class.java))
                             }
+                        }
+
+
+                        if (punchInTime != null && punchOutTime != null) {
                             binding.btnPunchIn.text = "Punched Out"
                             binding.btnPunchIn.isEnabled = false
                             binding.btnPunchIn.setBackgroundResource(R.drawable.disable_btn_punch)
@@ -534,6 +366,12 @@ class EmployeeDashboard : AppCompatActivity() {
                                     "hh:mm a dd-MMM-yyyy"
                                 )
                             }"
+
+                            if (isServiceRunning(LocationForegroundService::class.java)) {
+                                stopService(Intent(this, LocationForegroundService::class.java))
+                            }
+
+
 
                         } else if (punchInTime != null) {
                             binding.btnPunchIn.text = "Punch Out"
@@ -546,22 +384,17 @@ class EmployeeDashboard : AppCompatActivity() {
                                     "hh:mm a dd-MMM-yyyy"
                                 )
                             }"
-
-                            if (!isServiceRunning(LocationForegroundService::class.java)) {
-                                startLocationService()
-                            }
-
                         } else {
                             binding.btnPunchIn.text = "Punch In"
                             binding.btnPunchIn.isEnabled = true
                             binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
                         }
 
-
                         if (shiftEndTime != null) {
                             val currentDateTime = Calendar.getInstance()
                             val shiftEndCalendar = Calendar.getInstance()
-                            val shiftEndTimeDate = SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
+                            val shiftEndTimeDate =
+                                SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
 
                             shiftEndTimeDate?.let {
                                 shiftEndCalendar.set(Calendar.HOUR_OF_DAY, it.hours)
@@ -569,33 +402,19 @@ class EmployeeDashboard : AppCompatActivity() {
                                 shiftEndCalendar.set(Calendar.SECOND, 0)
                             }
 
-                            if (currentDateTime.after(shiftEndCalendar) && punchOutTime == null) {
+                            if (shiftEndTime != null && currentDateTime.after(shiftEndCalendar)) {
                                 if (isServiceRunning(LocationForegroundService::class.java)) {
-                                    stopLocationService()
+                                    stopService(Intent(this, LocationForegroundService::class.java))
                                 }
                             }
                         }
 
                     } else {
-
                         binding.btnPunchIn.text = "Punch In"
                         binding.btnPunchIn.isEnabled = true
                         binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-
-                        if (isServiceRunning(LocationForegroundService::class.java)) {
-                            stopLocationService()
-                        }
                     }
                 }
-
-
-
-
-
-
-
-
-
 
 
             }
@@ -653,7 +472,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
                 val rvAdapter = AdapterOnLeave(it.employeesOnLeave, this)
                 binding.rvLeaves.adapter = rvAdapter
-               // binding.tvLeaveViewAll.text = it.employeesOnLeave.size.toString()
+                // binding.tvLeaveViewAll.text = it.employeesOnLeave.size.toString()
             } else {
                 binding.llLeaves.visibility = View.VISIBLE
             }
@@ -663,25 +482,8 @@ class EmployeeDashboard : AppCompatActivity() {
         settingsViewModel.mSendGeoLocationResponse.observe(this) {
             if (it.status) {
 
+                settingsViewModel.getEmployeDashboard(this)
 
-                if (isServiceRunning(LocationForegroundService::class.java)) {
-                    stopLocationService()
-                    if (isLocationEnabled()) {
-                        startLocationService()
-                    } else {
-                        requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                    }
-
-
-                } else {
-                    if (isLocationEnabled()) {
-                        startLocationService()
-                    } else {
-                        requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                    }
-                }
-
-                CustomToast(this, it.message)
             } else {
                 CustomToast(this, it.message)
             }
@@ -698,7 +500,7 @@ class EmployeeDashboard : AppCompatActivity() {
                         .error(R.drawable.demo_avatar)
                         .into(binding.ivHeaderProfilePic)
 
-                    Log.d("res","get iamge url $imageUrl")
+                    Log.d("res", "get iamge url $imageUrl")
                 } else {
                     CustomToast(this, "No image available")
                 }
@@ -717,6 +519,7 @@ class EmployeeDashboard : AppCompatActivity() {
         super.onBackPressed()
         finishAffinity()
     }
+
     private fun isServiceRunning(serviceClass: Class<out Service>): Boolean {
         val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         for (service in activityManager.getRunningServices(Int.MAX_VALUE)) {
@@ -727,15 +530,7 @@ class EmployeeDashboard : AppCompatActivity() {
         return false
     }
 
-    private fun stopLocationService() {
-        val intent = Intent(this, LocationForegroundService::class.java)
-        stopService(intent)
-    }
 
-    private fun startLocationService() {
-        val serviceIntent = Intent(this, LocationForegroundService::class.java)
-        ContextCompat.startForegroundService(this, serviceIntent)
-    }
 
     private fun showCustomBottomSheet() {
         bottomSheetDialog = BottomSheetDialog(this)
@@ -915,7 +710,6 @@ class EmployeeDashboard : AppCompatActivity() {
         override fun onProviderEnabled(provider: String) {}
         override fun onProviderDisabled(provider: String) {}
     }
-
 
 
     private fun actionList(): List<ActionModel> {

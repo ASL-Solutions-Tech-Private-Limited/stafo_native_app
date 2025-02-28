@@ -2,9 +2,12 @@ package com.asl_emp_mng.app.screens.dashboard
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.ActionsListAdapter
@@ -24,6 +27,7 @@ import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 import com.asl_emp_mng.app.screens.settings.LeaveRequestHistoryActivity
 import com.asl_emp_mng.app.screens.settings.PolicyActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
+import com.asl_emp_mng.app.screens.settings.VerifyCompanyDetailsActivity
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.screens.ui.WishListActivity
@@ -44,10 +48,13 @@ class EmployerDashboard : AppCompatActivity() {
     var wishList = ArrayList<DashboardWish>()
 
     private val mActionList = ArrayList<ActionModel>()
+
+    private var companyStatus: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEmployerDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
 
         initViews()
         setOnClickEvents()
@@ -72,41 +79,67 @@ class EmployerDashboard : AppCompatActivity() {
                     override fun onActionClick(action: String) {
                         when (action) {
                             "Employee" -> {
-                                startActivity(
-                                    Intent(
-                                        this@EmployerDashboard,
-                                        ViewAllEmployeeActivity::class.java
-                                    ).apply {
-                                        putExtra("FROM", "View All")
-                                    }
-                                )
+
+                                if (companyStatus) {
+                                    startActivity(
+                                        Intent(
+                                            this@EmployerDashboard,
+                                            ViewAllEmployeeActivity::class.java
+                                        ).apply {
+                                            putExtra("FROM", "View All")
+                                        }
+                                    )
+                                } else {
+                                    showCompanyVerificationDialog()
+                                }
+
                             }
 
                             "Leaves" -> {
-                                startActivity(
-                                    Intent(
-                                        this@EmployerDashboard,
-                                        LeaveManagementActivity::class.java
+
+                                if (companyStatus) {
+                                    startActivity(
+                                        Intent(
+                                            this@EmployerDashboard,
+                                            LeaveManagementActivity::class.java
+                                        )
                                     )
-                                )
+                                } else {
+                                    showCompanyVerificationDialog()
+                                }
+
+
                             }
 
                             "Branches" -> {
-                                startActivity(
-                                    Intent(
-                                        this@EmployerDashboard,
-                                        BranchActivity::class.java
+                                if (companyStatus) {
+                                    startActivity(
+                                        Intent(
+                                            this@EmployerDashboard,
+                                            BranchActivity::class.java
+                                        )
                                     )
-                                )
+                                } else {
+                                    showCompanyVerificationDialog()
+                                }
+
+
                             }
 
                             "Policy" -> {
-                                startActivity(
-                                    Intent(
-                                        this@EmployerDashboard,
-                                        PolicyActivity::class.java
+
+
+                                if (companyStatus) {
+                                    startActivity(
+                                        Intent(
+                                            this@EmployerDashboard,
+                                            PolicyActivity::class.java
+                                        )
                                     )
-                                )
+                                } else {
+                                    showCompanyVerificationDialog()
+                                }
+
                             }
                         }
                     }
@@ -182,6 +215,21 @@ class EmployerDashboard : AppCompatActivity() {
                 } else {
                     binding.llLeaves.visibility = View.VISIBLE
                 }
+
+
+                it.companyInfo?.let { companyInfo ->
+                    Log.d("CompanyVerification", "isVerified: ${companyInfo.isVerified}")
+                    if (companyInfo.isVerified == "Yes") {
+                        companyStatus = true
+                        Log.d("CompanyVerification", "companyStatus set to TRUE")
+                    } else {
+                        companyStatus = false
+                        Log.d("CompanyVerification", "companyStatus set to FALSE")
+                        showCompanyVerificationDialog()
+                    }
+                }
+
+
             }
 
         }
@@ -222,10 +270,12 @@ class EmployerDashboard : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
+
     private fun stopLocationService() {
         val intent = Intent(this, LocationForegroundService::class.java)
         stopService(intent)
     }
+
     private fun setOnClickEvents() {
 
         stopLocationService()
@@ -233,33 +283,72 @@ class EmployerDashboard : AppCompatActivity() {
         settingsViewModel.getCompanyDetails(this@EmployerDashboard)
 
         binding.tvHeaderSetting.setOnClickListener {
-            val intent = Intent(this@EmployerDashboard, EmplyeeyerProfile::class.java)
-            intent.putExtra("DASHBOARD_TYPE", DashboardType.EMPLOYEE.name)
-            startActivity(intent)
+
+            if (companyStatus) {
+                val intent = Intent(this@EmployerDashboard, EmplyeeyerProfile::class.java)
+                intent.putExtra("DASHBOARD_TYPE", DashboardType.EMPLOYEE.name)
+                startActivity(intent)
+            } else {
+                showCompanyVerificationDialog()
+            }
+
         }
 
+
         binding.addEmp.setOnClickListener {
-           startActivity(Intent(this, AddEmployeeActivity::class.java))
-            //startActivity(Intent(this, AutoSearchPlaceActivity::class.java))
+
+            if (companyStatus) {
+                startActivity(Intent(this, AddEmployeeActivity::class.java))
+            } else {
+                showCompanyVerificationDialog()
+            }
+
         }
 
         binding.tvLetsCheckViewAll.setOnClickListener {
-            startActivity(Intent(this, EmplyeeAttendaceListActivity::class.java))
+
+            if (companyStatus) {
+                startActivity(Intent(this, EmplyeeAttendaceListActivity::class.java))
+            } else {
+                showCompanyVerificationDialog()
+            }
         }
 
         binding.tvProfile.setOnClickListener {
-            startActivity(Intent(this, CompanyProfileActivity::class.java))
+
+            if (companyStatus) {
+                startActivity(Intent(this, CompanyProfileActivity::class.java))
+                //startActivity(Intent(this, VerifyCompanyDetailsActivity::class.java))
+            } else {
+                showCompanyVerificationDialog()
+            }
+
         }
 
         binding.tvLetsLeaveViewAll.setOnClickListener {
-            startActivity(Intent(this, LeaveRequestHistoryActivity::class.java))
+
+            if (companyStatus) {
+                startActivity(Intent(this, LeaveRequestHistoryActivity::class.java))
+            } else {
+                showCompanyVerificationDialog()
+            }
+
         }
 
         binding.tvLetsWishViewAll.setOnClickListener {
-            startActivity(Intent(this, WishListActivity::class.java).apply {
-                putExtra("WishList", Gson().toJson(wishList))
-            })
+
+
+            if (companyStatus) {
+                startActivity(Intent(this, WishListActivity::class.java).apply {
+                    putExtra("WishList", Gson().toJson(wishList))
+                })
+            } else {
+                showCompanyVerificationDialog()
+            }
+
         }
+
+
     }
 
     private fun actionList(): List<ActionModel> {
@@ -281,5 +370,24 @@ class EmployerDashboard : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finishAffinity()
+    }
+
+
+    private fun showCompanyVerificationDialog() {
+        val builder = AlertDialog.Builder(this@EmployerDashboard)
+        builder.setTitle(R.string.app_name)
+        builder.setMessage("Your company is not verified. Please complete verification.")
+
+        builder.setPositiveButton("Yes") { dialog, _ ->
+            startActivity(Intent(this, VerifyCompanyDetailsActivity::class.java))
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
     }
 }

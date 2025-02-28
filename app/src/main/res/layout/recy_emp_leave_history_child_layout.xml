@@ -38,13 +38,13 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txt_leave_type"
                 android:layout_alignParentEnd="true"
-                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_9sdp"
                 android:layout_marginLeft="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_6sdp"
                 android:layout_marginEnd="0dp"
                 android:layout_toRightOf="@+id/txt_rqst_dt1"
                 android:ellipsize="end"
-                android:fontFamily="@font/gilroy_regular"
+                android:fontFamily="@font/gilroy_medium"
                 android:maxLength="28"
                 android:text=""
                 android:textColor="@color/black"
@@ -71,7 +71,8 @@
                 android:layout_below="@+id/txt_rqst_dt"
                 android:layout_alignStart="@+id/txt_rqst_dt"
                 android:layout_marginTop="@dimen/_6sdp"
-                android:fontFamily="@font/gilroy_regular"
+                android:layout_alignParentEnd="true"
+                android:fontFamily="@font/gilroy_medium"
                 android:text=""
                 android:textColor="@color/black"
                 android:textSize="14sp" />
@@ -88,13 +89,42 @@
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
+
+
+
+            <TextView
+                android:id="@+id/txt_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_days"
+                android:layout_alignParentEnd="true"
+                android:layout_alignStart="@+id/txt_rqst_dt"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:fontFamily="@font/gilroy_medium"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txt_description1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_days"
+                android:layout_alignStart="@+id/txt_rqst_dt1"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Description"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+
             <TextView
                 android:id="@+id/txt_status"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:layout_width="@dimen/_70sdp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txt_rqst_dt"
+                android:layout_below="@+id/txt_description"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="@dimen/_6sdp"
                 android:textAlignment="center"

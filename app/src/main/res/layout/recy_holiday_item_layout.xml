@@ -59,6 +59,7 @@
 
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_toLeftOf="@+id/item_delete"
             android:paddingEnd="@dimen/_10sdp"
             android:orientation="vertical"
             android:layout_toRightOf="@+id/ll_date"
@@ -86,6 +87,19 @@
                 android:textSize="@dimen/_12ssp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/item_delete"
+            android:src="@drawable/delete"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:tint="@color/pastel_red"
+            app:shapeAppearanceOverlay="@style/Circular"
+            android:background="@color/tea_green"
+            app:contentPadding="@dimen/_3sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"/>
 
 
         <!--<TextView

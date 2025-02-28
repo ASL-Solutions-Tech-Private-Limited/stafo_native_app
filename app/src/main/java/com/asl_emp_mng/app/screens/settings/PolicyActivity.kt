@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -22,6 +23,8 @@ import com.asl_emp_mng.app.databinding.ActivityPolicyBinding
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeComId
+import com.asl_emp_mng.app.utils.getEmployeeDetails
+import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
 import java.util.Collections
 import java.util.Random
 
@@ -56,12 +59,22 @@ class PolicyActivity : AppCompatActivity() {
         binding?.apply {
 
 
+            if (getIsCOMPANYLogin() == true) {
+                llcAddPolicy.visibility=View.VISIBLE
+            } else {
+                llcAddPolicy.visibility=View.GONE
+            }
 
-            settingsViewModel.fetchPolicy(this@PolicyActivity)
+
+
+
+
+
+            getEmployeeComId()?.let { settingsViewModel.fetchPolicy(this@PolicyActivity, it.toInt()) }
 
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
-                settingsViewModel.fetchPolicy(this@PolicyActivity)
+                getEmployeeComId()?.let { settingsViewModel.fetchPolicy(this@PolicyActivity, it.toInt()) }
             }
 
             llcAddPolicy.setOnClickListener {
@@ -86,9 +99,10 @@ class PolicyActivity : AppCompatActivity() {
         settingsViewModel.mPolicyFetchResponse.observe(this) {
 
 
-            if (it.status){
+            if (it.success){
+                Log.d("PolicyResponse", "Data received: ${it.data.size}")
+                val filePath=it.file_path
 
-               val filePath=it.file_path
                 if (it.data.isNotEmpty()){
                     binding.txtMsg.visibility = View.GONE
 
@@ -116,7 +130,7 @@ class PolicyActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-         settingsViewModel.fetchPolicy(this@PolicyActivity)
+        getEmployeeComId()?.let { settingsViewModel.fetchPolicy(this@PolicyActivity, it.toInt()) }
     }
 
     private fun handleLoader(status: String) {

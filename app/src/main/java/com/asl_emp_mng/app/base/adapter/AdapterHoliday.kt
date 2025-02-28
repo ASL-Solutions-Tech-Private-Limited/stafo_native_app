@@ -8,6 +8,8 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.RecyHolidayItemLayoutBinding
+import com.asl_emp_mng.app.screens.settings.BranchActivity
+import com.asl_emp_mng.app.screens.settings.HolidayActivity
 import com.asl_emp_mng.app.screens.settings.dataClass.Holiday
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -46,6 +48,10 @@ class AdapterHoliday (
                  binding.txtHolidayDay.text = formatDay(this.start_date)
                  binding.txtHolidayDate.text = formatDate(this.start_date)
                  binding.txtHolidayMonth.text = formatMonthDate(this.start_date)
+
+                 binding.itemDelete.setOnClickListener {
+                     showCompanyDeleteDialog(this.id)
+                 }
 
              }
          }
@@ -98,6 +104,25 @@ class AdapterHoliday (
         } catch (e: Exception) {
             dateStr
         }
+    }
+
+
+    private fun showCompanyDeleteDialog(itemId:Int) {
+        val builder = androidx.appcompat.app.AlertDialog.Builder(context)
+        builder.setTitle(R.string.app_name)
+        builder.setMessage("Are you sure? Delete this.")
+
+        builder.setPositiveButton("Yes") { dialog, _ ->
+            (context as HolidayActivity).deleteHoliday(itemId)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
     }
 
 }

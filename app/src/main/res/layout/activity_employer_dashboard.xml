@@ -42,7 +42,7 @@
                         android:layout_height="@dimen/_24sdp"
                         android:layout_marginStart="@dimen/_12sdp"
                         android:layout_marginTop="@dimen/_12sdp"
-                        android:src="@drawable/app_icon"
+                        android:src="@drawable/final_asl_hr_logo"
                         app:shapeAppearanceOverlay="@style/Circular"
                         android:scaleType="fitXY"
                         android:background="@color/primaryColor"

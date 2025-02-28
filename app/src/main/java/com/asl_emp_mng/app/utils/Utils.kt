@@ -45,7 +45,9 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
+import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.screens.auth.LoginWithOTPActivity
+import com.asl_emp_mng.app.screens.settings.VerifyCompanyDetailsActivity
 import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -1345,6 +1347,16 @@ fun getTodayDate(): String {
     return dateFormat.format(today)
 }
 
+
+ fun getFormatDate(inputDate: String): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
+
+    val date = inputFormat.parse(inputDate)
+    return outputFormat.format(date!!)
+}
+
+
 fun doLogout(mContext: Context) {
     Hawk.deleteAll()
     val intent = Intent(mContext, LoginWithOTPActivity::class.java)
@@ -1412,6 +1424,8 @@ fun calculateHours2(punchIn: String?, punchOut: String?): String {
         ""
     }
 }
+
+
 
 
 

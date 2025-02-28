@@ -39,12 +39,12 @@ class AdapterWishListFrom(
 
                 if (this.type == "Anniversary") {
                     val dateOfJoining =
-                        getFormattedDate(this.date_of_joining, "yyyy-MM-dd", "dd/MMM/yy")
+                        getFormattedDate(this.date_of_joining, "yyyy-MM-dd", "dd MMM yy")
                     binding.tvDate.text = "$dateOfJoining"
                     binding.ivBirthday.setImageResource(R.drawable.ic_work_aniversary)
                 } else {
                     val dateOfJoining =
-                        getFormattedDate(this.date_of_birth, "yyyy-MM-dd", "dd/MMM/yy")
+                        getFormattedDate(this.date_of_birth, "yyyy-MM-dd", "dd MMM yy")
                     binding.tvDate.text = "$dateOfJoining"
                     binding.ivBirthday.setImageResource(R.drawable.ic_emp_birthday)
                 }

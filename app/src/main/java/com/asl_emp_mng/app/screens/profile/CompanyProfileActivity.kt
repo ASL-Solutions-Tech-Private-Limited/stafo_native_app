@@ -281,39 +281,50 @@ class CompanyProfileActivity : AppCompatActivity() {
             if (it.status) {
                 it.data?.let { data ->
                     mCompany = data.company
-                    binding.tieCompanyName.setText(data.company?.companyName ?: "")
+                    binding.tieCompanyName.setText(data.company?.company_name ?: "")
                     isFocusableField(binding.tieCompanyName)
                     binding.tieCompanyAddress.setText(data.company?.address ?: "")
-                    binding.tieCompanyRegNo.setText(data.company?.registrationNumber ?: "")
-                    binding.tieCompanyGstNo.setText(data.company?.gstNumber ?: "")
-                    binding.tieCompanyPanNo.setText(data.company?.panNumber ?: "")
+                    binding.tieCompanyRegNo.setText(data.company?.registration_number ?: "")
+                    binding.tieCompanyGstNo.setText(data.company?.gst_number ?: "")
+                    binding.tieCompanyPanNo.setText(data.company?.pan_number ?: "")
                     binding.tieSelectCountry.setText(data.countryName ?: "")
                     binding.tieSelectState.setText(data.stateName ?: "")
                     binding.tieSelectCity.setText(data.cityName ?: "")
                     binding.tieOwnerEmail.setText(data.company?.email ?: "")
-                    binding.tieOwnerMobileNo.setText(data.company?.mobileNo ?: "")
-                    binding.tieOwnerName.setText(
-                        data.proprietor?.firstName ?: "" + data.proprietor?.lastName ?: ""
-                    )
+                    binding.tieOwnerMobileNo.setText(data.company?.mobile_no ?: "")
+
+
+
+
+                    binding.tieOwnerName.setText(data.proprietor?.firstName ?: "")
+
+
                     binding.tieOwnerAddress.setText(data.proprietor?.currentAddress ?: "")
 
 
+                    val companyTypeId = data.company?.company_type?.trim()?.toIntOrNull() ?: 0
+                    selectedCompanyType = companyTypeId
 
-                    val companyTypeId = data.company?.companyType?.toIntOrNull() ?: 0
-                    selectedCompanyType=companyTypeId
-                    val companyTypeName = mCompanyTypeList?.find { it.id == companyTypeId }?.company_name?: ""
+                    val companyTypeName =
+                        mCompanyTypeList?.find { it.id == companyTypeId }?.company_name ?: ""
                     binding.tieCompanyType.setText(companyTypeName)
 
-                    val businessTypeId = data.company?.businessTypeId ?: 0
-                    selectedBusinessType=businessTypeId
+
+                    val businessTypeId = data.company?.business_type_id ?: 0
+                    selectedBusinessType = businessTypeId
+
                     val businessTypeName = mBusinessTypeList?.find { it.id == businessTypeId }?.business_name ?: ""
-                    binding.tieBusinessType.setText(businessTypeName)
+                    binding.tieBusinessType.post {
+                        binding.tieBusinessType.setText(businessTypeName)
+                    }
+
+
+
+
 
                     selectedCountry = data.company?.country?.toInt() ?: 0
                     selectedState = data.company?.state?.toInt() ?: 0
                     selectedCity = data.company?.city?.toInt() ?: 0
-
-
 
 
                 }
@@ -367,7 +378,7 @@ class CompanyProfileActivity : AppCompatActivity() {
                         it1.tieCompanyType
                     )
                     for (comType in mCompanyTypeList?.indices!!) {
-                        if (mCompany?.companyType == mCompanyTypeList?.get(comType)?.id.toString()) {
+                        if (mCompany?.company_type == mCompanyTypeList?.get(comType)?.id.toString()) {
                             binding.tieCompanyType.setText(mCompanyTypeList?.get(comType)?.company_name)
                         }
                     }
@@ -389,7 +400,7 @@ class CompanyProfileActivity : AppCompatActivity() {
                     )
 
                     for (businessType in mCompanyTypeList?.indices!!) {
-                        if (mCompany?.businessTypeId.toString() == mBusinessTypeList?.get(
+                        if (mCompany?.business_type_id.toString() == mBusinessTypeList?.get(
                                 businessType
                             )?.id.toString()
                         ) {

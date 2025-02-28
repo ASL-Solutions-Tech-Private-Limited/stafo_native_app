@@ -34,7 +34,6 @@ class AdapterPolicy (
         with(holder) {
             with(list[position]) {
                 binding.txtPolicyName.text = this.title
-               // binding.txtViewPdf.text = "$filePath/${this.file}"
 
                 binding.llcViewPolicy.setOnClickListener {
                     val pdfUrl = "$filePath/${this.file}"

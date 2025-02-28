@@ -8,14 +8,16 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.RecyEmpLeaveHistoryChildLayoutBinding
+import com.asl_emp_mng.app.screens.settings.dataClass.BranchItem
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpLeaveData
+import com.asl_emp_mng.app.utils.getFormatDate
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Locale
 
-class AdapterEmployeeAllLeaveList (
+class AdapterEmployeeAllLeaveList(
     private var list: List<GetEmpLeaveData>,
     var context: Context
 ) : RecyclerView.Adapter<AdapterEmployeeAllLeaveList.ViewHolder>() {
@@ -38,29 +40,28 @@ class AdapterEmployeeAllLeaveList (
             with(list[position]) {
 
 
-
-
-                if (this.status=="approved"){
+                if (this.status == "approved") {
                     binding.txtStatus.setBackgroundResource(R.drawable.capsule_approve_button)
-                }else if (this.status=="pending"){
+                } else if (this.status == "pending") {
                     binding.txtStatus.setBackgroundResource(R.drawable.capsule_pending_button)
-                }else{
+                } else {
                     binding.txtStatus.setBackgroundResource(R.drawable.capsule_reject_button)
                 }
 
-                if (this.leaveType==1){
-                    binding.txtLeaveType.text="Casual Leave"
-                }else if (this.leaveType==2){
-                    binding.txtLeaveType.text="Sick Leave"
-                }else if (this.leaveType==3){
-                    binding.txtLeaveType.text="Privillage Leave"
-                }else{
-                    binding.txtLeaveType.text="Casual Leave"
+                if (this.leaveType == 1) {
+                    binding.txtLeaveType.text = "Casual Leave"
+                } else if (this.leaveType == 2) {
+                    binding.txtLeaveType.text = "Sick Leave"
+                } else if (this.leaveType == 3) {
+                    binding.txtLeaveType.text = "Privillage Leave"
+                } else {
+                    binding.txtLeaveType.text = "Casual Leave"
                 }
-
+                binding.txtDescription.text = this.reason
                 val capitalizedStatus = this.status.replaceFirstChar { it.uppercaseChar() }
                 binding.txtStatus.text = capitalizedStatus
-                binding.txtRqstDt.text = "${getFormatDate(this.fromDate)} - ${getFormatDate(this.toDate)}"
+                binding.txtRqstDt.text =
+                    "${getFormatDate(this.fromDate)} - ${getFormatDate(this.toDate)}"
 
 
                 binding.txtDays.text = "${calculateDuration(this.fromDate, this.toDate)} days"
@@ -73,7 +74,10 @@ class AdapterEmployeeAllLeaveList (
     override fun getItemCount(): Int {
         return list.size
     }
-
+    fun updateList(newList: List<GetEmpLeaveData>) {
+        list = newList
+        notifyDataSetChanged()
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun calculateDuration(fromDate: String, toDate: String): String {
@@ -81,13 +85,7 @@ class AdapterEmployeeAllLeaveList (
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
             val fromDateParsed = LocalDate.parse(fromDate.trim(), formatter)
             val toDateParsed = LocalDate.parse(toDate.trim(), formatter)
-           // val daysBetween = ChronoUnit.DAYS.between(fromDateParsed, toDateParsed)
-
             val daysBetween = ChronoUnit.DAYS.between(fromDateParsed, toDateParsed) + 1
-          /*  daysBetween.toString()
-            if (daysBetween == 0L) {
-                return "1 day"
-            }*/
 
             "$daysBetween"
 
@@ -96,12 +94,5 @@ class AdapterEmployeeAllLeaveList (
         }
     }
 
-    private fun getFormatDate(inputDate: String): String {
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
-
-        val date = inputFormat.parse(inputDate)
-        return outputFormat.format(date!!)
-    }
 
 }

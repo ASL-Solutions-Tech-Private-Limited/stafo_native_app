@@ -118,6 +118,8 @@
                         android:layout_height="52dp"
                         android:layout_weight="1"
                         android:alpha=".3"
+                        android:outlineProvider="none"
+                        android:layout_marginBottom="@dimen/_4sdp"
                         android:background="@drawable/button_background"
                         android:backgroundTint="@color/colorTextPrimary"
                         android:fontFamily="@font/gilroy_semi_bold"

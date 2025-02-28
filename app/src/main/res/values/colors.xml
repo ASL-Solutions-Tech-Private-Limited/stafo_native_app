@@ -19,4 +19,5 @@
     <color name="dashboard_background">#dedede</color>
     <color name="switch_bg">#f4f9ff</color>
     <color name="pending_colour">#F29339</color>
+    <color name="pastel_red">#FF746C</color>
 </resources>

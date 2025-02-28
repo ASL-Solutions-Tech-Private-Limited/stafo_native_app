@@ -273,7 +273,7 @@ class EmpLeaveActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun onDateSet() {
-        val displayFormat = "dd/MMM/yy"
+        val displayFormat = "dd MMM yy"
         val postFormat = "yyyy/MM/dd"
 
         val displaySdf = SimpleDateFormat(displayFormat, Locale.US)
@@ -297,7 +297,7 @@ class EmpLeaveActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setNoDay() {
         try {
-            val myFormat = "dd/MMM/yy"
+            val myFormat = "dd MMM yy"
             val sdf = SimpleDateFormat(myFormat, Locale.US)
 
             val fromDateStr = binding.edtFromDate.text.toString().trim()

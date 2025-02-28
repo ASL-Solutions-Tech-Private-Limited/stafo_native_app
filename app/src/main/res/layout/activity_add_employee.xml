@@ -296,7 +296,6 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:focusable="false"
-                            android:text="1"
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Department"

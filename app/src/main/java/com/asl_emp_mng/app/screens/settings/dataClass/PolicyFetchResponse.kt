@@ -1,7 +1,6 @@
 package com.asl_emp_mng.app.screens.settings.dataClass
-
 data class PolicyFetchResponse(
-    val status: Boolean,
+    val success: Boolean,
     val message: String,
     val file_path: String,
     val data: List<Policy>

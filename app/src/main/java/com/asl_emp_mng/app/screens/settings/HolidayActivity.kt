@@ -122,42 +122,24 @@ class HolidayActivity : AppCompatActivity() {
             }
         }
 
+        settingsViewModel.mDeleteResponse.observe(this) {
 
-    }
-    private fun generateHolidayDates(startDateStr: String, endDateStr: String): List<String> {
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-        val outputFormat = SimpleDateFormat("MMMM d, EEEE", Locale.ENGLISH)
-        val holidayDates = mutableListOf<String>()
-
-        try {
-            val startDate = inputFormat.parse(startDateStr) ?: return emptyList()
-            val endDate = inputFormat.parse(endDateStr) ?: return emptyList()
-            val calendar = Calendar.getInstance()
-            calendar.time = startDate
-
-            while (!calendar.time.after(endDate)) {
-                holidayDates.add(outputFormat.format(calendar.time))
-                calendar.add(Calendar.DAY_OF_MONTH, 1)
+            if (it.status){
+                getEmployeeComId()?.let {
+                    settingsViewModel.getHolidayList(this@HolidayActivity, it)
+                }
+                CustomToast(this,it.message)
+            } else {
+                CustomToast(this,it.message)
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
+
+
+
         }
 
-        return holidayDates
+
     }
 
-    private fun isFutureDate(dateStr: String): Boolean {
-        return try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-            val givenDate = inputFormat.parse(dateStr) ?: return false
-            val today = Calendar.getInstance().time
-
-            // Return true if given date is today or in the future
-            !givenDate.before(today)
-        } catch (e: Exception) {
-            false
-        }
-    }
     private fun handleLoader(status: String) {
         if (status.equals("load", ignoreCase = true)) {
             if (!customLoader.isShowing) customLoader.show()
@@ -165,7 +147,11 @@ class HolidayActivity : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
+    fun deleteHoliday(id:Int){
 
+        settingsViewModel.companyDeleteHoliday(this@HolidayActivity, id)
+
+    }
 
 
 

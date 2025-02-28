@@ -10,7 +10,8 @@ data class AttendanceSummaryResponse(
     @SerializedName("company_id") val companyId: Int,
     @SerializedName("employeesOnLeave") val employeesOnLeave: ArrayList<Leave>?,
     @SerializedName("birthday") val birthday: ArrayList<Birthday>?,
-    @SerializedName("anniversary") val anniversary: ArrayList<Annyversary>?
+    @SerializedName("anniversary") val anniversary: ArrayList<Annyversary>?,
+    @SerializedName("companyInfo") val companyInfo: VerifyCompanyInfo?
 )
 
 
@@ -32,4 +33,10 @@ data class Annyversary(
     @SerializedName("email") val email: String,
     @SerializedName("phone") val phone: String,
     @SerializedName("image") val image: String
+)
+data class VerifyCompanyInfo(
+    val id: Int?,
+    @SerializedName("company_name") val companyName: String?,
+    @SerializedName("company_code") val companyCode: String?,
+    @SerializedName("is_verified") val isVerified: String?
 )

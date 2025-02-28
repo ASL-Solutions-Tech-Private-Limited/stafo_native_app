@@ -59,7 +59,7 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
             this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
                 val selectedDate = Calendar.getInstance()
                 selectedDate.set(year, monthOfYear, dayOfMonth)
-                val dateFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
+                val dateFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
                 val formattedDate = dateFormat.format(selectedDate.time)
                 binding.txtDate.setText("$formattedDate")
                 mSelectedDate =
@@ -82,8 +82,7 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
     private fun onClickListener() {
         binding?.apply {
 
-            val currentDate =
-                SimpleDateFormat("dd/MMM/yy", Locale.getDefault()).format(calendar.time)
+            val currentDate = SimpleDateFormat("dd MMM yy", Locale.getDefault()).format(calendar.time)
             binding.txtDate.setText(currentDate)
 
 

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screens.auth.OtpVerifyActivity">
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".4" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_two"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".2" />
+
+    <View
+        android:id="@+id/header_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_200sdp"
+        android:background="@drawable/gradient_header"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/card_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline_two">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_one_inside"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent=".3" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_otp_verification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/gilroy_regular"
+            android:gravity="center"
+            android:text="OTP Verification"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16sdp"
+            app:fontFamily="@font/gilroy_bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guideline_one_inside" />
+        <LinearLayout
+            android:id="@+id/ll_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_12sdp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_otp_verification">
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_otp_mobile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_regular"
+                android:text="Enter OTP sent to"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_13ssp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_otp_mobile_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_3sdp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="register mobile number"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_13ssp" />
+        </LinearLayout>
+
+        <com.mukeshsolanki.OtpView
+            android:id="@+id/ll_otp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:inputType="number"
+            android:itemBackground="@color/tea_green_light"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            app:OtpHideLineWhenFilled="true"
+            app:OtpItemCount="6"
+            app:OtpItemSpacing="6dp"
+            app:OtpLineColor="@color/primaryColorDark"
+            app:OtpState_filled="true"
+            app:OtpViewType="rectangle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_top" />
+
+
+        <LinearLayout
+            android:id="@+id/ll_resend_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/btn_otp_verify"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_resend_otp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_regular"
+                android:text="Didn't receive any code?"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_resend_mobile_otp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_3sdp"
+                android:layout_toRightOf="@+id/tv_resend_otp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="RESEND CODE"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_12ssp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/btn_otp_verify"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_regular"
+                android:text="Expect OTP in"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_timer_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_3sdp"
+                android:layout_toRightOf="@+id/tv_resend_otp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="28"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_timer_time2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_3sdp"
+                android:layout_toRightOf="@+id/tv_resend_otp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="seconds"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btn_otp_verify"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_marginBottom="@dimen/_40sdp"
+            android:layout_weight="1"
+            android:alpha=".5"
+            android:background="@drawable/button_background"
+            android:backgroundTint="@color/colorTextPrimary"
+            android:clickable="false"
+            android:fontFamily="@font/gilroy_semi_bold"
+            android:text="Verify OTP"
+            android:textAllCaps="false"
+            android:textColor="@color/colorButtonText"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/ll_otp"
+            app:layout_constraintStart_toStartOf="@+id/ll_otp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_back"
+        android:layout_width="@dimen/_34sdp"
+        android:layout_height="@dimen/_34sdp"
+        android:layout_margin="@dimen/_12sdp"
+        android:padding="@dimen/_6sdp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_otp_bg"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_200sdp"
+        android:layout_marginTop="-100dp"
+        android:src="@drawable/otp_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_one"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

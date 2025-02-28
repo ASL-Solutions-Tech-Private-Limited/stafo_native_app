@@ -5,7 +5,8 @@ data class FetchEmployeeDetails(
     @SerializedName("status") val status: Boolean,
     @SerializedName("message") val message: String,
     @SerializedName("data") val data: EmployeeDataFetch?,
-    @SerializedName("image_url") val imageUrl: String?
+    @SerializedName("image_url") val imageUrl: String?,
+    @SerializedName("company_name") val companyName: String
 )
 
 data class EmployeeDataFetch(

@@ -20,6 +20,7 @@ import com.asl_emp_mng.app.databinding.ActivityBranchBinding
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchItem
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveData
 import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeComId
 
 class BranchActivity : AppCompatActivity() {
@@ -33,6 +34,7 @@ class BranchActivity : AppCompatActivity() {
     private lateinit var rvAdapter: BranchAdapter
 
     private var branchList: List<BranchItem> = listOf()
+
     private var filteredList: List<BranchItem> = listOf()
 
 
@@ -109,6 +111,20 @@ class BranchActivity : AppCompatActivity() {
         }
 
 
+        settingsViewModel.mDeleteResponse.observe(this) {
+
+            if (it.status){
+                getEmployeeComId()?.let { settingsViewModel.getViewBranchList(this@BranchActivity, it) }
+                CustomToast(this,it.message)
+            } else {
+               CustomToast(this,it.message)
+            }
+
+
+
+        }
+
+
     }
 
     override fun onResume() {
@@ -142,6 +158,12 @@ class BranchActivity : AppCompatActivity() {
         binding.llcAddBranch.setOnClickListener {
             startActivity(Intent(this, AddBranchActivity::class.java))
         }
+
+    }
+
+    fun deleteBranch(id:Int){
+
+        settingsViewModel.companyDeleteBranch(this@BranchActivity, id)
 
     }
 }

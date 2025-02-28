@@ -50,14 +50,7 @@ class AdapterOnLeave (
         return list.size
     }
 
-  /*  @RequiresApi(Build.VERSION_CODES.O)
-    private fun showDate(date:String):String{
 
-        val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        val outputFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
-        val formatDate = LocalDate.parse(date, inputFormatter).format(outputFormatter)
-        return formatDate
-    }*/
     private fun getFormatDate(inputDate: String): String {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
       val outputFormat = SimpleDateFormat("dd MMM", Locale.getDefault())

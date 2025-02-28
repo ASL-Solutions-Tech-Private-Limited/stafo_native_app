@@ -32,6 +32,7 @@ import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeComId
 import com.asl_emp_mng.app.utils.getEmployeeDetails
+import com.asl_emp_mng.app.utils.getFormatDate
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputEditText
 import java.io.File
@@ -56,6 +57,8 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
     private var mDepartmentList: ArrayList<DataDepartment>? = ArrayList()
     private var mBranchList: ArrayList<DataBranch>? = ArrayList()
+    private var mJobTitleList: ArrayList<String>? = ArrayList()
+
 
     private var profileType: String = "basic_details"
     private var selectMarital: String = "Single"
@@ -123,7 +126,8 @@ class EmployeeProfileDetails : AppCompatActivity() {
                         isFocusableField(binding.tieEmailId)
                     }
                     //binding.tieDateJoining.setText(data.dateOfJoining ?: "")
-                    binding.tieDateJoining.setText("${formatDate(data.dateOfJoining?:"")}")
+                    mDateOfJoining= data.dateOfJoining.toString()
+                    binding.tieDateJoining.setText("${getFormatDate(data.dateOfJoining?:"")}")
                     if (!data.dateOfJoining.isNullOrEmpty()) {
                         isFocusableField(binding.tieDateJoining)
                     }
@@ -135,12 +139,23 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
                    // binding.tieDateOfBirth.setText(data.dateOfBirth ?: "")
                     if (!data.dateOfBirth.isNullOrEmpty()) {
-                        binding.tieDateOfBirth.setText("${formatDate(data.dateOfBirth ?: "")}")
+                        mDateOfBirth=data.dateOfBirth
+                        binding.tieDateOfBirth.setText("${getFormatDate(data.dateOfBirth ?: "")}")
                         isFocusableField(binding.tieDateOfBirth)
                     }
 
 
+                    selectGender = data.gender.toString().lowercase(Locale.ROOT)
+                    when (selectGender) {
+                        "male" -> binding.genderRadioGroup.check(R.id.male)
+                        "female" -> binding.genderRadioGroup.check(R.id.female)
+                    }
+
+
+
+
                     selectBranch = data.branchId
+
 
                     if (selectBranch != null) {
                         val index = mBranchList?.indexOfFirst { it.id == selectBranch }
@@ -164,15 +179,33 @@ class EmployeeProfileDetails : AppCompatActivity() {
                     }
 
 
+
+
+
+                    val position = data.position ?: ""
+
+                    selectJobTitle = position
+
+                    if (position.isNotEmpty() && mJobTitleList != null) {
+                        val index = mJobTitleList!!.indexOf(position)
+                        if (index != -1) {
+                            binding.spinnerJobTitle.setSelection(index)
+                        }
+                    }
+
+
                     val maritalStatusFromApi = data.maritalStatus ?: ""
 
                     if (maritalStatusFromApi.isNotEmpty()) {
                         val mOptions = resources.getStringArray(R.array.marital_status)
                         for (item in mOptions) {
                             if (item == maritalStatusFromApi)
-                                binding.spinnerJobTitle.setSelection(mOptions.indexOf(item))
+                                binding.spinnerMaritalSts.setSelection(mOptions.indexOf(item))
                         }
                     }
+
+
+
 
 
 
@@ -188,17 +221,18 @@ class EmployeeProfileDetails : AppCompatActivity() {
                         isFocusableField(binding.tieGurdianName)
                     }
 
-                    if (data.position != null && data.position.isNotEmpty()) {
+                   /* if (data.position != null && data.position.isNotEmpty()) {
                         val options = resources.getStringArray(R.array.position_type)
                         for (item in options) {
                             if (item == data.position)
                                 binding.spinnerJobTitle.setSelection(options.indexOf(item))
                         }
-                    }
+                    }*/
 
                     if (!data.dateOfLeaving.isNullOrBlank()) {
+                        mDateOfLeaving=data.dateOfLeaving
                        // binding.tieDateOfLeaving.setText(data.dateOfLeaving)
-                        binding.tieDateOfLeaving.setText("${formatDate(data.dateOfLeaving)}")
+                        binding.tieDateOfLeaving.setText("${getFormatDate(data.dateOfLeaving)}")
                         isFocusableField(binding.tieDateOfLeaving)
                     }
 
@@ -248,6 +282,40 @@ class EmployeeProfileDetails : AppCompatActivity() {
                 CustomToast(this, it.message)
             }
         }
+
+
+        settingsViewModel.mJobTitleResponse.observe(this@EmployeeProfileDetails) { response ->
+            if (response.status) {
+
+                mJobTitleList = ArrayList(response.data.map { it.name })
+
+                val adapterTitle = ArrayAdapter(
+                    this@EmployeeProfileDetails,
+                    R.layout.custom_spinner_item,
+                    mJobTitleList!!
+                )
+
+                binding.spinnerJobTitle.adapter = adapterTitle
+
+                binding.spinnerJobTitle.onItemSelectedListener =
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            selectJobTitle = parent.getItemAtPosition(position).toString()
+                        }
+
+                        override fun onNothingSelected(parent: AdapterView<*>) {}
+                    }
+
+            } else {
+                CustomToast(this@EmployeeProfileDetails, response.message)
+            }
+        }
+
 
 
 
@@ -366,41 +434,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
             settingsViewModel.getJobTitleList(this@EmployeeProfileDetails)
 
 
-            settingsViewModel.mJobTitleResponse.observe(this@EmployeeProfileDetails) {
-                if (it.status) {
 
-                    val jobTitles = it.data.map { it.name }
-                    // val jobTitles = mutableListOf("Select Job Title") + it.data.map { it.name }
-
-                    val adapterTitle = ArrayAdapter(
-                        this@EmployeeProfileDetails,
-                        R.layout.custom_spinner_item,
-                        jobTitles
-                    )
-                    binding.spinnerJobTitle.setAdapter(adapterTitle)
-
-                    binding.spinnerJobTitle.onItemSelectedListener =
-                        object : AdapterView.OnItemSelectedListener {
-                            override fun onItemSelected(
-                                parent: AdapterView<*>,
-                                view: View?,
-                                position: Int,
-                                id: Long
-                            ) {
-                                val selectedItem = parent.getItemAtPosition(position).toString()
-                                selectJobTitle = selectedItem
-                            }
-
-                            override fun onNothingSelected(parent: AdapterView<*>) {
-                            }
-                        }
-
-
-                } else {
-                    CustomToast(this@EmployeeProfileDetails, it.message)
-                }
-
-            }
 
 
             /* val options = resources.getStringArray(R.array.position_type)
@@ -431,6 +465,8 @@ class EmployeeProfileDetails : AppCompatActivity() {
                 onBackPressedDispatcher.onBackPressed()
                 finish()
             }
+
+
             binding.genderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
                 val radioButton = group.findViewById<RadioButton>(R.id.male)
                 val radioButton1 = group.findViewById<RadioButton>(R.id.female)
@@ -587,7 +623,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             maritalStatus = selectMarital,
                             guardianName = "",
                             bloodGroup = " ",
-                            dateOfJoining = tieDateJoining.text.toString(),
+                            dateOfJoining = mDateOfJoining,
                             dateOfBirth = " ",
                             gender = selectGender,
                             address = tieAddress.text.toString(),
@@ -628,8 +664,8 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             maritalStatus = selectMarital,
                             guardianName = tieGurdianName.text.toString(),
                             bloodGroup = tieBloodGroup.text.toString(),
-                            dateOfJoining = tieDateJoining.text.toString(),
-                            dateOfBirth = tieDateOfBirth.text.toString(),
+                            dateOfJoining = mDateOfJoining,
+                            dateOfBirth = mDateOfBirth,
                             gender = selectGender,
                             address = tieAddress.text.toString(),
                             country = 0,
@@ -687,8 +723,8 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             maritalStatus = selectMarital,
                             guardianName = tieGurdianName.text.toString(),
                             bloodGroup = tieBloodGroup.text.toString(),
-                            dateOfJoining = tieDateJoining.text.toString(),
-                            dateOfBirth = tieDateOfBirth.text.toString(),
+                            dateOfJoining = mDateOfJoining,
+                            dateOfBirth = mDateOfBirth,
                             gender = selectGender,
                             address = tieAddress.text.toString(),
                             country = 0,
@@ -699,7 +735,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             official_email_id = tieOfficialEmail.text.toString(),
                             pf_number = tiePfNumber.text.toString(),
                             esi_number = tieEsiNumber.text.toString(),
-                            date_of_leaving = tieDateOfLeaving.text.toString(),
+                            date_of_leaving = mDateOfLeaving,
                         )
 
 
@@ -880,13 +916,13 @@ class EmployeeProfileDetails : AppCompatActivity() {
         )
         datePickerDialog.show()
     }*/
-private fun formatDate(inputDate: String): String {
+/*private fun formatDate(inputDate: String): String {
     val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
 
     val date = inputFormat.parse(inputDate)
     return outputFormat.format(date!!)
-}
+}*/
     private fun showDatePicker(view: TextInputEditText?, fieldType: String) {
         val calendar = Calendar.getInstance()
 
@@ -896,7 +932,7 @@ private fun formatDate(inputDate: String): String {
                     set(year, month, dayOfMonth)
                 }
 
-                val displayFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
+                val displayFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
                 val formattedDisplayDate = displayFormat.format(selectedDate.time)
 
                 val apiFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())

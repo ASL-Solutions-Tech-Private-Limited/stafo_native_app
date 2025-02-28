@@ -339,12 +339,10 @@ class AddEmployeeActivity : AppCompatActivity() {
                         phone = tieMobileNo.text.toString(),
                         branch_id = selectBranch,
                         department_id = selectDepartment,
-                        date_of_joining = tieDateJoining.text.toString(),
+                        date_of_joining = mDateOfJoining,
                         gender = selectGender,
                         address = tieAddress.text.toString()
                     )
-
-                    Log.d("res","post add : "+requestBody)
 
                     settingsViewModel.addEmployee(this@AddEmployeeActivity, requestBody)
 
@@ -389,32 +387,22 @@ class AddEmployeeActivity : AppCompatActivity() {
                 tieStaffName.error = "Please enter staff name"
                 tieStaffName.requestFocus()
                 return false
-            } /*else if (tieJobTitle.text.isNullOrEmpty()) {
-                tieJobTitle.error = "Please enter job title"
-                return false
-            } else if (tieBranch.text.isNullOrEmpty()) {
-                tieBranch.error = "Please enter branch"
-                tieBranch.requestFocus()
+            }  else if (tieBranch.text.isNullOrEmpty()) {
+                CustomToast(this@AddEmployeeActivity,"Please enter branch")
                 return false
             } else if (tieDepartment.text.isNullOrEmpty()) {
-                tieDepartment.error = "Please enter department"
-                tieDepartment.requestFocus()
+                CustomToast(this@AddEmployeeActivity,"Please enter department")
                 return false
-            } */ else if (tieMobileNo.text.isNullOrEmpty()) {
+            }  else if (tieMobileNo.text.isNullOrEmpty()) {
                 tieMobileNo.error = "Please enter mobile number"
                 tieMobileNo.requestFocus()
                 return false
             } else if (tieEmailId.text.isNullOrEmpty()) {
-                tieEmailId.error = "Please enter office email id"
-                tieEmailId.requestFocus()
-                return false
-            } else if (tieEmailId.text.isNullOrEmpty()) {
-                tieEmailId.error = "Please enter office email id"
+                tieEmailId.error = "Please enter email id"
                 tieEmailId.requestFocus()
                 return false
             } else if (tieDateJoining.text.isNullOrEmpty()) {
-                tieDateJoining.error = "Please enter date of joining"
-                tieDateJoining.requestFocus()
+               CustomToast(this@AddEmployeeActivity,"Please enter date of joining")
                 return false
             } else if (tieAddress.text.isNullOrEmpty()) {
                 tieAddress.error = "Please enter address"
@@ -434,7 +422,7 @@ class AddEmployeeActivity : AppCompatActivity() {
                 val formattedDate = dateFormat.format(selectedDate.time)
                 mDateOfJoining=formattedDate
 
-                val displayFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
+                val displayFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
                 val formattedDisplayDate = displayFormat.format(selectedDate.time)
 
                 binding.tieDateJoining.setText("$formattedDisplayDate")

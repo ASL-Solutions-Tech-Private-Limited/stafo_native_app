@@ -98,23 +98,13 @@ class DynamicHolidayAdapter(private val fields: MutableList<DynamicHolidayField>
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         val datePickerDialog = DatePickerDialog(editText.context, { _, selectedYear, selectedMonth, selectedDay ->
-
-            // Convert selected date to Date object
             calendar.set(selectedYear, selectedMonth, selectedDay)
             val date = calendar.time
-
-            // Format for user display (27/Feb/25)
-            val displayFormat = SimpleDateFormat("dd/MMM/yy", Locale.ENGLISH)
+            val displayFormat = SimpleDateFormat("dd MMM yy", Locale.ENGLISH)
             val formattedDisplayDate = displayFormat.format(date)
-
-            // Format for API (2025-02-27)
             val apiFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
             val formattedApiDate = apiFormat.format(date)
-
-            // Set display format in EditText
             editText.setText(formattedDisplayDate)
-
-            // Store API format in the respective field
             if (editText.id == R.id.editText2) {
                 field.userInput2 = formattedApiDate
             } else if (editText.id == R.id.editText3) {

@@ -44,6 +44,13 @@
         <item>Casual Leave</item>
         <item>Previllage  Leave</item>
     </string-array>
+
+    <string-array name="leave_type_search">
+        <item>All</item>
+        <item>Sick Leave</item>
+        <item>Casual Leave</item>
+        <item>Privillage Leave</item>
+    </string-array>
     <string-array name="leave_settings">
         <item>Create Leave Policy</item>
         <item>History</item>

@@ -28,6 +28,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyUpdateDocumentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.DeleteResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
@@ -52,6 +53,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.JobTitleResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.PanVerifyRequestBody
+import com.asl_emp_mng.app.screens.settings.dataClass.PanVerifyResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PendingLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PolicyCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PolicyFetchResponse
@@ -65,11 +68,14 @@ import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfile
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfile
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfileResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.VerifyGSTNumberResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.VerifyRegisterNumberResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ViewBranchResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.HeaderMap
 import retrofit2.http.Multipart
@@ -233,7 +239,7 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<GetEmpAttendanceRecord>
 
-    @PUT("api/company/update")
+    @POST("api/company/update")
     suspend fun callUpdateCompany(
         @Body request: UpdateCompanyProfile,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
@@ -317,6 +323,7 @@ interface ApiStores {
 
     @GET("api/policy")
     suspend fun callFetchPolicy(
+        @Query("company_id") companyId: Int,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap(),
     ): Response<PolicyFetchResponse>
 
@@ -353,10 +360,52 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<EmployeeUploadImageResponse>
 
+    @POST("api/document-verify")
+    suspend fun callVerifyPan(
+        @Body request: PanVerifyRequestBody,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<PanVerifyResponse>
+
+
+    @POST("api/document-verify")
+    suspend fun callVerifyCompany(
+        @Body request: PanVerifyRequestBody,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<VerifyRegisterNumberResponse>
+
+    @POST("api/document-verify")
+    suspend fun callVerifyGst(
+        @Body request: PanVerifyRequestBody,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<VerifyGSTNumberResponse>
+
     @Multipart
     @POST("api/company/update")
     suspend fun updateCompanyImage(
         @Part image: MultipartBody.Part,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<UpdateCompanyProfileResponse>
+
+    @DELETE("api/branch/delete/{id}")
+    suspend fun callDeleteBranch(
+        @Path("id") id: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteResponse>
+
+
+
+    @DELETE("api/shifts/{id}")
+    suspend fun callDeleteShift(
+        @Path("id") id: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteResponse>
+
+    @DELETE("api/holidays-delete/{id}")
+    suspend fun callDeleteHoliday(
+        @Path("id") id: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteResponse>
+
+
+
 }

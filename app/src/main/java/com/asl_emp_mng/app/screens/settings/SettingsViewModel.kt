@@ -29,6 +29,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyUpdateDocumentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.DeleteResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentResponse
@@ -53,6 +54,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.JobTitleResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.OnLeaveResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.PanVerifyRequestBody
+import com.asl_emp_mng.app.screens.settings.dataClass.PanVerifyResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PendingLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PolicyCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PolicyFetchResponse
@@ -66,6 +69,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfile
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateCompanyProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfile
 import com.asl_emp_mng.app.screens.settings.dataClass.UpdateEmployeeProfileResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.VerifyGSTNumberResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.VerifyRegisterNumberResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ViewBranchResponse
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getUserAccessToken
@@ -276,6 +281,307 @@ class SettingsViewModel : BaseViewModel() {
     private var mCompanyUploadImage: MutableLiveData<UpdateCompanyProfileResponse> = MutableLiveData()
 
     val mCompanyUploadImageResponse: LiveData<UpdateCompanyProfileResponse> get() = mCompanyUploadImage
+
+    private var mPanVerify: MutableLiveData<PanVerifyResponse> = MutableLiveData()
+
+    val mPanVerifyResponse: LiveData<PanVerifyResponse> get() = mPanVerify
+
+
+    private var mVerifyGSTNumber: MutableLiveData<VerifyGSTNumberResponse> = MutableLiveData()
+
+    val mVerifyGSTNumberResponse: LiveData<VerifyGSTNumberResponse> get() = mVerifyGSTNumber
+
+
+
+
+    private var mVerifyRegisterNumber: MutableLiveData<VerifyRegisterNumberResponse> = MutableLiveData()
+
+    val mVerifyRegisterNumberResponse: LiveData<VerifyRegisterNumberResponse> get() = mVerifyRegisterNumber
+
+
+
+    private var mDelete: MutableLiveData<DeleteResponse> = MutableLiveData()
+
+    val mDeleteResponse: LiveData<DeleteResponse> get() = mDelete
+
+
+
+    fun companyDeleteBranch(
+        mContext: Context,
+        id:Int
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callDeleteBranch(id)
+                Log.d("res", "rgs verify c :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mDelete.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+    fun companyDeleteShift(
+        mContext: Context,
+        id:Int
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callDeleteShift(id)
+                Log.d("res", "rgs verify c :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mDelete.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun companyDeleteHoliday(
+        mContext: Context,
+        id:Int
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callDeleteHoliday(id)
+                Log.d("res", "rgs verify c :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mDelete.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+    fun companyRGSVerify(
+        mContext: Context,
+        request: PanVerifyRequestBody
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callVerifyCompany(request)
+                Log.d("res", "rgs verify c :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mVerifyRegisterNumber.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+    fun companyGSTVerify(
+        mContext: Context,
+        request: PanVerifyRequestBody
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callVerifyGst(request)
+                Log.d("res", "gst verify c :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mVerifyGSTNumber.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun companyPanVerify(
+        mContext: Context,
+        request: PanVerifyRequestBody
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callVerifyPan(request)
+                Log.d("res", "pan verify c :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mPanVerify.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
     fun changeCompanyProfileImage(
@@ -583,12 +889,12 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun fetchPolicy(mContext: Context) {
+    fun fetchPolicy(mContext: Context,id:Int) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ASLEmpMng.instance.apiStores()?.callFetchPolicy()
-                Log.d("res", "policy " + response?.body().toString())
+                val response = ASLEmpMng.instance.apiStores()?.callFetchPolicy(id)
+
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {

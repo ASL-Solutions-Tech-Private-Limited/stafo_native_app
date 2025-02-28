@@ -3,18 +3,24 @@ package com.asl_emp_mng.app.screens
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.model.ProfileType
 import com.asl_emp_mng.app.databinding.ActivityEmpProfileBinding
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
+import com.asl_emp_mng.app.screens.settings.dataClass.DataBranch
+import com.asl_emp_mng.app.screens.settings.dataClass.DataDepartment
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeComId
 import com.asl_emp_mng.app.utils.getEmployeeDetails
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -22,6 +28,14 @@ class EmpProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmpProfileBinding
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
+
+    private var mDepartmentList: ArrayList<DataDepartment>? = ArrayList()
+    private var mBranchList: ArrayList<DataBranch>? = ArrayList()
+    private var mJobTitleList: ArrayList<String>? = ArrayList()
+
+    private var selectJobTitle: String = ""
+    private var selectBranch: Int = 1
+    private var selectDepartment: Int = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -40,7 +54,21 @@ class EmpProfileActivity : AppCompatActivity() {
     private fun onClickListener() {
         binding?.apply {
 
+            getEmployeeComId()?.let {
+                settingsViewModel.getBranchList(
+                    this@EmpProfileActivity,
+                    it
+                )
+            }
+            getEmployeeComId()?.let {
+                settingsViewModel.getDepartmentList(
+                    this@EmpProfileActivity,
+                    it
+                )
+            }
 
+
+            settingsViewModel.getJobTitleList(this@EmpProfileActivity)
 
 
             val profileType = ProfileType.valueOf(
@@ -72,9 +100,6 @@ class EmpProfileActivity : AppCompatActivity() {
 
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-        getEmployeeComId()?.let { settingsViewModel.getBranchList(this, it) }
-
-
 
 
         settingsViewModel.mFetchEmployeeDetailsResponse.observe(this) {
@@ -84,7 +109,6 @@ class EmpProfileActivity : AppCompatActivity() {
 
                     Log.d("res","data: ${it.data}")
 
-                    // Extension function to handle null or empty values
                     fun String?.orDash(): String = if (this.isNullOrEmpty()) "-" else this
 
                    // Basic details
@@ -92,66 +116,72 @@ class EmpProfileActivity : AppCompatActivity() {
                     binding.txtMobile.text = data.phone.orDash()
                     binding.txtEmail.text = data.email.orDash()
                     binding.txtAddress.text = data.address.orDash()
-                    binding.txtDob.text = formatDate(data.dateOfBirth.orDash())
+                    binding.txtDob.text = formatDate(data.dateOfBirth.toString())
 
                    // Professional details
-                    binding.txtCComName.text = data.companyId?.toString().orDash()
-                    binding.txtCComBranch.text = data.branchId?.toString().orDash()
-                    binding.txtCComDepartment.text = data.departmentId?.toString().orDash()
-                    binding.txtCComEmpType.text = data.employeeTypeId?.toString().orDash()
-                    binding.txtCComJoining.text = formatDate(data.dateOfJoining.orDash())
-                    binding.txtCComLeaving.text =formatDate(data.dateOfLeaving.orDash())
+                    binding.txtCComName.text = it.companyName
+                    //binding.txtCComEmpType.text = data.employeeTypeId?.toString().orDash()
+
                     binding.txtCComEmpId.text = data.empId.orDash()
-                    binding.txtCComJobTitle.text = data.position.orDash()
-                    binding.txtCComPfNo.text = data.pfNumber?.toString().orDash()
+                    binding.txtCComPfNo.text = data.pfNumber?.orDash()
                     binding.txtCComOfficialEmail.text = data.email.orDash()
 
+                    selectBranch = data.branchId
+
+
+                    if (selectBranch != null) {
+                        val index = mBranchList?.indexOfFirst { it.id == selectBranch }
+                        if (index != -1) {
+                            binding.txtCComBranch.setText(index?.let { it1 -> mBranchList?.get(it1)?.branch_name })
+                            binding.txtLComBranch.setText(index?.let { it1 -> mBranchList?.get(it1)?.branch_name })
+                        }
+                    }
+
+
+                    selectDepartment = data.departmentId
+
+                    if (selectDepartment != null) {
+                        val index = mDepartmentList?.indexOfFirst { it.id == selectDepartment }
+                        if (index != -1) {
+                            binding.txtCComDepartment.setText(index?.let { it1 -> mDepartmentList?.get(it1)?.name })
+                            binding.txtLComDepartment.setText(index?.let { it1 -> mDepartmentList?.get(it1)?.name })
+                        }
+                    }
+
+
+
+
+
+                    val position = data.position ?: ""
+                    selectJobTitle = position
+
+                    if (position.isNotEmpty() && mJobTitleList != null) {
+                        val index = mJobTitleList!!.indexOf(position)
+                        if (index != -1) {
+                            binding.txtCComJobTitle.setText(mJobTitleList!![index])
+                            binding.txtLComJobTitle.setText(mJobTitleList!![index])
+                        }
+                    }
+
+
                      // Last company details
-                    binding.txtLComName.text = data.companyId?.toString().orDash()
-                    binding.txtLComBranch.text = data.branchId?.toString().orDash()
-                    binding.txtLComDepartment.text = data.departmentId?.toString().orDash()
-                    binding.txtLComEmpType.text = data.employeeTypeId?.toString().orDash()
-                    binding.txtLComJoining.text = formatDate(data.dateOfJoining.orDash())
-                    binding.txtLComLeaving.text = formatDate(data.dateOfLeaving.orDash())
+                    binding.txtLComName.text = it.companyName
+                   // binding.txtLComEmpType.text = data.employeeTypeId?.toString().orDash()
+
+
+                    binding.txtCComJoining.text =formatDate(data.dateOfJoining.toString())
+                    binding.txtLComJoining.text =formatDate(data.dateOfJoining.toString())
+
+                    binding.txtCComLeaving.text =formatDate(data.dateOfLeaving.toString())
+                    binding.txtLComLeaving.text =formatDate(data.dateOfLeaving.toString())
+
                     binding.txtLComEmpId.text = data.empId.orDash()
-                    binding.txtLComJobTitle.text = data.position.orDash()
-                    binding.txtLComPfNo.text = data.pfNumber?.toString().orDash()
+                    binding.txtLComPfNo.text = data.pfNumber?.orDash()
                     binding.txtLComOfficialEmail.text = data.email.orDash()
 
 
 
 
-
-                    /*    //basic details
-                        binding.txtName.text=data.name
-                        binding.txtMobile.text=data.phone
-                        binding.txtEmail.text=data.email
-                        binding.txtAddress.text=data.address
-                        binding.txtDob.text=data.dateOfBirth
-
-                        //professional details
-                        binding.txtCComName.text= data.companyId.toString()
-                        binding.txtCComBranch.text= data.branchId.toString()
-                        binding.txtCComDepartment.text= data.departmentId.toString()
-                        binding.txtCComEmpType.text= data.employeeTypeId.toString()
-                        binding.txtCComJoining.text= data.dateOfJoining.toString()
-                        binding.txtCComLeaving.text= data.dateOfLeaving.toString()
-                        binding.txtCComEmpId.text= data.empId
-                        binding.txtCComJobTitle.text= data.position.toString()
-                        binding.txtCComPfNo.text= data.pfNumber.toString()
-                        binding.txtCComOfficialEmail.text= data.email
-
-                        //last company
-                        binding.txtLComName.text= data.companyId.toString()
-                        binding.txtLComBranch.text= data.branchId.toString()
-                        binding.txtLComDepartment.text= data.departmentId.toString()
-                        binding.txtLComEmpType.text= data.employeeTypeId.toString()
-                        binding.txtLComJoining.text= data.dateOfJoining.toString()
-                        binding.txtLComLeaving.text= data.dateOfLeaving.toString()
-                        binding.txtLComEmpId.text= data.empId
-                        binding.txtLComJobTitle.text= data.position.toString()
-                        binding.txtLComPfNo.text= data.pfNumber.toString()
-                        binding.txtLComOfficialEmail.text= data.email*/
 
 
 
@@ -172,6 +202,24 @@ class EmpProfileActivity : AppCompatActivity() {
                 CustomToast(this, it.message)
             }
         }
+
+
+        settingsViewModel.mJobTitleResponse.observe(this) { response ->
+            if (response.status) {
+                mJobTitleList = ArrayList(response.data.map { it.name })
+            }
+        }
+
+        settingsViewModel.mBranchListResponse.observe(this) {
+            mBranchList = it.data
+
+        }
+
+        settingsViewModel.mDepartmentListResponse.observe(this) {
+            mDepartmentList = it.data
+        }
+
+
     }
 
     private fun handleLoader(status: String) {
@@ -183,10 +231,15 @@ class EmpProfileActivity : AppCompatActivity() {
     }
 
     private fun formatDate(inputDate: String): String {
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
+        if (inputDate.isNullOrEmpty()) return ""
 
-        val date = inputFormat.parse(inputDate)
-        return outputFormat.format(date!!)
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+            val date = inputFormat.parse(inputDate)
+            outputFormat.format(date!!)
+        } catch (e: Exception) {
+            ""
+        }
     }
 }

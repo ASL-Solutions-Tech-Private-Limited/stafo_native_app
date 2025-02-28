@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.RecyCompanyLeaveHistoryItemLayoutBinding
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveData
+import com.asl_emp_mng.app.utils.getFormatDate
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -37,10 +38,10 @@ class AdapterRequestLeaveHistory(
         with(holder) {
             with(leavesManagementList[position]) {
                 binding.txtEmpName.text = this.employeeBasicInfo.name
-                binding.txtLeaveDate.text = "${formatDate(this.fromDate)} - ${formatDate(this.toDate)}"
-                binding.txtStartDate.text = "${formatDate(this.fromDate)}"
-                binding.txtEndDate.text = "${formatDate(this.toDate)}"
-                binding.txtAppliedDate.text = "${formatDate(this.fromDate)}"
+                binding.txtLeaveDate.text = "${getFormatDate(this.fromDate)} - ${getFormatDate(this.toDate)}"
+                binding.txtStartDate.text = "${getFormatDate(this.fromDate)}"
+                binding.txtEndDate.text = "${getFormatDate(this.toDate)}"
+                binding.txtAppliedDate.text = "${getFormatDate(this.fromDate)}"
 
                 if (this.leaveType=="1"){
                     binding.txtLeaveType.text="Casual Leave"
@@ -98,12 +99,6 @@ class AdapterRequestLeaveHistory(
     }
 
 
-    private fun formatDate(inputDate: String): String {
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
 
-        val date = inputFormat.parse(inputDate)
-        return outputFormat.format(date!!)
-    }
 
 }

@@ -97,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/_40sdp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -268,7 +268,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_c_com_emp_type1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="Full Time"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />
@@ -751,7 +751,7 @@
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toRightOf="@+id/txt_l_com_emp_type1"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="Full Time"
+                        android:text=""
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp" />

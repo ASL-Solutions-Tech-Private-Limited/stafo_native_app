@@ -2,7 +2,9 @@ package com.asl_emp_mng.app.screens.emp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -16,6 +18,8 @@ import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.AdapterEmployeeAllLeaveList
 import com.asl_emp_mng.app.databinding.ActivityEmployeeLeaveHistoryBinding
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
+import com.asl_emp_mng.app.screens.settings.dataClass.BranchItem
+import com.asl_emp_mng.app.screens.settings.dataClass.GetEmpLeaveData
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployeeLeaveHistRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveCount
 import com.asl_emp_mng.app.utils.CustomLoader
@@ -27,6 +31,9 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
     private lateinit var leaveCount: List<LeaveCount>
+    private var list: List<GetEmpLeaveData> = listOf()
+    private var filteredList: List<GetEmpLeaveData> = listOf()
+    private lateinit var rvAdapter:AdapterEmployeeAllLeaveList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +46,13 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
             insets
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
+
+
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+        binding.rvEmpLeaveHist.layoutManager = layoutManager
+        rvAdapter = AdapterEmployeeAllLeaveList(mutableListOf(), this)
+        binding.rvEmpLeaveHist.adapter = rvAdapter
+
         onClickListener()
         observeViewModel()
 
@@ -67,19 +81,17 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
 
                 binding.txtMsg.visibility = View.GONE
 
+                list=it.data
+                filteredList=list
+
                 leaveCount=it.leaveCount
-                val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-                binding.rvEmpLeaveHist.setLayoutManager(layoutManager)
-                val rvAdapter = AdapterEmployeeAllLeaveList(it.data, this)
-                binding.rvEmpLeaveHist.adapter = rvAdapter
-                rvAdapter.notifyDataSetChanged()
+                rvAdapter.updateList(filteredList.toMutableList())
 
                 if (leaveCount.size>2){
                     binding.tvPrivileged.text=leaveCount[0].totalDays
                     binding.tvSick.text=leaveCount[1].totalDays
                     binding.tvCasual.text=leaveCount[2].totalDays
                 }
-
 
 
             }else{
@@ -91,6 +103,28 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    fun GetEmpLeaveData.getLeaveTypeName(): String {
+        return when (this.leaveType) {
+            1 -> "Casual Leave"
+            2 -> "Sick Leave"
+            3 -> "Privillage Leave"
+            else -> "All"
+        }
+    }
+
+
+    private fun filterList(query: String) {
+        val filteredList = if (query.isEmpty()) {
+            list
+        } else {
+            list.filter {
+                it.getLeaveTypeName().contains(query, ignoreCase = true)
+            }
+        }
+
+        rvAdapter.updateList(filteredList.toMutableList())
     }
 
     private fun handleLoader(status: String) {
@@ -106,9 +140,26 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
         binding?.apply {
 
 
-            val options = resources.getStringArray(R.array.leave_type)
+            val options = resources.getStringArray(R.array.leave_type_search)
             val adapterSpinner = ArrayAdapter(this@EmployeeLeaveHistoryActivity, R.layout.custom_spinner_item, options)
             binding.spinnerSearchType.setAdapter(adapterSpinner)
+            binding.spinnerSearchType.setSelection(0)
+            binding.spinnerSearchType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                    val selectedValue = parent.getItemAtPosition(position).toString()
+                    if (selectedValue.equals("All", ignoreCase = true)) {
+                        filteredList = list
+                    } else {
+                        filteredList = list.filter { it.getLeaveTypeName().contains(selectedValue, ignoreCase = true) }
+                    }
+                    rvAdapter.updateList(filteredList.toMutableList())
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                }
+            }
+
+
 
 
 
