@@ -368,7 +368,8 @@ class EmployeeDashboard : AppCompatActivity() {
                             }"
 
                             if (isServiceRunning(LocationForegroundService::class.java)) {
-                                stopService(Intent(this, LocationForegroundService::class.java))
+                                val serviceIntent = Intent(this, LocationForegroundService::class.java)
+                                stopService(serviceIntent)
                             }
 
 
@@ -404,7 +405,8 @@ class EmployeeDashboard : AppCompatActivity() {
 
                             if (shiftEndTime != null && currentDateTime.after(shiftEndCalendar)) {
                                 if (isServiceRunning(LocationForegroundService::class.java)) {
-                                    stopService(Intent(this, LocationForegroundService::class.java))
+                                    val serviceIntent = Intent(this, LocationForegroundService::class.java)
+                                    stopService(serviceIntent)
                                 }
                             }
                         }

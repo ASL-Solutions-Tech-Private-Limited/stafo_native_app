@@ -66,6 +66,8 @@ class CompanyProfileActivity : AppCompatActivity() {
     private var selectedCompanyType: Int = 0
     private var selectedBusinessType: Int = 0
 
+    private var isBusinessTypeDialogShowing = false
+
     private var profileType: String = "company_basic"
     private var mCompany: Company? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -146,6 +148,8 @@ class CompanyProfileActivity : AppCompatActivity() {
 
             tieCompanyType.setOnClickListener { companyTypeDialog.show() }
             tieBusinessType.setOnClickListener { businessTypeDialog.show() }
+
+
             tieSelectCountry.setOnClickListener { countryDialog.show() }
             tieSelectState.setOnClickListener { validateAndShowStateDialog() }
             tieSelectCity.setOnClickListener { validateAndShowCityDialog() }

@@ -48,7 +48,6 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
-        android:layout_marginBottom="@dimen/_50sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,8 +67,10 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_text_background"
                 android:fontFamily="@font/gilroy_medium"
-                android:hint="Enter pan number"
-                android:inputType="textPersonName" />
+                android:maxLength="10"
+                android:inputType="textCapCharacters"
+                android:singleLine="true"
+                android:hint="Enter pan number" />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_register_no"
@@ -85,8 +86,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_text_background"
                 android:fontFamily="@font/gilroy_medium"
-                android:hint="Enter register number"
-                android:inputType="textPersonName" />
+                android:hint="Enter register number" />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_gst_no"

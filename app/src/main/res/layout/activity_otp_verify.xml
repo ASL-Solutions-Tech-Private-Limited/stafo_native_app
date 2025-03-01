@@ -196,7 +196,7 @@
             android:id="@+id/btn_otp_verify"
             android:layout_width="0dp"
             android:layout_height="@dimen/_37sdp"
-            android:layout_marginBottom="@dimen/_40sdp"
+            android:layout_marginBottom="@dimen/_50sdp"
             android:layout_weight="1"
             android:alpha=".5"
             android:outlineProvider="none"

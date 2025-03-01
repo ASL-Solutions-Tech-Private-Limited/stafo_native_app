@@ -4,10 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.ActionsListAdapter
@@ -52,8 +55,14 @@ class EmployerDashboard : AppCompatActivity() {
     private var companyStatus: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityEmployerDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
         window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
 
         initViews()
@@ -318,7 +327,7 @@ class EmployerDashboard : AppCompatActivity() {
 
             if (companyStatus) {
                 startActivity(Intent(this, CompanyProfileActivity::class.java))
-                //startActivity(Intent(this, VerifyCompanyDetailsActivity::class.java))
+               // startActivity(Intent(this, VerifyCompanyDetailsActivity::class.java))
             } else {
                 showCompanyVerificationDialog()
             }
@@ -356,6 +365,7 @@ class EmployerDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_calendar_month))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
+        mActionList.add(ActionModel("Location Track", R.drawable.ic_location_pin))
         return mActionList
     }
 

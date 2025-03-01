@@ -56,9 +56,9 @@
                         android:layout_marginTop="@dimen/_12sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:gravity="center"
-                        android:text="Asl HR Wala"
+                        android:text="STAFO"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_14ssp"
 
                         app:layout_constraintBottom_toTopOf="@id/header_view"
                         app:layout_constraintStart_toEndOf="@id/iv_app_icon"

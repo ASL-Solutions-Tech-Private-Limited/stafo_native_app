@@ -2,7 +2,12 @@ package com.asl_emp_mng.app.screens.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.InputFilter
+import android.text.Spanned
+import android.text.TextWatcher
 import android.view.View
+import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -14,10 +19,12 @@ import androidx.core.view.WindowInsetsCompat
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.ActivityVerifyCompanyDetailsBinding
 import com.asl_emp_mng.app.databinding.PanVerifyBottomSheetLayoutBinding
+import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
 import com.asl_emp_mng.app.screens.settings.dataClass.PanVerifyRequestBody
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeComId
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class VerifyCompanyDetailsActivity : AppCompatActivity() {
@@ -44,19 +51,29 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
 
-
-
-
-
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (panStatus && gstStatus && companyStatus) {
-                    finish()
-                } else {
-                    showExitConfirmationDialog()
+                when {
+                    panStatus && gstStatus && companyStatus -> {
+                        val intent = Intent(this@VerifyCompanyDetailsActivity, EmployerDashboard::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                        finish()
+                    }
+                    panStatus || gstStatus || companyStatus -> {
+                        showExitConfirmationDialog()
+                    }
+                    else -> {
+                        val intent = Intent(this@VerifyCompanyDetailsActivity, EmployerDashboard::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                        finish()
+                    }
                 }
             }
         })
+
+
 
 
         onClickListener()
@@ -74,6 +91,7 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
                 } else {
                     showCustomBottomSheet("Pan Card Verify")
                 }
+
             }
 
             llcCompanyVerify.setOnClickListener {
@@ -172,9 +190,14 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
             val bottomSheet = (dialog as BottomSheetDialog)
                 .findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.setBackgroundResource(android.R.color.transparent)
+
         }
 
+        bottomSheetDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+
         bottomSheetDialog.setCancelable(false)
+
         bottomSheetDialogBinding.textView.text = type
 
         when (type) {
@@ -196,6 +219,31 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
                 bottomSheetDialogBinding.tilRegisterNo.visibility = View.GONE
             }
         }
+
+
+
+
+        bottomSheetDialogBinding.tiePanNo.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val pan = s.toString().uppercase()
+                if (pan != s.toString()) {
+                    bottomSheetDialogBinding.tiePanNo.setText(pan)
+                    bottomSheetDialogBinding.tiePanNo.setSelection(pan.length)
+                }
+
+                if (pan.length == 10) {
+                    if (!isValidPAN(pan)) {
+                        bottomSheetDialogBinding.tiePanNo.error = "Invalid PAN format (eg. ABCDE1234F)"
+                    }
+                }
+            }
+        })
+
+
 
         bottomSheetDialogBinding.btnSubmit.setOnClickListener {
             when (type) {
@@ -260,7 +308,10 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
 
 
 
-
+    private fun isValidPAN(pan: String): Boolean {
+        val panRegex = Regex("^[A-Z]{5}[0-9]{4}[A-Z]$")
+        return panRegex.matches(pan)
+    }
 
 
     private fun showExitConfirmationDialog() {

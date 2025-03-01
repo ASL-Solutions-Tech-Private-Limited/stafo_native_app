@@ -39,6 +39,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeePostLocationRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeePostLocationResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeUploadImageResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeViewDocumentRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeViewDocumentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.FetchEmployeeDetails
 import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResquest
@@ -405,7 +407,11 @@ interface ApiStores {
         @Path("id") id: Int,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeleteResponse>
-
+    @POST("api/employee-documents/list")
+    suspend fun callEmployeeViewDocument(
+        @Body request: EmployeeViewDocumentRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EmployeeViewDocumentResponse>
 
 
 }

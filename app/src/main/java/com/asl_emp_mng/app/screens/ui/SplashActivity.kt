@@ -29,7 +29,9 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, CommonViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         makeStatusBarTransparent()
+
         viewDataBinding?.lifecycleOwner = this
 
         val delayMillis = 3000L // Total delay time

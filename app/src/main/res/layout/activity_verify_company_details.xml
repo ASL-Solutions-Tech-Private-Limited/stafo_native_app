@@ -56,6 +56,40 @@
 
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llc_aadhaar_verify"
+            android:weightSum="2"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:background="@drawable/edit_text_background"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:textSize="@dimen/_12ssp"
+                android:layout_weight="0.5"
+                android:fontFamily="@font/gilroy_medium"
+                android:textColor="@color/black"
+                android:text="Aadhaar"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_aadhaar_verify"
+                android:layout_weight="1.5"
+                android:textSize="@dimen/_12ssp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:textColor="@color/black"
+                android:text="Verify"
+                android:gravity="end"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/_13ssp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/llc_pan_verify"
             android:weightSum="2"
             android:layout_marginTop="@dimen/_14sdp"
@@ -88,6 +122,8 @@
                 android:layout_height="wrap_content"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/llc_company_verify"
             android:weightSum="2"

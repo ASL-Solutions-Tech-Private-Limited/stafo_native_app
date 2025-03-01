@@ -17,6 +17,7 @@ import com.asl_emp_mng.app.screens.EmpProfileActivity
 import com.asl_emp_mng.app.screens.emp.EmpLeaveActivity
 import com.asl_emp_mng.app.screens.emp.EmployeeAttendance
 import com.asl_emp_mng.app.screens.emp.EmployeeAttendanceRecordActivity
+import com.asl_emp_mng.app.screens.emp.EmployeeViewDocumentActivity
 import com.asl_emp_mng.app.screens.settings.AddDepartmentActivity
 import com.asl_emp_mng.app.screens.settings.AddShiftActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
@@ -40,7 +41,7 @@ import java.time.LocalDate
 
 class EmplyeeyerProfile : AppCompatActivity() {
 
-    private lateinit var binding:ActivityEmplyeeyerProfileBinding
+    private lateinit var binding: ActivityEmplyeeyerProfileBinding
     private var profileImage: File? = null
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
@@ -69,7 +70,10 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
             } else {
 
-                settingsViewModel.fetchEmployeeDetails(this@EmplyeeyerProfile, getEmployeeDetails()?.id.toString())
+                settingsViewModel.fetchEmployeeDetails(
+                    this@EmplyeeyerProfile,
+                    getEmployeeDetails()?.id.toString()
+                )
 
                 tvHeaderEmpName.text = getEmployeeDetails()?.name ?: "Guest"
                 tvHeaderEmpEmail.text = getEmployeeDetails()?.email ?: "--"
@@ -84,7 +88,10 @@ class EmplyeeyerProfile : AppCompatActivity() {
         if (getIsCOMPANYLogin() == true) {
             settingsViewModel.getCompanyDetails(this@EmplyeeyerProfile)
         } else {
-            settingsViewModel.fetchEmployeeDetails(this@EmplyeeyerProfile, getEmployeeDetails()?.id.toString())
+            settingsViewModel.fetchEmployeeDetails(
+                this@EmplyeeyerProfile,
+                getEmployeeDetails()?.id.toString()
+            )
 
         }
         super.onResume()
@@ -99,7 +106,10 @@ class EmplyeeyerProfile : AppCompatActivity() {
         settingsViewModel.mEmployeeUploadImageResponse.observe(this) {
             if (it.status) {
                 CustomToast(this, it.message)
-                settingsViewModel.fetchEmployeeDetails(this@EmplyeeyerProfile, getEmployeeDetails()?.id.toString())
+                settingsViewModel.fetchEmployeeDetails(
+                    this@EmplyeeyerProfile,
+                    getEmployeeDetails()?.id.toString()
+                )
             } else {
                 CustomToast(this, it.message)
             }
@@ -118,7 +128,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
                         .error(R.drawable.demo_avatar)
                         .into(binding.ivHeaderProfilePic)
 
-                    Log.d("res","get iamge url $imageUrl")
+                    Log.d("res", "get iamge url $imageUrl")
                 } else {
                     CustomToast(this, "No image available")
                 }
@@ -195,13 +205,12 @@ class EmplyeeyerProfile : AppCompatActivity() {
             binding.expandableOtherManagement.toggleLayout()
         }
 
-        val departmentSettings = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_department_settings)
+        val departmentSettings =
+            binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_department_settings)
 
         departmentSettings?.setOnClickListener {
             startActivity(Intent(this, AddDepartmentActivity::class.java))
         }
-
-
 
 
         val holidaySettings =
@@ -227,7 +236,6 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
 
         setAttendanceSetting?.setOnClickListener {
-
 
 
             startActivity(
@@ -274,7 +282,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
             startActivity(Intent(this, EmpLeaveActivity::class.java))
         }
         binding?.tvAttendance?.setOnClickListener {
-            startActivity(Intent(this,EmployeeAttendanceRecordActivity::class.java))
+            startActivity(Intent(this, EmployeeAttendanceRecordActivity::class.java))
         }
         binding?.expandableProfile?.setOnClickListener {
             binding.expandableProfile.toggleLayout()
@@ -314,17 +322,13 @@ class EmplyeeyerProfile : AppCompatActivity() {
         val documentProfile =
             binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_documents)
         documentProfile?.setOnClickListener {
-            CustomToast(this, "Working is progress")
-            /*  val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
-              intent.putExtra("PROFILE_TYPE", ProfileType.DOCUMENT.name)
-              startActivity(intent)*/
+            startActivity(Intent(this, EmployeeViewDocumentActivity::class.java))
         }
 
         binding.tvEmpLogout.setOnClickListener {
             doLogout(this)
         }
     }
-
 
 
     private fun openPicker(req: Int) {
@@ -355,7 +359,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
                         if (getIsCOMPANYLogin() == true) {
                             Log.d("res", "com File selected: ${file.absolutePath}")
-                            settingsViewModel.changeCompanyProfileImage(this,file)
+                            settingsViewModel.changeCompanyProfileImage(this, file)
                         } else {
                             Log.d("res", "emp File selected: ${file.absolutePath}")
                             val id = getEmployeeDetails()?.id
@@ -364,7 +368,6 @@ class EmplyeeyerProfile : AppCompatActivity() {
                                 settingsViewModel.changeEmpProfileImage(this, it, file)
                             } ?: Log.e("res", "Employee ID is null")
                         }
-
 
 
                     }

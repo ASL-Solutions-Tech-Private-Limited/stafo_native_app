@@ -65,20 +65,7 @@ class LocationForegroundService : Service() {
             Log.e(TAG, "Location permission not granted. The Activity should have handled this.")
         }
 
-        return START_STICKY
-
-       /* if (hasLocationPermission()) {
-            startAsForegroundService()
-            startLocationUpdates()
-
-            startTimer()
-
-
-        } else {
-            Log.e(TAG, "Location permission not granted. The Activity should have handled this.")
-        }
-
-        return START_STICKY*/
+        return START_NOT_STICKY
     }
 
 
@@ -107,12 +94,10 @@ class LocationForegroundService : Service() {
                     longitude = long
                 )
 
-                Log.d("res", "post geo: $request")
 
                 val token = getUserAccessToken()
                 if (token == null) {
                     withContext(Dispatchers.Main) {
-                        Log.e("API Error", "Token is null")
                     }
                     return@launch
                 }
@@ -143,8 +128,6 @@ class LocationForegroundService : Service() {
         handler = Handler(Looper.getMainLooper())
         runnable = object : Runnable {
             override fun run() {
-               // Log.d("res", "15 seconds passed")
-
                 postGeoLocation(lat.toString(),longi.toString())
 
                 handler?.postDelayed(this, 10000)
@@ -155,15 +138,15 @@ class LocationForegroundService : Service() {
     }
 
     private fun stopRecurringTimer() {
-        handler?.removeCallbacks(runnable!!)
+        handler?.removeCallbacksAndMessages(null)
+        handler = null
+        runnable = null
     }
 
     override fun onCreate() {
         super.onCreate()
         NotificationsHelper.createNotificationChannel(this)
-
         startAsForegroundService()
-
         setupLocationUpdates()
         startServiceRunningTicker()
     }
@@ -174,6 +157,7 @@ class LocationForegroundService : Service() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
         timerJob?.cancel()
         coroutineScope.coroutineContext.cancelChildren()
+        stopRecurringTimer()
     }
 
     private fun startAsForegroundService() {
@@ -227,7 +211,7 @@ class LocationForegroundService : Service() {
     }
 
     private fun startServiceRunningTicker() {
-        timerJob?.cancel() // Cancel any previous job
+        timerJob?.cancel()
         timerJob = coroutineScope.launch {
             tickerFlow().collectLatest {
                 withContext(Dispatchers.Main) {
@@ -256,9 +240,23 @@ class LocationForegroundService : Service() {
 
 
     fun stopForegroundService() {
+
+        if (!isServiceRunning(LocationForegroundService::class.java)) {
+            Log.w(TAG, "Service is not running, skipping stopForegroundService()")
+            return
+        }
+
         stopRecurringTimer()
-        fusedLocationClient.removeLocationUpdates(locationCallback)
-        stopForeground(true)
+        coroutineScope.cancel()
+        timerJob?.cancel()
+        timerJob = null
+
+        try {
+            stopForeground(true)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error while stopping foreground service: ${e.message}")
+        }
+
         stopSelf()
     }
 
@@ -271,14 +269,11 @@ class LocationForegroundService : Service() {
 
 
 
-    private fun isLocationServiceRunning(serviceClass: Class<out Service>): Boolean {
+    private fun isServiceRunning(serviceClass: Class<out Service>): Boolean {
         val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        for (service in activityManager.getRunningServices(Int.MAX_VALUE)) {
-            if (serviceClass.name == service.service.className) {
-                return true
-            }
+        return activityManager.getRunningServices(Int.MAX_VALUE).any {
+            it.service.className == serviceClass.name
         }
-        return false
     }
 
 
