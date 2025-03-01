@@ -214,7 +214,8 @@
                     android:layout_marginEnd="@dimen/_12sdp"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:text="View All"
-                    android:textSize="@dimen/_14sdp"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_12sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/header_layout" />
 
@@ -281,7 +282,8 @@
                     android:layout_marginEnd="@dimen/_12sdp"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:text="View All"
-                    android:textSize="@dimen/_14sdp"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_12sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_banners" />
 
@@ -349,7 +351,8 @@
                     android:layout_marginEnd="@dimen/_12sdp"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:text="View All"
-                    android:textSize="@dimen/_14sdp"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_12sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rl_leaves_panel" />
 

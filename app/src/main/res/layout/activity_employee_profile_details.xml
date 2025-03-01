@@ -63,7 +63,6 @@
             android:id="@+id/rdgp_profile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/include_01"
             android:orientation="horizontal">
 
 
@@ -197,7 +196,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/_16sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_arrow_down"
                         android:tint="@color/black"
@@ -504,7 +503,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/_16sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_arrow_down"
                         android:tint="@color/black"

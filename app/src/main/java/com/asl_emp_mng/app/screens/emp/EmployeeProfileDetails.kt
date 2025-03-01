@@ -793,7 +793,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
             CustomToast(this, ImagePicker.getError(data))
 
         } else {
-            CustomToast(this, "Task Cancelled")
+            // CustomToast(this, "Task Cancelled")
 
         }
     }
@@ -897,7 +897,17 @@ class EmployeeProfileDetails : AppCompatActivity() {
             binding.tieOfficialEmail to "Please enter official email ",
             binding.tieEsiNumber to "Please enter esi number",
             binding.tiePfNumber to "Please enter pf number ",
-        ).all { validateField(it.first, it.second) }
+        ).all { validateField3(it.first, it.second) }
+    }
+
+
+    private fun validateField3(view: TextInputEditText?, errorMsg: String): Boolean {
+        return if (view?.text.isNullOrEmpty()) {
+           CustomToast(this,errorMsg)
+            false
+        } else {
+            true
+        }
     }
 
 

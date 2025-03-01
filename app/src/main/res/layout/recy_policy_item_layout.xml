@@ -62,9 +62,9 @@
                 android:layout_width="@dimen/_18sdp"
                 android:layout_height="@dimen/_18sdp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/_12sdp"
-                android:src="@drawable/ic_view_profile"
-                android:tint="@color/black"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:src="@drawable/pdf"
+                android:padding="@dimen/_3sdp"
                 tools:ignore="UseAppTint" />
 
             <TextView
@@ -74,7 +74,7 @@
                 android:layout_marginStart="@dimen/_4sdp"
                 android:layout_marginEnd="@dimen/_12sdp"
                 android:fontFamily="@font/gilroy_medium"
-                android:paddingVertical="@dimen/_8sdp"
+                android:paddingVertical="@dimen/_6sdp"
                 android:text="View Policy"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_10ssp" />

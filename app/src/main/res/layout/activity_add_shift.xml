@@ -23,11 +23,11 @@
 
             <ImageView
                 android:id="@+id/image_back"
-                android:layout_width="@dimen/_33sdp"
-                android:layout_height="@dimen/_26sdp"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_back"
                 android:tint="@color/white"

@@ -378,7 +378,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
             CustomToast(this, ImagePicker.getError(data))
 
         } else {
-            CustomToast(this, "Task Cancelled")
+            // CustomToast(this, "Task Cancelled")
 
         }
     }

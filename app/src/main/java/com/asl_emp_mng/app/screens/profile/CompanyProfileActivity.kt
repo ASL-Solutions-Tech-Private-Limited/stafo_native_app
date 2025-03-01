@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -35,6 +36,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputEditText
 import java.io.File
 import java.io.FileOutputStream
+
 
 class CompanyProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCompanyProfileBinding
@@ -287,9 +289,25 @@ class CompanyProfileActivity : AppCompatActivity() {
                     binding.tieCompanyRegNo.setText(data.company?.registration_number ?: "")
                     binding.tieCompanyGstNo.setText(data.company?.gst_number ?: "")
                     binding.tieCompanyPanNo.setText(data.company?.pan_number ?: "")
-                    binding.tieSelectCountry.setText(data.countryName ?: "")
-                    binding.tieSelectState.setText(data.stateName ?: "")
-                    binding.tieSelectCity.setText(data.cityName ?: "")
+
+
+                    //
+
+                    if (!data.countryName.isNullOrEmpty()){
+                        enableDisableView(binding.tieSelectCountry,false)
+                        binding.tieSelectCountry.setText(data.countryName ?: "")
+                    }
+
+                    if (!data.stateName.isNullOrEmpty()){
+                        enableDisableView(binding.tieSelectState,false)
+                        binding.tieSelectState.setText(data.stateName ?: "")
+                    }
+
+                    if (!data.cityName.isNullOrEmpty()){
+                        enableDisableView(binding.tieSelectCity,false)
+                        binding.tieSelectCity.setText(data.cityName ?: "")
+                    }
+
                     binding.tieOwnerEmail.setText(data.company?.email ?: "")
                     binding.tieOwnerMobileNo.setText(data.company?.mobile_no ?: "")
 
@@ -628,7 +646,7 @@ class CompanyProfileActivity : AppCompatActivity() {
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -661,6 +679,16 @@ class CompanyProfileActivity : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
             null
+        }
+    }
+
+    private fun enableDisableView(view: View, enabled: Boolean) {
+        view.setEnabled(enabled)
+        if (view is ViewGroup) {
+            val group = view
+            for (idx in 0 until group.childCount) {
+                enableDisableView(group.getChildAt(idx), enabled)
+            }
         }
     }
 }
