@@ -6,11 +6,13 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.ajithvgiri.searchdialog.OnSearchItemSelected
 import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
+import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.model.CompanyInfo
 import com.asl_emp_mng.app.base.model.OwnerInfo
 import com.asl_emp_mng.app.databinding.ActivitySignUpBinding
@@ -47,6 +49,7 @@ class SignUpActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
         mMobile = intent.extras?.getString("mobile")
 
         binding.tieCompanyMobile.setText(mMobile)

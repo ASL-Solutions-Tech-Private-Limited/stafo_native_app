@@ -59,7 +59,7 @@
                         android:gravity="center"
                         android:text="STAFO"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_14ssp"
                         app:layout_constraintBottom_toTopOf="@id/header_view"
                         app:layout_constraintStart_toEndOf="@id/iv_app_icon"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -90,7 +90,7 @@
                         android:layout_marginStart="@dimen/_12sdp"
                         android:layout_marginTop="@dimen/_12sdp"
                         android:fontFamily="@font/gilroy_bold"
-                        android:textSize="@dimen/_15sdp"
+                        android:textSize="@dimen/_12ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/header_view"
                         tools:text="Good Morning" />
@@ -111,7 +111,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-
+                        android:layout_marginTop="@dimen/_8sdp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_header_emp_name">
 
@@ -122,8 +122,11 @@
                             android:layout_marginStart="@dimen/_12sdp"
                             android:fontFamily="@font/gilroy_bold"
                             android:text="View Profile"
+                            android:background="@drawable/custom_view_profile_bg"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"
+                            android:textSize="@dimen/_12ssp"
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:paddingVertical="@dimen/_6sdp"
                             android:visibility="visible" />
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -133,9 +136,8 @@
                             android:layout_marginStart="@dimen/_12sdp"
                             android:fontFamily="@font/gilroy_bold"
                             android:text="Settings"
-
                             android:textColor="@color/red"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_12ssp" />
                     </LinearLayout>
 
                     <de.hdodenhof.circleimageview.CircleImageView
@@ -167,7 +169,7 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="Today's Report(29 Jan 25)"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_12ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -179,8 +181,8 @@
                         android:layout_marginEnd="@dimen/_12sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="View All"
-                        android:textColor="@color/blue"
-                        android:textSize="@dimen/_12sdp"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12ssp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -190,12 +192,12 @@
                         android:layout_height="@dimen/_100sdp"
                         android:layout_marginTop="@dimen/_6sdp"
                         android:orientation="horizontal"
-                        android:weightSum="2"
+                        android:weightSum="3"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_lets_check">
 
-                       <!-- <androidx.cardview.widget.CardView
+                        <androidx.cardview.widget.CardView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_margin="@dimen/_6sdp"
@@ -217,14 +219,15 @@
                                     android:src="@drawable/resized_all_emp_icon" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/txt_all_emp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/gilroy_semi_bold"
                                     android:gravity="center"
                                     android:padding="@dimen/_4sdp"
-                                    android:text="Employee"
+                                    android:text="All Employee"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_14sdp" />
+                                    android:textSize="@dimen/_12ssp" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/tv_all_emp"
@@ -238,7 +241,7 @@
                                     android:textStyle="bold" />
 
                             </LinearLayout>
-                        </androidx.cardview.widget.CardView>-->
+                        </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="0dp"
@@ -269,7 +272,7 @@
                                     android:padding="@dimen/_4sdp"
                                     android:text="Present"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_14sdp" />
+                                    android:textSize="@dimen/_12ssp" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/tv_present_emp"
@@ -296,7 +299,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/gradient_header"
+                                android:background="@drawable/onleave_card_bg"
                                 android:gravity="center"
                                 android:padding="@dimen/_6sdp"
                                 android:orientation="vertical">
@@ -313,7 +316,7 @@
                                     android:padding="@dimen/_4sdp"
                                     android:text=" On Leave"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_14sdp" />
+                                    android:textSize="@dimen/_12ssp" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/tv_on_leave_emp"
@@ -382,7 +385,7 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="On Leave"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_12ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/card_banners" />
 
@@ -394,8 +397,8 @@
                         android:layout_marginEnd="@dimen/_12sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="View All"
-                        android:textColor="@color/blue"
-                        android:textSize="@dimen/_12sdp"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12ssp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/card_banners" />
 
@@ -413,7 +416,6 @@
                         android:layout_marginStart="@dimen/_6sdp"
                         android:layout_marginTop="@dimen/_6sdp"
                         android:layout_marginEnd="@dimen/_6sdp"
-
                         tools:itemCount="1"
                         tools:listitem="@layout/item_leave_list" />
 
@@ -450,7 +452,7 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="Wishes"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_12ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/rl_leaves_panel" />
 
@@ -462,8 +464,8 @@
                         android:layout_marginEnd="@dimen/_12sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="View All"
-                        android:textColor="@color/blue"
-                        android:textSize="@dimen/_12sdp"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12ssp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/rl_leaves_panel" />
 
@@ -473,15 +475,16 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_wishes">
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_wishes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_6sdp"
-                        android:layout_marginTop="@dimen/_6sdp"
-                        android:layout_marginEnd="@dimen/_6sdp"
-                        tools:itemCount="1"
-                        tools:listitem="@layout/item_leave_list" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_wishes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_6sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:layout_marginEnd="@dimen/_6sdp"
+                            tools:itemCount="1"
+                            tools:listitem="@layout/item_leave_list" />
 
                         <LinearLayout
                             android:id="@+id/ll_no_wishes"
@@ -517,7 +520,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_12sdp"
-            android:backgroundTint="@color/primaryColor"
+            android:backgroundTint="@color/colorTextPrimary"
             android:src="@drawable/ic_user"
             android:text="Add Employee"
             app:layout_constraintBottom_toBottomOf="parent"

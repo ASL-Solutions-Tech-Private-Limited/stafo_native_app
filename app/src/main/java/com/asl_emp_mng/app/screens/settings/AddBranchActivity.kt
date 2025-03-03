@@ -16,8 +16,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.request.AddBranchRequest
 import com.asl_emp_mng.app.databinding.ActivityAddBranchBinding
 import com.asl_emp_mng.app.screens.auth.AuthViewModel
@@ -58,6 +60,7 @@ class AddBranchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
 
 

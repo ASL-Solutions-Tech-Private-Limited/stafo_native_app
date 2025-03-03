@@ -17,9 +17,11 @@ import com.asl_emp_mng.app.base.adapter.BranchAdapter
 import com.asl_emp_mng.app.databinding.ActivityNewDeviceRegisterBinding
 import com.asl_emp_mng.app.screens.settings.AddBranchActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
+import com.asl_emp_mng.app.screens.settings.dataClass.ChangeDeviceRequest
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeComId
+import com.asl_emp_mng.app.utils.getEmployeeDetails
 
 class NewDeviceRegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNewDeviceRegisterBinding
@@ -28,6 +30,7 @@ class NewDeviceRegisterActivity : AppCompatActivity() {
     private val settingsViewModel: SettingsViewModel by viewModels()
 
     private lateinit var deviceID: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +42,9 @@ class NewDeviceRegisterActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
-        deviceID = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
+
+        deviceID = intent.extras?.getString("deviceId") ?: ""
 
         setOnClickEvents()
         observeViewModel()
@@ -49,7 +53,13 @@ class NewDeviceRegisterActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-        settingsViewModel.mViewBranchResponse.observe(this) {
+        settingsViewModel.mChangeDeviceResponse.observe(this) {
+
+            if (it.success){
+                CustomToast(this,it.message)
+            }else{
+                CustomToast(this,it.message)
+            }
 
         }
     }
@@ -66,12 +76,12 @@ class NewDeviceRegisterActivity : AppCompatActivity() {
     private fun setOnClickEvents() {
 
         binding.btnRequestRegister.setOnClickListener {
-            getEmployeeComId()?.let {
-                settingsViewModel.getViewBranchList(
-                    this@NewDeviceRegisterActivity,
-                    it
-                )
-            }
+
+            val request= ChangeDeviceRequest(
+                employee_id = getEmployeeDetails()?.id.toString(),
+                status = "pending"
+            )
+            settingsViewModel.requestDeviceChange(this@NewDeviceRegisterActivity, request)
         }
 
     }

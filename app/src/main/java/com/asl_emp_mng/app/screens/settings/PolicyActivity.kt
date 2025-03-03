@@ -45,7 +45,7 @@ class PolicyActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
         onClickListener()
         observeViewModel()

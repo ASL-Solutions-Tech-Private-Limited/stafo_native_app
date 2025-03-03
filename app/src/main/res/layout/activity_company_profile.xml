@@ -12,7 +12,7 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/primaryColorDark"
+        android:background="@color/colorTextPrimary"
         app:elevation="0dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -564,12 +564,11 @@
             android:layout_margin="@dimen/_12sdp"
             android:layout_weight="1"
             android:background="@drawable/button_background"
-            android:backgroundTint="@color/colorTextPrimary"
             android:fontFamily="@font/gilroy_semi_bold"
             android:text="Update Profile"
             android:textAllCaps="false"
             android:textColor="@color/colorButtonText"
-            android:textSize="16dp" />
+            android:textSize="@dimen/_12ssp" />
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

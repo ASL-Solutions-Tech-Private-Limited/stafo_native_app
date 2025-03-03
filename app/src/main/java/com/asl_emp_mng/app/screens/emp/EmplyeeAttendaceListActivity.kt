@@ -7,10 +7,15 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.EmployeeAttendanceAdapter
 import com.asl_emp_mng.app.base.model.EmployeeAttendanceModel
 import com.asl_emp_mng.app.databinding.ActivityEmployeeAttendanceBinding
@@ -43,6 +48,13 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityEmployeeAttendanceBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        enableEdgeToEdge()
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
         val curren = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
         mSelectedDate = curren

@@ -24,8 +24,13 @@ import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.AssignShiftRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.ChangeDeviceRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.ChangeDeviceResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.CompanyAcceptDeviceRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyUpdateDocumentResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.CompanyViewRequestDevice
+import com.asl_emp_mng.app.screens.settings.dataClass.CompanyViewRequestDeviceResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DeleteResponse
@@ -413,5 +418,23 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<EmployeeViewDocumentResponse>
 
+    @POST("api/change-device")
+    suspend fun callRequestDevice(
+        @Body request: ChangeDeviceRequest
+    ): Response<ChangeDeviceResponse>
+
+
+    @POST("api/company/approve-device")
+    suspend fun callCompanyAcceptRequestDevice(
+        @Body request: CompanyAcceptDeviceRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ChangeDeviceResponse>
+
+
+    @POST("api/device-requests-list")
+    suspend fun callGetCompanyRequestDevice(
+        @Body request: CompanyViewRequestDevice,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<CompanyViewRequestDeviceResponse>
 
 }

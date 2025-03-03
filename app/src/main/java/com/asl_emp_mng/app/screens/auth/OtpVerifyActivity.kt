@@ -12,12 +12,14 @@ import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.databinding.ActivityOtpVerifyBinding
 import com.asl_emp_mng.app.screens.dashboard.EmployeeDashboard
 import com.asl_emp_mng.app.screens.dashboard.EmployerDashboard
+import com.asl_emp_mng.app.screens.emp.NewDeviceRegisterActivity
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.setCompanyDetails
@@ -45,6 +47,7 @@ class OtpVerifyActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
 
         mobile = intent.extras?.getString("mobile") ?: ""
@@ -107,28 +110,53 @@ class OtpVerifyActivity : AppCompatActivity() {
 
         authViewModel.mVerifyOtpResponse.observe(this) {
             if (it.success) {
-                if (it.data?.company != null) {
-                    setUserAccessToken(it.data?.token ?: "")
-                    setIsCOMPANYLogin(true)
-                    setCompanyDetails(it.data.company)
-                    startActivity(Intent(this@OtpVerifyActivity, EmployerDashboard::class.java))
-                    finish()
-                } else if (it.data?.employee != null) {
-                    // saveToken(this, "token", it.data?.token ?: "")
-                    setUserAccessToken(it.data?.token ?: "")
-                    setIsEMPLogin(true)
-                    setEmployeeDetails(it.data.employee)
-                    startActivity(Intent(this@OtpVerifyActivity, EmployeeDashboard::class.java))
-                    finish()
-                } else {
 
-                    // saveToken(this, "token", it.data?.token ?: "")
-                    startActivity(Intent(this@OtpVerifyActivity, SignUpActivity::class.java).apply {
-                        putExtra("mobile", mobile)
-                    })
-                    finish()
+                if (it.data?.device_change=="no"){
+                    if (it.data?.company != null) {
+                        setUserAccessToken(it.data?.token ?: "")
+                        setIsCOMPANYLogin(true)
+                        setCompanyDetails(it.data.company)
+                        startActivity(Intent(this@OtpVerifyActivity, EmployerDashboard::class.java))
+                        finish()
+                    } else if (it.data?.employee != null) {
+                        // saveToken(this, "token", it.data?.token ?: "")
+                        setUserAccessToken(it.data?.token ?: "")
+                        setIsEMPLogin(true)
+                        setEmployeeDetails(it.data.employee)
+                        startActivity(Intent(this@OtpVerifyActivity, EmployeeDashboard::class.java))
+                        finish()
+                    } else {
+
+                        // saveToken(this, "token", it.data?.token ?: "")
+                        startActivity(Intent(this@OtpVerifyActivity, SignUpActivity::class.java).apply {
+                            putExtra("mobile", mobile)
+                        })
+                        finish()
+                    }
+                }else if (it.data?.device_change=="yes"){
+
+                    if (it.data?.employee != null) {
+                        setUserAccessToken(it.data?.token ?: "")
+                        setEmployeeDetails(it.data.employee)
+
+                        startActivity(Intent(this@OtpVerifyActivity, NewDeviceRegisterActivity::class.java).apply {
+                            putExtra("deviceId", it.data?.device_id)
+                        })
+                        finish()
+                    }
+
+
+
                 }
+
+
+
             } else {
+                if (it.message==""){
+                    val intent = Intent(this@OtpVerifyActivity, NewDeviceRegisterActivity::class.java)
+                    intent.putExtra("mobile", mobile)
+                    startActivity(intent)
+                }
                 CustomToast(this, it.message)
             }
         }

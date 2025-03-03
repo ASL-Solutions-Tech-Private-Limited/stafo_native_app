@@ -34,13 +34,13 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, CommonViewModel>() {
 
         viewDataBinding?.lifecycleOwner = this
 
-        val delayMillis = 3000L // Total delay time
+        val delayMillis = 500L
 
         Handler(Looper.getMainLooper()).postDelayed({
             viewDataBinding?.imgSplash?.visibility = View.VISIBLE
             val animation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
             viewDataBinding?.imgSplash?.startAnimation(animation)
-        }, 1000)
+        }, 100)
 
         Handler(Looper.getMainLooper()).postDelayed({
             if (isOnBoardingScreenShown() && getIsCOMPANYLogin() == true) {

@@ -10,7 +10,7 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/primaryColorDark"
+        android:background="@color/colorTextPrimary"
         app:elevation="0dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -86,7 +86,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:text="New Phone Detected"
         android:textColor="@color/black"
-        android:textSize="@dimen/_14ssp"
+        android:textSize="@dimen/_13ssp"
         android:fontFamily="@font/gilroy_semi_bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -112,6 +112,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="Send Request"
+        android:textSize="@dimen/_12ssp"
         android:outlineProvider="none"
         android:textAllCaps="false"
         android:textColor="@color/white"

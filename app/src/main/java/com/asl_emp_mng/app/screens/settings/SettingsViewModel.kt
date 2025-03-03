@@ -25,8 +25,13 @@ import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.AssignShiftRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.BranchListResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.ChangeDeviceRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.ChangeDeviceResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.CompanyAcceptDeviceRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyProfileResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyUpdateDocumentResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.CompanyViewRequestDevice
+import com.asl_emp_mng.app.screens.settings.dataClass.CompanyViewRequestDeviceResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DeleteResponse
@@ -311,6 +316,151 @@ class SettingsViewModel : BaseViewModel() {
     val mEmployeeViewDocumentResponse: LiveData<EmployeeViewDocumentResponse> get() = mEmployeeViewDocument
 
 
+
+    private var mChangeDevice: MutableLiveData<ChangeDeviceResponse> = MutableLiveData()
+
+    val mChangeDeviceResponse: LiveData<ChangeDeviceResponse> get() = mChangeDevice
+
+    private var mGetCompanyViewRequestDevice: MutableLiveData<CompanyViewRequestDeviceResponse> = MutableLiveData()
+
+    val mGetCompanyViewRequestDeviceResponse: LiveData<CompanyViewRequestDeviceResponse> get() = mGetCompanyViewRequestDevice
+
+
+
+    fun companyAcceptRequestDeviceChange(
+        mContext: Context,
+        request: CompanyViewRequestDevice
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callGetCompanyRequestDevice(request)
+                Log.d("res", "device accept :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mGetCompanyViewRequestDevice.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+    fun companyAcceptRequestDeviceChange(
+        mContext: Context,
+        request: CompanyAcceptDeviceRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callCompanyAcceptRequestDevice(request)
+                Log.d("res", "device accept :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mChangeDevice.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+    fun requestDeviceChange(
+        mContext: Context,
+        request: ChangeDeviceRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callRequestDevice(request)
+                Log.d("res", "device :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mChangeDevice.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
     fun viewEmployeeDocuments(
         mContext: Context,

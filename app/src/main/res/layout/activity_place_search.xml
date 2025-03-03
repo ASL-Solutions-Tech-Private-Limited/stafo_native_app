@@ -58,6 +58,6 @@
         android:text="Add Address"
         android:textAllCaps="false"
         android:textColor="@color/colorButtonText"
-        android:textSize="16dp" />
+        android:textSize="@dimen/_12ssp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

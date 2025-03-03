@@ -7,9 +7,13 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.model.ProfileType
 import com.asl_emp_mng.app.databinding.ActivityEmplyeeyerProfileBinding
@@ -48,9 +52,15 @@ class EmplyeeyerProfile : AppCompatActivity() {
     private val settingsViewModel: SettingsViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge()
         binding = ActivityEmplyeeyerProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
         setupView(binding)
         setOnClickEvents(binding)
         observeViewModel()

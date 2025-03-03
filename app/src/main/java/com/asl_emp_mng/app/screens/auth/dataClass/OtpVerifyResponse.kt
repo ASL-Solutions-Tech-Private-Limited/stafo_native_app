@@ -11,5 +11,9 @@ data class OtpVerifyResponse(
 data class OtpData (
     val token: String,
     val company: CompanyData? = null,
-    val employee: Employee? = null
+    val employee: Employee? = null,
+    val device_id: String?,
+    val device_change: String?
 )
+
+

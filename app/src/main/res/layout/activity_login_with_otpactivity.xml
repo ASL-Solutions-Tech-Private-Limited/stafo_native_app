@@ -68,9 +68,9 @@
                     android:fontFamily="@font/gilroy_bold"
                     android:lineSpacingExtra="@dimen/_8sdp"
                     android:padding="@dimen/_4sdp"
-                    android:text="Get started with\nASL HR Wala"
+                    android:text="Get started with\nSTAFO"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp"
+                    android:textSize="@dimen/_15ssp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/iv_back" />
 
@@ -89,6 +89,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="8709305214"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12ssp"
                         android:fontFamily="@font/gilroy_medium"
                         android:inputType="number"
                         android:maxLength="10" />
@@ -110,7 +112,7 @@
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="Need Help?"
                         android:textColor="@color/black"
-                        android:textSize="18dp" />
+                        android:textSize="@dimen/_12ssp" />
 
                     <Button
                         android:id="@+id/btn_sign_in"
@@ -126,7 +128,7 @@
                         android:text="Sign In"
                         android:textAllCaps="false"
                         android:textColor="@color/colorButtonText"
-                        android:textSize="16dp" />
+                        android:textSize="@dimen/_12ssp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -147,7 +149,7 @@
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="Don't have an account?"
                         android:textColor="@color/black"
-                        android:textSize="18dp" />
+                        android:textSize="@dimen/_12ssp" />
 
                     <TextView
                         android:id="@+id/tv_register_now"
@@ -157,7 +159,7 @@
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="Register instead"
                         android:textColor="@color/colorTextPrimary"
-                        android:textSize="18dp" />
+                        android:textSize="@dimen/_12ssp" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

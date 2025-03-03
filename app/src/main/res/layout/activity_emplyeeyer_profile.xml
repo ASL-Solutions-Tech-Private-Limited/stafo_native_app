@@ -50,7 +50,7 @@
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
                     app:shapeAppearanceOverlay="@style/Circular"
-                    android:background="@color/primaryColorDark"
+                    android:background="@color/blue"
                     android:src="@drawable/ic_change_camera"
                     android:tint="@color/white"
                     app:contentPadding="@dimen/_4sdp" />

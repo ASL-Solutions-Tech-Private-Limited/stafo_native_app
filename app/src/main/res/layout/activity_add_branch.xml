@@ -28,7 +28,7 @@
         android:padding="@dimen/_4sdp"
         android:text="Add Branch"
         android:textColor="@color/white"
-        android:textSize="@dimen/_18sdp"
+        android:textSize="@dimen/_14ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_back" />
 
@@ -145,6 +145,6 @@
             android:text="Submit"
             android:textAllCaps="false"
             android:textColor="@color/colorButtonText"
-            android:textSize="16dp" />
+            android:textSize="@dimen/_12ssp" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.BaseActivity
 import com.asl_emp_mng.app.databinding.ActivityLoginBinding
@@ -20,6 +23,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, AuthViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
         viewDataBinding?.lifecycleOwner = this
         obversers()

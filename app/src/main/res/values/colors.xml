@@ -20,4 +20,7 @@
     <color name="switch_bg">#f4f9ff</color>
     <color name="pending_colour">#F29339</color>
     <color name="pastel_red">#FF746C</color>
+    <color name="light_blue">#90D6FF</color>
+    <color name="blue">#0000FF</color>
+    <color name="app_theme_colour">#3363AB</color>
 </resources>

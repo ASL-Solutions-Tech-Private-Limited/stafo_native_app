@@ -2,9 +2,14 @@ package com.asl_emp_mng.app.screens.ui
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.adapter.AdapterWishListFrom
 import com.asl_emp_mng.app.base.model.DashboardWish
 import com.asl_emp_mng.app.databinding.ActivityWishListBinding
@@ -22,8 +27,15 @@ class WishListActivity : AppCompatActivity() {
     private val settingsViewModel: SettingsViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityWishListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
         if (intent.hasExtra("WishList")) {
             mWishList = Gson().fromJson(

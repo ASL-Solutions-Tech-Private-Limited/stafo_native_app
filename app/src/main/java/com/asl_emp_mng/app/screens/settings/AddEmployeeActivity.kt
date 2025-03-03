@@ -13,6 +13,7 @@ import android.widget.RadioButton
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.ajithvgiri.searchdialog.OnSearchItemSelected
@@ -71,12 +72,14 @@ class AddEmployeeActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
+
 
 
         binding?.apply {
             rpbBasicInfo.setProgress(100f)
             rpbBasicInfo.setUnfilledColor(resources.getColor(R.color.tea_green))
-            rpbBasicInfo.setFilledColor(resources.getColor(R.color.primaryColor))
+            rpbBasicInfo.setFilledColor(resources.getColor(R.color.colorTextPrimary))
         }
 
 

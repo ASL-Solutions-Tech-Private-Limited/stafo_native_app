@@ -26,6 +26,8 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
+
         viewDataBinding?.lifecycleOwner = this
 
         requestPermissions()

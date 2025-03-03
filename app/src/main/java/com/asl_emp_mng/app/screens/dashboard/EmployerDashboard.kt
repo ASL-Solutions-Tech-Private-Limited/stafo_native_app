@@ -32,6 +32,7 @@ import com.asl_emp_mng.app.screens.settings.PolicyActivity
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.settings.VerifyCompanyDetailsActivity
 import com.asl_emp_mng.app.screens.settings.ViewAllEmployeeActivity
+import com.asl_emp_mng.app.screens.settings.ViewDeviceRequestEmpActivity
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.screens.ui.WishListActivity
 import com.asl_emp_mng.app.utils.CustomLoader
@@ -63,7 +64,7 @@ class EmployerDashboard : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
         initViews()
         setOnClickEvents()
@@ -150,6 +151,21 @@ class EmployerDashboard : AppCompatActivity() {
                                 }
 
                             }
+                            "Request Device" -> {
+
+
+                                if (companyStatus) {
+                                    startActivity(
+                                        Intent(
+                                            this@EmployerDashboard,
+                                            ViewDeviceRequestEmpActivity::class.java
+                                        )
+                                    )
+                                } else {
+                                    showCompanyVerificationDialog()
+                                }
+
+                            }
                         }
                     }
 
@@ -168,6 +184,8 @@ class EmployerDashboard : AppCompatActivity() {
                 setEmployeeComId(it.companyId.toString())
                 wishList.clear()
                 binding.tvPresentEmp.text = it.presentCount.toString()
+                binding.tvAllEmp.text = it.employeeCount.toString()
+
                 if (it.birthday != null && it.birthday.isNotEmpty()) {
                     for (i in it.birthday.indices) {
                         wishList.add(
@@ -366,6 +384,7 @@ class EmployerDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("Branches", R.drawable.ic_calendar_month))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
         mActionList.add(ActionModel("Location Track", R.drawable.ic_location_pin))
+        mActionList.add(ActionModel("Request Device", R.drawable.resized_device))
         return mActionList
     }
 
