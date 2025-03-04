@@ -5,7 +5,7 @@ data class PanVerifyResponse(
     val data: Data?,
     val status: String?,
     val message: String?,
-    val request_id: Int?,
+    val request_id: String?,
     val status_code: Int?
 )
 

@@ -3,8 +3,6 @@ package com.asl_emp_mng.app.screens.settings
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.text.InputFilter
-import android.text.Spanned
 import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
@@ -24,7 +22,6 @@ import com.asl_emp_mng.app.screens.settings.dataClass.PanVerifyRequestBody
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeComId
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class VerifyCompanyDetailsActivity : AppCompatActivity() {
@@ -35,6 +32,9 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
     private var panStatus: Boolean = false
     private var gstStatus: Boolean = false
     private var companyStatus: Boolean = false
+    private var aadhaarStatus: Boolean = false
+    private var mAadhaarRequestID = ""
+    private var mType = ""
 
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var bottomSheetDialogBinding: PanVerifyBottomSheetLayoutBinding
@@ -83,12 +83,11 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
     private fun onClickListener() {
         binding.apply {
             settingsViewModel.getCompanyDetails(this@VerifyCompanyDetailsActivity)
-
-
             llcPanVerify.setOnClickListener {
                 if (panStatus) {
                     CustomToast(this@VerifyCompanyDetailsActivity, "Already verified")
                 } else {
+                    mType = "Pan Card Verify"
                     showCustomBottomSheet("Pan Card Verify")
                 }
 
@@ -98,6 +97,7 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
                 if (companyStatus) {
                     CustomToast(this@VerifyCompanyDetailsActivity, "Already verified")
                 } else {
+                    mType = "Register Number Verify"
                     showCustomBottomSheet("Register Number Verify")
                 }
             }
@@ -106,7 +106,16 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
                 if (gstStatus) {
                     CustomToast(this@VerifyCompanyDetailsActivity, "Already verified")
                 } else {
+                    mType = "Gst Number Verify"
                     showCustomBottomSheet("Gst Number Verify")
+                }
+            }
+            llcAadhaarVerify.setOnClickListener {
+                if (aadhaarStatus) {
+                    CustomToast(this@VerifyCompanyDetailsActivity, "Already verified")
+                } else {
+                    mType = "Aadhaar Verify"
+                    showCustomBottomSheet("Aadhaar Verify")
                 }
             }
         }
@@ -136,6 +145,12 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
                 binding.txtCompanyVerify.text = if (companyStatus) "Verified" else "Verify"
                 binding.txtCompanyVerify.setTextColor(
                     getColor(if (companyStatus) R.color.primaryColorDark else R.color.black)
+                )
+                //Aadhaar Verification
+                aadhaarStatus = it.data?.company?.aadhar_verify == "Yes"
+                binding.txtAadhaarVerify.text = if (aadhaarStatus) "Verified" else "Verify"
+                binding.txtAadhaarVerify.setTextColor(
+                    getColor(if (aadhaarStatus) R.color.primaryColorDark else R.color.black)
                 )
             } else {
                 CustomToast(this, it.message)
@@ -172,6 +187,27 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
             }
         }
 
+        settingsViewModel.mAadhaarVerifyResponse.observe(this) {
+            if (it.status == "success") {
+                if (mType == "Aadhaar OTP Verify") {
+                    settingsViewModel.getCompanyDetails(this@VerifyCompanyDetailsActivity)
+                    CustomToast(this, "OTP has been verified successfully")
+                    bottomSheetDialog.dismiss()
+                } else {
+                    it.status?.let { it1 -> CustomToast(this, it1) }
+                    mAadhaarRequestID = it.request_id ?: ""
+                    mType = "Aadhaar OTP Verify"
+                    bottomSheetDialogBinding.tilAadhaarNo.isEnabled = false
+                    bottomSheetDialogBinding.tieAadhaarNo.isFocusable = false
+                    bottomSheetDialogBinding.llAadhaarOtp.visibility = View.VISIBLE
+                    CustomToast(this, "OTP has been sent successfully")
+                    bottomSheetDialogBinding.btnSubmit.text = "OTP Verify"
+                }
+            } else {
+                it.status?.let { it1 -> CustomToast(this, it1) }
+            }
+        }
+
 
     }
 
@@ -184,6 +220,7 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
     }
 
     private fun showCustomBottomSheet(type: String) {
+
         bottomSheetDialog = BottomSheetDialog(this)
         bottomSheetDialogBinding = PanVerifyBottomSheetLayoutBinding.inflate(layoutInflater)
         bottomSheetDialog.setOnShowListener { dialog ->
@@ -199,6 +236,7 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
         bottomSheetDialog.setCancelable(false)
 
         bottomSheetDialogBinding.textView.text = type
+
 
         when (type) {
             "Pan Card Verify" -> {
@@ -217,6 +255,13 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
                 bottomSheetDialogBinding.tilPanNo.visibility = View.GONE
                 bottomSheetDialogBinding.tilGstNo.visibility = View.VISIBLE
                 bottomSheetDialogBinding.tilRegisterNo.visibility = View.GONE
+            }
+            "Aadhaar Verify" -> {
+                bottomSheetDialogBinding.tilPanNo.visibility = View.GONE
+                bottomSheetDialogBinding.tilGstNo.visibility = View.GONE
+                bottomSheetDialogBinding.tilRegisterNo.visibility = View.GONE
+                bottomSheetDialogBinding.tilAadhaarNo.visibility = View.VISIBLE
+
             }
         }
 
@@ -243,55 +288,130 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
             }
         })
 
+        bottomSheetDialogBinding.tieAadhaarNo.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val pan = s.toString().uppercase()
+                if (pan != s.toString()) {
+                    bottomSheetDialogBinding.tieAadhaarNo.setText(pan)
+                    bottomSheetDialogBinding.tieAadhaarNo.setSelection(pan.length)
+                }
+
+                if (pan.length == 12) {
+                    if (!isValidPAN(pan)) {
+                        bottomSheetDialogBinding.tiePanNo.error = "Invalid Aadhaar no"
+                    }
+                }
+            }
+        })
+
 
 
         bottomSheetDialogBinding.btnSubmit.setOnClickListener {
-            when (type) {
-                "Pan Card Verify" -> {
-                    val panNumber = bottomSheetDialogBinding.tiePanNo.text.toString()
-                    if (panNumber.isEmpty()) {
-                        bottomSheetDialogBinding.tiePanNo.error = "Please enter PAN number"
-                        bottomSheetDialogBinding.tiePanNo.requestFocus()
-                    } else {
-                        val request = PanVerifyRequestBody(
-                            company_id = getEmployeeComId().toString(),
-                            type = "pan",
-                            number = panNumber
-                        )
-
-                        settingsViewModel.companyPanVerify(this@VerifyCompanyDetailsActivity, request)
-                    }
+            if (bottomSheetDialogBinding.btnSubmit.text == "OTP Verify") {
+                val otp = bottomSheetDialogBinding.llAadhaarOtp.text.toString()
+                val aadhaar = bottomSheetDialogBinding.tieAadhaarNo.text.toString()
+                if (otp.isEmpty()) {
+                    bottomSheetDialogBinding.llAadhaarOtp.error = "Please enter OTP"
+                    bottomSheetDialogBinding.llAadhaarOtp.requestFocus()
+                } else {
+                    val request = PanVerifyRequestBody(
+                        company_id = getEmployeeComId().toString(),
+                        type = "aadhar-otp",
+                        number = aadhaar,
+                        otp = otp,
+                        request_id = mAadhaarRequestID
+                    )
+                    settingsViewModel.comapnyAadhaarVerfication(
+                        this@VerifyCompanyDetailsActivity,
+                        request
+                    )
                 }
+            } else {
+                when (type) {
+                    "Pan Card Verify" -> {
+                        val panNumber = bottomSheetDialogBinding.tiePanNo.text.toString()
+                        if (panNumber.isEmpty()) {
+                            bottomSheetDialogBinding.tiePanNo.error = "Please enter PAN number"
+                            bottomSheetDialogBinding.tiePanNo.requestFocus()
+                        } else {
+                            val request = PanVerifyRequestBody(
+                                company_id = getEmployeeComId().toString(),
+                                type = "pan",
+                                number = panNumber
+                            )
 
-                "Register Number Verify" -> {
-                    val registerNumber = bottomSheetDialogBinding.tieRegisterNo.text.toString()
-                    if (registerNumber.isEmpty()) {
-                        bottomSheetDialogBinding.tieRegisterNo.error = "Please enter register number"
-                        bottomSheetDialogBinding.tieRegisterNo.requestFocus()
-                    }else{
-                        val request = PanVerifyRequestBody(
-                            company_id = getEmployeeComId().toString(),
-                            type = "company",
-                            number = registerNumber
-                        )
-
-                        settingsViewModel.companyRGSVerify(this@VerifyCompanyDetailsActivity, request)
-
+                            settingsViewModel.companyPanVerify(
+                                this@VerifyCompanyDetailsActivity,
+                                request
+                            )
+                        }
                     }
-                }
 
-                "Gst Number Verify" -> {
-                    val gstNumber = bottomSheetDialogBinding.tieGstNo.text.toString()
-                    if (gstNumber.isEmpty()) {
-                        bottomSheetDialogBinding.tieGstNo.error = "Please enter GST number"
-                        bottomSheetDialogBinding.tieGstNo.requestFocus()
-                    }else{
-                        val request = PanVerifyRequestBody(
-                            company_id = getEmployeeComId().toString(),
-                            type = "gstin",
-                            number = gstNumber
-                        )
-                        settingsViewModel.companyGSTVerify(this@VerifyCompanyDetailsActivity, request)
+                    "Register Number Verify" -> {
+                        val registerNumber = bottomSheetDialogBinding.tieRegisterNo.text.toString()
+                        if (registerNumber.isEmpty()) {
+                            bottomSheetDialogBinding.tieRegisterNo.error =
+                                "Please enter register number"
+                            bottomSheetDialogBinding.tieRegisterNo.requestFocus()
+                        } else {
+                            val request = PanVerifyRequestBody(
+                                company_id = getEmployeeComId().toString(),
+                                type = "company",
+                                number = registerNumber
+                            )
+
+                            settingsViewModel.companyRGSVerify(
+                                this@VerifyCompanyDetailsActivity,
+                                request
+                            )
+
+                        }
+                    }
+
+                    "Gst Number Verify" -> {
+                        val gstNumber = bottomSheetDialogBinding.tieGstNo.text.toString()
+                        if (gstNumber.isEmpty()) {
+                            bottomSheetDialogBinding.tieGstNo.error = "Please enter GST number"
+                            bottomSheetDialogBinding.tieGstNo.requestFocus()
+                        } else {
+                            val request = PanVerifyRequestBody(
+                                company_id = getEmployeeComId().toString(),
+                                type = "gstin",
+                                number = gstNumber
+                            )
+                            settingsViewModel.companyGSTVerify(
+                                this@VerifyCompanyDetailsActivity,
+                                request
+                            )
+
+                        }
+                    }
+
+
+                    "Aadhaar Verify" -> {
+                        val aadhaarNumber = bottomSheetDialogBinding.tieAadhaarNo.text.toString()
+                        if (aadhaarNumber.isEmpty()) {
+                            bottomSheetDialogBinding.tieAadhaarNo.error =
+                                "Please enter Aadhaar number"
+                            bottomSheetDialogBinding.tieAadhaarNo.requestFocus()
+                        } else {
+                            val request = PanVerifyRequestBody(
+                                company_id = getEmployeeComId().toString(),
+                                type = "aadhar",
+                                number = aadhaarNumber
+                            )
+                            settingsViewModel.comapnyAadhaarVerfication(
+                                this@VerifyCompanyDetailsActivity,
+                                request
+                            )
+                        }
+                    }
+
+                    "Aadhaar OTP Verify" -> {
 
                     }
                 }
@@ -326,4 +446,106 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
         val dialog = builder.create()
         dialog.show()
     }
+
+    private fun updateButtonListener(type: String) {
+        bottomSheetDialogBinding.btnSubmit.setOnClickListener {
+            when (type) {
+                "Pan Card Verify" -> {
+                    val panNumber = bottomSheetDialogBinding.tiePanNo.text.toString()
+                    if (panNumber.isEmpty()) {
+                        bottomSheetDialogBinding.tiePanNo.error = "Please enter PAN number"
+                        bottomSheetDialogBinding.tiePanNo.requestFocus()
+                    } else {
+                        val request = PanVerifyRequestBody(
+                            company_id = getEmployeeComId().toString(),
+                            type = "pan",
+                            number = panNumber
+                        )
+                        settingsViewModel.companyPanVerify(
+                            this@VerifyCompanyDetailsActivity,
+                            request
+                        )
+                    }
+                }
+
+                "Register Number Verify" -> {
+                    val registerNumber = bottomSheetDialogBinding.tieRegisterNo.text.toString()
+                    if (registerNumber.isEmpty()) {
+                        bottomSheetDialogBinding.tieRegisterNo.error =
+                            "Please enter register number"
+                        bottomSheetDialogBinding.tieRegisterNo.requestFocus()
+                    } else {
+                        val request = PanVerifyRequestBody(
+                            company_id = getEmployeeComId().toString(),
+                            type = "company",
+                            number = registerNumber
+                        )
+                        settingsViewModel.companyRGSVerify(
+                            this@VerifyCompanyDetailsActivity,
+                            request
+                        )
+                    }
+                }
+
+                "Gst Number Verify" -> {
+                    val gstNumber = bottomSheetDialogBinding.tieGstNo.text.toString()
+                    if (gstNumber.isEmpty()) {
+                        bottomSheetDialogBinding.tieGstNo.error = "Please enter GST number"
+                        bottomSheetDialogBinding.tieGstNo.requestFocus()
+                    } else {
+                        val request = PanVerifyRequestBody(
+                            company_id = getEmployeeComId().toString(),
+                            type = "gstin",
+                            number = gstNumber
+                        )
+                        settingsViewModel.companyGSTVerify(
+                            this@VerifyCompanyDetailsActivity,
+                            request
+                        )
+                    }
+                }
+
+                "Aadhaar Verify" -> {
+                    val aadhaarNumber = bottomSheetDialogBinding.tieAadhaarNo.text.toString()
+                    if (aadhaarNumber.isEmpty()) {
+                        bottomSheetDialogBinding.tieAadhaarNo.error = "Please enter Aadhaar number"
+                        bottomSheetDialogBinding.tieAadhaarNo.requestFocus()
+                    } else {
+                        val request = PanVerifyRequestBody(
+                            company_id = getEmployeeComId().toString(),
+                            type = "aadhar",
+                            number = aadhaarNumber
+                        )
+                        settingsViewModel.comapnyAadhaarVerfication(
+                            this@VerifyCompanyDetailsActivity,
+                            request
+                        )
+                    }
+                }
+
+                "Aadhaar OTP Verify" -> {
+                    val otp = bottomSheetDialogBinding.llAadhaarOtp.text.toString()
+                    val aadhaar = bottomSheetDialogBinding.tieAadhaarNo.text.toString()
+                    if (otp.isEmpty()) {
+                        bottomSheetDialogBinding.llAadhaarOtp.error = "Please enter OTP"
+                        bottomSheetDialogBinding.llAadhaarOtp.requestFocus()
+                    } else {
+                        val request = PanVerifyRequestBody(
+                            company_id = getEmployeeComId().toString(),
+                            type = "aadhar-otp",
+                            number = aadhaar,
+                            otp = otp,
+                            request_id = mAadhaarRequestID
+                        )
+                        settingsViewModel.comapnyAadhaarVerfication(
+                            this@VerifyCompanyDetailsActivity,
+                            request
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+
 }

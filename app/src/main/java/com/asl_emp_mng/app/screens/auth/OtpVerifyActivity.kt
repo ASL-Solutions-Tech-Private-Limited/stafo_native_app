@@ -110,53 +110,48 @@ class OtpVerifyActivity : AppCompatActivity() {
 
         authViewModel.mVerifyOtpResponse.observe(this) {
             if (it.success) {
-
-                if (it.data?.device_change=="no"){
-                    if (it.data?.company != null) {
+                if (it.data?.company != null) {
                         setUserAccessToken(it.data?.token ?: "")
                         setIsCOMPANYLogin(true)
                         setCompanyDetails(it.data.company)
                         startActivity(Intent(this@OtpVerifyActivity, EmployerDashboard::class.java))
                         finish()
                     } else if (it.data?.employee != null) {
-                        // saveToken(this, "token", it.data?.token ?: "")
+                    if (it.data?.device_change == "yes") {
+                        setUserAccessToken(it.data?.token ?: "")
+                        setEmployeeDetails(it.data.employee)
+                        startActivity(
+                            Intent(
+                                this@OtpVerifyActivity,
+                                NewDeviceRegisterActivity::class.java
+                            ).apply {
+                                putExtra("deviceId", it.data?.device_id)
+                            })
+                        finish()
+                    } else {
                         setUserAccessToken(it.data?.token ?: "")
                         setIsEMPLogin(true)
                         setEmployeeDetails(it.data.employee)
-                        startActivity(Intent(this@OtpVerifyActivity, EmployeeDashboard::class.java))
+                        startActivity(
+                            Intent(
+                                this@OtpVerifyActivity,
+                                EmployeeDashboard::class.java
+                            )
+                        )
                         finish()
+                    }
                     } else {
-
-                        // saveToken(this, "token", it.data?.token ?: "")
                         startActivity(Intent(this@OtpVerifyActivity, SignUpActivity::class.java).apply {
                             putExtra("mobile", mobile)
                         })
                         finish()
                     }
-                }else if (it.data?.device_change=="yes"){
-
-                    if (it.data?.employee != null) {
-                        setUserAccessToken(it.data?.token ?: "")
-                        setEmployeeDetails(it.data.employee)
-
-                        startActivity(Intent(this@OtpVerifyActivity, NewDeviceRegisterActivity::class.java).apply {
-                            putExtra("deviceId", it.data?.device_id)
-                        })
-                        finish()
-                    }
-
-
-
-                }
-
-
-
             } else {
-                if (it.message==""){
+                /*if (it.message==""){
                     val intent = Intent(this@OtpVerifyActivity, NewDeviceRegisterActivity::class.java)
                     intent.putExtra("mobile", mobile)
                     startActivity(intent)
-                }
+                }*/
                 CustomToast(this, it.message)
             }
         }

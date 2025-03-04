@@ -47,7 +47,8 @@ data class Company(
     val pan_verify: String?,
     val registration_verify: String?,
     val gstn_verify: String?,
-    val is_verified: String?
+    val is_verified: String?,
+    val aadhar_verify: String?
 )
 
 /*data class Company(

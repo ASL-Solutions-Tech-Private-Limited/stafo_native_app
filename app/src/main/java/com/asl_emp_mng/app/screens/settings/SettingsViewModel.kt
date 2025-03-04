@@ -1,9 +1,7 @@
 package com.asl_emp_mng.app.screens.settings
 
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -85,15 +83,12 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
-import java.io.FileOutputStream
 
 class SettingsViewModel : BaseViewModel() {
 
@@ -297,6 +292,11 @@ class SettingsViewModel : BaseViewModel() {
     private var mVerifyGSTNumber: MutableLiveData<VerifyGSTNumberResponse> = MutableLiveData()
 
     val mVerifyGSTNumberResponse: LiveData<VerifyGSTNumberResponse> get() = mVerifyGSTNumber
+
+
+    private var mAadhaarVerfication: MutableLiveData<PanVerifyResponse> = MutableLiveData()
+
+    val mAadhaarVerifyResponse: LiveData<PanVerifyResponse> get() = mAadhaarVerfication
 
 
 
@@ -639,16 +639,11 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-
-
-
-
     fun companyRGSVerify(
         mContext: Context,
         request: PanVerifyRequestBody
     ) {
         getLoaderLiveData().value = "load"
-
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callVerifyCompany(request)
@@ -685,11 +680,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
-
-
-
-
 
     fun companyGSTVerify(
         mContext: Context,
@@ -777,16 +767,48 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
+    fun comapnyAadhaarVerfication(
+        mContext: Context,
+        request: PanVerifyRequestBody
+    ) {
+        getLoaderLiveData().value = "load"
 
-
-
-
-
-
-
-
-
-
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callVerifyPan(request)
+                Log.d("res", "pan verify c :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAadhaarVerfication.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
     fun changeCompanyProfileImage(
