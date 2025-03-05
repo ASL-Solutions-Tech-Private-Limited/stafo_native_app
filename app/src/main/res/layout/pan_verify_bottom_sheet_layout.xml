@@ -121,7 +121,8 @@
                 android:background="@drawable/edit_text_background"
                 android:fontFamily="@font/gilroy_medium"
                 android:hint="Enter Aadhaar number"
-                android:inputType="textPersonName" />
+                android:maxLength="12"
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
 

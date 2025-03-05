@@ -166,11 +166,11 @@ class CompanyProfileActivity : AppCompatActivity() {
                         )
                         val companyInfo = UpdateCompanyProfile(
                             companyName = binding.tieCompanyName.text.toString(),
-                            companyType = selectedCompanyType.toString(),
+                            companyType = selectedCompanyType.toString().trim(),
                             businessTypeId = selectedBusinessType,
-                            registrationNumber = binding.tieCompanyRegNo.text.toString(),
-                            gstNumber = binding.tieCompanyGstNo.text.toString(),
-                            panNumber = binding.tieCompanyPanNo.text.toString(),
+                            registrationNumber = binding.tieCompanyRegNo.text.toString().trim(),
+                            gstNumber = binding.tieCompanyGstNo.text.toString().trim(),
+                            panNumber = binding.tieCompanyPanNo.text.toString().trim(),
                             address = binding.tieCompanyAddress.text.toString(),
                             cityId = selectedCity,
                             stateId = selectedState,
@@ -200,19 +200,19 @@ class CompanyProfileActivity : AppCompatActivity() {
                 } else if (profileType == "company_owner") {
                     if (isValidOwnerInfo()) {
                         val ownerInfo = OwnerInfo(
-                            firstName = binding.tieOwnerName.text.toString(),
+                            firstName = binding.tieOwnerName.text.toString().trim(),
                             lastName = "",
-                            mobile = binding.tieOwnerMobileNo.text.toString(),
-                            email = binding.tieOwnerEmail.text.toString()
+                            mobile = binding.tieOwnerMobileNo.text.toString().trim(),
+                            email = binding.tieOwnerEmail.text.toString().trim()
                         )
                         val companyInfo = UpdateCompanyProfile(
                             companyName = tieCompanyName.text.toString(),
                             companyType = selectedCompanyType.toString(),
                             businessTypeId = selectedBusinessType,
-                            registrationNumber = tieCompanyRegNo.text.toString(),
-                            gstNumber = tieCompanyGstNo.text.toString(),
-                            panNumber = tieCompanyPanNo.text.toString(),
-                            address = tieCompanyAddress.text.toString(),
+                            registrationNumber = tieCompanyRegNo.text.toString().trim(),
+                            gstNumber = tieCompanyGstNo.text.toString().trim(),
+                            panNumber = tieCompanyPanNo.text.toString().trim(),
+                            address = tieCompanyAddress.text.toString().trim(),
                             cityId = selectedCity,
                             stateId = selectedState,
                             countryId = selectedCountry,
@@ -227,6 +227,8 @@ class CompanyProfileActivity : AppCompatActivity() {
                             ownerInfo = ownerInfo
                         )
 
+
+                        Log.d("res","post data: $companyInfo")
                         settingsViewModel.updateCompanyProfile(
                             this@CompanyProfileActivity,
                             companyInfo

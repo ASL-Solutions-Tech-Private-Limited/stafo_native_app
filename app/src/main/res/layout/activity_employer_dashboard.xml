@@ -140,12 +140,15 @@
                             android:textSize="@dimen/_12ssp" />
                     </LinearLayout>
 
-                    <de.hdodenhof.circleimageview.CircleImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/iv_header_profile_pic"
                         android:layout_width="@dimen/_54sdp"
                         android:layout_height="@dimen/_54sdp"
                         android:layout_marginEnd="@dimen/_12sdp"
-                        android:src="@drawable/demo_avatar"
+                        app:shapeAppearanceOverlay="@style/Circular"
+                        android:scaleType="fitXY"
+                        android:background="@color/white"
+                        android:src="@drawable/ic_organization"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_header_greeting" />
 
@@ -207,6 +210,7 @@
                             app:cardElevation="@dimen/_4sdp">
 
                             <LinearLayout
+                                android:id="@+id/llc_card_all_emp"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/gradient_header"
@@ -253,6 +257,7 @@
                             app:cardElevation="@dimen/_4sdp">
 
                             <LinearLayout
+                                android:id="@+id/llc_card_present"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/gradient_header"
@@ -297,6 +302,7 @@
                             app:cardElevation="@dimen/_4sdp">
 
                             <LinearLayout
+                                android:id="@+id/llc_card_on_leave"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/onleave_card_bg"

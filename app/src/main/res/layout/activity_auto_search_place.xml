@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="#80D3D3D3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".screens.ui.AutoSearchPlaceActivity">
@@ -48,27 +49,111 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_weight="1"
+            android:fontFamily="@font/gilroy_semi_bold"
+            android:text="Location Record"
+            android:textAlignment="center"
+            android:textColor="#565656"
+            android:textSize="@dimen/_13ssp"
+            app:drawableTint="@color/black" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginVertical="@dimen/_4sdp"
+            android:id="@+id/ll_calendar"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@drawable/custom_round_card_bg"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginVertical="@dimen/_6sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:src="@drawable/ic_calendar_month" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:id="@+id/txt_date"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="14-02-2025"
+                android:textColor="#565656"
+                android:textSize="@dimen/_12ssp"
+                app:drawableTint="@color/black" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
     <com.mmi.MapmyIndiaMapView
         android:id="@+id/idMapView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_12sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/rl_top" />
 
-    <TextView
-        android:id="@+id/txt_sts"
-        android:text="No Location Found"
-        android:visibility="gone"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_12ssp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_not_view"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_alignTop="@+id/txt_msg"
+            android:layout_marginBottom="@dimen/_10sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/txt_msg"
+            android:src="@drawable/ic_no_found_location"
+            android:layout_width="@dimen/_38sdp"
+            android:layout_height="@dimen/_38sdp"/>
+
+        <TextView
+            android:id="@+id/txt_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Not found record"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/gilroy_medium"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

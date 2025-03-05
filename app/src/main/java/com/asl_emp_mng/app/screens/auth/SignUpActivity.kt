@@ -59,20 +59,18 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun setupOnClickListener() {
-        binding?.apply {
-
-
+        binding.apply {
             btnNext.setOnClickListener {
                 if (validateBasicInfo()) {
                     val companyInfo = CompanyInfo(
-                        company_name = tieCompanyName.text.toString(),
+                        company_name = tieCompanyName.text.toString().trim(),
                         company_type = userSelectCTypeId,
                         business_type = userSelectBTypeId,
                         registration_number = "",
                         gst_number = "",
                         pan_number = "",
-                        mobile_no = "$mMobile",
-                        email = tieCompanyEmail.text.toString(),
+                        mobile_no = tieCompanyMobile.text.toString().trim(),
+                        email = tieCompanyEmail.text.toString().trim(),
                         password = "",
                         password_confirmation = "",
                         country = "",
@@ -82,9 +80,10 @@ class SignUpActivity : AppCompatActivity() {
                         pin = ""
                     )
                     val ownerInfo = OwnerInfo(
-                        first_name = tieOwnerName.text.toString(),
+                        first_name = tieOwnerName.text.toString().trim(),
                         last_name = "",
-                        email = "", mobile = "$mMobile"
+                        email = "",
+                        mobile = tieCompanyMobile.text.toString().trim()
 
                     )
                     authViewModel.registerUser(this@SignUpActivity,companyInfo,ownerInfo)
@@ -94,6 +93,14 @@ class SignUpActivity : AppCompatActivity() {
 
             tieCompanyType.setOnClickListener { companyTypeDialog.show() }
             tieBusinessType.setOnClickListener { businessTypeDialog.show() }
+
+           /* tieCompanyEmail.setOnFocusChangeListener { view, hasFocus ->
+                if (!hasFocus) { // When user clicks outside
+                    if (tieCompanyEmail.text.toString().trim().isNotEmpty()) {
+                        tieCompanyEmail.clearFocus()
+                    }
+                }
+            }*/
 
         }
     }
@@ -201,8 +208,10 @@ class SignUpActivity : AppCompatActivity() {
                 field.setText(searchListItem.title)
                 if (title == "Company Type") {
                     userSelectCTypeId = searchListItem.id.toString()
+                    binding.tieCompanyEmail.clearFocus()
                 } else if (title == "Business Type"){
                     userSelectBTypeId = searchListItem.id.toString()
+                    binding.tieCompanyEmail.clearFocus()
                 }
 
                 dialog.dismiss()

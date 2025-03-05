@@ -25,6 +25,9 @@ import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.calculateMinutes
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -211,7 +214,7 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
         binding?.apply {
 
             val currentDate =
-                SimpleDateFormat("MMM-yy", Locale.getDefault()).format(calendar.time)
+                SimpleDateFormat("MMM yy", Locale.getDefault()).format(calendar.time)
             binding.txtDate.setText(currentDate)
 
             fetchAttendanceData()
@@ -257,12 +260,12 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
     }
 
 
-   /* private fun showDatePicker() {
+    private fun showDatePicker() {
         val datePickerDialog = DatePickerDialog(
             this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
                 val selectedDate = Calendar.getInstance()
                 selectedDate.set(year, monthOfYear, dayOfMonth)
-                val dateFormat = SimpleDateFormat("MMM/yy", Locale.getDefault())
+                val dateFormat = SimpleDateFormat("MMM yy", Locale.getDefault())
                 val formattedDate = dateFormat.format(selectedDate.time)
                 binding.txtDate.setText("$formattedDate")
                 mSelectedDate =
@@ -277,10 +280,10 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
             calendar.get(Calendar.DAY_OF_MONTH)
         )
         datePickerDialog.show()
-    }*/
+    }
 
 
-    private fun showDatePicker() {
+   /* private fun showDatePicker() {
         val datePickerDialog = DatePickerDialog(
             this, { _, year, monthOfYear, _ ->  // Ignore day selection
                 val selectedDate = Calendar.getInstance()
@@ -326,7 +329,41 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
         }
 
         datePickerDialog.show()
+    }*/
+
+
+    private fun showMonthYearPicker(onMonthSelected: (month: Int, year: Int) -> Unit) {
+        val calendar = Calendar.getInstance()
+        val today = calendar.timeInMillis
+
+        val constraints = CalendarConstraints.Builder()
+            .setValidator(DateValidatorPointForward.now())
+            .build()
+
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Select Month & Year")
+            .setCalendarConstraints(constraints)
+            .setSelection(today)
+            .build()
+
+        datePicker.show(supportFragmentManager, "MonthYearPicker")
+
+        datePicker.addOnPositiveButtonClickListener { selection ->
+            val selectedCalendar = Calendar.getInstance().apply { timeInMillis = selection }
+            val selectedMonth = selectedCalendar.get(Calendar.MONTH)
+            val selectedYear = selectedCalendar.get(Calendar.YEAR)
+
+            onMonthSelected(selectedMonth, selectedYear)
+        }
     }
+
+    private fun getMonthName(month: Int): String {
+        return SimpleDateFormat("MMMM", Locale.getDefault()).format(Calendar.getInstance().apply {
+            set(Calendar.MONTH, month)
+        }.time)
+    }
+
+
 
 
     fun getAllDatesFromMonth(yearMonth: String): List<DateItem> {

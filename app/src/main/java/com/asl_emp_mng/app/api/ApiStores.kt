@@ -375,6 +375,13 @@ interface ApiStores {
 
 
     @POST("api/document-verify")
+    suspend fun callVerifyAadhaar(
+        @Body request: PanVerifyRequestBody,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<PanVerifyResponse>
+
+
+    @POST("api/document-verify")
     suspend fun callVerifyCompany(
         @Body request: PanVerifyRequestBody,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()

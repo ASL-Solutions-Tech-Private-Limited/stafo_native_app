@@ -67,6 +67,11 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_dashboard.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_emp_branch_details.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
@@ -227,6 +232,21 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_view_device_request_emp.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_view_emp_location_track.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_wish_list.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/app_bar_main.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
@@ -332,6 +352,11 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/layout_others_items.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/layout_profile.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
@@ -417,6 +442,11 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/recy_new_device_request_emp_layout.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/recy_on_leave_emp_item_layout.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
@@ -469,13 +499,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1eeb3fca-a4a9-48ce-a4f9-f3fda60e9524" name="Changes" comment="Update Add Staff API">
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/api/ApiStores.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/api/ApiStores.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/LoginWithOTPActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/LoginWithOTPActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/OtpVerifyActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/OtpVerifyActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployerDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployerDashboard.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/gradient_header.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/gradient_header.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_employer_dashboard.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_employer_dashboard.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_action_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_action_layout.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_leave_list.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_leave_list.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/VerifyCompanyDetailsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/VerifyCompanyDetailsActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/ViewAllEmployeeActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/ViewAllEmployeeActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/GeoLocationHistResquest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/GeoLocationHistResquest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/AutoSearchPlaceActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/AutoSearchPlaceActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_auto_search_place.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_auto_search_place.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_dashboard.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_dashboard.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_login_with_otpactivity.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_login_with_otpactivity.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -538,10 +582,10 @@
         <option value="Kotlin Interface" />
         <option value="Kotlin Object" />
         <option value="Kotlin Enum" />
-        <option value="Kotlin Data Class" />
         <option value="layoutResourceFile" />
-        <option value="Kotlin Class" />
+        <option value="Kotlin Data Class" />
         <option value="resourceFile" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -752,6 +796,10 @@
     <key name="android.template.-396451063">
       <recent name="com.asl_emp_mng.app.screens.settings" />
     </key>
+    <key name="android.template.-1938452959">
+      <recent name="com.asl_emp_mng.app.screens.settings" />
+      <recent name="com.asl_emp_mng.app.screens.dashboard" />
+    </key>
     <key name="android.template.1718060039">
       <recent name="com.softmint_pro.app.screens.aeps" />
     </key>
@@ -763,6 +811,9 @@
     </key>
     <key name="android.template.-1826973453">
       <recent name="com.asl_emp_mng.app.screens.ui" />
+    </key>
+    <key name="android.template.1943598628">
+      <recent name="com.asl_emp_mng.app.screens.emp" />
     </key>
   </component>
   <component name="RunManager" selected="Android App.app">

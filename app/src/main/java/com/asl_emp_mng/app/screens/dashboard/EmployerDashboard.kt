@@ -22,7 +22,9 @@ import com.asl_emp_mng.app.base.model.DashboardType
 import com.asl_emp_mng.app.base.model.DashboardWish
 import com.asl_emp_mng.app.base.service.LocationForegroundService
 import com.asl_emp_mng.app.databinding.ActivityEmployerDashboardBinding
+import com.asl_emp_mng.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.asl_emp_mng.app.screens.emp.EmplyeeAttendaceListActivity
+import com.asl_emp_mng.app.screens.emp.ViewEmpLocationTrackActivity
 import com.asl_emp_mng.app.screens.profile.CompanyProfileActivity
 import com.asl_emp_mng.app.screens.settings.AddEmployeeActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
@@ -151,6 +153,22 @@ class EmployerDashboard : AppCompatActivity() {
                                 }
 
                             }
+
+                            "Location Track" -> {
+
+
+                                if (companyStatus) {
+                                    startActivity(
+                                        Intent(
+                                            this@EmployerDashboard,
+                                            ViewEmpLocationTrackActivity::class.java
+                                        )
+                                    )
+                                } else {
+                                    showCompanyVerificationDialog()
+                                }
+
+                            }
                             "Request Device" -> {
 
 
@@ -245,13 +263,15 @@ class EmployerDashboard : AppCompatActivity() {
 
 
                 it.companyInfo?.let { companyInfo ->
-                    Log.d("CompanyVerification", "isVerified: ${companyInfo.isVerified}")
+
                     if (companyInfo.isVerified == "Yes") {
                         companyStatus = true
-                        Log.d("CompanyVerification", "companyStatus set to TRUE")
+
                     } else {
                         companyStatus = false
-                        Log.d("CompanyVerification", "companyStatus set to FALSE")
+                        binding.llNoWishes.visibility = View.GONE
+                        binding.llLeaves.visibility = View.GONE
+
                         showCompanyVerificationDialog()
                     }
                 }
@@ -273,7 +293,7 @@ class EmployerDashboard : AppCompatActivity() {
                         .error(R.drawable.demo_avatar)
                         .into(binding.ivHeaderProfilePic)
                 } ?: run {
-                    CustomToast(this, "No image available")
+
                 }
 
 
@@ -321,6 +341,37 @@ class EmployerDashboard : AppCompatActivity() {
 
         }
 
+        binding.llcCardAllEmp.setOnClickListener {
+            if (companyStatus) {
+                startActivity(
+                    Intent(
+                        this@EmployerDashboard,
+                        ViewAllEmployeeActivity::class.java
+                    ).apply {
+                        putExtra("FROM", "View All")
+                    }
+                )
+            } else {
+                showCompanyVerificationDialog()
+            }
+        }
+
+        binding.llcCardOnLeave.setOnClickListener {
+            if (companyStatus) {
+                startActivity(Intent(this, LeaveRequestHistoryActivity::class.java))
+            } else {
+                showCompanyVerificationDialog()
+            }
+        }
+
+        binding.llcCardPresent.setOnClickListener {
+            if (companyStatus) {
+                startActivity(Intent(this, EmplyeeAttendaceListActivity::class.java))
+            } else {
+                showCompanyVerificationDialog()
+            }
+        }
+
 
         binding.addEmp.setOnClickListener {
 
@@ -343,12 +394,14 @@ class EmployerDashboard : AppCompatActivity() {
 
         binding.tvProfile.setOnClickListener {
 
-            if (companyStatus) {
-                startActivity(Intent(this, CompanyProfileActivity::class.java))
+            startActivity(Intent(this, CompanyProfileActivity::class.java))
+
+           /* if (companyStatus) {
+
                // startActivity(Intent(this, VerifyCompanyDetailsActivity::class.java))
             } else {
                 showCompanyVerificationDialog()
-            }
+            }*/
 
         }
 

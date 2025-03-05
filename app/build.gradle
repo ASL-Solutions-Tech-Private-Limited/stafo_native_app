@@ -51,17 +51,17 @@ android {
     productFlavors {
         production {
             minSdkVersion 24
-            buildConfigField 'String', 'ENDPOINT', '"http://aslhr.2ndwork.in/"'
+            buildConfigField 'String', 'ENDPOINT', '"https://stafo.in/"'
             buildConfigField 'String', 'API_KEY', '""'
             buildConfigField 'boolean', 'STAGE_MODE', "false"
-            resValue "string", "app_name", "ASL MNG"
+            resValue "string", "app_name", "STAFO"
         }
         staging {
             minSdkVersion 24
-            buildConfigField 'String', 'ENDPOINT', '"http://aslhr.2ndwork.in/"'
+            buildConfigField 'String', 'ENDPOINT', '"https://stafo.in/"'
             buildConfigField 'String', 'API_KEY', '""'
             buildConfigField 'boolean', 'STAGE_MODE', "true"
-            resValue "string", "app_name", "ASL MNG"
+            resValue "string", "app_name", "STAFO"
         }
     }
     lintOptions {

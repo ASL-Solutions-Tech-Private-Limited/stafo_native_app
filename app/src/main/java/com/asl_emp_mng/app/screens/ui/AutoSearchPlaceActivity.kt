@@ -1,5 +1,6 @@
 package com.asl_emp_mng.app.screens.ui
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -23,18 +24,25 @@ import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResquest
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveRequestBody
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getEmployeeDetails
+import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
 import com.mmi.MapmyIndiaMapView
 import com.mmi.layers.Marker
 import com.mmi.layers.PathOverlay
 import com.mmi.layers.UserLocationOverlay
 import com.mmi.layers.location.GpsLocationProvider
 import com.mmi.util.GeoPoint
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class AutoSearchPlaceActivity : AppCompatActivity() {
     private lateinit var binding:ActivityAutoSearchPlaceBinding
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
     private lateinit var mEMPID:String
+    private val calendar = Calendar.getInstance()
+    private var mSelectedDate = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,14 +53,17 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        window.statusBarColor = ContextCompat.getColor(this, R.color.primaryColorDark)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
         mEMPID = intent.getStringExtra("EMP_ID") ?: ""
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
+        mSelectedDate = currentDate
 
 
         onClickListener()
         observeViewModel()
 
     }
+
 
 
     private fun observeViewModel() {
@@ -68,7 +79,7 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
 
                 if (it.data.isNotEmpty()){
                     binding.idMapView.visibility=View.VISIBLE
-                    binding.txtSts.visibility=View.GONE
+                    binding.layoutNotView.visibility=View.GONE
                     val geoPoints = it.data.map {
                         GeoPoint(it.latitude.toDouble(), it.longitude.toDouble())
                     }
@@ -76,7 +87,7 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
                     addMarkersAndPath(geoPoints)
                 }else{
                     binding.idMapView.visibility=View.GONE
-                    binding.txtSts.visibility=View.VISIBLE
+                    binding.layoutNotView.visibility=View.VISIBLE
                 }
 
 
@@ -103,8 +114,12 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
     private fun onClickListener() {
         binding?.apply {
 
+            val showCurrentDate = SimpleDateFormat("dd MMM yy", Locale.getDefault()).format(calendar.time)
+            binding.txtDate.setText(showCurrentDate)
+
             val request = GeoLocationHistResquest(
-               employee_id =mEMPID
+               employee_id =mEMPID,
+                date = mSelectedDate
             )
             Log.d("res","emp get :$request")
 
@@ -114,6 +129,10 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
             imageBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
                 finish()
+            }
+
+            llCalendar.setOnClickListener {
+                showDatePicker()
             }
 
 
@@ -168,59 +187,48 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
 
 
 
-    /* private fun addMarkersAndPath(geoPoints: List<GeoPoint>) {
+    private fun showDatePicker() {
+        val datePickerDialog = DatePickerDialog(
+            this, { _, year, monthOfYear,dayOfMonth ->
+                val selectedDate = Calendar.getInstance()
+                selectedDate.set(year, monthOfYear, dayOfMonth)
 
-         val mapmyIndiaMapView = findViewById<MapmyIndiaMapView>(R.id.idMapView)
-         val mapView = mapmyIndiaMapView.mapView
+                val dateFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
+                val formattedDate = dateFormat.format(selectedDate.time)
+                binding.txtDate.setText(formattedDate)
 
-         val geoPointsArrayList = ArrayList(geoPoints)
+                mSelectedDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(selectedDate.time)
 
-         geoPoints.forEach { point ->
-             val marker = Marker(mapView)
-             marker.position = point
-             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
-             mapView.overlays.add(marker)
-         }
+                val request = GeoLocationHistResquest(
+                    employee_id =mEMPID,
+                    date = mSelectedDate
+                )
+                Log.d("res","emp get :$request")
 
-         val pathOverlay = PathOverlay(this).apply {
-             color = ContextCompat.getColor(this@AutoSearchPlaceActivity, R.color.primaryColorDark)
-             width = 10f
-             points = geoPointsArrayList
-         }
-
-         mapView.overlays.add(pathOverlay)
-         mapView.setBounds(geoPointsArrayList)
-         mapView.invalidate()
-     }*/
+                settingsViewModel.getGeoLocationHist(this@AutoSearchPlaceActivity, request)
 
 
-    /*private fun addMarkersAndPath(geoPoints: List<GeoPoint>) {
 
-        val mapmyIndiaMapView = findViewById<MapmyIndiaMapView>(R.id.idMapView)
-        val mapView = mapmyIndiaMapView.mapView
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
 
-       *//* val geoPoints = arrayListOf(
-            GeoPoint(28.549356, 77.26780099999999),
-            GeoPoint(28.551844, 77.26749),
-            GeoPoint(28.554454, 77.265473),
-            GeoPoint(28.549637999999998, 77.262909)
-        )*//*
-
-        geoPoints.forEach { point ->
-            val marker = Marker(mapView)
-            marker.position = point
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
-            mapView.overlays.add(marker)
+        try {
+            val datePicker = datePickerDialog.datePicker
+            val daySpinner = datePicker.findViewById<View>(
+                resources.getIdentifier("day", "id", "android")
+            )
+            daySpinner?.visibility = View.GONE
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        val pathOverlay = PathOverlay(this).apply {
-            color = ContextCompat.getColor(this@AutoSearchPlaceActivity, R.color.primaryColorDark)
-            width = 10f
-            points = geoPoints
-        }
-        mapView.overlays.add(pathOverlay)
-        mapView.setBounds(geoPoints)
-        mapView.invalidate()
+
+        datePickerDialog.show()
+    }
 
 
-    }*/
+
+
 }

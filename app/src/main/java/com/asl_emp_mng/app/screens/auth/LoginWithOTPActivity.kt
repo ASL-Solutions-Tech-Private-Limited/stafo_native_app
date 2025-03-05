@@ -46,7 +46,7 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
 
     private fun onClickListeners() {
         viewDataBinding?.apply {
-            tieMobileNo.setText("9593464714")
+
 
             btnSignIn.setOnClickListener {
                 if (arePermissionsGranted()) {
@@ -57,7 +57,9 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
             }
 
             tvRegisterNow.setOnClickListener {
-                startActivity(Intent(this@LoginWithOTPActivity, MobileSignUp::class.java))
+                //startActivity(Intent(this@LoginWithOTPActivity, MobileSignUp::class.java))
+                startActivity(Intent(this@LoginWithOTPActivity, SignUpActivity::class.java))
+
             }
         }
     }

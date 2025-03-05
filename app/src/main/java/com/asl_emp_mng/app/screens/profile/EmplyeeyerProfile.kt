@@ -137,10 +137,6 @@ class EmplyeeyerProfile : AppCompatActivity() {
                         .placeholder(R.drawable.demo_avatar)
                         .error(R.drawable.demo_avatar)
                         .into(binding.ivHeaderProfilePic)
-
-                    Log.d("res", "get iamge url $imageUrl")
-                } else {
-                    CustomToast(this, "No image available")
                 }
 
             } else {

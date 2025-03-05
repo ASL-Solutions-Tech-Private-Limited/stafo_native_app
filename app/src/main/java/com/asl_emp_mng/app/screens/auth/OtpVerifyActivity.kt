@@ -55,7 +55,7 @@ class OtpVerifyActivity : AppCompatActivity() {
 
         deviceID = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
 
-        binding.llOtp.setText(otp)
+      //  binding.llOtp.setText(otp)
         onClickListener()
         observeViewModel()
     }
