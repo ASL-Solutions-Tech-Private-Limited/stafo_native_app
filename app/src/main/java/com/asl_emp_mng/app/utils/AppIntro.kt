@@ -125,19 +125,19 @@ class AppIntroViewPager2Adapter : RecyclerView.Adapter<PagerVH2>() {
                 bindingDesign.introTitle.text = context.getString(R.string.intro_title_1)
                 bindingDesign.introDescription.text =
                     context.getString(R.string.intro_description_1)
-                bindingDesign.introImage.setImageResource(R.drawable.hr_icon)
+                bindingDesign.introImage.setImageResource(R.drawable.hiring)
             }
             if (position == 1) {
                 bindingDesign.introTitle.text = context.getString(R.string.intro_title_2)
                 bindingDesign.introDescription.text =
                     context.getString(R.string.intro_description_2)
-                bindingDesign.introImage.setImageResource(R.drawable.hr_icon)
+                bindingDesign.introImage.setImageResource(R.drawable.punch_in)
             }
             if (position == 2) {
                 bindingDesign.introTitle.text = context.getString(R.string.intro_title_3)
                 bindingDesign.introDescription.text =
                     context.getString(R.string.intro_description_3)
-                bindingDesign.introImage.setImageResource(R.drawable.hr_icon)
+                bindingDesign.introImage.setImageResource(R.drawable.money)
             }
         }
     }
