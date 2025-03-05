@@ -448,7 +448,7 @@ class AddEmployeeActivity : AppCompatActivity() {
 
                 binding.rpbPersonalInfo.setProgress(100f)
                 binding.rpbPersonalInfo.setUnfilledColor(resources.getColor(R.color.tea_green))
-                binding.rpbPersonalInfo.setFilledColor(resources.getColor(R.color.primaryColor))
+                binding.rpbPersonalInfo.setFilledColor(resources.getColor(R.color.colorTextPrimary))
 
             }
 
@@ -460,7 +460,7 @@ class AddEmployeeActivity : AppCompatActivity() {
 
                 binding.rpbDocumentInfo.setProgress(100f)
                 binding.rpbDocumentInfo.setUnfilledColor(resources.getColor(R.color.tea_green))
-                binding.rpbDocumentInfo.setFilledColor(resources.getColor(R.color.primaryColor))
+                binding.rpbDocumentInfo.setFilledColor(resources.getColor(R.color.colorTextPrimary))
 
             }
 
@@ -472,7 +472,7 @@ class AddEmployeeActivity : AppCompatActivity() {
 
                 binding.rpbEmploymentDetails.setProgress(100f)
                 binding.rpbEmploymentDetails.setUnfilledColor(resources.getColor(R.color.tea_green))
-                binding.rpbEmploymentDetails.setFilledColor(resources.getColor(R.color.primaryColor))
+                binding.rpbEmploymentDetails.setFilledColor(resources.getColor(R.color.colorTextPrimary))
 
             }
         }
