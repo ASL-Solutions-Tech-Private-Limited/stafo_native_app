@@ -283,7 +283,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
             startActivity(Intent(this, LeaveManagementActivity::class.java))
         }
 
-        binding.expandableOtherManagement.findViewById<AppCompatTextView>(R.id.tv_need_help)
+        binding.expandableOtherManagement.findViewById<AppCompatTextView>(R.id.tv_need_help_company)
             .setOnClickListener {
                 startActivity(Intent(this, HelpSupportActivity::class.java))
             }
@@ -294,12 +294,18 @@ class EmplyeeyerProfile : AppCompatActivity() {
         binding?.tvLeave?.setOnClickListener {
             startActivity(Intent(this, EmpLeaveActivity::class.java))
         }
+
+
         binding?.tvAttendance?.setOnClickListener {
             startActivity(Intent(this, EmployeeAttendanceRecordActivity::class.java))
         }
         binding?.expandableProfile?.setOnClickListener {
             binding.expandableProfile.toggleLayout()
 
+        }
+
+        binding?.tvPolicy?.setOnClickListener {
+            startActivity(Intent(this, PolicyActivity::class.java))
         }
 
         binding.expandableOtherManagement.findViewById<AppCompatTextView>(R.id.tv_logout)

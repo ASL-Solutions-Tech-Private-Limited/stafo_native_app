@@ -40,7 +40,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/_12sdp" />
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_need_help"
+        android:id="@+id/tv_need_help_company"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_44sdp"
         android:layout_marginStart="@dimen/_12sdp"

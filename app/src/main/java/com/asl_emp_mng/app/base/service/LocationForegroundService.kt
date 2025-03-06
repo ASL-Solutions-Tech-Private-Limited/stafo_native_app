@@ -65,7 +65,7 @@ class LocationForegroundService : Service() {
             Log.e(TAG, "Location permission not granted. The Activity should have handled this.")
         }
 
-        return START_NOT_STICKY
+        return START_STICKY
     }
 
 

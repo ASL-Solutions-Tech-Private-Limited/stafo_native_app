@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -330,6 +331,9 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
                 if (!it.employeeInfo.punches.isNullOrEmpty()) {
+
+                    Log.d("res", "true ")
+
                     val punchData = it.employeeInfo.punches[0]
                     val punchInTime = punchData.punchIn
                     val punchOutTime = punchData.punchOut
@@ -346,12 +350,15 @@ class EmployeeDashboard : AppCompatActivity() {
                     }
 
                     if (punchInDate == currentDate) {
-
                         if (punchInTime != null && geoStatus == "1") {
                             if (!isServiceRunning(LocationForegroundService::class.java)) {
                                 startService(Intent(this, LocationForegroundService::class.java))
                             }
+
+
                         }
+
+
 
 
                         if (punchInTime != null && punchOutTime != null) {
@@ -368,10 +375,11 @@ class EmployeeDashboard : AppCompatActivity() {
                             }"
 
                             if (isServiceRunning(LocationForegroundService::class.java)) {
-                                val serviceIntent = Intent(this, LocationForegroundService::class.java)
+
+                                val serviceIntent =
+                                    Intent(this, LocationForegroundService::class.java)
                                 stopService(serviceIntent)
                             }
-
 
 
                         } else if (punchInTime != null) {
@@ -406,8 +414,10 @@ class EmployeeDashboard : AppCompatActivity() {
                             }
 
                             if (shiftEndTime != null && currentDateTime.after(shiftEndCalendar)) {
+
                                 if (isServiceRunning(LocationForegroundService::class.java)) {
-                                    val serviceIntent = Intent(this, LocationForegroundService::class.java)
+                                    val serviceIntent =
+                                        Intent(this, LocationForegroundService::class.java)
                                     stopService(serviceIntent)
                                 }
                             }
@@ -533,7 +543,6 @@ class EmployeeDashboard : AppCompatActivity() {
         }
         return false
     }
-
 
 
     private fun showCustomBottomSheet() {
