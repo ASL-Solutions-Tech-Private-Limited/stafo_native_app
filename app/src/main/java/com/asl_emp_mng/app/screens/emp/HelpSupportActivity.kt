@@ -1,5 +1,7 @@
 package com.asl_emp_mng.app.screens.emp
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -15,8 +17,10 @@ import com.asl_emp_mng.app.databinding.ActivityHelpSupportBinding
 import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.getCompanyDetails
 import com.asl_emp_mng.app.utils.getEmployeeComId
 import com.asl_emp_mng.app.utils.getEmployeeDetails
+import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
 
 class HelpSupportActivity : AppCompatActivity() {
     private lateinit var binding:ActivityHelpSupportBinding
@@ -43,10 +47,34 @@ class HelpSupportActivity : AppCompatActivity() {
 
     private fun onClickListener() {
         binding?.apply {
+            if (getIsCOMPANYLogin() == true) {
+
+                rtlCompany.visibility=View.VISIBLE
+                rtlEmployee.visibility=View.GONE
+
+
+            } else {
+                rtlCompany.visibility=View.GONE
+                rtlEmployee.visibility=View.VISIBLE
+
+
+                settingsViewModel.fetchEmployeeDetails(this@HelpSupportActivity, getEmployeeDetails()?.id.toString())
+
+
+
+
+            }
+
+
 
             imageBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
-            settingsViewModel.fetchEmployeeDetails(this@HelpSupportActivity, getEmployeeDetails()?.id.toString())
+            tvContactLink.setOnClickListener {
+                val url = "http://stafo.in/about-us"
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(intent)
+            }
+
 
         }
     }

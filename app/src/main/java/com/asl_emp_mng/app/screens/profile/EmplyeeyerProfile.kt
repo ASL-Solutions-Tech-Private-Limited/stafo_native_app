@@ -283,6 +283,12 @@ class EmplyeeyerProfile : AppCompatActivity() {
             startActivity(Intent(this, LeaveManagementActivity::class.java))
         }
 
+        binding.expandableOtherManagement.findViewById<AppCompatTextView>(R.id.tv_need_help)
+            .setOnClickListener {
+                startActivity(Intent(this, HelpSupportActivity::class.java))
+            }
+
+
         // for employee
 
         binding?.tvLeave?.setOnClickListener {
