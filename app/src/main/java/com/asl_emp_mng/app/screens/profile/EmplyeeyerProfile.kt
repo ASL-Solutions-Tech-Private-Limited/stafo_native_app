@@ -22,6 +22,7 @@ import com.asl_emp_mng.app.screens.emp.EmpLeaveActivity
 import com.asl_emp_mng.app.screens.emp.EmployeeAttendance
 import com.asl_emp_mng.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.asl_emp_mng.app.screens.emp.EmployeeViewDocumentActivity
+import com.asl_emp_mng.app.screens.emp.HelpSupportActivity
 import com.asl_emp_mng.app.screens.settings.AddDepartmentActivity
 import com.asl_emp_mng.app.screens.settings.AddShiftActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
@@ -158,7 +159,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
                         .error(R.drawable.demo_avatar)
                         .into(binding.ivHeaderProfilePic)
                 } ?: run {
-                    CustomToast(this, "No image available")
+
                 }
 
 
@@ -334,6 +335,10 @@ class EmplyeeyerProfile : AppCompatActivity() {
         binding.tvEmpLogout.setOnClickListener {
             doLogout(this)
         }
+
+        binding.tvHelpSupport.setOnClickListener {
+            startActivity(Intent(this, HelpSupportActivity::class.java))
+        }
     }
 
 
@@ -364,10 +369,10 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
 
                         if (getIsCOMPANYLogin() == true) {
-                            Log.d("res", "com File selected: ${file.absolutePath}")
+
                             settingsViewModel.changeCompanyProfileImage(this, file)
                         } else {
-                            Log.d("res", "emp File selected: ${file.absolutePath}")
+
                             val id = getEmployeeDetails()?.id
 
                             id?.let {

@@ -392,6 +392,8 @@ class EmployeeDashboard : AppCompatActivity() {
                         }
 
                         if (shiftEndTime != null) {
+
+
                             val currentDateTime = Calendar.getInstance()
                             val shiftEndCalendar = Calendar.getInstance()
                             val shiftEndTimeDate =
@@ -504,7 +506,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
                     Log.d("res", "get iamge url $imageUrl")
                 } else {
-                    CustomToast(this, "No image available")
+
                 }
 
             } else {

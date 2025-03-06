@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_text_background"
                 android:fontFamily="@font/gilroy_medium"
-                android:hint="Enter register number" />
+                android:hint="Enter registration number" />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_gst_no"
