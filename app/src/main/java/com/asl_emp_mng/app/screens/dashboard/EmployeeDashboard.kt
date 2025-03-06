@@ -350,8 +350,11 @@ class EmployeeDashboard : AppCompatActivity() {
                     }
 
                     if (punchInDate == currentDate) {
+
                         if (punchInTime != null && geoStatus == "1") {
+                            Log.d("res", "check time service")
                             if (!isServiceRunning(LocationForegroundService::class.java)) {
+                                Log.d("res", "start time service")
                                 startService(Intent(this, LocationForegroundService::class.java))
                             }
 
@@ -414,7 +417,7 @@ class EmployeeDashboard : AppCompatActivity() {
                             }
 
                             if (shiftEndTime != null && currentDateTime.after(shiftEndCalendar)) {
-
+                                Log.d("res", "end time service")
                                 if (isServiceRunning(LocationForegroundService::class.java)) {
                                     val serviceIntent =
                                         Intent(this, LocationForegroundService::class.java)
@@ -514,7 +517,7 @@ class EmployeeDashboard : AppCompatActivity() {
                         .error(R.drawable.demo_avatar)
                         .into(binding.ivHeaderProfilePic)
 
-                    Log.d("res", "get iamge url $imageUrl")
+
                 } else {
 
                 }

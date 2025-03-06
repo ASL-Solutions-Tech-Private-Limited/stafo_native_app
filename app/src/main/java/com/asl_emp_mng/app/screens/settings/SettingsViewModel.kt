@@ -2285,15 +2285,22 @@ class SettingsViewModel : BaseViewModel() {
 
                             mAddEmp.postValue(response.body())
                         } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
+
+
+                            if (response.code()==422){
+                                CustomToast(mContext, response.body()?.message?:"")
+                            }else{
+                                it.errorBody()?.charStream()?.let { errorStream ->
+                                    val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                    CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                } ?: run {
+                                    CustomToast(
+                                        mContext,
+                                        mContext.getString(R.string.error_something_went_wrong)
+                                    )
+                                }
                             }
+
                         }
                     } ?: run {
                         CustomToast(

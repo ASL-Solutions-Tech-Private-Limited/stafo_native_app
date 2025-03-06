@@ -202,13 +202,17 @@ class AuthViewModel() : BaseViewModel() {
                         if (response.isSuccessful) {
                             mRegister.postValue(response.body())
                         } else {
-                            val errorBody = response.errorBody()?.string()
+                         /*   val errorBody = response.errorBody()?.string()
                             errorBody?.let { errorJson ->
                                 val error = Gson().fromJson(errorJson, ErrorResponse::class.java)
                                 CustomToast(mContext, error?.message ?: "Unknown error")
                             } ?: run {
                                 CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
-                            }
+                            }*/
+
+                            CustomToast(mContext, response.body()?.message?:mContext.getString(R.string.error_something_went_wrong))
+
+
                         }
                     } else {
                         Log.e("API_ERROR", "Response is null")
