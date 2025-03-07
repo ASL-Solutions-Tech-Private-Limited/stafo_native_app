@@ -16,6 +16,7 @@ import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.BaseActivity
 import com.asl_emp_mng.app.databinding.ActivityLoginWithOtpactivityBinding
 import com.asl_emp_mng.app.utils.CustomLoader
+import com.asl_emp_mng.app.utils.CustomToast
 
 class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, AuthViewModel>() {
 
@@ -95,6 +96,8 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
                 intent.putExtra("mobile", mobile)
                 intent.putExtra("otp", otp)
                 startActivity(intent)
+            }else{
+                CustomToast(this,it.message)
             }
         }
     }

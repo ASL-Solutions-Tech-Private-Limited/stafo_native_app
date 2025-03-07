@@ -113,8 +113,6 @@ class AuthViewModel() : BaseViewModel() {
                 Log.d("res",response?.body().toString())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
-
-
                     if (response != null && response.isSuccessful) {
                         mOtp.postValue(response.body())
                     } else {
