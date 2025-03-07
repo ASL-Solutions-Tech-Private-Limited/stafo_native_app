@@ -53,23 +53,33 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                when {
-                    panStatus && gstStatus && companyStatus -> {
-                        val intent = Intent(this@VerifyCompanyDetailsActivity, EmployerDashboard::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                        startActivity(intent)
-                        finish()
-                    }
-                    panStatus || gstStatus || companyStatus -> {
-                        showExitConfirmationDialog()
-                    }
-                    else -> {
-                        val intent = Intent(this@VerifyCompanyDetailsActivity, EmployerDashboard::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                        startActivity(intent)
-                        finish()
-                    }
-                }
+
+
+                val intent = Intent(this@VerifyCompanyDetailsActivity, EmployerDashboard::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity (intent)
+                finish ()
+
+               /* when {
+
+
+
+                    *//* aadhaarStatus && gstStatus && companyStatus -> {
+                         val intent = Intent(this@VerifyCompanyDetailsActivity, EmployerDashboard::class.java)
+                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                         startActivity(intent)
+                         finish()
+                     }
+                     panStatus || gstStatus || companyStatus -> {
+                         showExitConfirmationDialog()
+                     }
+                     else -> {
+                         val intent = Intent(this@VerifyCompanyDetailsActivity, EmployerDashboard::class.java)
+                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                         startActivity(intent)
+                         finish()
+                     }*//*
+                }*/
             }
         })
 
@@ -158,7 +168,7 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
         }
 
         settingsViewModel.mPanVerifyResponse.observe(this) {
-            if (it.status=="success") {
+            if (it.status == "success") {
                 settingsViewModel.getCompanyDetails(this@VerifyCompanyDetailsActivity)
                 it.status?.let { it1 -> CustomToast(this, it1) }
                 bottomSheetDialog.dismiss()
@@ -168,7 +178,7 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
         }
 
         settingsViewModel.mVerifyGSTNumberResponse.observe(this) {
-            if (it.status=="success") {
+            if (it.status == "success") {
                 settingsViewModel.getCompanyDetails(this@VerifyCompanyDetailsActivity)
                 it.status?.let { it1 -> CustomToast(this, it1) }
                 bottomSheetDialog.dismiss()
@@ -178,7 +188,7 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
         }
 
         settingsViewModel.mVerifyRegisterNumberResponse.observe(this) {
-            if (it.status=="success") {
+            if (it.status == "success") {
                 settingsViewModel.getCompanyDetails(this@VerifyCompanyDetailsActivity)
                 it.status?.let { it1 -> CustomToast(this, it1) }
                 bottomSheetDialog.dismiss()
@@ -256,6 +266,7 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
                 bottomSheetDialogBinding.tilGstNo.visibility = View.VISIBLE
                 bottomSheetDialogBinding.tilRegisterNo.visibility = View.GONE
             }
+
             "Aadhaar Verify" -> {
                 bottomSheetDialogBinding.tilPanNo.visibility = View.GONE
                 bottomSheetDialogBinding.tilGstNo.visibility = View.GONE
@@ -282,7 +293,8 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
 
                 if (pan.length == 10) {
                     if (!isValidPAN(pan)) {
-                        bottomSheetDialogBinding.tiePanNo.error = "Invalid PAN format (eg. ABCDE1234F)"
+                        bottomSheetDialogBinding.tiePanNo.error =
+                            "Invalid PAN format (eg. ABCDE1234F)"
                     }
                 }
             }
@@ -425,7 +437,6 @@ class VerifyCompanyDetailsActivity : AppCompatActivity() {
         bottomSheetDialog.setContentView(bottomSheetDialogBinding.root)
         bottomSheetDialog.show()
     }
-
 
 
     private fun isValidPAN(pan: String): Boolean {

@@ -48,6 +48,7 @@ import com.asl_emp_mng.app.screens.settings.SettingsViewModel
 import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.screens.ui.WishListActivity
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.doLogout
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 import com.asl_emp_mng.app.utils.getFormattedDate
 import com.asl_emp_mng.app.utils.getFormattedDate2
@@ -192,6 +193,11 @@ class EmployeeDashboard : AppCompatActivity() {
     private fun onClickListener() {
         binding?.apply {
 
+
+            ivLogout.setOnClickListener {
+                showLogoutDialog()
+            }
+
             settingsViewModel.fetchEmployeeDetails(
                 this@EmployeeDashboard,
                 getEmployeeDetails()?.id.toString()
@@ -330,7 +336,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
 
-                if (!it.employeeInfo.punches.isNullOrEmpty()) {
+               /* if (!it.employeeInfo.punches.isNullOrEmpty()) {
 
                     Log.d("res", "true ")
 
@@ -431,7 +437,68 @@ class EmployeeDashboard : AppCompatActivity() {
                         binding.btnPunchIn.isEnabled = true
                         binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
                     }
+                }*/
+
+                if (!it.employeeInfo.punches.isNullOrEmpty()) {
+                    Log.d("res", "true ")
+
+                    val punchesToday = it.employeeInfo.punches.filter { punch ->
+                        val punchDate = punch.punchIn?.let {
+                            SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(it)
+                        }?.let {
+                            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
+                        }
+                        punchDate == SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                    }
+
+                    if (punchesToday.isNotEmpty()) {
+                        val lastPunch = punchesToday.last() // Get the latest punch-in/out data
+                        val punchInTime = lastPunch.punchIn
+                        val punchOutTime = lastPunch.punchOut
+                        val geoStatus = it.employeeInfo.geoStatus
+
+                        if (punchInTime != null && geoStatus == "1") {
+                            Log.d("res", "check time service")
+                            if (!isServiceRunning(LocationForegroundService::class.java)) {
+                                Log.d("res", "start time service")
+                                startService(Intent(this, LocationForegroundService::class.java))
+                            }
+                        }
+
+                        if (punchInTime != null && punchOutTime != null) {
+                            // If last punch has both In and Out, allow another Punch In
+                            binding.btnPunchIn.text = "Punch In"
+                            binding.btnPunchIn.isEnabled = true
+                            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+                            binding.tvOfficeTiming.text = "Punched Out At ${
+                                getFormattedDate2(
+                                    punchOutTime,
+                                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
+                                    "hh:mm a dd MMM yyyy"
+                                )
+                            }"
+
+                        } else if (punchInTime != null) {
+                            // If last punch only has In, allow Punch Out
+                            binding.btnPunchIn.text = "Punch Out"
+                            binding.btnPunchIn.isEnabled = true
+                            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+                            binding.tvOfficeTiming.text = "Punched In At ${
+                                getFormattedDate2(
+                                    punchInTime,
+                                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
+                                    "hh:mm a dd MMM yyyy"
+                                )
+                            }"
+                        }
+                    } else {
+                        // No punches today, allow Punch In
+                        binding.btnPunchIn.text = "Punch In"
+                        binding.btnPunchIn.isEnabled = true
+                        binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+                    }
                 }
+
 
 
             }
@@ -535,6 +602,25 @@ class EmployeeDashboard : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finishAffinity()
+    }
+
+
+    private fun showLogoutDialog() {
+        val builder = AlertDialog.Builder(this@EmployeeDashboard)
+        builder.setTitle(R.string.app_name)
+        builder.setMessage("Are you sure? You want to logout from device!")
+
+        builder.setPositiveButton("Yes") { dialog, _ ->
+            doLogout(this)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
     }
 
     private fun isServiceRunning(serviceClass: Class<out Service>): Boolean {

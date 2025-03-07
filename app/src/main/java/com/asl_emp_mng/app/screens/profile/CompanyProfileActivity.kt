@@ -315,12 +315,23 @@ class CompanyProfileActivity : AppCompatActivity() {
                     }
 
                     binding.tieOwnerEmail.setText(data.company?.email ?: "")
-                    binding.tieOwnerMobileNo.setText(data.company?.mobile_no ?: "")
+
+
+                    if (!data.company?.mobile_no.isNullOrEmpty()){
+                        binding.tieOwnerMobileNo.setText(data.company?.mobile_no ?: "")
+                        isFocusableField(binding.tieOwnerMobileNo)
+                    }
+
+
+                    if (!data.proprietor?.firstName.isNullOrEmpty()){
+                        binding.tieOwnerName.setText(data.proprietor?.firstName ?: "")
+                        isFocusableField(binding.tieOwnerName)
+                    }
 
 
 
 
-                    binding.tieOwnerName.setText(data.proprietor?.firstName ?: "")
+
 
 
                     binding.tieOwnerAddress.setText(data.proprietor?.currentAddress ?: "")

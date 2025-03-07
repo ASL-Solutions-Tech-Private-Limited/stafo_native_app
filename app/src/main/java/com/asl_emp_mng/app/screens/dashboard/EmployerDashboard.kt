@@ -39,6 +39,7 @@ import com.asl_emp_mng.app.screens.ui.EmplyeeyerProfile
 import com.asl_emp_mng.app.screens.ui.WishListActivity
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.doLogout
 import com.asl_emp_mng.app.utils.getCompanyDetails
 import com.asl_emp_mng.app.utils.getGreetingBasedOnTime
 import com.asl_emp_mng.app.utils.getTodayDate
@@ -325,6 +326,10 @@ class EmployerDashboard : AppCompatActivity() {
 
     private fun setOnClickEvents() {
 
+        binding.ivLogout.setOnClickListener {
+            showLogoutDialog()
+        }
+
         stopLocationService()
 
         settingsViewModel.getCompanyDetails(this@EmployerDashboard)
@@ -462,6 +467,24 @@ class EmployerDashboard : AppCompatActivity() {
 
         builder.setPositiveButton("Yes") { dialog, _ ->
             startActivity(Intent(this, VerifyCompanyDetailsActivity::class.java))
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun showLogoutDialog() {
+        val builder = AlertDialog.Builder(this@EmployerDashboard)
+        builder.setTitle(R.string.app_name)
+        builder.setMessage("Are you sure? You want to logout from device!")
+
+        builder.setPositiveButton("Yes") { dialog, _ ->
+            doLogout(this)
             dialog.dismiss()
         }
 
