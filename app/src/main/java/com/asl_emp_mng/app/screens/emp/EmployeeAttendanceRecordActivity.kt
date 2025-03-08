@@ -190,7 +190,7 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
                     adapter.submitList(mMonth)
                 } else {
                     binding.rvEmpAttendList.layoutManager = LinearLayoutManager(this)
-                    val newAdapter = AdapterEmployeeRecord(this)
+                    val newAdapter = AdapterEmployeeRecord(this,mEMPID)
                     binding.rvEmpAttendList.adapter = newAdapter
                     newAdapter.submitList(mMonth)
                 }

@@ -1,7 +1,9 @@
 package com.asl_emp_mng.app.base.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.asl_emp_mng.app.base.model.DateItem
 import com.asl_emp_mng.app.databinding.RecyEmpAttendanceChildLayoutBinding
+import com.asl_emp_mng.app.screens.emp.EmpDayAttendanceRecordActivity
+import com.asl_emp_mng.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.asl_emp_mng.app.utils.calculateHours
 import com.asl_emp_mng.app.utils.calculateHours2
 import com.asl_emp_mng.app.utils.extractDayNameDateAndMonth
@@ -19,7 +23,8 @@ import java.util.Locale
 
 
 class AdapterEmployeeRecord(
-    private val context: Context
+    private val context: Context,
+    private val employeeId:String
 ) : ListAdapter<DateItem, AdapterEmployeeRecord.ViewHolder>(DiffCallback()) {
 
     inner class ViewHolder(val binding: RecyEmpAttendanceChildLayoutBinding) :
@@ -54,6 +59,15 @@ class AdapterEmployeeRecord(
                 } else {
                     ""
                 }
+            }
+
+            holder.itemView.setOnClickListener {
+
+                val intent = Intent(context, EmpDayAttendanceRecordActivity::class.java).apply {
+                    putExtra("EMP_ID", employeeId)
+                }
+
+                context.startActivity(intent)
             }
         }
     }

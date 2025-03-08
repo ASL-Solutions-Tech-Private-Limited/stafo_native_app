@@ -288,17 +288,17 @@ class EmployerDashboard : AppCompatActivity() {
             if (it.status) {
 
                 it.data?.companyLogo?.let { imageUrl ->
+                    binding.ivHeaderProfilePic.visibility=View.VISIBLE
                     Glide.with(this)
                         .load(imageUrl)
-                        .placeholder(R.drawable.demo_avatar)
-                        .error(R.drawable.demo_avatar)
                         .into(binding.ivHeaderProfilePic)
                 } ?: run {
-
+                    binding.ivHeaderProfilePic.visibility=View.GONE
                 }
 
 
             } else {
+                binding.ivHeaderProfilePic.visibility=View.GONE
                 CustomToast(this, it.message)
             }
 

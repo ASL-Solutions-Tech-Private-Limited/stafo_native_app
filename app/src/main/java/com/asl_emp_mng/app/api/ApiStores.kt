@@ -16,6 +16,7 @@ import com.asl_emp_mng.app.screens.auth.dataClass.CountryListResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.LoginResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.OtpResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.OtpVerifyResponse
+import com.asl_emp_mng.app.screens.auth.dataClass.SelfieAttendanceResponse
 import com.asl_emp_mng.app.screens.auth.dataClass.StatesListResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpResponse
@@ -33,6 +34,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.CompanyViewRequestDevice
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyViewRequestDeviceResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.DayPunchINRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.DayPunchINResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DeleteResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateResponse
@@ -443,5 +446,21 @@ interface ApiStores {
         @Body request: CompanyViewRequestDevice,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<CompanyViewRequestDeviceResponse>
+
+
+
+    @Multipart
+    @POST("api/employee/selfie-attendance")
+    suspend fun selfieAttendanceEmp(
+        @Part("employee_id") employeeId: RequestBody,
+        @Part image: MultipartBody.Part,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<SelfieAttendanceResponse>
+
+    @POST("api/employee/punch-list")
+    suspend fun dayAttendanceRecordEmp(
+        @Body request: DayPunchINRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DayPunchINResponse>
 
 }

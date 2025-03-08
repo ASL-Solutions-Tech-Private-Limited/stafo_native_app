@@ -120,6 +120,7 @@ class OtpVerifyActivity : AppCompatActivity() {
                     if (it.data?.device_change == "yes") {
                         setUserAccessToken(it.data?.token ?: "")
                         setEmployeeDetails(it.data.employee)
+                        setIsEMPLogin(true)
                         startActivity(
                             Intent(
                                 this@OtpVerifyActivity,

@@ -16,6 +16,7 @@ import com.asl_emp_mng.app.base.model.RequestGeoLocationResponse
 import com.asl_emp_mng.app.base.request.AddBranchRequest
 import com.asl_emp_mng.app.screens.auth.LoginActivity
 import com.asl_emp_mng.app.screens.auth.dataClass.AddBranchResponse
+import com.asl_emp_mng.app.screens.auth.dataClass.SelfieAttendanceResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpRequestBody
 import com.asl_emp_mng.app.screens.settings.dataClass.AddEmpResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ApproveLeaveRequest
@@ -32,6 +33,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.CompanyViewRequestDevice
 import com.asl_emp_mng.app.screens.settings.dataClass.CompanyViewRequestDeviceResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.DayPunchINRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.DayPunchINResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DeleteResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateResponse
@@ -324,6 +327,127 @@ class SettingsViewModel : BaseViewModel() {
     private var mGetCompanyViewRequestDevice: MutableLiveData<CompanyViewRequestDeviceResponse> = MutableLiveData()
 
     val mGetCompanyViewRequestDeviceResponse: LiveData<CompanyViewRequestDeviceResponse> get() = mGetCompanyViewRequestDevice
+
+    private var mSelfieAttendanceEmp: MutableLiveData<SelfieAttendanceResponse> = MutableLiveData()
+
+    val mSelfieAttendanceEmpResponse: LiveData<SelfieAttendanceResponse> get() = mSelfieAttendanceEmp
+
+
+    private var mDayPunchINEmp: MutableLiveData<DayPunchINResponse> = MutableLiveData()
+
+    val mDayPunchINEmpResponse: LiveData<DayPunchINResponse> get() = mDayPunchINEmp
+
+
+
+    fun getDayAttendanceRecordEmp(
+        mContext: Context,
+        request: DayPunchINRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.dayAttendanceRecordEmp(request)
+                Log.d("res", "record :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mDayPunchINEmp.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+    fun selfieAttendanceEmpolyee(
+        mContext: Context,
+        employeeId: Int,
+        file: File?
+    ) {
+        getLoaderLiveData().postValue("load")
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                if (file == null) {
+                    Log.e("API_ERROR", "File is null, cannot upload image.")
+                    withContext(Dispatchers.Main) {
+                        getLoaderLiveData().postValue("stop")
+                        CustomToast(mContext, "File is null, cannot upload image.")
+                    }
+                    return@launch
+                }
+                val requestBody = employeeId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+                val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+                val imagePart = MultipartBody.Part.createFormData("image", file.name, requestFile)
+
+                val response = ASLEmpMng.instance.apiStores()?.selfieAttendanceEmp(requestBody, imagePart)
+
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().postValue("stop")
+
+                    if (response == null) {
+                        CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                        return@withContext
+                    }
+
+                    if (response.isSuccessful) {
+
+                        Log.d("res",response.body().toString())
+                        mSelfieAttendanceEmp.postValue(response.body())
+                    } else {
+                        val errorResponse = response.errorBody()?.charStream()?.use { reader ->
+                            Gson().fromJson(reader, ErrorResponse::class.java)
+                        }
+
+                        val errorMessage = errorResponse?.message
+                            ?: mContext.getString(R.string.error_something_went_wrong)
+                        CustomToast(mContext, errorMessage)
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().postValue("stop")
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+
 
 
 
