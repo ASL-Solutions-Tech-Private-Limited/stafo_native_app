@@ -47,7 +47,9 @@ class AdapterEmpDayAttendance (
         notifyDataSetChanged()
     }
 
-    fun convertTo12HourFormat(dateTime: String): String {
+    fun convertTo12HourFormat(dateTime: String?): String {
+        if (dateTime.isNullOrEmpty()) return "--"
+
         val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
 
@@ -56,9 +58,10 @@ class AdapterEmpDayAttendance (
             outputFormat.format(date!!)
         } catch (e: Exception) {
             e.printStackTrace()
-            ""
+            "--"
         }
     }
+
 
 
 }

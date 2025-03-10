@@ -58,6 +58,7 @@ class OtpVerifyActivity : AppCompatActivity() {
       //  binding.llOtp.setText(otp)
         onClickListener()
         observeViewModel()
+        binding.llOtp.requestFocus()
     }
 
     private fun onClickListener() {

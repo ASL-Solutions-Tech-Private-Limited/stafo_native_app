@@ -51,6 +51,28 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
+
+
+        if (ContextCompat.checkSelfPermission(
+                this@EmpSelfieAttendanceActivity,
+                android.Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_DENIED
+        ) {
+            ActivityCompat.requestPermissions(
+                this@EmpSelfieAttendanceActivity,
+                arrayOf(android.Manifest.permission.CAMERA),
+                100
+            )
+        } else {
+     /*       val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            cameraIntent.putExtra("android.intent.extras.CAMERA_FACING", 1)
+            startActivityForResult(cameraIntent, 123)*/
+
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            cameraIntent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1)
+            startActivityForResult(cameraIntent, 123)
+        }
+
         onClickListener()
         observeViewModel()
 
@@ -210,8 +232,12 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 123) {
             if (grantResults.size != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+               /* val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 cameraIntent.putExtra("android.intent.extras.CAMERA_FACING", 1)
+                startActivityForResult(cameraIntent, 123)*/
+
+                val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                cameraIntent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1)
                 startActivityForResult(cameraIntent, 123)
             } else {
                 CustomToast(this, "Camera Permission Denined..")

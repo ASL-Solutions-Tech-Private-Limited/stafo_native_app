@@ -106,7 +106,7 @@ class EmpListAdapter(
                     binding.llcViewProfile.visibility = View.GONE
                     binding.llcReqLocation.visibility = View.GONE
                     binding.llcViewMap.visibility = View.GONE
-                    binding.llcAddAttendance.visibility = View.GONE
+                    binding.llcAddAttendance.visibility = View.VISIBLE
                     binding.llcShiftTime.visibility = View.VISIBLE
                     binding.llcViewProfile.setOnClickListener {
 
@@ -114,7 +114,7 @@ class EmpListAdapter(
                 }
 
                 binding.llcAddAttendance.setOnClickListener {
-                    (context as ViewAllEmployeeActivity).showCustomBottomSheet(this.id.toString())
+                    (context as ViewAllEmployeeActivity).showCustomBottomSheet(this.id)
                 }
 
                 binding.llcShiftTime.setOnClickListener {

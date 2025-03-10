@@ -17,6 +17,7 @@ import com.asl_emp_mng.app.base.BaseActivity
 import com.asl_emp_mng.app.databinding.ActivityLoginWithOtpactivityBinding
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
+import com.asl_emp_mng.app.utils.doLogout
 
 class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, AuthViewModel>() {
 
@@ -39,7 +40,6 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
 
     override fun onResume() {
         super.onResume()
-        // Check permissions again when the user returns from settings
         if (arePermissionsGranted()) {
             enableLoginButton()
         }
@@ -97,11 +97,33 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
                 intent.putExtra("otp", otp)
                 startActivity(intent)
             }else{
-                CustomToast(this,it.message)
+                val msg=it.message
+                if (msg=="User not found."){
+                    showDialog()
+                }else{
+                    CustomToast(this,it.message)
+                }
+
             }
         }
     }
+    private fun showDialog() {
+        val builder = AlertDialog.Builder(this@LoginWithOTPActivity)
+        builder.setTitle(R.string.app_name)
+        builder.setMessage("User not found. Please register your mobile number as a company first, then try logging in again.")
 
+        builder.setPositiveButton("Yes") { dialog, _ ->
+            startActivity(Intent(this@LoginWithOTPActivity, SignUpActivity::class.java))
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
     private fun arePermissionsGranted(): Boolean {
         val locationGranted = ContextCompat.checkSelfPermission(
             this, Manifest.permission.ACCESS_FINE_LOCATION

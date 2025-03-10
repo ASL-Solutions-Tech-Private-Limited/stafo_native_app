@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -26,6 +27,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.AssignShiftRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeDataList
 import com.asl_emp_mng.app.screens.settings.dataClass.GetEmployee
 import com.asl_emp_mng.app.screens.settings.dataClass.LeaveData
+import com.asl_emp_mng.app.screens.settings.dataClass.SetAttendanceTypeRequest
 import com.asl_emp_mng.app.utils.CustomLoader
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeComId
@@ -54,6 +56,14 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     private lateinit var rvRadioShift: RecyclerView
     private lateinit var rvRadioShiftAdapter: RadioShiftAdapter
     private val calendar = Calendar.getInstance()
+
+    private var attendanceLocation:String="from office"
+
+    private  var isSelfie:String="false"
+    private  var isQR:String="false"
+    private  var isGeo:String="false"
+    private  var isAllow:String="false"
+    private  var attendanceType:String="false"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -165,6 +175,17 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         settingsViewModel.mSendGeoLocationResponse.observe(this) {
             if (it.status) {
                 CustomToast(this, it.message)
+            }else{
+                CustomToast(this, it.message)
+            }
+        }
+
+        settingsViewModel.mSetAttendanceTypeResponse.observe(this) {
+            if (it.status) {
+                CustomToast(this, it.message)
+                bottomSheetDialog.dismiss()
+            }else{
+                CustomToast(this, it.message)
             }
         }
 
@@ -203,7 +224,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
 
      @SuppressLint("MissingInflatedId")
-     fun showCustomBottomSheet(id:String) {
+     fun showCustomBottomSheet(id:Int) {
         bottomSheetDialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.attendance_mode_bottom_sheet_layout, null)
 
@@ -220,8 +241,56 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         val llFromAny = view.findViewById<LinearLayout>(R.id.ll_from_any)
         val imgOffice = view.findViewById<ImageView>(R.id.img_office)
         val imgAny = view.findViewById<ImageView>(R.id.img_any)
+        val switchAllow = view.findViewById<SwitchCompat>(R.id.switch_allow)
+        val switchSelfie = view.findViewById<SwitchCompat>(R.id.switch_selfie)
+        val switchQr = view.findViewById<SwitchCompat>(R.id.switch_qr)
+        val switchGeo = view.findViewById<SwitchCompat>(R.id.switch_geo)
+
+        val btnSetAttendanceType = view.findViewById<AppCompatButton>(R.id.btn_setAttendance_type)
+
+       /*  switchGeo.setOnCheckedChangeListener { _, isChecked ->
+             isGeo = if (isChecked) "true" else "false"
+         }
+         switchQr.setOnCheckedChangeListener { _, isChecked ->
+             isQR = if (isChecked) "true" else "false"
+         }
+         switchSelfie.setOnCheckedChangeListener { _, isChecked ->
+             isSelfie = if (isChecked) "true" else "false"
+         }*/
+         switchAllow.setOnCheckedChangeListener { _, isChecked ->
+             attendanceType = if (isChecked) "true" else "false"
+         }
+
+
+         switchGeo.setOnCheckedChangeListener { _, isChecked ->
+             if (isChecked) {
+                 attendanceType = "geo"
+                 switchQr.isChecked = false
+                 switchSelfie.isChecked = false
+             }
+         }
+
+         switchQr.setOnCheckedChangeListener { _, isChecked ->
+             if (isChecked) {
+                 attendanceType = "qr code"
+                 switchGeo.isChecked = false
+                 switchSelfie.isChecked = false
+             }
+         }
+
+         switchSelfie.setOnCheckedChangeListener { _, isChecked ->
+             if (isChecked) {
+                 attendanceType = "selfie"
+                 switchGeo.isChecked = false
+                 switchQr.isChecked = false
+             }
+         }
+
+
 
          llFromOffice.setOnClickListener {
+
+             attendanceLocation="from office"
              llFromOffice.setBackgroundResource(R.drawable.custom_switch_card_bg)
              llFromAny.setBackgroundResource(R.drawable.custom_switch_card_bg2)
 
@@ -231,6 +300,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
          }
 
          llFromAny.setOnClickListener {
+             attendanceLocation="from anywhere"
              llFromOffice.setBackgroundResource(R.drawable.custom_switch_card_bg2)
              llFromAny.setBackgroundResource(R.drawable.custom_switch_card_bg)
 
@@ -238,11 +308,32 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
              imgAny.setImageResource(R.drawable.ic_lv_active_radio)
          }
 
+         btnSetAttendanceType.setOnClickListener {
+
+             if (attendanceType=="false"){
+                 CustomToast(this,"Please select attendance type!")
+                 Log.d("res","get val $isGeo $isSelfie $isAllow $isQR $attendanceLocation")
+             }else{
+                 Log.d("res","get val $isGeo $isSelfie $isAllow $isQR $attendanceLocation")
+                 val request=SetAttendanceTypeRequest(
+                     employee_id = id,
+                     attendance_type = attendanceType
+                 )
+                 Log.d("res","post: $request")
+                 settingsViewModel.setAttendanceTypeEmployee(this,request)
+             }
+
+
+         }
+
 
 
         btnCancel.setOnClickListener {
             bottomSheetDialog.dismiss()
         }
+
+
+
 
 
         bottomSheetDialog.setContentView(view)

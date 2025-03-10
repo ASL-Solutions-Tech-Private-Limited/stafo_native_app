@@ -422,6 +422,7 @@
                             android:fontFamily="@font/gilroy_medium"
                             android:gravity="start|top"
                             android:hint="Address"
+                            android:maxLines="3"
                             android:textSize="@dimen/_12ssp"
                             android:textColor="@color/black"
                             android:inputType="textImeMultiLine"

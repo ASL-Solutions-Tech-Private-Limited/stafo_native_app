@@ -23,4 +23,6 @@
     <color name="light_blue">#90D6FF</color>
     <color name="blue">#0000FF</color>
     <color name="app_theme_colour">#3363AB</color>
+
+    <color name="green_light_400">#80E8F5E9</color>
 </resources>

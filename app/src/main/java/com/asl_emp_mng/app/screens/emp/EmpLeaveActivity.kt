@@ -304,7 +304,7 @@ class EmpLeaveActivity : AppCompatActivity() {
             val toDateStr = binding.edtToDate.text.toString().trim()
 
             if (fromDateStr.isEmpty() || toDateStr.isEmpty()) {
-                return // Exit if either date is empty
+                return
             }
 
             val fromDate = sdf.parse(fromDateStr)
@@ -331,7 +331,12 @@ class EmpLeaveActivity : AppCompatActivity() {
             ) + 1
 
             val formattedNoDays = daysBetween.toInt().toString()
-            binding.nodTxt.text = "No of leave: $formattedNoDays days"
+            if (formattedNoDays == "1"){
+                binding.nodTxt.text = "No of leave: $formattedNoDays day"
+            } else {
+                binding.nodTxt.text = "No of leave: $formattedNoDays days"
+            }
+            // binding.nodTxt.text = "No of leave: $formattedNoDays days"
 
         } catch (e: ParseException) {
             e.printStackTrace()

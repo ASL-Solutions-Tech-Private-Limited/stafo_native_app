@@ -4,6 +4,8 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -37,17 +39,19 @@ import java.util.Random
 
 class EmployeeAttendanceRecordActivity : AppCompatActivity() {
     private val TAG = "EmployeeAttendanceRecor"
-    private lateinit var binding:ActivityEmployeeAttendanceRecordBinding
+    private lateinit var binding: ActivityEmployeeAttendanceRecordBinding
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
     private var mEMPID = ""
     private val calendar = Calendar.getInstance()
     private var mSelectedDate = ""
     private var avgWork: Float? = null
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding=ActivityEmployeeAttendanceRecordBinding.inflate(layoutInflater)
+        binding = ActivityEmployeeAttendanceRecordBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -61,25 +65,23 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
         mEMPID = intent.getStringExtra("EMP_ID") ?: ""
 
-        Log.d("res","get :$mEMPID")
+        Log.d("res", "get :$mEMPID")
 
         onClickListener()
         observeViewModel()
 
 
-
-
     }
 
     private fun fetchAttendanceData() {
-        if (getIsCOMPANYLogin()==true){
+        if (getIsCOMPANYLogin() == true) {
 
             settingsViewModel.getMonthlyAttendance(
                 this@EmployeeAttendanceRecordActivity,
                 mSelectedDate,
                 mEMPID
             )
-        }else{
+        } else {
             settingsViewModel.getMonthlyAttendance(
                 this@EmployeeAttendanceRecordActivity,
                 mSelectedDate, getEmployeeDetails()?.id.toString(),
@@ -87,63 +89,64 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun observeViewModel() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-      /*  settingsViewModel.mAttendanceHistoryResponse.observe(this) {
-            if (it.status) {
-                if (it.data != null) {
-                    binding.txtMsg.visibility = View.GONE
-                val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-                    var mPresentCount = 0
-                    var mTotalWorkingHour = 0
-                    val mMonth = getAllDatesFromMonth(mSelectedDate)
-                    for (month in mMonth.indices) {
-                        for (item in it.data.indices) {
-                            if (mMonth[month].date == it.data[item].date) {
-                                mMonth[month].isPresent = it.data[item].attendance
-                                mMonth[month].punchIn = it.data[item].in_time.toString()
-                                mMonth[month].punchOut = it.data[item].out_time.toString()
-                                if (it.data[item].attendance == "Present") {
-                                    mPresentCount++
-                                }
-                                if (!it.data[item].in_time.isNullOrEmpty()) {
-                                    mTotalWorkingHour += calculateMinutes(
-                                        it.data[item].in_time.toString(),
-                                        it.data[item].out_time.toString()
-                                    ).toInt()
-                                }
-                            }
-                        }
-                    }
-                    Log.e(TAG, "observeViewModel: $mPresentCount")
-                    val totalHours = mTotalWorkingHour / 60
-                    val totalMinutes = mTotalWorkingHour % 60
+        /*  settingsViewModel.mAttendanceHistoryResponse.observe(this) {
+              if (it.status) {
+                  if (it.data != null) {
+                      binding.txtMsg.visibility = View.GONE
+                  val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+                      var mPresentCount = 0
+                      var mTotalWorkingHour = 0
+                      val mMonth = getAllDatesFromMonth(mSelectedDate)
+                      for (month in mMonth.indices) {
+                          for (item in it.data.indices) {
+                              if (mMonth[month].date == it.data[item].date) {
+                                  mMonth[month].isPresent = it.data[item].attendance
+                                  mMonth[month].punchIn = it.data[item].in_time.toString()
+                                  mMonth[month].punchOut = it.data[item].out_time.toString()
+                                  if (it.data[item].attendance == "Present") {
+                                      mPresentCount++
+                                  }
+                                  if (!it.data[item].in_time.isNullOrEmpty()) {
+                                      mTotalWorkingHour += calculateMinutes(
+                                          it.data[item].in_time.toString(),
+                                          it.data[item].out_time.toString()
+                                      ).toInt()
+                                  }
+                              }
+                          }
+                      }
+                      Log.e(TAG, "observeViewModel: $mPresentCount")
+                      val totalHours = mTotalWorkingHour / 60
+                      val totalMinutes = mTotalWorkingHour % 60
 
-// Display the total time in "hh:mm" format
-                    val totalWorkingTime = String.format("%02d:%02d", totalHours, totalMinutes)
+  // Display the total time in "hh:mm" format
+                      val totalWorkingTime = String.format("%02d:%02d", totalHours, totalMinutes)
 
-                   // Calculate the average working hours per day
+                     // Calculate the average working hours per day
 
-                    val officeHoursPerDay = 8.0
-                    val totalWorkingHours = mTotalWorkingHour / 60.0
-                    avgWork = calculateAverageHours(totalWorkingHours, mPresentCount)
-                    Log.d("res", "get avg: $avgWork")
-                    avgWork?.let {
-                        val progress = ((it / officeHoursPerDay) * 100).toFloat()
-                        binding.cpb.updateProgress(progress.coerceIn(0f, 100f))
-                    }
+                      val officeHoursPerDay = 8.0
+                      val totalWorkingHours = mTotalWorkingHour / 60.0
+                      avgWork = calculateAverageHours(totalWorkingHours, mPresentCount)
+                      Log.d("res", "get avg: $avgWork")
+                      avgWork?.let {
+                          val progress = ((it / officeHoursPerDay) * 100).toFloat()
+                          binding.cpb.updateProgress(progress.coerceIn(0f, 100f))
+                      }
 
-                    binding.txtTotalPresent.text = mPresentCount.toString() ?: "0"
-                    binding.txtTotalWorking.text = totalWorkingTime ?: "00:00"
-                binding.rvEmpAttendList.setLayoutManager(layoutManager)
-                    val rvAdapter = AdapterEmployeeRecord(mMonth, this)
-                binding.rvEmpAttendList.adapter = rvAdapter
-                rvAdapter.notifyDataSetChanged()
-            } else {
-                binding.txtMsg.visibility = View.VISIBLE
-            }
-            }
-        }*/
+                      binding.txtTotalPresent.text = mPresentCount.toString() ?: "0"
+                      binding.txtTotalWorking.text = totalWorkingTime ?: "00:00"
+                  binding.rvEmpAttendList.setLayoutManager(layoutManager)
+                      val rvAdapter = AdapterEmployeeRecord(mMonth, this)
+                  binding.rvEmpAttendList.adapter = rvAdapter
+                  rvAdapter.notifyDataSetChanged()
+              } else {
+                  binding.txtMsg.visibility = View.VISIBLE
+              }
+              }
+          }*/
 
         settingsViewModel.mAttendanceHistoryResponse.observe(this) { response ->
             if (response.status && response.data != null) {
@@ -184,15 +187,23 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
                 binding.txtTotalPresent.text = mPresentCount.toString()
                 binding.txtTotalWorking.text = totalWorkingTime
 
-                // ✅ Instead of resetting adapter, just update the list
                 val adapter = binding.rvEmpAttendList.adapter as? AdapterEmployeeRecord
                 if (adapter != null) {
                     adapter.submitList(mMonth)
                 } else {
                     binding.rvEmpAttendList.layoutManager = LinearLayoutManager(this)
-                    val newAdapter = AdapterEmployeeRecord(this,mEMPID)
+                    val newAdapter = AdapterEmployeeRecord(this, mEMPID)
                     binding.rvEmpAttendList.adapter = newAdapter
                     newAdapter.submitList(mMonth)
+
+                    newAdapter.submitList(mMonth) {
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val currentDatePosition = newAdapter.getCurrentDatePosition()
+                            if (currentDatePosition != -1) {
+                                binding.rvEmpAttendList.smoothScrollToPosition(currentDatePosition) // Smooth scrolling
+                            }
+                        }, 300)
+                    }
                 }
             } else {
                 binding.txtMsg.visibility = View.VISIBLE
@@ -224,7 +235,7 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
             }
 
             imageBack.setOnClickListener {
-               onBackPressedDispatcher.onBackPressed()
+                onBackPressedDispatcher.onBackPressed()
                 finish()
             }
 
@@ -237,9 +248,6 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
             }
 
 
-
-
-
         }
     }
 
@@ -249,6 +257,7 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
         val sdfDay = SimpleDateFormat("EEE", Locale.ENGLISH)
         return sdfDay.format(date!!)
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun getDate(dateString: String): String {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -283,53 +292,53 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
     }
 
 
-   /* private fun showDatePicker() {
-        val datePickerDialog = DatePickerDialog(
-            this, { _, year, monthOfYear, _ ->  // Ignore day selection
-                val selectedDate = Calendar.getInstance()
-                selectedDate.set(year, monthOfYear, 1) // Always set the 1st of the month
+    /* private fun showDatePicker() {
+         val datePickerDialog = DatePickerDialog(
+             this, { _, year, monthOfYear, _ ->  // Ignore day selection
+                 val selectedDate = Calendar.getInstance()
+                 selectedDate.set(year, monthOfYear, 1) // Always set the 1st of the month
 
-                val dateFormat = SimpleDateFormat("MMM-yy", Locale.getDefault())
-                val formattedDate = dateFormat.format(selectedDate.time)
-                binding.txtDate.setText(formattedDate)
+                 val dateFormat = SimpleDateFormat("MMM-yy", Locale.getDefault())
+                 val formattedDate = dateFormat.format(selectedDate.time)
+                 binding.txtDate.setText(formattedDate)
 
-                mSelectedDate = SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(selectedDate.time)
-
-
-                if (getIsCOMPANYLogin()==true){
-
-                    settingsViewModel.getMonthlyAttendance(
-                        this@EmployeeAttendanceRecordActivity,
-                        mSelectedDate,
-                        mEMPID
-                    )
-                }else{
-                    settingsViewModel.getMonthlyAttendance(
-                        this@EmployeeAttendanceRecordActivity,
-                        mSelectedDate, getEmployeeDetails()?.id.toString(),
-                    )
-                }
+                 mSelectedDate = SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(selectedDate.time)
 
 
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH) // Set current day
-        )
+                 if (getIsCOMPANYLogin()==true){
 
-        // Hide the "Day" selector using reflection (may not work on all devices)
-        try {
-            val datePicker = datePickerDialog.datePicker
-            val daySpinner = datePicker.findViewById<View>(
-                resources.getIdentifier("day", "id", "android")
-            )
-            daySpinner?.visibility = View.GONE
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+                     settingsViewModel.getMonthlyAttendance(
+                         this@EmployeeAttendanceRecordActivity,
+                         mSelectedDate,
+                         mEMPID
+                     )
+                 }else{
+                     settingsViewModel.getMonthlyAttendance(
+                         this@EmployeeAttendanceRecordActivity,
+                         mSelectedDate, getEmployeeDetails()?.id.toString(),
+                     )
+                 }
 
-        datePickerDialog.show()
-    }*/
+
+             },
+             calendar.get(Calendar.YEAR),
+             calendar.get(Calendar.MONTH),
+             calendar.get(Calendar.DAY_OF_MONTH) // Set current day
+         )
+
+         // Hide the "Day" selector using reflection (may not work on all devices)
+         try {
+             val datePicker = datePickerDialog.datePicker
+             val daySpinner = datePicker.findViewById<View>(
+                 resources.getIdentifier("day", "id", "android")
+             )
+             daySpinner?.visibility = View.GONE
+         } catch (e: Exception) {
+             e.printStackTrace()
+         }
+
+         datePickerDialog.show()
+     }*/
 
 
     private fun showMonthYearPicker(onMonthSelected: (month: Int, year: Int) -> Unit) {
@@ -364,8 +373,6 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
     }
 
 
-
-
     fun getAllDatesFromMonth(yearMonth: String): List<DateItem> {
         val dateList = mutableListOf<DateItem>()
 
@@ -391,12 +398,10 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
     }
 
 
-
     fun calculateAverageHours(totalHours: Double, presentDays: Int): Float? {
         if (presentDays == 0) return 0f
         return (totalHours / presentDays).toFloat()
     }
-
 
 
 }

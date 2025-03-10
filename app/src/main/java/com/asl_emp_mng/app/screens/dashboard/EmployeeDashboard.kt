@@ -1,6 +1,7 @@
 package com.asl_emp_mng.app.screens.dashboard
 
 import android.Manifest
+import android.app.Activity
 import android.app.ActivityManager
 import android.app.Service
 import android.content.Context
@@ -9,6 +10,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -42,6 +44,7 @@ import com.asl_emp_mng.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.asl_emp_mng.app.screens.emp.EmployeeLeaveHistoryActivity
 import com.asl_emp_mng.app.screens.emp.EmployeeProfileDetails
 import com.asl_emp_mng.app.screens.emp.EmployeePunchInActivity
+import com.asl_emp_mng.app.screens.emp.QRCodeAttendanceEmpActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
 import com.asl_emp_mng.app.screens.settings.LeaveRequestHistoryActivity
 import com.asl_emp_mng.app.screens.settings.PolicyActivity
@@ -61,7 +64,13 @@ import com.bumptech.glide.Glide
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.android.play.core.review.testing.FakeReviewManager
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -87,7 +96,7 @@ class EmployeeDashboard : AppCompatActivity() {
     private val PLACE_SEARCH_REQUEST_CODE = 101
 
     private val calendar = Calendar.getInstance()
-
+    private lateinit var reviewManager: FakeReviewManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,6 +110,16 @@ class EmployeeDashboard : AppCompatActivity() {
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        // reviewManager = ReviewManagerFactory.create(this)
+        reviewManager = FakeReviewManager(this)
+
+
+
+
+
+
+
+
 
 
         setupViews()
@@ -192,11 +211,11 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
     private fun onClickListener() {
-        binding?.apply {
-
+        binding.apply {
 
             ivLogout.setOnClickListener {
-                showLogoutDialog()
+                // showLogoutDialog()
+                showRateDialog()
             }
 
             settingsViewModel.fetchEmployeeDetails(
@@ -221,16 +240,16 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
             /* tvStopService.setOnClickListener {
-                stopLocationService()
-            }
+                    stopLocationService()
+                }
 
-              tvStartService.setOnClickListener {
-                  if (hasLocationPermission()) {
-                      startLocationService()
-                  } else {
-                      requestLocationPermission()
-                  }
-              }*/
+                  tvStartService.setOnClickListener {
+                      if (hasLocationPermission()) {
+                          startLocationService()
+                      } else {
+                          requestLocationPermission()
+                      }
+                  }*/
 
             Log.d("res", "${getIsCOMPANYLogin()}")
 
@@ -245,7 +264,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
                     val builder = AlertDialog.Builder(this@EmployeeDashboard)
                     builder.setTitle(R.string.app_name)
-                    builder.setMessage("Are you sure? Yuo want to punch out!")
+                    builder.setMessage("Are you sure? You want to punch out!")
 
                     builder.setPositiveButton("Yes") { dialog, which ->
 
@@ -578,7 +597,7 @@ class EmployeeDashboard : AppCompatActivity() {
             if (it.status) {
                 if (!it.imageUrl.isNullOrEmpty()) {
 
-                    binding.ivHeaderProfilePic.visibility=View.VISIBLE
+                    binding.ivHeaderProfilePic.visibility = View.VISIBLE
                     val imageUrl = it.imageUrl
 
                     Glide.with(this)
@@ -587,11 +606,11 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
                 } else {
-                    binding.ivHeaderProfilePic.visibility=View.GONE
+                    binding.ivHeaderProfilePic.visibility = View.GONE
                 }
 
             } else {
-                binding.ivHeaderProfilePic.visibility=View.GONE
+                binding.ivHeaderProfilePic.visibility = View.GONE
                 CustomToast(this, it.message)
             }
 
@@ -604,6 +623,55 @@ class EmployeeDashboard : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finishAffinity()
+    }
+
+    private fun showRateDialog() {
+        /*val request = reviewManager.requestReviewFlow()
+        request.addOnCompleteListener { request ->
+            if (request.isSuccessful) {
+                Log.i("CheckReview","IsSuccess")
+                val reviewInfo = request.result
+                val flow = reviewManager.launchReviewFlow(this@EmployeeDashboard, reviewInfo)
+                flow.addOnCompleteListener { _ ->
+                    // The flow has finished. The API does not indicate whether the user
+                    // reviewed or not, or even whether the review dialog was shown. Thus, no
+                    // matter the result, we continue our app flow.
+                }
+            } else {
+                // There was some problem, continue regardless of the result.
+                // you can show your own rate dialog alert and redirect user to your app page
+                // on play store.
+            }
+        }*/
+        val request = reviewManager.requestReviewFlow()
+        request.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.i("CheckReview", "IsSuccess")
+                val reviewInfo = task.result
+                val flow = reviewManager.launchReviewFlow(this@EmployeeDashboard, reviewInfo)
+
+                flow.addOnCompleteListener { _ ->
+                    Log.i("CheckReview", "Review flow completed")
+                }
+            } else {
+                openPlayStoreForReview(this)
+                Log.e("CheckReview", "Review flow request failed", task.exception)
+
+                // Handle error (optional: show a custom review dialog)
+                task.exception?.let { exception ->
+                    when (exception) {
+                        is com.google.android.play.core.review.ReviewException -> {
+                            Log.e("CheckReview", "Review API error: ${exception.message}")
+                        }
+                        else -> {
+                            Log.e("CheckReview", "Unknown error: ${exception.message}")
+                        }
+                    }
+                }
+
+                // Alternative action: Show custom rating dialog or redirect to Play Store
+            }
+        }
     }
 
 
@@ -664,8 +732,9 @@ class EmployeeDashboard : AppCompatActivity() {
         }
 
         bottomSheetDialogBinding.llQrAttendance.setOnClickListener {
+            startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
+            bottomSheetDialog.dismiss()
 
-            Toast.makeText(this@EmployeeDashboard, "work in progress", Toast.LENGTH_SHORT).show()
         }
 
         bottomSheetDialog.setContentView(bottomSheetDialogBinding.root)
@@ -826,9 +895,17 @@ class EmployeeDashboard : AppCompatActivity() {
     }
 
     private fun setupImageSlider() {
-        var imageList = ArrayList<Int>()
+        val imageList = ArrayList<Int>()
         imageList.add(R.drawable.banner_one)
         imageList.add(R.drawable.banner_two)
         binding.imageSlider.setSliderAdapter(SliderAdapter(this, imageList))
+    }
+
+    private fun openPlayStoreForReview(context: Context) {
+        val appPackageName = context.packageName
+        val uri = Uri.parse("market://details?id=$appPackageName")
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 }

@@ -70,6 +70,10 @@ import com.asl_emp_mng.app.screens.settings.dataClass.PolicyCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PolicyFetchResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.PunchInResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.QRAttendanceMarkRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.QRAttendanceMarkResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.SetAttendanceTypeRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.SetAttendanceTypeResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftAssignmentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateResponse
@@ -462,5 +466,17 @@ interface ApiStores {
         @Body request: DayPunchINRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DayPunchINResponse>
+
+    @POST("api/set-attendance-type")
+    suspend fun setAttendanceType(
+        @Body request: SetAttendanceTypeRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<SetAttendanceTypeResponse>
+
+    @POST("api/employee/qr-attendance")
+    suspend fun markAttendanceQR(
+        @Body request: QRAttendanceMarkRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<QRAttendanceMarkResponse>
 
 }

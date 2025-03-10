@@ -69,6 +69,10 @@ import com.asl_emp_mng.app.screens.settings.dataClass.PolicyCreateResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PolicyFetchResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.PunchInResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.QRAttendanceMarkRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.QRAttendanceMarkResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.SetAttendanceTypeRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.SetAttendanceTypeResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftAssignmentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftCreateResponse
@@ -336,6 +340,112 @@ class SettingsViewModel : BaseViewModel() {
     private var mDayPunchINEmp: MutableLiveData<DayPunchINResponse> = MutableLiveData()
 
     val mDayPunchINEmpResponse: LiveData<DayPunchINResponse> get() = mDayPunchINEmp
+
+
+    private var mSetAttendanceType: MutableLiveData<SetAttendanceTypeResponse> = MutableLiveData()
+
+    val mSetAttendanceTypeResponse: LiveData<SetAttendanceTypeResponse> get() = mSetAttendanceType
+
+
+    private var mQRAttendanceMark: MutableLiveData<QRAttendanceMarkResponse> = MutableLiveData()
+
+    val mQRAttendanceMarkResponse: LiveData<QRAttendanceMarkResponse> get() = mQRAttendanceMark
+
+
+
+
+
+    fun markAttendanceQREmp(
+        mContext: Context,
+        request: QRAttendanceMarkRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.markAttendanceQR(request)
+                Log.d("res", "set type atdd :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mQRAttendanceMark.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun setAttendanceTypeEmployee(
+        mContext: Context,
+        request: SetAttendanceTypeRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.setAttendanceType(request)
+                Log.d("res", "set type atdd :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mSetAttendanceType.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
 
 
 

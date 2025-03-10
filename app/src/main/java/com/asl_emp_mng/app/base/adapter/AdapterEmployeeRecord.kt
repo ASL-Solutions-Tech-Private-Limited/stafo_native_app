@@ -3,28 +3,27 @@ package com.asl_emp_mng.app.base.adapter
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.asl_emp_mng.app.R
 import com.asl_emp_mng.app.base.model.DateItem
 import com.asl_emp_mng.app.databinding.RecyEmpAttendanceChildLayoutBinding
 import com.asl_emp_mng.app.screens.emp.EmpDayAttendanceRecordActivity
-import com.asl_emp_mng.app.screens.emp.EmployeeAttendanceRecordActivity
-import com.asl_emp_mng.app.utils.calculateHours
 import com.asl_emp_mng.app.utils.calculateHours2
 import com.asl_emp_mng.app.utils.extractDayNameDateAndMonth
-import java.text.SimpleDateFormat
-import java.util.Locale
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class AdapterEmployeeRecord(
     private val context: Context,
-    private val employeeId:String
+    private val employeeId: String
 ) : ListAdapter<DateItem, AdapterEmployeeRecord.ViewHolder>(DiffCallback()) {
 
     inner class ViewHolder(val binding: RecyEmpAttendanceChildLayoutBinding) :
@@ -37,6 +36,7 @@ class AdapterEmployeeRecord(
         return ViewHolder(binding)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         with(holder.binding) {
@@ -54,11 +54,12 @@ class AdapterEmployeeRecord(
                 tvCheckIn.text = item.punchIn ?: ""
                 tvCheckOut.text = if (item.punchOut == "null") "" else item.punchOut ?: ""
 
-                tvWorkingHrs.text = if (!item.punchIn.isNullOrEmpty() && !item.punchOut.isNullOrEmpty()) {
-                    calculateHours2(item.punchIn, item.punchOut)
-                } else {
-                    ""
-                }
+                tvWorkingHrs.text =
+                    if (!item.punchIn.isNullOrEmpty() && !item.punchOut.isNullOrEmpty()) {
+                        calculateHours2(item.punchIn, item.punchOut)
+                    } else {
+                        ""
+                    }
             }
 
             holder.itemView.setOnClickListener {
@@ -68,6 +69,13 @@ class AdapterEmployeeRecord(
                 }
 
                 context.startActivity(intent)
+            }
+
+            val storeDate = item.date
+            if (storeDate == getCurrentDate()) {
+                holder.binding.clLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.green_light_400))
+            } else {
+                holder.binding.clLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
             }
         }
     }
@@ -81,10 +89,19 @@ class AdapterEmployeeRecord(
             return oldItem == newItem
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getCurrentDate(): String {
+        val currentDate = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return currentDate.format(formatter)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getCurrentDatePosition(): Int {
+        return currentList.indexOfFirst { it.date == getCurrentDate() }
+    }
 }
-
-
-
 
 
 /*
