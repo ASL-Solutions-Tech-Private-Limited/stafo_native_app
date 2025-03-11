@@ -26,6 +26,8 @@ import com.asl_emp_mng.app.screens.emp.HelpSupportActivity
 import com.asl_emp_mng.app.screens.settings.AddDepartmentActivity
 import com.asl_emp_mng.app.screens.settings.AddShiftActivity
 import com.asl_emp_mng.app.screens.settings.BranchActivity
+import com.asl_emp_mng.app.screens.settings.FeedbackActivity
+import com.asl_emp_mng.app.screens.settings.GenerateQRActivity
 import com.asl_emp_mng.app.screens.settings.HolidayActivity
 import com.asl_emp_mng.app.screens.settings.LeaveManagementActivity
 import com.asl_emp_mng.app.screens.settings.PolicyActivity
@@ -212,11 +214,21 @@ class EmplyeeyerProfile : AppCompatActivity() {
             binding.expandableOtherManagement.toggleLayout()
         }
 
-        val departmentSettings =
-            binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_department_settings)
+        val qrCodeSettings = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_generate_qr_settings)
+
+        qrCodeSettings?.setOnClickListener {
+            startActivity(Intent(this, GenerateQRActivity::class.java))
+        }
+
+        val departmentSettings = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_department_settings)
 
         departmentSettings?.setOnClickListener {
             startActivity(Intent(this, AddDepartmentActivity::class.java))
+        }
+
+
+        binding.tvCompanyFeedback.setOnClickListener {
+            startActivity(Intent(this, FeedbackActivity::class.java))
         }
 
 
@@ -293,6 +305,10 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         binding?.tvLeave?.setOnClickListener {
             startActivity(Intent(this, EmpLeaveActivity::class.java))
+        }
+
+        binding.tvEmpFeedback.setOnClickListener {
+            startActivity(Intent(this, FeedbackActivity::class.java))
         }
 
 

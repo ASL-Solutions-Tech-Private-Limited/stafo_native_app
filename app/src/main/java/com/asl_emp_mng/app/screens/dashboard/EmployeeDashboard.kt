@@ -214,8 +214,8 @@ class EmployeeDashboard : AppCompatActivity() {
         binding.apply {
 
             ivLogout.setOnClickListener {
-                // showLogoutDialog()
-                showRateDialog()
+                 showLogoutDialog()
+               // showRateDialog()
             }
 
             settingsViewModel.fetchEmployeeDetails(

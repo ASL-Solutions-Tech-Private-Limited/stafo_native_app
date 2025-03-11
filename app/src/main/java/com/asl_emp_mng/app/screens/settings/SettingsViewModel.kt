@@ -1,6 +1,8 @@
 package com.asl_emp_mng.app.screens.settings
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -49,6 +51,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeUploadImageRespons
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeViewDocumentRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeViewDocumentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.FetchEmployeeDetails
+import com.asl_emp_mng.app.screens.settings.dataClass.GenerateQCodeRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResquest
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAllEmployeeResponse
@@ -71,6 +74,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.PunchInResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.QRAttendanceMarkRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.QRAttendanceMarkResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.SendFeedbackRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.SendFeedbackResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.SetAttendanceTypeRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.SetAttendanceTypeResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftAssignmentResponse
@@ -86,6 +91,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.VerifyRegisterNumberRespon
 import com.asl_emp_mng.app.screens.settings.dataClass.ViewBranchResponse
 import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getUserAccessToken
+import com.caverock.androidsvg.SVG
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -95,7 +101,9 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody
 import java.io.File
+
 
 class SettingsViewModel : BaseViewModel() {
 
@@ -351,7 +359,138 @@ class SettingsViewModel : BaseViewModel() {
 
     val mQRAttendanceMarkResponse: LiveData<QRAttendanceMarkResponse> get() = mQRAttendanceMark
 
+    private var mGenerateQRCode: MutableLiveData<Bitmap> = MutableLiveData()
 
+    val mGenerateQRCodeResponse: LiveData<Bitmap> get() = mGenerateQRCode
+
+
+
+    private var mSendFeedback: MutableLiveData<SendFeedbackResponse> = MutableLiveData()
+
+    val mSendFeedbackResponse: LiveData<SendFeedbackResponse> get() = mSendFeedback
+
+
+    fun postFeedback(
+        mContext: Context,
+        request: SendFeedbackRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.sendFeedback(request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mSendFeedback.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+    fun generateQRCode(
+        mContext: Context,
+        request: GenerateQCodeRequest
+
+        ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.generateQR(request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    if (response == null) {
+                        CustomToast(mContext,  "Response is null")
+                        return@withContext
+                    }
+                    response?.let {
+
+                        if (it.isSuccessful) {
+                            val bitmap = convertResponseToBitmap(it.body())
+                            bitmap?.let { mGenerateQRCode.postValue(it) }
+                        } else {
+
+                            val errorMessage = response.errorBody()?.string() ?: "Unknown error"
+                            CustomToast(mContext,  "API Error: $errorMessage")
+                      /*      it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    "else run"+mContext.getString(R.string.error_something_went_wrong)
+                                )
+
+
+                            }*/
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            "run"+mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, "Exception: ${e.localizedMessage}")
+                }
+            }
+        }
+    }
+
+
+    private fun convertResponseToBitmap(responseBody: ResponseBody?): Bitmap? {
+        return try {
+            responseBody?.byteStream()?.use { inputStream ->
+                val svg = SVG.getFromInputStream(inputStream)
+                val width = 500  // Set required width
+                val height = 500  // Set required height
+                val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                val canvas = Canvas(bitmap)
+                svg.renderToCanvas(canvas)
+                bitmap
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
 
 
 

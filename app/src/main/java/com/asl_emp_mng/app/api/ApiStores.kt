@@ -50,6 +50,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeUploadImageRespons
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeViewDocumentRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.EmployeeViewDocumentResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.FetchEmployeeDetails
+import com.asl_emp_mng.app.screens.settings.dataClass.GenerateQCodeRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.GeoLocationHistResquest
 import com.asl_emp_mng.app.screens.settings.dataClass.GetAllEmployeeResponse
@@ -72,6 +73,8 @@ import com.asl_emp_mng.app.screens.settings.dataClass.PunchInRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.PunchInResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.QRAttendanceMarkRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.QRAttendanceMarkResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.SendFeedbackRequest
+import com.asl_emp_mng.app.screens.settings.dataClass.SendFeedbackResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.SetAttendanceTypeRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.SetAttendanceTypeResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.ShiftAssignmentResponse
@@ -87,6 +90,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.VerifyRegisterNumberRespon
 import com.asl_emp_mng.app.screens.settings.dataClass.ViewBranchResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -478,5 +482,17 @@ interface ApiStores {
         @Body request: QRAttendanceMarkRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<QRAttendanceMarkResponse>
+
+    @POST("api/generate-qrcode")
+    suspend fun generateQR(
+        @Body request: GenerateQCodeRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ResponseBody>
+
+    @POST("api/employee/qr-attendance")
+    suspend fun sendFeedback(
+        @Body request: SendFeedbackRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<SendFeedbackResponse>
 
 }

@@ -147,6 +147,11 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_generate_qractivity.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_help_support.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
@@ -215,6 +220,11 @@
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_policy.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_qrcode_attendance_emp.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_registration.xml">
@@ -295,6 +305,11 @@
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/custom_spinner_item.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/generate_qr_code_bottom_sheet_layout.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/image_slider_layout_item.xml">
@@ -519,22 +534,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1eeb3fca-a4a9-48ce-a4f9-f3fda60e9524" name="Changes" comment="Update Add Staff API">
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/production/release/STAFO.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/production/release/STAFO.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/production/release/output-metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/production/release/output-metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/api/ApiStores.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/api/ApiStores.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterEmpDayAttendance.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterEmpDayAttendance.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployeeDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployeeDashboard.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmpSelfieAttendanceActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmpSelfieAttendanceActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/profile/EmplyeeyerProfile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/profile/EmplyeeyerProfile.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/SettingsViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/SettingsViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/layout_account_setting_items.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/layout_account_setting_items.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -544,7 +551,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[13911499310008M]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[adb-13911499310008M-otkZlA._adb-tls-connect._tcp]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -597,10 +604,10 @@
         <option value="Kotlin Interface" />
         <option value="Kotlin Object" />
         <option value="Kotlin Enum" />
-        <option value="layoutResourceFile" />
         <option value="resourceFile" />
         <option value="Kotlin Class" />
         <option value="Kotlin Data Class" />
+        <option value="layoutResourceFile" />
       </list>
     </option>
   </component>
@@ -684,6 +691,9 @@
     <key name="android.template.-1792958730">
       <recent name="com.asl_emp_mng.app.screens.settings" />
     </key>
+    <key name="android.template.576855869">
+      <recent name="com.asl_emp_mng.app.screens.settings" />
+    </key>
     <key name="android.template.1010459408">
       <recent name="com.asl_emp_mng.app.screens.ui" />
     </key>
@@ -695,9 +705,6 @@
     </key>
     <key name="android.template.771554936">
       <recent name="com.softmint_pro.app.screens.agentOnBoard" />
-    </key>
-    <key name="android.template.-1856986408">
-      <recent name="com.asl_emp_mng.app.screens" />
     </key>
     <key name="android.template.-1062607416">
       <recent name="com.asl_emp_mng.app.screens.ui" />
@@ -718,18 +725,8 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/src/main/res/color" />
     </key>
-    <key name="android.template.-725947550">
-      <recent name="com.asl_emp_mng.app.screens.emp" />
-    </key>
     <key name="CreateKotlinClassDialog.RecentsKey">
       <recent name="com.softmint_pro.app.utils" />
-    </key>
-    <key name="android.template.1981905723">
-      <recent name="com.softmint_pro.app.screens.report" />
-      <recent name="com.softmint_pro.app.screens.report.user" />
-    </key>
-    <key name="android.template.-2113371898">
-      <recent name="com.asl_emp_mng.app.screens.settings" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
       <recent name="com.asl_emp_mng.app.base.request" />
@@ -740,9 +737,6 @@
     </key>
     <key name="android.template.-1940949072">
       <recent name="com.softmint_pro.app.screens.report" />
-    </key>
-    <key name="android.template.-1901062974">
-      <recent name="com.softmint_pro.app.screens.agentOnBoard" />
     </key>
     <key name="android.template.188208528">
       <recent name="com.asl_emp_mng.app.screens.ui" />
@@ -756,14 +750,54 @@
     <key name="android.template.1663466035">
       <recent name="com.asl_emp_mng.app.screens.emp" />
     </key>
-    <key name="android.template.-838999855">
-      <recent name="com.softmint_upi.app.screens.history.tabs" />
-    </key>
     <key name="android.template.-288818840">
       <recent name="com.asl_emp_mng.app.screens.settings" />
     </key>
     <key name="android.template.177528348">
       <recent name="com.asl_emp_mng.app.screens.emp" />
+    </key>
+    <key name="android.template.-1628015020">
+      <recent name="com.asl_emp_mng.app.screens" />
+    </key>
+    <key name="android.template.824711770">
+      <recent name="com.asl_emp_mng.app.screens" />
+    </key>
+    <key name="android.template.-1954405958">
+      <recent name="com.softmint_pro.app.screens.qrCodeAgentOnboard.screens" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.softmint_upi.app.screens.dashboard.adapter" />
+    </key>
+    <key name="android.template.-124362806">
+      <recent name="com.asl_emp_mng.app.screens" />
+    </key>
+    <key name="android.template.1544000632">
+      <recent name="com.asl_emp_mng.app.screens" />
+    </key>
+    <key name="android.template.1943598628">
+      <recent name="com.asl_emp_mng.app.screens.emp" />
+    </key>
+    <key name="android.template.-1856986408">
+      <recent name="com.asl_emp_mng.app.screens" />
+    </key>
+    <key name="android.template.-672194589">
+      <recent name="com.asl_emp_mng.app.screens.emp" />
+    </key>
+    <key name="android.template.-725947550">
+      <recent name="com.asl_emp_mng.app.screens.emp" />
+    </key>
+    <key name="android.template.1981905723">
+      <recent name="com.softmint_pro.app.screens.report" />
+      <recent name="com.softmint_pro.app.screens.report.user" />
+    </key>
+    <key name="android.template.-2113371898">
+      <recent name="com.asl_emp_mng.app.screens.settings" />
+    </key>
+    <key name="android.template.-1901062974">
+      <recent name="com.softmint_pro.app.screens.agentOnBoard" />
+    </key>
+    <key name="android.template.-838999855">
+      <recent name="com.softmint_upi.app.screens.history.tabs" />
     </key>
     <key name="android.template.-321272910">
       <recent name="com.asl_emp_mng.app.screens.auth" />
@@ -775,20 +809,8 @@
       <recent name="com.softmint_upi.app.screens.account.staff" />
       <recent name="com.softmint_upi.app.screens.history.tabs.adapters" />
     </key>
-    <key name="android.template.-1628015020">
-      <recent name="com.asl_emp_mng.app.screens" />
-    </key>
     <key name="android.template.648208985">
       <recent name="com.softmint_upi.app.screens.account.bank.staff" />
-    </key>
-    <key name="android.template.824711770">
-      <recent name="com.asl_emp_mng.app.screens" />
-    </key>
-    <key name="android.template.-1954405958">
-      <recent name="com.softmint_pro.app.screens.qrCodeAgentOnboard.screens" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.softmint_upi.app.screens.dashboard.adapter" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\asl_hr_app_and\app\src\main\res\drawable" />
@@ -806,9 +828,6 @@
     </key>
     <key name="android.template.-1405872134">
       <recent name="com.asl_emp_mng.app.screens.emp" />
-    </key>
-    <key name="android.template.-124362806">
-      <recent name="com.asl_emp_mng.app.screens" />
     </key>
     <key name="android.template.1484537167">
       <recent name="com.softmint_pro.app.screens.aeps" />
@@ -828,14 +847,8 @@
     <key name="android.template.305654280">
       <recent name="com.asl_emp_mng.app.screens" />
     </key>
-    <key name="android.template.1544000632">
-      <recent name="com.asl_emp_mng.app.screens" />
-    </key>
     <key name="android.template.-1826973453">
       <recent name="com.asl_emp_mng.app.screens.ui" />
-    </key>
-    <key name="android.template.1943598628">
-      <recent name="com.asl_emp_mng.app.screens.emp" />
     </key>
   </component>
   <component name="RunManager" selected="Android App.app">
