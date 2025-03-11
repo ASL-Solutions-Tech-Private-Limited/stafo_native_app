@@ -477,16 +477,23 @@ class EmployeeDashboard : AppCompatActivity() {
                         val punchInTime = lastPunch.punchIn
                         val punchOutTime = lastPunch.punchOut
                         val geoStatus = it.employeeInfo.geoStatus
+                        val shiftEndTime = it.employeeInfo.shift?.endTime
 
                         if (punchInTime != null && geoStatus == "1") {
                             Log.d("res", "check time service")
                             if (!isServiceRunning(LocationForegroundService::class.java)) {
-                                Log.d("res", "start time service")
                                 startService(Intent(this, LocationForegroundService::class.java))
                             }
                         }
 
                         if (punchInTime != null && punchOutTime != null) {
+
+                            if (isServiceRunning(LocationForegroundService::class.java)) {
+
+                                val serviceIntent = Intent(this, LocationForegroundService::class.java)
+                                stopService(serviceIntent)
+                            }
+
                             // If last punch has both In and Out, allow another Punch In
                             binding.btnPunchIn.text = "Punch In"
                             binding.btnPunchIn.isEnabled = true
@@ -512,8 +519,35 @@ class EmployeeDashboard : AppCompatActivity() {
                                 )
                             }"
                         }
+
+                        if (shiftEndTime != null) {
+
+
+                            val currentDateTime = Calendar.getInstance()
+                            val shiftEndCalendar = Calendar.getInstance()
+                            val shiftEndTimeDate =
+                                SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
+
+                            shiftEndTimeDate?.let {
+                                shiftEndCalendar.set(Calendar.HOUR_OF_DAY, it.hours)
+                                shiftEndCalendar.set(Calendar.MINUTE, it.minutes)
+                                shiftEndCalendar.set(Calendar.SECOND, 0)
+                            }
+
+                            if (shiftEndTime != null && currentDateTime.after(shiftEndCalendar)) {
+                                Log.d("res", "end time service")
+                                if (isServiceRunning(LocationForegroundService::class.java)) {
+                                    val serviceIntent = Intent(this, LocationForegroundService::class.java)
+                                    stopService(serviceIntent)
+                                }
+                            }
+                        }
+
+
+
+
+
                     } else {
-                        // No punches today, allow Punch In
                         binding.btnPunchIn.text = "Punch In"
                         binding.btnPunchIn.isEnabled = true
                         binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
