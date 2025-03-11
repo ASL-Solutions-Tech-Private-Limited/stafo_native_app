@@ -22,6 +22,7 @@ import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.getEmployeeComId
 import com.asl_emp_mng.app.utils.getEmployeeDetails
 import com.asl_emp_mng.app.utils.getFormatDate
+import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
 import com.google.android.material.textfield.TextInputEditText
 import java.io.File
 import java.util.Locale
@@ -90,10 +91,22 @@ class FeedbackActivity : AppCompatActivity() {
             btnSendFeedback.setOnClickListener {
 
                 if (isValidate()) {
-                    val request= SendFeedbackRequest(
-                        feedback = tieFeedback.text.toString()
-                    )
-                    settingsViewModel.postFeedback(this@FeedbackActivity, request)
+
+                    if (getIsCOMPANYLogin() == true){
+                        val request= SendFeedbackRequest(
+                            company_id = getEmployeeComId().toString(),
+                            message = tieFeedback.text.toString()
+                        )
+                        settingsViewModel.postFeedback(this@FeedbackActivity, request)
+
+                    }else{
+                        val request= SendFeedbackRequest(
+                            employee_id = getEmployeeDetails()?.id.toString(),
+                            message = tieFeedback.text.toString()
+                        )
+                        settingsViewModel.postFeedback(this@FeedbackActivity, request)
+                    }
+
                 }
 
 

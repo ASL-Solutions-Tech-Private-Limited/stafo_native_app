@@ -479,8 +479,8 @@ class SettingsViewModel : BaseViewModel() {
         return try {
             responseBody?.byteStream()?.use { inputStream ->
                 val svg = SVG.getFromInputStream(inputStream)
-                val width = 500  // Set required width
-                val height = 500  // Set required height
+                val width = 500
+                val height = 500
                 val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                 val canvas = Canvas(bitmap)
                 svg.renderToCanvas(canvas)

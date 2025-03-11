@@ -489,7 +489,7 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<ResponseBody>
 
-    @POST("api/employee/qr-attendance")
+    @POST("api/feedback")
     suspend fun sendFeedback(
         @Body request: SendFeedbackRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
