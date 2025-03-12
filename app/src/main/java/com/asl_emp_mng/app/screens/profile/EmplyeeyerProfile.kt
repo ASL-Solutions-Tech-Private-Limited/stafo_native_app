@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
@@ -180,6 +181,17 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         }
 
+        settingsViewModel.mDeleteCompanyResponse.observe(this) {
+            if (it.status) {
+                doLogout(this)
+                CustomToast(this, it.message)
+                finishAffinity()
+            } else {
+                CustomToast(this, it.message)
+            }
+
+        }
+
     }
 
     private fun handleLoader(status: String) {
@@ -301,6 +313,15 @@ class EmplyeeyerProfile : AppCompatActivity() {
             }
 
 
+        // delete company account
+        binding.expandableOtherManagement.findViewById<AppCompatTextView>(R.id.tv_delete_account)
+            .setOnClickListener {
+                showDialog()
+            }
+
+
+
+
         // for employee
 
         binding?.tvLeave?.setOnClickListener {
@@ -345,15 +366,16 @@ class EmplyeeyerProfile : AppCompatActivity() {
             intent.putExtra("PROFILE_TYPE", ProfileType.PROFESSIONAL.name)
             startActivity(intent)
         }
-        val educationalProfile =
+    /*    val educationalProfile =
             binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_educational)
         educationalProfile?.setOnClickListener {
 
             CustomToast(this, "Working is progress")
-            /*  val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
+            *//*  val intent = Intent(this@EmplyeeyerProfile, EmpProfileActivity::class.java)
               intent.putExtra("PROFILE_TYPE", ProfileType.EDUCATION.name)
-              startActivity(intent)*/
-        }
+              startActivity(intent)*//*
+        }*/
+
         val documentProfile =
             binding?.expandableProfile?.findViewById<AppCompatTextView>(R.id.tv_profile_documents)
         documentProfile?.setOnClickListener {
@@ -369,6 +391,24 @@ class EmplyeeyerProfile : AppCompatActivity() {
         }
     }
 
+
+    private fun showDialog() {
+        val builder = AlertDialog.Builder(this@EmplyeeyerProfile)
+        builder.setTitle(R.string.app_name)
+        builder.setMessage("Are you sure? You want to delete your account!")
+
+        builder.setPositiveButton("Yes") { dialog, _ ->
+            settingsViewModel.deleteAccount(this@EmplyeeyerProfile)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
 
     private fun openPicker(req: Int) {
 

@@ -37,7 +37,7 @@ object NotificationsHelper {
     fun buildNotification(context: Context): Notification {
         return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
             .setContentTitle(context.getString(R.string.foreground_service_sample_notification_title))
-            .setContentText(context.getString(R.string.foreground_service_sample_notification_description))
+           // .setContentText(context.getString(R.string.foreground_service_sample_notification_description))
             .setSmallIcon(R.drawable.ic_notification)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .setContentIntent(Intent(context, MainActivity::class.java).let { notificationIntent ->

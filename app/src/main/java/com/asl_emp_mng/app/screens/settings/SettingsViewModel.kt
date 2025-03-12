@@ -37,6 +37,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DayPunchINRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.DayPunchINResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.DeleteCompanyResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DeleteResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateResponse
@@ -368,6 +369,56 @@ class SettingsViewModel : BaseViewModel() {
     private var mSendFeedback: MutableLiveData<SendFeedbackResponse> = MutableLiveData()
 
     val mSendFeedbackResponse: LiveData<SendFeedbackResponse> get() = mSendFeedback
+
+
+
+    private var mDeleteCompany: MutableLiveData<DeleteCompanyResponse> = MutableLiveData()
+
+    val mDeleteCompanyResponse: LiveData<DeleteCompanyResponse> get() = mDeleteCompany
+
+
+
+
+    fun deleteAccount(
+        mContext: Context
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.deleteAccount()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mDeleteCompany.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
     fun postFeedback(

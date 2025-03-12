@@ -403,6 +403,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
             }
         })
+
         when (title) {
             "Branch" -> branchDialog = dialog
             "Department" -> departmentDialog = dialog

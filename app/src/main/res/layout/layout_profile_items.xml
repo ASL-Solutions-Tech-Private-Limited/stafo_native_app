@@ -39,7 +39,7 @@
         android:text="Professional "
         android:textColor="@color/white"
         android:textSize="@dimen/_12sdp" />
-    <androidx.appcompat.widget.AppCompatTextView
+    <!--<androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_profile_educational"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_44sdp"
@@ -55,7 +55,7 @@
         android:padding="@dimen/_12sdp"
         android:text="Educational "
         android:textColor="@color/white"
-        android:textSize="@dimen/_12sdp" />
+        android:textSize="@dimen/_12sdp" />-->
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_profile_documents"
         android:layout_width="match_parent"

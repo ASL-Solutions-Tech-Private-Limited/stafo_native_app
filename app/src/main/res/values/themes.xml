@@ -6,7 +6,7 @@
 
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/primaryColorDark</item>
+        <item name="android:statusBarColor">@color/colorTextPrimary</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <item name="textInputStyle">@style/Widget.MyApp.TextInputLayout</item>
 

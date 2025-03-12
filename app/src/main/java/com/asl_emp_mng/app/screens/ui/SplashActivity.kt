@@ -34,7 +34,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, CommonViewModel>() {
 
         viewDataBinding?.lifecycleOwner = this
 
-        val delayMillis = 500L
+        val delayMillis = 300L
 
         Handler(Looper.getMainLooper()).postDelayed({
             viewDataBinding?.imgSplash?.visibility = View.VISIBLE

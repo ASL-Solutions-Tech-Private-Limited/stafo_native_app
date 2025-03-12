@@ -3,6 +3,7 @@ package com.asl_emp_mng.app.screens.dashboard
 import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
+import android.app.KeyguardManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -13,6 +14,8 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.View
@@ -34,9 +37,12 @@ import com.asl_emp_mng.app.base.adapter.AdapterWishList
 import com.asl_emp_mng.app.base.adapter.SliderAdapter
 import com.asl_emp_mng.app.base.model.ActionModel
 import com.asl_emp_mng.app.base.model.DashboardWish
+import com.asl_emp_mng.app.base.model.FullScreenDialog
 import com.asl_emp_mng.app.base.service.LocationForegroundService
 import com.asl_emp_mng.app.databinding.ActivityEmpDashboardBinding
 import com.asl_emp_mng.app.databinding.CustomBottomSheetAttendanceLayoutBinding
+import com.asl_emp_mng.app.screens.auth.LoginWithOTPActivity
+import com.asl_emp_mng.app.screens.auth.OnBoardingActivity
 import com.asl_emp_mng.app.screens.emp.EmpBranchDetailsActivity
 import com.asl_emp_mng.app.screens.emp.EmpLeaveActivity
 import com.asl_emp_mng.app.screens.emp.EmpSelfieAttendanceActivity
@@ -58,8 +64,14 @@ import com.asl_emp_mng.app.utils.getFormattedDate
 import com.asl_emp_mng.app.utils.getFormattedDate2
 import com.asl_emp_mng.app.utils.getGreetingBasedOnTime
 import com.asl_emp_mng.app.utils.getIsCOMPANYLogin
+import com.asl_emp_mng.app.utils.getIsLock
+import com.asl_emp_mng.app.utils.getIsLockUser
+import com.asl_emp_mng.app.utils.getIsLogin
+import com.asl_emp_mng.app.utils.isOnBoardingScreenShown
 import com.asl_emp_mng.app.utils.setEmployeeBranchId
 import com.asl_emp_mng.app.utils.setEmployeeComId
+import com.asl_emp_mng.app.utils.setIsLock
+import com.asl_emp_mng.app.utils.setIsLockUser
 import com.bumptech.glide.Glide
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -114,6 +126,20 @@ class EmployeeDashboard : AppCompatActivity() {
         reviewManager = FakeReviewManager(this)
 
 
+
+
+
+       /* if (getIsLockUser() ==true){
+            if (getIsLock() ==true){
+                val delayMillis = 100L
+                Handler(Looper.getMainLooper()).postDelayed({
+                    showLockScreen()
+                }, delayMillis)
+
+            }
+        }else{
+            showScreenLockDialog()
+        }*/
 
 
 
@@ -281,7 +307,11 @@ class EmployeeDashboard : AppCompatActivity() {
                     dialog.show()
 
                 } else {
-                    showCustomBottomSheet()
+                    if (isLocationPermissionGranted()) {
+                        showCustomBottomSheet()
+                    } else {
+                        showPermissionDialog()
+                    }
                 }
 
 
@@ -304,6 +334,83 @@ class EmployeeDashboard : AppCompatActivity() {
 
         }
     }
+
+
+    private fun isLocationPermissionGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun showPermissionDialog() {
+        val dialog = FullScreenDialog(this) {
+            requestLocationPermission()
+        }
+        dialog.show()
+    }
+
+    private fun requestLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            when {
+                ContextCompat.checkSelfPermission(
+                    this, Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    showCustomBottomSheet()
+                }
+
+                ActivityCompat.shouldShowRequestPermissionRationale(
+                    this, Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                ) -> {
+                    requestPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                }
+
+                else -> {
+                    requestPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                }
+            }
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                CustomToast(this, "Background Location Permission Granted")
+                showCustomBottomSheet()
+            } else {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+                    showSettingsDialog()
+                } else {
+                    showSettingsDialog()
+                }
+            }
+        }
+
+
+    private fun showSettingsDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Permission Required")
+            .setMessage("Background location access is required. Please enable it in settings.")
+            .setPositiveButton("Go to Settings") { _, _ ->
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = Uri.fromParts("package", packageName, null)
+                intent.data = uri
+                startActivity(intent)
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+
+
+
+
+
 
 
     private fun observeViewModel() {
@@ -480,7 +587,7 @@ class EmployeeDashboard : AppCompatActivity() {
                         val shiftEndTime = it.employeeInfo.shift?.endTime
 
                         if (punchInTime != null && geoStatus == "1") {
-                            Log.d("res", "check time service")
+
                             if (!isServiceRunning(LocationForegroundService::class.java)) {
                                 startService(Intent(this, LocationForegroundService::class.java))
                             }
@@ -654,6 +761,10 @@ class EmployeeDashboard : AppCompatActivity() {
 
     }
 
+
+
+
+
     override fun onBackPressed() {
         super.onBackPressed()
         finishAffinity()
@@ -709,6 +820,51 @@ class EmployeeDashboard : AppCompatActivity() {
     }
 
 
+    private fun showScreenLockDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.app_name)
+            .setMessage("Are you using a screen lock for better security?")
+            .setPositiveButton("Yes") { dialog, _ ->
+                setIsLockUser(true)
+                setIsLock(true)
+                showLockScreen()
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                setIsLockUser(true)
+                setIsLock(false)
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun showLockScreen() {
+        val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+
+        if (keyguardManager.isDeviceSecure) {
+            val intent = keyguardManager.createConfirmDeviceCredentialIntent(
+                "Unlock Your Phone",
+                "Please confirm your identity"
+            )
+            if (intent != null) {
+                lockScreenLauncher.launch(intent)
+            }
+        } else {
+            val intent = Intent(Settings.ACTION_SECURITY_SETTINGS)
+            startActivity(intent)
+        }
+    }
+
+    private val lockScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+
+            } else {
+                finish()
+            }
+        }
+
     private fun showLogoutDialog() {
         val builder = AlertDialog.Builder(this@EmployeeDashboard)
         builder.setTitle(R.string.app_name)
@@ -752,6 +908,7 @@ class EmployeeDashboard : AppCompatActivity() {
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialogBinding.llGeoAttendance.setOnClickListener {
+
             if (isLocationEnabled()) {
                 bottomSheetDialog.dismiss()
                 startActivity(Intent(this, EmployeePunchInActivity::class.java))

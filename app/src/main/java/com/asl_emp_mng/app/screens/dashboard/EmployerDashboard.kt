@@ -1,13 +1,23 @@
 package com.asl_emp_mng.app.screens.dashboard
 
+import android.annotation.TargetApi
+import android.app.KeyguardManager
+import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -42,8 +52,12 @@ import com.asl_emp_mng.app.utils.CustomToast
 import com.asl_emp_mng.app.utils.doLogout
 import com.asl_emp_mng.app.utils.getCompanyDetails
 import com.asl_emp_mng.app.utils.getGreetingBasedOnTime
+import com.asl_emp_mng.app.utils.getIsLock
+import com.asl_emp_mng.app.utils.getIsLockUser
 import com.asl_emp_mng.app.utils.getTodayDate
 import com.asl_emp_mng.app.utils.setEmployeeComId
+import com.asl_emp_mng.app.utils.setIsLock
+import com.asl_emp_mng.app.utils.setIsLockUser
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 
@@ -69,11 +83,72 @@ class EmployerDashboard : AppCompatActivity() {
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
+
+
+      /*  if (getIsLockUser()==true){
+            if (getIsLock()==true){
+                val delayMillis = 100L
+                Handler(Looper.getMainLooper()).postDelayed({
+                    showLockScreen()
+                }, delayMillis)
+            }
+        }else{
+            showScreenLockDialog()
+        }*/
+
+
         initViews()
         setOnClickEvents()
         observeViewModel()
         setupImageSlider()
     }
+
+
+    private fun showScreenLockDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.app_name)
+            .setMessage("Are you using a screen lock for better security?")
+            .setPositiveButton("Yes") { dialog, _ ->
+                setIsLockUser(true)
+                setIsLock(true)
+                showLockScreen()
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                setIsLockUser(true)
+                setIsLock(false)
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun showLockScreen() {
+        val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+
+        if (keyguardManager.isDeviceSecure) {
+            val intent = keyguardManager.createConfirmDeviceCredentialIntent(
+                "Unlock Your Phone",
+                "Please confirm your identity"
+            )
+            if (intent != null) {
+                lockScreenLauncher.launch(intent)
+            }
+        } else {
+            val intent = Intent(Settings.ACTION_SECURITY_SETTINGS)
+            startActivity(intent)
+        }
+    }
+
+    private val lockScreenLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+
+            } else {
+                finish()
+            }
+        }
+
 
     private fun initViews() {
         binding.apply {
@@ -308,6 +383,7 @@ class EmployerDashboard : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        settingsViewModel.getCompanyDashboard(this@EmployerDashboard)
         settingsViewModel.getCompanyDetails(this@EmployerDashboard)
     }
 

@@ -113,7 +113,12 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
         builder.setMessage("User not found. Please register your mobile number as a company first, then try logging in again.")
 
         builder.setPositiveButton("Yes") { dialog, _ ->
-            startActivity(Intent(this@LoginWithOTPActivity, SignUpActivity::class.java))
+
+            val intent = Intent(this@LoginWithOTPActivity, SignUpActivity::class.java)
+            intent.putExtra("mobile", viewDataBinding?.tieMobileNo?.text.toString().trim())
+            startActivity(intent)
+
+
             dialog.dismiss()
         }
 

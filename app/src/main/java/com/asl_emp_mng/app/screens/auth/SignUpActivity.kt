@@ -38,7 +38,7 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var businessTypeDialog: SearchableDialog
     private lateinit var userSelectCTypeId: String
     private lateinit var userSelectBTypeId: String
-    private var mMobile: String? = null
+    private lateinit var mobile: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,9 +50,9 @@ class SignUpActivity : AppCompatActivity() {
             insets
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
-        mMobile = intent.extras?.getString("mobile")
+        mobile = intent.extras?.getString("mobile") ?: ""
 
-        binding.tieCompanyMobile.setText(mMobile)
+        binding.tieCompanyMobile.setText(mobile)
 
         observeViewModel()
         setupOnClickListener()

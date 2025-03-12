@@ -94,11 +94,11 @@ class AddPolicyActivity : AppCompatActivity() {
         binding?.apply {
 
 
-            llcAddMore.setOnClickListener {
+          /*  llcAddMore.setOnClickListener {
 
                 CustomToast(this@AddPolicyActivity,"Working is progress")
                 //addDynamicField()
-            }
+            }*/
 
 
 

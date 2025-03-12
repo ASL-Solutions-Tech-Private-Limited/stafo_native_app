@@ -36,6 +36,7 @@ import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.CreateHolidayResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DayPunchINRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.DayPunchINResponse
+import com.asl_emp_mng.app.screens.settings.dataClass.DeleteCompanyResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DeleteResponse
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateRequest
 import com.asl_emp_mng.app.screens.settings.dataClass.DepartmentCreateResponse
@@ -494,5 +495,10 @@ interface ApiStores {
         @Body request: SendFeedbackRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<SendFeedbackResponse>
+
+    @POST("api/company/delete")
+    suspend fun deleteAccount(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteCompanyResponse>
 
 }

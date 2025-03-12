@@ -16,6 +16,8 @@ private val COMPANY_DETAILS = "company_details"
 private val EMPLOYEE_DETAILS = "employee_details"
 private val COM_ID = "com_id"
 private val EMP_BRANCH_ID = "emp_branch_id"
+private val isLockSet = "is_lock_set"
+private val isLockUserSet = "is_lock_user_set"
 
 fun isOnBoardingScreenShown(): Boolean {
     return Hawk.get(isOnBoardingShown, false)
@@ -25,6 +27,23 @@ fun setIsOnBoardingScreenShown(isOnBoardingShown_: Boolean) {
     Hawk.put(isOnBoardingShown, isOnBoardingShown_)
 }
 
+
+fun setIsLockUser(isLock: Boolean) {
+    Hawk.put(isLockUserSet, isLock)
+}
+
+
+fun getIsLockUser(): Boolean? {
+    return Hawk.get(isLockUserSet, false)
+}
+fun setIsLock(isLock: Boolean) {
+    Hawk.put(isLockSet, isLock)
+}
+
+
+fun getIsLock(): Boolean? {
+    return Hawk.get(isLockSet, false)
+}
 fun setIsEMPLogin(islogin: Boolean) {
     Hawk.put(isEMPLogin, islogin)
 }

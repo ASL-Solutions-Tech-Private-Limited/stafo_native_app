@@ -164,6 +164,7 @@
                         android:layout_height="@dimen/_54sdp"
                         android:layout_marginEnd="@dimen/_12sdp"
                         android:src="@drawable/demo_avatar"
+                        android:visibility="invisible"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_header_greeting" />
 

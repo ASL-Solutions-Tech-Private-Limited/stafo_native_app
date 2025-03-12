@@ -156,6 +156,7 @@
                         android:layout_marginEnd="@dimen/_12sdp"
                         app:shapeAppearanceOverlay="@style/Circular"
                         android:scaleType="fitXY"
+                        android:visibility="invisible"
                         android:background="@color/white"
                         android:src="@drawable/ic_organization"
                         app:layout_constraintEnd_toEndOf="parent"

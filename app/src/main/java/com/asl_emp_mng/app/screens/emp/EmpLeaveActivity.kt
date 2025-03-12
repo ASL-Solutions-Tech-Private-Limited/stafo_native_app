@@ -48,7 +48,7 @@ class EmpLeaveActivity : AppCompatActivity() {
     private var todate = ""
     private var fromdate: String = ""
     private var reason: String = ""
-    private var leaveType:Int=2
+    private var leaveType: Int = 2
     private var nodays = 0f
 
     private var postFromDate: String = ""
@@ -58,6 +58,7 @@ class EmpLeaveActivity : AppCompatActivity() {
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,26 +115,32 @@ class EmpLeaveActivity : AppCompatActivity() {
         val options = resources.getStringArray(R.array.leave_type)
         val adapter = ArrayAdapter(this, R.layout.custom_spinner_item, options)
         binding.spinnerLeaveType.setAdapter(adapter)
-        binding.spinnerLeaveType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedValue = parent.getItemAtPosition(position).toString()
+        binding.spinnerLeaveType.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val selectedValue = parent.getItemAtPosition(position).toString()
 
-                if (selectedValue=="Casual Leave"){
-                    leaveType=1
+                    if (selectedValue == "Casual Leave") {
+                        leaveType = 1
 
-                }else if (selectedValue=="Sick Leave"){
-                    leaveType=2
-                }else if (selectedValue=="Previllage Leave"){
-                    leaveType=3
+                    } else if (selectedValue == "Sick Leave") {
+                        leaveType = 2
+                    } else if (selectedValue == "Previllage Leave") {
+                        leaveType = 3
+                    }
+
+                    Log.d("res", "leavetype: $leaveType  $selectedValue")
+
                 }
 
-                Log.d("res","leavetype: $leaveType  $selectedValue")
-
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                }
             }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-            }
-        }
 
 
 
@@ -165,23 +172,45 @@ class EmpLeaveActivity : AppCompatActivity() {
                 if (isValidate()) {
 
 
-                    val request = EmployeeLeaveRequestBody(
-                        employee_id = getEmployeeDetails()?.id.toString(),
-                        from_date = postFromDate,
-                        to_date = postToDate,
-                        reason = binding.edtDescription.text.toString(),
-                        leave_type = leaveType
+                    val myFormat = "dd MMM yy"
+                    val sdf = SimpleDateFormat(myFormat, Locale.US)
 
-                    )
+                    val fromDateStr = binding.edtFromDate.text.toString().trim()
+                    val toDateStr = binding.edtToDate.text.toString().trim()
+
+                    val fromDate = sdf.parse(fromDateStr)
+                    val toDate = sdf.parse(toDateStr)
+
+                    if (fromDate == null || toDate == null) {
+                        return@setOnClickListener
+                    }
 
 
-                    settingsViewModel.requestLeaveEmp(this@EmpLeaveActivity, request)
+                    if (toDate.before(fromDate)) {
+
+                        CustomToast(
+                            this@EmpLeaveActivity,
+                            "The 'To Date' cannot be earlier than the 'From Date'."
+                        )
+
+                    } else {
+                        val request = EmployeeLeaveRequestBody(
+                            employee_id = getEmployeeDetails()?.id.toString(),
+                            from_date = postFromDate,
+                            to_date = postToDate,
+                            reason = binding.edtDescription.text.toString(),
+                            leave_type = leaveType
+
+                        )
+
+
+                        settingsViewModel.requestLeaveEmp(this@EmpLeaveActivity, request)
+
+                    }
 
 
                 }
             }
-
-
 
 
         }
@@ -215,10 +244,10 @@ class EmpLeaveActivity : AppCompatActivity() {
     private fun isValidate(): Boolean {
         binding?.apply {
             if (edtFromDate.text.isNullOrEmpty()) {
-                CustomToast(this@EmpLeaveActivity,"Please enter from date")
+                CustomToast(this@EmpLeaveActivity, "Please enter from date")
                 return false
             } else if (edtToDate.text.isNullOrEmpty()) {
-                CustomToast(this@EmpLeaveActivity,"Please enter to date")
+                CustomToast(this@EmpLeaveActivity, "Please enter to date")
                 return false
             } else if (edtDescription.text.isNullOrEmpty()) {
                 edtDescription.error = "Please enter description"
@@ -331,18 +360,17 @@ class EmpLeaveActivity : AppCompatActivity() {
             ) + 1
 
             val formattedNoDays = daysBetween.toInt().toString()
-            if (formattedNoDays == "1"){
+            if (formattedNoDays == "1") {
                 binding.nodTxt.text = "No of leave: $formattedNoDays day"
             } else {
                 binding.nodTxt.text = "No of leave: $formattedNoDays days"
             }
-            // binding.nodTxt.text = "No of leave: $formattedNoDays days"
+
 
         } catch (e: ParseException) {
             e.printStackTrace()
         }
     }
-
 
 
     private fun hasLocationPermission(): Boolean {
