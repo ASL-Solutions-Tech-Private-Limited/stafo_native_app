@@ -233,7 +233,7 @@
                 android:textSize="@dimen/_12ssp"
                 app:drawableTint="@color/black" />
 
-            <com.asl_emp_mng.app.base.model.CircularProgressBar
+            <com.stafo.app.base.model.CircularProgressBar
                 android:id="@+id/progress_bar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_50sdp"

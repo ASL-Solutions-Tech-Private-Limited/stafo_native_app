@@ -1,0 +1,70 @@
+package com.stafo.app.screens.ui
+
+import android.os.Bundle
+import android.view.View
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.stafo.app.R
+import com.stafo.app.base.adapter.AdapterWishListFrom
+import com.stafo.app.base.model.DashboardWish
+import com.stafo.app.databinding.ActivityWishListBinding
+import com.stafo.app.screens.settings.SettingsViewModel
+import com.stafo.app.utils.CustomLoader
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.util.Calendar
+
+class WishListActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityWishListBinding
+    private val calendar = Calendar.getInstance()
+    private var mWishList = ArrayList<DashboardWish>()
+    private val customLoader: CustomLoader by lazy { CustomLoader(this) }
+    private val settingsViewModel: SettingsViewModel by viewModels()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        binding = ActivityWishListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
+
+        if (intent.hasExtra("WishList")) {
+            mWishList = Gson().fromJson(
+                intent.getStringExtra("WishList"),
+                object : TypeToken<ArrayList<DashboardWish>>() {}.type
+            )
+        }
+
+        initView()
+
+    }
+
+    private fun initView() {
+        binding?.apply {
+            ivBack.setOnClickListener { finish() }
+            rvWishList.layoutManager =
+                LinearLayoutManager(this@WishListActivity, LinearLayoutManager.VERTICAL, false)
+
+            if (mWishList.isNullOrEmpty()) {
+                rvWishList.visibility = View.GONE
+                llLeaves.visibility = View.VISIBLE
+
+            } else {
+                rvWishList.adapter = AdapterWishListFrom(mWishList, this@WishListActivity)
+                rvWishList.visibility = View.VISIBLE
+            }
+
+        }
+
+
+    }
+}

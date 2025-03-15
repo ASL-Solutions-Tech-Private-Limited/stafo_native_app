@@ -203,7 +203,7 @@
                 app:drawableTint="@color/black" />
 
 
-            <com.asl_emp_mng.app.base.model.CircularProgressBar
+            <com.stafo.app.base.model.CircularProgressBar
                 android:id="@+id/cpb"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

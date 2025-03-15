@@ -1,95 +1,26 @@
 {
   "project_info": {
-    "project_number": "510608521001",
-    "firebase_url": "https://softmint-5a060-default-rtdb.firebaseio.com",
-    "project_id": "softmint-5a060",
-    "storage_bucket": "softmint-5a060.appspot.com"
+    "project_number": "891337755162",
+    "project_id": "stafo-38601",
+    "storage_bucket": "stafo-38601.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:510608521001:android:036212f47f194d229f6938",
+        "mobilesdk_app_id": "1:891337755162:android:fa4d6487087b038fd19fa3",
         "android_client_info": {
-          "package_name": "com.finance.softmint"
+          "package_name": "com.stafo.app"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "510608521001-nvhdnij9s9ubhvc915ud3p9r29j033cq.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD-fl-LcOjnhvw1PaZcDpLJsOgsQND_DJc"
+          "current_key": "AIzaSyAo_Om2kKFmMLEclp2T2VABylrrLTy0t60"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "510608521001-nvhdnij9s9ubhvc915ud3p9r29j033cq.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:510608521001:android:4cb228c7a97352759f6938",
-        "android_client_info": {
-          "package_name": "com.finance.softmint_csp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "510608521001-nvhdnij9s9ubhvc915ud3p9r29j033cq.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyD-fl-LcOjnhvw1PaZcDpLJsOgsQND_DJc"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "510608521001-nvhdnij9s9ubhvc915ud3p9r29j033cq.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:510608521001:android:84eb6c25451311dc9f6938",
-        "android_client_info": {
-          "package_name": "com.asl_emp_mng.app"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "510608521001-nvhdnij9s9ubhvc915ud3p9r29j033cq.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyD-fl-LcOjnhvw1PaZcDpLJsOgsQND_DJc"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "510608521001-nvhdnij9s9ubhvc915ud3p9r29j033cq.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

@@ -538,11 +538,258 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eeb3fca-a4a9-48ce-a4f9-f3fda60e9524" name="Changes" comment="Update Add Staff API">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployerDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployerDashboard.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/themes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/themes.xml" afterDir="false" />
+    <list default="true" id="1eeb3fca-a4a9-48ce-a4f9-f3fda60e9524" name="Changes" comment="Added Intro Image and TestK">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/EmpBranchDetails.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/request/RegisterRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/AadhaarOtpVerify.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/ApproveLeaveRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/GeoLocationHistResquest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/utils/MyFirebaseMessagingService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/google-services.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/google-services.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/google-services_2.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/androidTest/java/com/asl_emp_mng/app/ExampleInstrumentedTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/androidTest/java/com/stafo/app/ExampleInstrumentedTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/ASLEmpMng.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/ASLEmpMng.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/api/ApiClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/api/ApiClient.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/api/ApiStores.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/api/ApiStores.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/BaseActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/BaseActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/BaseFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/BaseFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/BaseViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/BaseViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/BaseViewModelFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/BaseViewModelFactory.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/ActionsListAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/ActionsListAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterDeviceRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/AdapterDeviceRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterEmpDayAttendance.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/AdapterEmpDayAttendance.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterEmployeeAllLeaveList.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/AdapterEmployeeAllLeaveList.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterEmployeeRecord.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/AdapterEmployeeRecord.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterHoliday.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/AdapterHoliday.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterOnLeave.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/AdapterOnLeave.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterPolicy.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/AdapterPolicy.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterRequestLeaveHistory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/AdapterRequestLeaveHistory.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterViewEmpDocument.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/AdapterViewEmpDocument.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterWishList.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/AdapterWishList.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterWishListFrom.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/AdapterWishListFrom.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/BranchAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/BranchAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/DynamicAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/DynamicAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/DynamicHolidayAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/DynamicHolidayAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/DynamicPolicyAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/DynamicPolicyAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/EmpItemAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/EmpItemAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/EmpListAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/EmpListAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/EmployeeAttendanceAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/EmployeeAttendanceAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/LeavesManagementAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/LeavesManagementAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/RadioShiftAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/RadioShiftAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/ShiftAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/ShiftAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/SliderAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/SliderAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/ViewEmpListAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/ViewEmpListAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/ActionModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/ActionModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/CircularProgressBar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/CircularProgressBar.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/Commonfunctions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/Commonfunctions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/CompanyInfo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/CompanyInfo.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/DashboardType.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/DashboardType.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/DashboardWish.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/DashboardWish.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/DateItem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/DateItem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/DynamicField.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/DynamicField.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/DynamicHolidayField.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/DynamicHolidayField.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/DynamicPolicyField.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/DynamicPolicyField.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/EmpBranchDetails.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/EmpConstants.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/EmpConstants.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/Employee.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/Employee.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/EmployeeAttendanceModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/EmployeeAttendanceModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/EmployeeDashboardResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/EmployeeDashboardResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/FullScreenDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/FullScreenDialog.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/GetPunchType.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/GetPunchType.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/GetRunningGeoLocation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/GetRunningGeoLocation.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/HomeBaseModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/HomeBaseModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/LeavesManagementModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/LeavesManagementModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/MonthAttendaceResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/MonthAttendaceResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/OwnerInfo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/OwnerInfo.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/ProfileType.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/ProfileType.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/PunchInType.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/PunchInType.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/RequestGeoLocationResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/RequestGeoLocationResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/ResponseModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/ResponseModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/model/StateModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/StateModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/network/ApiService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/network/ApiService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/network/RetrofitInstance.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/network/RetrofitInstance.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/notification/NotificationsHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/notification/NotificationsHelper.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/request/AddBranchRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/request/AddBranchRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/request/OtpRequestBody.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/request/OtpRequestBody.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/request/RegisterRequest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/request/VerifyOtpRequestBody.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/request/VerifyOtpRequestBody.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/service/LocationForegroundService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/service/LocationForegroundService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/EmpProfileActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/EmpProfileActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/LoginActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/LoginActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/SetAttendanceActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/SetAttendanceActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/AuthViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/AuthViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/LoginActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/LoginActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/LoginWithOTPActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/LoginWithOTPActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/MobileSignUp.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/MobileSignUp.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/OnBoardingActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/OnBoardingActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/OtpVerifyActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/OtpVerifyActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/RegistrationActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/RegistrationActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/SignUpActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/SignUpActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/AddBranchResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/dataClass/AddBranchResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/BusinessTypeResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/dataClass/BusinessTypeResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/CitiesListResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/dataClass/CitiesListResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/CompanyRegisterRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/dataClass/CompanyRegisterRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/CompanyRegistrationResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/dataClass/CompanyRegistrationResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/CompanyTypeResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/dataClass/CompanyTypeResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/CountryListResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/dataClass/CountryListResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/LoginResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/dataClass/LoginResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/OtpResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/dataClass/OtpResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/OtpVerifyResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/dataClass/OtpVerifyResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/RegisterResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/dataClass/RegisterResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/SelfieAttendanceResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/dataClass/SelfieAttendanceResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/auth/dataClass/StatesListResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/auth/dataClass/StatesListResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/DashboardActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/dashboard/DashboardActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployeeDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/dashboard/EmployeeDashboard.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployerDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/dashboard/EmployerDashboard.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmpBranchDetailsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmpBranchDetailsActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmpDayAttendanceRecordActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmpDayAttendanceRecordActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmpLeaveActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmpLeaveActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmpSelfieAttendanceActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmpSelfieAttendanceActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeAttendance.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmployeeAttendance.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeAttendanceRecordActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmployeeAttendanceRecordActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeLeaveHistoryActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmployeeLeaveHistoryActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeProfileDetails.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmployeeProfileDetails.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeePunchInActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmployeePunchInActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmployeeViewDocumentActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmployeeViewDocumentActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmplyeeAttendaceListActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmplyeeAttendaceListActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/EmplyeeListAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmplyeeListAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/HelpSupportActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/HelpSupportActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/NewDeviceRegisterActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/NewDeviceRegisterActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/QRCodeAttendanceEmpActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/QRCodeAttendanceEmpActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/emp/ViewEmpLocationTrackActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/ViewEmpLocationTrackActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/profile/CompanyProfileActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/profile/CompanyProfileActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/profile/EmplyeeyerProfile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/profile/EmplyeeyerProfile.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AadhaarOtpVerifyActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AadhaarOtpVerifyActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AccountSettingsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AccountSettingsActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddBranchActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AddBranchActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddDepartmentActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AddDepartmentActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddEmployeeActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AddEmployeeActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddHolidayActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AddHolidayActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddPolicyActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AddPolicyActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/AddShiftActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AddShiftActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/BranchActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/BranchActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/CreateLeavePolicyActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/CreateLeavePolicyActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/FeedbackActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/FeedbackActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/GenerateQRActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/GenerateQRActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/HolidayActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/HolidayActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/LeaveManagementActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/LeaveManagementActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/LeaveRequestHistoryActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/LeaveRequestHistoryActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/OnLeaveActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/OnLeaveActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/PolicyActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/PolicyActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/SettingsViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/SettingsViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/VerifyCompanyDetailsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/VerifyCompanyDetailsActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/ViewAllEmployeeActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/ViewAllEmployeeActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/ViewDeviceRequestEmpActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/ViewDeviceRequestEmpActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/AadhaarOtpVerify.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/AadhaarRequestBody.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/AadhaarRequestBody.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/AddEmpRequestBody.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/AddEmpRequestBody.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/AddEmpResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/AddEmpResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/ApproveLeaveRequest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/ApproveLeaveResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/ApproveLeaveResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/AssignShiftRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/AssignShiftRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/AttendanceSummaryResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/AttendanceSummaryResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/BranchListResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/BranchListResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/BranchRequestBody.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/BranchRequestBody.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/ChangeDeviceRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/ChangeDeviceRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/ChangeDeviceResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/ChangeDeviceResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/CompanyAcceptDeviceRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/CompanyAcceptDeviceRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/CompanyProfileResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/CompanyProfileResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/CompanyUpdateDocumentRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/CompanyUpdateDocumentRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/CompanyUpdateDocumentResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/CompanyUpdateDocumentResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/CompanyVerifyRequestBody.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/CompanyVerifyRequestBody.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/CompanyViewRequestDevice.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/CompanyViewRequestDevice.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/CompanyViewRequestDeviceResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/CompanyViewRequestDeviceResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/CreateHolidayRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/CreateHolidayRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/CreateHolidayResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/CreateHolidayResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/DayPunchINRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/DayPunchINRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/DayPunchINResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/DayPunchINResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/DeleteCompanyResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/DeleteCompanyResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/DeleteResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/DeleteResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/DepartmentCreateRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/DepartmentCreateRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/DepartmentCreateResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/DepartmentCreateResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/DepartmentResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/DepartmentResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/EmployeeDocumentUploadResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/EmployeeDocumentUploadResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/EmployeeLeaveRequestBody.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/EmployeeLeaveRequestBody.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/EmployeeLeaveResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/EmployeeLeaveResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/EmployeeListResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/EmployeeListResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/EmployeePostLocationRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/EmployeePostLocationRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/EmployeePostLocationResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/EmployeePostLocationResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/EmployeeUploadImageResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/EmployeeUploadImageResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/EmployeeViewDocumentRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/EmployeeViewDocumentRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/EmployeeViewDocumentResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/EmployeeViewDocumentResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/FetchEmployeeDetails.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/FetchEmployeeDetails.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/GenerateQCodeRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/GenerateQCodeRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/GeoLocationHistResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/GeoLocationHistResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/GeoLocationHistResquest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/GetAllEmployeeResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/GetAllEmployeeResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/GetAttendanceRecordRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/GetAttendanceRecordRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/GetEmpAttendanceRecord.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/GetEmpAttendanceRecord.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/GetEmpAttendanceRecordBody.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/GetEmpAttendanceRecordBody.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/GetEmployeeLeaveHistRequestBody.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/GetEmployeeLeaveHistRequestBody.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/GetEmployeeLeaveHistResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/GetEmployeeLeaveHistResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/HolidayListResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/HolidayListResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/JobTitleResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/JobTitleResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/LeaveRequestBody.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/LeaveRequestBody.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/LeaveResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/LeaveResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/OnLeaveResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/OnLeaveResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/PanVerifyRequestBody.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/PanVerifyRequestBody.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/PanVerifyResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/PanVerifyResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/PendingLeaveResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/PendingLeaveResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/PolicyCreateResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/PolicyCreateResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/PolicyFetchResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/PolicyFetchResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/PunchInRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/PunchInRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/PunchInResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/PunchInResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/QRAttendanceMarkRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/QRAttendanceMarkRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/QRAttendanceMarkResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/QRAttendanceMarkResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/SendFeedbackRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/SendFeedbackRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/SendFeedbackResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/SendFeedbackResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/SetAttendanceTypeRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/SetAttendanceTypeRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/SetAttendanceTypeResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/SetAttendanceTypeResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/ShiftAssignmentResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/ShiftAssignmentResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/ShiftCreateRequest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/ShiftCreateRequest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/ShiftCreateResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/ShiftCreateResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/ShiftListResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/ShiftListResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/UpdateCompanyProfile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/UpdateCompanyProfile.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/UpdateCompanyProfileResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/UpdateCompanyProfileResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/UpdateEmployeeProfile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/UpdateEmployeeProfile.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/UpdateEmployeeProfileResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/UpdateEmployeeProfileResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/VerifyGSTNumberResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/VerifyGSTNumberResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/VerifyRegisterNumberResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/VerifyRegisterNumberResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/dataClass/ViewBranchResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/ViewBranchResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/AutoSearchPlaceActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/ui/AutoSearchPlaceActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/ui/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/PlaceSearchActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/ui/PlaceSearchActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/SplashActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/ui/SplashActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/WishListActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/ui/WishListActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/utils/AppIntro.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/utils/AppIntro.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/utils/CommonViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/utils/CommonViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/utils/CustomDatePickerDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/utils/CustomDatePickerDialog.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/utils/CustomLoader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/utils/CustomLoader.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/utils/CustomTrustManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/utils/CustomTrustManager.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/utils/RoundedCornerProgressBar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/utils/RoundedCornerProgressBar.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/utils/SessionManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/utils/SessionManager.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/utils/TTSWorker.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/utils/TTSWorker.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/utils/Utils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/utils/Utils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_back.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_back.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_add_employee.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_add_employee.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_attendance_record.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_attendance_record.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_emplyee_attendace_list.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_emplyee_attendace_list.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_registration.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_registration.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/navigation/mobile_navigation.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/navigation/mobile_navigation.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/navigation/nav_graph.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/navigation/nav_graph.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/navigation/nav_graph2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/navigation/nav_graph2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/asl_emp_mng/app/ExampleUnitTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/stafo/app/ExampleUnitTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -552,7 +799,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[13911499310008M]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=/Users/injamamul/.android/avd/Pixel_7_Pro_API_33.avd)]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -642,49 +889,49 @@
     <option name="showLibraryContents" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Android App.Asl_EMP__1.0.app.executor&quot;: &quot;Run&quot;,
-    &quot;Android App.app.executor&quot;: &quot;Run&quot;,
-    &quot;ApkExportedModule&quot;: &quot;Asl_EMP__1.0.app&quot;,
-    &quot;BundleExportedModule&quot;: &quot;Softmint_UPI_1.0.app&quot;,
-    &quot;DEBUGGABLE_DEVICE&quot;: &quot;vivo-v2153-13911499310008M&quot;,
-    &quot;DEBUGGABLE_PROCESS&quot;: &quot;com.asl_emp_mng.app&quot;,
-    &quot;DEBUGGER_ID&quot;: &quot;Auto&quot;,
-    &quot;ExportApk.ApkPathForAsl_EMP__1.0.app&quot;: &quot;D:\\asl_hr_app_and\\app&quot;,
-    &quot;ExportApk.ApkPathForSoftmint_KYC.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app&quot;,
-    &quot;ExportApk.ApkPathForSoftmint_UPI_1.0.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app&quot;,
-    &quot;ExportBundle.BundlePathForSoftmint_KYC.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app&quot;,
-    &quot;ExportBundle.BundlePathForSoftmint_UPI_1.0.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;SHOW_ALL_PROCESSES&quot;: &quot;false&quot;,
-    &quot;ScreenshotViewer.SavePath&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC&quot;,
-    &quot;android-custom-view/Users/injamamul/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_SELECTED&quot;: &quot;RecyclerView&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;com.android.tools.idea.devicemanager.tab&quot;: &quot;Physical&quot;,
-    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/company__dashboard&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_directory_selection&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/ASL Projects/ASLHRManagement/app/src/main/res/drawable&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/asl_hr_app_and/app/src/main/res/drawable&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.intentionPowerPack&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Android App.Asl_EMP__1.0.app.executor": "Run",
+    "Android App.app.executor": "Run",
+    "ApkExportedModule": "Asl_EMP__1.0.app",
+    "BundleExportedModule": "Softmint_UPI_1.0.app",
+    "DEBUGGABLE_DEVICE": "vivo-v2153-13911499310008M",
+    "DEBUGGABLE_PROCESS": "com.asl_emp_mng.app",
+    "DEBUGGER_ID": "Auto",
+    "ExportApk.ApkPathForAsl_EMP__1.0.app": "D:\\asl_hr_app_and\\app",
+    "ExportApk.ApkPathForSoftmint_KYC.app": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app",
+    "ExportApk.ApkPathForSoftmint_UPI_1.0.app": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app",
+    "ExportBundle.BundlePathForSoftmint_KYC.app": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app",
+    "ExportBundle.BundlePathForSoftmint_UPI_1.0.app": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "SHOW_ALL_PROCESSES": "false",
+    "ScreenshotViewer.SavePath": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC",
+    "android-custom-view/Users/injamamul/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_SELECTED": "RecyclerView",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "com.android.tools.idea.devicemanager.tab": "Physical",
+    "com.codeium.enabled": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "feature/settings__api__integration",
+    "kotlin-language-version-configured": "true",
+    "last_directory_selection": "/Users/injamamul/Desktop/Android Projects/Freelance/ASL Projects/ASLHRManagement/app/src/main/res/drawable",
+    "last_opened_file_path": "/Users/injamamul/Desktop/Android Projects/Freelance/ASL Projects/ASLHRManagement/app",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.17",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.intentionPowerPack",
+    "show.migrate.to.gradle.popup": "false"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;ExportApk.BuildVariants&quot;: [
-      &quot;productionRelease&quot;
+  "keyToStringList": {
+    "ExportApk.BuildVariants": [
+      "productionRelease"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="android.template.-1659704359">
       <recent name="com.asl_emp_mng.app.screens.settings" />
@@ -804,21 +1051,21 @@
       <recent name="com.asl_emp_mng.app.screens.auth" />
     </key>
     <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="com.stafo.app.utils" />
       <recent name="com.asl_emp_mng.app.base.adapter" />
       <recent name="com.asl_emp_mng.app.utils" />
       <recent name="com.softmint_upi.app.screens.account" />
       <recent name="com.softmint_upi.app.screens.account.staff" />
-      <recent name="com.softmint_upi.app.screens.history.tabs.adapters" />
     </key>
     <key name="android.template.648208985">
       <recent name="com.softmint_upi.app.screens.account.bank.staff" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app" />
       <recent name="D:\asl_hr_app_and\app\src\main\res\drawable" />
       <recent name="D:\asl_hr_app_and\app\libs" />
       <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
       <recent name="D:\asl_hr_app_and\app\src\main\java\com\asl_emp_mng\app\base\model" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/layout" />
     </key>
     <key name="android.template.708963382">
       <recent name="com.asl_emp_mng.app.screens.ui" />
@@ -855,6 +1102,7 @@
   <component name="RunManager" selected="Android App.app">
     <configuration name="Asl_EMP__1.0.app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
       <module name="Asl_EMP__1.0.app" />
+      <option name="ANDROID_RUN_CONFIGURATION_SCHEMA_VERSION" value="1" />
       <option name="DEPLOY" value="true" />
       <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
       <option name="DEPLOY_AS_INSTANT" value="false" />
@@ -862,13 +1110,15 @@
       <option name="PM_INSTALL_OPTIONS" value="" />
       <option name="ALL_USERS" value="false" />
       <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="ALLOW_ASSUME_VERIFIED" value="false" />
       <option name="CLEAR_APP_STORAGE" value="false" />
       <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
       <option name="ACTIVITY_EXTRA_FLAGS" value="" />
       <option name="MODE" value="default_activity" />
+      <option name="RESTORE_ENABLED" value="false" />
+      <option name="RESTORE_FILE" value="" />
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
       <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
       <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
       <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
@@ -913,6 +1163,7 @@
         <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
       </Profilers>
       <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY" value="" />
       <option name="ACTIVITY_CLASS" value="" />
       <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
       <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
@@ -921,7 +1172,8 @@
       </method>
     </configuration>
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App">
-      <module name="Asl_EMP__1.0.app.main" />
+      <module name="Asl_EMP__1.0.app" />
+      <option name="ANDROID_RUN_CONFIGURATION_SCHEMA_VERSION" value="1" />
       <option name="DEPLOY" value="true" />
       <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
       <option name="DEPLOY_AS_INSTANT" value="false" />
@@ -929,13 +1181,15 @@
       <option name="PM_INSTALL_OPTIONS" value="" />
       <option name="ALL_USERS" value="false" />
       <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="ALLOW_ASSUME_VERIFIED" value="false" />
       <option name="CLEAR_APP_STORAGE" value="false" />
       <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
       <option name="ACTIVITY_EXTRA_FLAGS" value="" />
       <option name="MODE" value="default_activity" />
+      <option name="RESTORE_ENABLED" value="false" />
+      <option name="RESTORE_FILE" value="" />
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
       <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
       <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
       <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
@@ -980,6 +1234,7 @@
         <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
       </Profilers>
       <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY" value="" />
       <option name="ACTIVITY_CLASS" value="" />
       <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
       <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
@@ -1297,57 +1552,57 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
           <line>53</line>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
           <line>54</line>
           <option name="timeStamp" value="50" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
           <line>243</line>
           <option name="timeStamp" value="51" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
           <line>244</line>
           <option name="timeStamp" value="52" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
           <line>245</line>
           <option name="timeStamp" value="53" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/MerchantDocumentUploadActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/MerchantDocumentUploadActivity.kt</url>
           <line>133</line>
           <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/FOOTPActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/FOOTPActivity.kt</url>
           <line>104</line>
           <option name="timeStamp" value="58" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/FOOTPActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/FOOTPActivity.kt</url>
           <line>106</line>
           <option name="timeStamp" value="59" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/FOOTPActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/FOOTPActivity.kt</url>
           <line>107</line>
           <option name="timeStamp" value="60" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/FOOTPActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/FOOTPActivity.kt</url>
           <line>108</line>
           <option name="timeStamp" value="61" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/FinalSuccessScreen.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/FinalSuccessScreen.kt</url>
           <line>28</line>
           <properties>
             <option name="lambda-ordinal" value="-1" />
@@ -1355,7 +1610,7 @@
           <option name="timeStamp" value="62" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/FinalSuccessScreen.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/FinalSuccessScreen.kt</url>
           <line>36</line>
           <properties>
             <option name="lambda-ordinal" value="-1" />
@@ -1363,122 +1618,122 @@
           <option name="timeStamp" value="63" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/OnBoardingBusinessScreenActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/OnBoardingBusinessScreenActivity.kt</url>
           <line>78</line>
           <option name="timeStamp" value="65" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/OnBoardingBusinessScreenActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/OnBoardingBusinessScreenActivity.kt</url>
           <line>79</line>
           <option name="timeStamp" value="66" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/UserEarningReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/UserEarningReportActivity.kt</url>
           <line>83</line>
           <option name="timeStamp" value="72" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/UserEarningReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/UserEarningReportActivity.kt</url>
           <line>90</line>
           <option name="timeStamp" value="73" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/user/ViewUserListActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/user/ViewUserListActivity.kt</url>
           <line>181</line>
           <option name="timeStamp" value="74" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/user/ViewUserListActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/user/ViewUserListActivity.kt</url>
           <line>182</line>
           <option name="timeStamp" value="75" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/user/ViewUserListActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/user/ViewUserListActivity.kt</url>
           <line>187</line>
           <option name="timeStamp" value="77" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>57</line>
           <option name="timeStamp" value="78" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>59</line>
           <option name="timeStamp" value="80" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>60</line>
           <option name="timeStamp" value="81" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>62</line>
           <option name="timeStamp" value="82" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>63</line>
           <option name="timeStamp" value="84" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>64</line>
           <option name="timeStamp" value="85" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>65</line>
           <option name="timeStamp" value="86" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>69</line>
           <option name="timeStamp" value="87" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/AepsReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/AepsReportActivity.kt</url>
           <line>75</line>
           <option name="timeStamp" value="88" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/AepsReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/AepsReportActivity.kt</url>
           <line>76</line>
           <option name="timeStamp" value="89" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/AepsReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/AepsReportActivity.kt</url>
           <line>77</line>
           <option name="timeStamp" value="90" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/AepsReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/AepsReportActivity.kt</url>
           <line>82</line>
           <option name="timeStamp" value="91" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/AepsReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/AepsReportActivity.kt</url>
           <line>83</line>
           <option name="timeStamp" value="92" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/AepsReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/AepsReportActivity.kt</url>
           <line>86</line>
           <option name="timeStamp" value="93" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/AepsReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/AepsReportActivity.kt</url>
           <line>87</line>
           <option name="timeStamp" value="94" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/history/HistoryFragment.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/history/HistoryFragment.kt</url>
           <line>73</line>
           <option name="timeStamp" value="100" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/account/staff/ViewStaffActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/account/staff/ViewStaffActivity.kt</url>
           <line>27</line>
           <option name="timeStamp" value="101" />
         </line-breakpoint>
@@ -1496,6 +1751,16 @@
         <entry key="com.asl_emp_mng.app.test">
           <value>
             <CheckInfo lastCheckTimestamp="1739288345341" />
+          </value>
+        </entry>
+        <entry key="com.stafo.app">
+          <value>
+            <CheckInfo lastCheckTimestamp="1742024042271" />
+          </value>
+        </entry>
+        <entry key="com.stafo.app.test">
+          <value>
+            <CheckInfo lastCheckTimestamp="1742024042270" />
           </value>
         </entry>
       </map>
