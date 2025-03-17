@@ -18,6 +18,7 @@ data class GetEmployee(
     val branch_name: String,
     val department_name: String,
     val geo_status: String?,
+    val status: String,
     val attendances: List<Attendance>
 )
 

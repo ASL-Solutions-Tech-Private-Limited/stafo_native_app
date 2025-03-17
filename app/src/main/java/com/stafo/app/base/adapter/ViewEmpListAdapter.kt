@@ -38,6 +38,8 @@ class ViewEmpListAdapter (
                 binding.llcAddAttendance.visibility = View.GONE
                 binding.llcShiftTime.visibility = View.GONE
                 binding.llcReqLocation.visibility = View.GONE
+                binding.ivEdit.visibility = View.GONE
+                binding.llcViewMap.visibility = View.VISIBLE
                 binding.llcViewMap.visibility = View.VISIBLE
 
 

@@ -195,20 +195,12 @@
                             android:hint="Name"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
-                    <TextView
-                        android:layout_marginTop="@dimen/_12sdp"
-                        android:text="Select Job Title*"
-                        android:paddingStart="@dimen/_2sdp"
-                        android:textSize="@dimen/_12ssp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+
                     <RelativeLayout
                         android:id="@+id/rl_spn_subordinate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_3sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
                         android:visibility="visible">
 
                         <Spinner

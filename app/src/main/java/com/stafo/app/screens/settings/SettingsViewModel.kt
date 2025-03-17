@@ -94,6 +94,10 @@ import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getUserAccessToken
 import com.caverock.androidsvg.SVG
 import com.google.gson.Gson
+import com.stafo.app.screens.settings.dataClass.CreateLeavePolicyRequest
+import com.stafo.app.screens.settings.dataClass.CreateLeavePolicyResponse
+import com.stafo.app.screens.settings.dataClass.InActiveEmpRequest
+import com.stafo.app.screens.settings.dataClass.InActiveEmpResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -375,6 +379,105 @@ class SettingsViewModel : BaseViewModel() {
     private var mDeleteCompany: MutableLiveData<DeleteCompanyResponse> = MutableLiveData()
 
     val mDeleteCompanyResponse: LiveData<DeleteCompanyResponse> get() = mDeleteCompany
+
+    private var mCreateLeavePolicy: MutableLiveData<CreateLeavePolicyResponse> = MutableLiveData()
+
+    val mCreateLeavePolicyResponse: LiveData<CreateLeavePolicyResponse> get() = mCreateLeavePolicy
+
+
+    private var mInActiveEmp: MutableLiveData<InActiveEmpResponse> = MutableLiveData()
+
+    val mInActiveEmpResponse: LiveData<InActiveEmpResponse> get() = mInActiveEmp
+
+
+    fun postActiveInactiveEmp(
+        mContext: Context,
+        request: InActiveEmpRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callActiveInactiveEmp(request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mInActiveEmp.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+    fun createLeavePolicyCompany(
+        mContext: Context,
+        request: CreateLeavePolicyRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callCreateLeavePolicy(request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mCreateLeavePolicy.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
 

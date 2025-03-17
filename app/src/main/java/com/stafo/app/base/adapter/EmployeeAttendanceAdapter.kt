@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.stafo.app.R
 import com.stafo.app.databinding.ItemEmpAttendaceLayoutBinding
 import com.stafo.app.screens.emp.EmployeeAttendanceRecordActivity
@@ -33,6 +35,22 @@ class EmployeeAttendanceAdapter(
             with(attendList[position]) {
                 binding.tvEmpName.text = this.name
                 binding.tvEmpJobTitle.text = this.position
+
+                if (!this.image.isNullOrEmpty()) {
+                    binding.civEmp.visibility = View.VISIBLE
+
+                    val imageUrl = "${this.imagePath}/${this.image}".replace("\\", "")
+
+                    Glide.with(context)
+                        .load(imageUrl)
+                        .into(binding.civEmp)
+
+                } else {
+                    binding.civEmp.visibility = View.GONE
+                }
+
+
+
                 if (this.attendances[0].attendance=="Absent") {
 
                     binding.tvCheckIn.text = this.attendances[0].attendance

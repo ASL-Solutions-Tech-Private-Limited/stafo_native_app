@@ -35,6 +35,7 @@ import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getFormatDate
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputEditText
+import com.stafo.app.utils.getIsCOMPANYLogin
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -63,6 +64,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
     private var profileType: String = "basic_details"
     private var selectMarital: String = "Single"
     private var mEmpID = ""
+    private var mEmpType = ""
     private var mEMPDetails: EmployeeDataFetch? = null
 
     private var aadhaarFile: File? = null
@@ -86,6 +88,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
         mEmpID = intent.getStringExtra("EMP_ID").toString()
+        mEmpType = intent.getStringExtra("EMP_TYPE").toString()
         onClickListener()
         observeViewModel()
 
@@ -414,7 +417,13 @@ class EmployeeProfileDetails : AppCompatActivity() {
     private fun onClickListener() {
         binding?.apply {
 
-
+            if (mEmpType == "View") {
+                btnUpdateProfile.visibility = View.INVISIBLE
+            } else if (mEmpType == "Edit") {
+                btnUpdateProfile.visibility = View.VISIBLE
+            } else {
+                btnUpdateProfile.visibility = View.VISIBLE
+            }
 
 
 
@@ -610,6 +619,9 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
             btnUpdateProfile.setOnClickListener {
+
+
+
                 if (profileType == "basic_details") {
                     if (validateBasicInfo()) {
                         Log.d("res", "post: ")
@@ -641,14 +653,27 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
 
+
+
+
                         Log.d("res", "post: $request")
 
+                        if (getIsCOMPANYLogin()==true){
+                            settingsViewModel.updateEmployeeDetails(
+                                this@EmployeeProfileDetails,
+                                mEmpID,
+                                request
+                            )
+                        }else{
+                            settingsViewModel.updateEmployeeDetails(
+                                this@EmployeeProfileDetails,
+                                getEmployeeDetails()?.id.toString(),
+                                request
+                            )
+                        }
 
-                        settingsViewModel.updateEmployeeDetails(
-                            this@EmployeeProfileDetails,
-                            getEmployeeDetails()?.id.toString(),
-                            request
-                        )
+
+
 
                     }
                 } else if (profileType == "personal_details") {
@@ -680,12 +705,22 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             date_of_leaving = "",
                         )
 
+                        if (getIsCOMPANYLogin()==true){
+                            settingsViewModel.updateEmployeeDetails(
+                                this@EmployeeProfileDetails,
+                                mEmpID,
+                                request
+                            )
+                        }else{
+                            settingsViewModel.updateEmployeeDetails(
+                                this@EmployeeProfileDetails,
+                                getEmployeeDetails()?.id.toString(),
+                                request
+                            )
+                        }
 
-                        settingsViewModel.updateEmployeeDetails(
-                            this@EmployeeProfileDetails,
-                            getEmployeeDetails()?.id.toString(),
-                            request
-                        )
+
+
                     }
 
                 } else if (profileType == "document_details") {
@@ -700,11 +735,25 @@ class EmployeeProfileDetails : AppCompatActivity() {
                         licenceFile?.let { documentList.add(Triple("Driving Licence", "3", it)) }
                         voterIdFile?.let { documentList.add(Triple("Voter ID", "4", it)) }
 
-                        settingsViewModel.postEmpUploadDocument(
-                            this@EmployeeProfileDetails,
-                            mEmpID,
-                            documentList
-                        )
+
+
+                        if (getIsCOMPANYLogin()==true){
+                            settingsViewModel.postEmpUploadDocument(
+                                this@EmployeeProfileDetails,
+                                mEmpID,
+                                documentList
+                            )
+                        }else{
+                            settingsViewModel.postEmpUploadDocument(
+                                this@EmployeeProfileDetails,
+                                getEmployeeDetails()?.id.toString(),
+                                documentList
+                            )
+                        }
+
+
+
+
 
 
                     }

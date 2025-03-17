@@ -1,6 +1,7 @@
 package com.stafo.app.screens.settings
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
@@ -30,6 +32,8 @@ import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.stafo.app.screens.settings.dataClass.InActiveEmpRequest
+import com.stafo.app.utils.doLogout
 import java.util.Calendar
 
 class ViewAllEmployeeActivity : AppCompatActivity() {
@@ -155,6 +159,19 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         }
 
 
+        settingsViewModel.mInActiveEmpResponse.observe(this) {
+
+            if (it.status) {
+
+                settingsViewModel.getAllEmployeeList(this@ViewAllEmployeeActivity)
+                CustomToast(this, it.message)
+
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
+
+
 
 
         settingsViewModel.mShiftAssignmentResponse.observe(this) {
@@ -195,6 +212,37 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
+
+
+
+
+
+    fun showActiveAlert(id:String,status:String) {
+        val builder =AlertDialog.Builder(this@ViewAllEmployeeActivity)
+        builder.setTitle(R.string.app_name)
+        builder.setMessage("Are you sure? You want to change status this employee!")
+
+        builder.setPositiveButton("Yes") { dialog, _ ->
+
+            val request= InActiveEmpRequest(
+                id=id,
+                status = status
+            )
+
+            settingsViewModel.postActiveInactiveEmp(this@ViewAllEmployeeActivity,request)
+
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+
 
     private fun setOnClickEvents() {
 

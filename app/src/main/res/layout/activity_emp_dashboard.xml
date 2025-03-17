@@ -188,7 +188,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/_12sdp"
                             android:fontFamily="@font/gilroy_medium"
-                            android:text="Your Office timing is 9:00 AM to 5:00 PM"
+                            android:text="Your Office timing is"
                             android:textSize="@dimen/_12ssp" />
 
                         <androidx.appcompat.widget.AppCompatButton

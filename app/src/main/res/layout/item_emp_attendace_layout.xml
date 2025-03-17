@@ -149,10 +149,10 @@
                     android:orientation="horizontal">
 
                     <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/civ_emp"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:layout_width="@dimen/_30sdp"
-                        android:layout_height="@dimen/_30sdp"
-                        android:src="@drawable/demo_avatar" />
+                        android:layout_height="@dimen/_30sdp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

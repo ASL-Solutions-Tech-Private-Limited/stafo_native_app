@@ -11,6 +11,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.R
 import com.stafo.app.base.model.DynamicField
+import com.stafo.app.base.model.DynamicHolidayField
 
 
 class DynamicAdapter(private val fields: MutableList<DynamicField>) :
@@ -56,6 +57,11 @@ class DynamicAdapter(private val fields: MutableList<DynamicField>) :
     }
 
     override fun getItemCount(): Int = fields.size
+
+
+    fun getAllFields(): List<DynamicField> {
+        return fields
+    }
 
     fun addField(newField: DynamicField) {
         fields.add(newField)

@@ -1,11 +1,14 @@
 package com.stafo.app.base.adapter
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.stafo.app.R
 import com.stafo.app.databinding.RecyViewEmployeeItemLayoutBinding
 import com.stafo.app.screens.emp.EmployeeProfileDetails
 import com.stafo.app.screens.settings.ViewAllEmployeeActivity
@@ -41,16 +44,52 @@ class EmpListAdapter(
 
 
                 if (from == "View All") {
-                    binding.llcViewProfile.visibility = View.VISIBLE
+                    binding.llcViewProfile.visibility = View.GONE
+                    binding.ivEdit.visibility = View.VISIBLE
                     binding.llcAddAttendance.visibility = View.GONE
                     binding.llcShiftTime.visibility = View.GONE
-                    binding.llcViewProfile.setOnClickListener {
+
+                    if (this.status=="1"){
+                        binding.llcActiveEmp.visibility = View.GONE
+                        binding.llcInActiveEmp.visibility = View.VISIBLE
+                    }else{
+                        binding.llcActiveEmp.visibility = View.VISIBLE
+                        binding.llcInActiveEmp.visibility = View.GONE
+                    }
+
+
+
+                    binding.llcActiveEmp.setOnClickListener {
+                        (context as ViewAllEmployeeActivity).showActiveAlert(list[position].id.toString(),"1")
+                    }
+
+                    binding.llcInActiveEmp.setOnClickListener {
+                        (context as ViewAllEmployeeActivity).showActiveAlert(list[position].id.toString(),"0")
+                    }
+
+
+                   /* binding.llcViewProfile.setOnClickListener {
                         context.startActivity(
                             Intent(
                                 context,
                                 EmployeeProfileDetails::class.java
                             ).apply {
                                 putExtra("EMP_ID", list[position].id.toString())
+                                putExtra("EMP_TYPE", "View")
+                            })
+                    }*/
+
+                    binding.ivEdit.setOnClickListener {
+
+                        Log.d("res","id :${list[position].id}]")
+                        context.startActivity(
+                            Intent(
+                                context,
+                                EmployeeProfileDetails::class.java
+                            ).apply {
+                                putExtra("EMP_ID", list[position].id.toString())
+                                putExtra("EMP_TYPE", "Edit")
+
                             })
                     }
 
@@ -101,14 +140,16 @@ class EmpListAdapter(
                         )
                     }
                 } else {
+
+                    binding.llcActiveEmp.visibility = View.GONE
+                    binding.llcInActiveEmp.visibility = View.GONE
                     binding.llcViewProfile.visibility = View.GONE
                     binding.llcReqLocation.visibility = View.GONE
                     binding.llcViewMap.visibility = View.GONE
+                    binding.ivEdit.visibility = View.GONE
                     binding.llcAddAttendance.visibility = View.VISIBLE
                     binding.llcShiftTime.visibility = View.VISIBLE
-                    binding.llcViewProfile.setOnClickListener {
 
-                    }
                 }
 
                 binding.llcAddAttendance.setOnClickListener {
@@ -136,5 +177,7 @@ class EmpListAdapter(
         list = newList
         notifyDataSetChanged()
     }
+
+
 
 }

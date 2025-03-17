@@ -4,16 +4,16 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.asl_emp_mng.app",
+  "applicationId": "com.stafo.app",
   "variantName": "productionRelease",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 4,
-      "versionName": "1.0.4",
-      "outputFile": "ASL_HR_productionRelease_1.0.4_1741712820873.apk"
+      "versionCode": 1,
+      "versionName": "1.0.1",
+      "outputFile": "ASL_HR_productionRelease_1.0.1_1742227656116.apk"
     }
   ],
   "elementType": "File"

@@ -66,6 +66,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.play.core.review.testing.FakeReviewManager
 import com.google.gson.Gson
+import com.stafo.app.utils.convertTo12HourFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -406,6 +407,13 @@ class EmployeeDashboard : AppCompatActivity() {
                 setEmployeeComId(it.employeeInfo.companyId.toString())
 
                 setEmployeeBranchId(it.employeeInfo.branchId.toString())
+
+
+                it.employeeInfo.shift?.let { shift ->
+                    val startTime12Hr = convertTo12HourFormat(shift.startTime)
+                    val endTime12Hr = convertTo12HourFormat(shift.endTime)
+                    binding.tvOfficeTiming.text = "Your Office timing is $startTime12Hr to $endTime12Hr"
+                }
 
 
 

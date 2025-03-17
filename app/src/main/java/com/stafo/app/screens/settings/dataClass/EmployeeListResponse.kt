@@ -1,5 +1,6 @@
 package com.stafo.app.screens.settings.dataClass
 
+import com.google.gson.annotations.SerializedName
 import com.stafo.app.base.model.EmployeeAttendanceModel
 
 data class EmployeeListResponse(
@@ -17,6 +18,8 @@ data class EmployeeDataList(
     val phone: String,
     val position: String? = null,
     val salary: String? = null,
+    val image: String?,
+    @SerializedName("image_path") val imagePath: String,
     val company_id: Int,
     val branch_name: String,
     val department_name: String,

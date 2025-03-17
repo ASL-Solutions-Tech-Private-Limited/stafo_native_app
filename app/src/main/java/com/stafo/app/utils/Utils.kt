@@ -55,6 +55,7 @@ import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.orhanobut.hawk.Hawk
+import com.stafo.app.R
 import com.trackier.sdk.TrackierEvent
 import com.trackier.sdk.TrackierSDK.trackEvent
 import org.json.JSONObject
@@ -1456,3 +1457,13 @@ fun calculateMinutes(inTime: String, outTime: String): Int {
 
     return 0 // Return 0 minutes if there's an error
 }
+
+
+fun convertTo12HourFormat(time: String): String {
+    val inputFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+    return inputFormat.parse(time)?.let { outputFormat.format(it) } ?: time
+}
+
+

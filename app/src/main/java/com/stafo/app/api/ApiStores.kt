@@ -34,6 +34,8 @@ import com.stafo.app.screens.settings.dataClass.CompanyViewRequestDevice
 import com.stafo.app.screens.settings.dataClass.CompanyViewRequestDeviceResponse
 import com.stafo.app.screens.settings.dataClass.CreateHolidayRequest
 import com.stafo.app.screens.settings.dataClass.CreateHolidayResponse
+import com.stafo.app.screens.settings.dataClass.CreateLeavePolicyRequest
+import com.stafo.app.screens.settings.dataClass.CreateLeavePolicyResponse
 import com.stafo.app.screens.settings.dataClass.DayPunchINRequest
 import com.stafo.app.screens.settings.dataClass.DayPunchINResponse
 import com.stafo.app.screens.settings.dataClass.DeleteCompanyResponse
@@ -61,6 +63,8 @@ import com.stafo.app.screens.settings.dataClass.GetEmpAttendanceRecordBody
 import com.stafo.app.screens.settings.dataClass.GetEmployeeLeaveHistRequestBody
 import com.stafo.app.screens.settings.dataClass.GetEmployeeLeaveHistResponse
 import com.stafo.app.screens.settings.dataClass.HolidayListResponse
+import com.stafo.app.screens.settings.dataClass.InActiveEmpRequest
+import com.stafo.app.screens.settings.dataClass.InActiveEmpResponse
 import com.stafo.app.screens.settings.dataClass.JobTitleResponse
 import com.stafo.app.screens.settings.dataClass.LeaveRequestBody
 import com.stafo.app.screens.settings.dataClass.LeaveResponse
@@ -499,5 +503,20 @@ interface ApiStores {
     suspend fun deleteAccount(
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeleteCompanyResponse>
+
+
+
+    @POST("api/leave-policy")
+    suspend fun callCreateLeavePolicy(
+        @Body request: CreateLeavePolicyRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<CreateLeavePolicyResponse>
+
+
+    @POST("api/employees-status-change")
+    suspend fun callActiveInactiveEmp(
+        @Body request: InActiveEmpRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<InActiveEmpResponse>
 
 }
