@@ -1,8 +1,12 @@
 package com.stafo.app.screens.settings
 
 import android.app.DatePickerDialog
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -34,7 +38,7 @@ class AddEmployeeActivity : AppCompatActivity() {
     private val calendar = Calendar.getInstance()
     private var mSteps = 1
     private var selectGender: String="male"
-    private lateinit var selectJobTitle: String
+    private var selectJobTitle: String=""
     private var selectBranch: Int = 1
     private var selectDepartment: Int = 1
 
@@ -128,7 +132,7 @@ class AddEmployeeActivity : AppCompatActivity() {
         }
 
 
-        settingsViewModel.getJobTitleList(this)
+      /*  settingsViewModel.getJobTitleList(this)
 
 
         settingsViewModel.mJobTitleResponse.observe(this) {
@@ -163,7 +167,7 @@ class AddEmployeeActivity : AppCompatActivity() {
               CustomToast(this,it.message)
           }
 
-        }
+        }*/
 
 
     }
@@ -221,7 +225,7 @@ class AddEmployeeActivity : AppCompatActivity() {
     private fun onClickListener() {
 
 
-        binding?.apply {
+        binding.apply {
 
          /*   val options = resources.getStringArray(R.array.position_type)
             val adapterTitle =
@@ -245,7 +249,16 @@ class AddEmployeeActivity : AppCompatActivity() {
                 }*/
 
 
+            val text = "Basic\nDetails*"
+            val spannable = SpannableString(text)
+            spannable.setSpan(
+                ForegroundColorSpan(Color.RED),
+                text.length - 1,
+                text.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
 
+            binding.tvBasicDetails.text = spannable
 
 
 

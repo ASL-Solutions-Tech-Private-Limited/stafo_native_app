@@ -57,12 +57,13 @@
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_basic_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:gravity="center"
                     android:padding="@dimen/_2sdp"
-                    android:text="Basic\nDetails"
+                    android:text="Basic\nDetails*"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_9ssp" />
 
@@ -196,7 +197,7 @@
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <RelativeLayout
+                   <!-- <RelativeLayout
                         android:id="@+id/rl_spn_subordinate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -225,7 +226,7 @@
                             android:src="@drawable/ic_arrow_down"
                             android:tint="@color/black"
                             tools:ignore="UseAppTint" />
-                    </RelativeLayout>
+                    </RelativeLayout>-->
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_branch"

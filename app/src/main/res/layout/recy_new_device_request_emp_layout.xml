@@ -22,11 +22,12 @@
 
         <RelativeLayout
             android:id="@+id/top_emp_title"
-            android:layout_alignParentEnd="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_alignParentEnd="true">
+
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/approve_lv_emp_image"
                 android:layout_width="@dimen/_28sdp"
@@ -36,12 +37,13 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_user_img"
                 app:shapeAppearanceOverlay="@style/Circular" />
+
             <TextView
-                android:layout_centerVertical="true"
                 android:id="@+id/txt_emp_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_toRightOf="@+id/approve_lv_emp_image"
                 android:fontFamily="@font/gilroy_regular"
@@ -49,9 +51,6 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12ssp" />
         </RelativeLayout>
-
-
-
 
 
         <TextView
@@ -62,23 +61,23 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_medium"
-            android:text="Mobile"
             android:singleLine="true"
+            android:text="Mobile"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
         <TextView
             android:id="@+id/txt_mobile"
-            android:layout_marginStart="@dimen/_15sdp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/txt_mobile1"
             android:layout_below="@+id/top_emp_title"
             android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginTop="@dimen/_8sdp"
+            android:layout_toRightOf="@+id/txt_mobile1"
             android:fontFamily="@font/gilroy_regular"
-            android:text=""
             android:singleLine="true"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
@@ -91,8 +90,8 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_medium"
-            android:text="Email"
             android:singleLine="true"
+            android:text="Email"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
@@ -105,8 +104,8 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_regular"
-            android:text=""
             android:singleLine="true"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
@@ -119,8 +118,8 @@
             android:layout_alignParentStart="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_medium"
-            android:text="Position"
             android:singleLine="true"
+            android:text="Position"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
@@ -133,31 +132,48 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_regular"
-            android:text=""
             android:singleLine="true"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
+        <TextView
+            android:id="@+id/txt_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_job_title"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:singleLine="true"
+            android:visibility="gone"
+            android:text="Approved"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
 
         <RelativeLayout
+            android:id="@+id/rtl_approve_reject"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txt_job_title"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_10sdp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="visible">
 
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_approve"
                 android:layout_width="wrap_content"
-                android:outlineProvider="none"
                 android:layout_height="@dimen/_28sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_3sdp"
-                android:background="@drawable/button_background"
                 android:layout_toLeftOf="@+id/btn_reject"
+                android:background="@drawable/button_background"
                 android:fontFamily="@font/gilroy_regular"
+                android:outlineProvider="none"
                 android:text="Approve"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
@@ -166,12 +182,12 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_reject"
                 android:layout_width="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:outlineProvider="none"
                 android:layout_height="@dimen/_28sdp"
+                android:layout_alignParentEnd="true"
                 android:layout_marginBottom="@dimen/_3sdp"
                 android:background="@drawable/custom_reject_btn_bg"
                 android:fontFamily="@font/gilroy_regular"
+                android:outlineProvider="none"
                 android:text="Reject"
                 android:textAllCaps="false"
                 android:textColor="@color/black"

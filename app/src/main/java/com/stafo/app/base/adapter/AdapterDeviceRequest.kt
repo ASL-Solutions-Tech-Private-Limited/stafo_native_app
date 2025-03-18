@@ -3,6 +3,7 @@ package com.stafo.app.base.adapter
 import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -37,6 +38,25 @@ class AdapterDeviceRequest (
                 binding.txtMobile.text = this.phone
                 binding.txtJobTitle.text = this.position
                 binding.txtEmail.text = this.email
+
+
+                if (this.device_status=="approved"){
+                    binding.txtStatus.visibility= View.VISIBLE
+                    binding.txtStatus.text="Approved"
+                    binding.txtStatus.setTextColor(context.getColor(R.color.primaryColor))
+                    binding.rtlApproveReject.visibility= View.GONE
+                }else if (this.device_status=="rejected"){
+                    binding.txtStatus.visibility= View.VISIBLE
+                    binding.txtStatus.text="Rejected"
+                    binding.txtStatus.setTextColor(context.getColor(R.color.reject))
+                    binding.rtlApproveReject.visibility= View.GONE
+                }else{
+                    binding.rtlApproveReject.visibility= View.VISIBLE
+                    binding.txtStatus.visibility= View.GONE
+                }
+
+
+
                 binding.btnApprove.setOnClickListener {
                     showAlert("approve",this.id,this.device_id)
 
