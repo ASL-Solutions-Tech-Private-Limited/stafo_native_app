@@ -106,7 +106,6 @@ class EmployeeAttendance : AppCompatActivity() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
         settingsViewModel.mEmployeeListResponse.observe(this) {
-            Log.d("res", it.message)
             if (it.status) {
                 binding.txtMsg.visibility = View.GONE
                 Log.d("res", it.data.toString())

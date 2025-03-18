@@ -47,6 +47,9 @@
         tools:replace="android:label"
         tools:targetApi="31">
         <activity
+            android:name=".screens.settings.UploadSelfieAttendanceActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.settings.FeedbackActivity"
             android:exported="false" />
         <activity
@@ -303,7 +306,6 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-
         <service
             android:name=".utils.MyFirebaseMessagingService"
             android:enabled="true"
@@ -331,7 +333,5 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="Notification" />
     </application>
-
-
 
 </manifest>

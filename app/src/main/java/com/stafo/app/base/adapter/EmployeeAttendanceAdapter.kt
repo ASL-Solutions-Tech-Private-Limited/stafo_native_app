@@ -64,7 +64,7 @@ class EmployeeAttendanceAdapter(
 
                 holder.itemView.setOnClickListener {
                      val employeeId=attendList[position].id
-                    Log.d("res","$employeeId")
+
 
                     val intent = Intent(context, EmployeeAttendanceRecordActivity::class.java).apply {
                         putExtra("EMP_ID", employeeId.toString())

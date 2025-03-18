@@ -172,6 +172,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
         settingsViewModel.mCompanyUploadImageResponse.observe(this) {
             if (it.status) {
                 CustomToast(this, it.message)
+                settingsViewModel.getCompanyDetails(this@EmplyeeyerProfile)
             } else {
                 CustomToast(this, it.message)
             }

@@ -65,9 +65,9 @@ class CreateLeavePolicyActivity : AppCompatActivity() {
                 onBackPressedDispatcher.onBackPressed()
             }
 
-            btnAddPolicy.setOnClickListener {
+           /* btnAddPolicy.setOnClickListener {
 
-                if (dynamicFields.size>0){
+              *//*  if (dynamicFields.size>0){
                     if (adapter.isValid()) {
 
                         val allFields = adapter.getAllFields()
@@ -94,12 +94,12 @@ class CreateLeavePolicyActivity : AppCompatActivity() {
                     }
                 }else {
                     CustomToast(this@CreateLeavePolicyActivity, "Please add leave policy!")
-                }
+                }*//*
 
 
 
 
-            }
+            }*/
 
 
         }

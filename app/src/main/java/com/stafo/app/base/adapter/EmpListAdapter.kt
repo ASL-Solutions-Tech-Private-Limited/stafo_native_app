@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.R
 import com.stafo.app.databinding.RecyViewEmployeeItemLayoutBinding
 import com.stafo.app.screens.emp.EmployeeProfileDetails
+import com.stafo.app.screens.settings.UploadSelfieAttendanceActivity
 import com.stafo.app.screens.settings.ViewAllEmployeeActivity
 import com.stafo.app.screens.settings.dataClass.GetEmployee
 import com.stafo.app.screens.ui.AutoSearchPlaceActivity
@@ -44,6 +45,7 @@ class EmpListAdapter(
 
 
                 if (from == "View All") {
+
                     binding.llcViewProfile.visibility = View.GONE
                     binding.ivEdit.visibility = View.VISIBLE
                     binding.llcAddAttendance.visibility = View.GONE
@@ -57,6 +59,30 @@ class EmpListAdapter(
                         binding.llcInActiveEmp.visibility = View.GONE
                     }
 
+
+                    if (this.selfieImage.isNullOrEmpty()){
+                        binding.llcUploadSelfie.visibility=View.VISIBLE
+                        binding.llcRemoveSelfie.visibility=View.GONE
+
+                    }else{
+                        binding.llcRemoveSelfie.visibility=View.VISIBLE
+                        binding.llcUploadSelfie.visibility=View.GONE
+                    }
+
+                    binding.llcRemoveSelfie.setOnClickListener {
+                        (context as ViewAllEmployeeActivity).showRemoveAlert(list[position].id.toString())
+                    }
+
+
+                    binding.llcUploadSelfie.setOnClickListener {
+                        context.startActivity(
+                            Intent(
+                                context,
+                                UploadSelfieAttendanceActivity::class.java
+                            ).apply {
+                                putExtra("EMP_ID", list[position].id.toString())
+                            })
+                    }
 
 
                     binding.llcActiveEmp.setOnClickListener {
@@ -97,7 +123,7 @@ class EmpListAdapter(
                     if (this.geo_status == "1") {
                         // Case when geo_status is "1"
                         binding.llcReqLocation.visibility = View.GONE
-                        binding.llcViewMap.visibility = View.VISIBLE
+                        binding.llcViewMap.visibility = View.GONE
                     } else if (!this.geo_status.isNullOrEmpty()) {
                         // Case when geo_status is NOT NULL and NOT "1"
                         binding.llcReqLocation.visibility = View.VISIBLE

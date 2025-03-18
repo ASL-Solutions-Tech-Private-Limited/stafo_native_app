@@ -154,21 +154,72 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/txt_job_title"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_12sdp"
             android:orientation="horizontal">
-
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/llc_inActive_emp"
+                android:id="@+id/llc_remove_selfie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
                 android:background="@drawable/custom_date_bg"
                 android:orientation="horizontal"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <ImageView
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:paddingVertical="@dimen/_8sdp"
+                    android:text="Remove selfie"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10ssp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llc_upload_selfie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:background="@drawable/custom_date_bg"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:paddingVertical="@dimen/_8sdp"
+                    android:text="Upload selfie"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10ssp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llc_inActive_emp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:background="@drawable/custom_date_bg"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+               <!-- <ImageView
                     android:layout_width="@dimen/_18sdp"
                     android:layout_height="@dimen/_18sdp"
                     android:layout_gravity="center_vertical"
@@ -176,14 +227,14 @@
                     android:paddingVertical="@dimen/_4sdp"
                     android:src="@drawable/remove_user"
                     android:tint="@color/black"
-                    tools:ignore="UseAppTint" />
+                    tools:ignore="UseAppTint" />-->
 
                 <TextView
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_4sdp"
-                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
                     android:fontFamily="@font/gilroy_medium"
                     android:paddingVertical="@dimen/_8sdp"
                     android:text="InActive"
@@ -197,14 +248,14 @@
                 android:id="@+id/llc_active_emp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
                 android:background="@drawable/custom_date_bg"
                 android:orientation="horizontal"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <ImageView
+              <!--  <ImageView
                     android:layout_width="@dimen/_18sdp"
                     android:layout_height="@dimen/_18sdp"
                     android:layout_gravity="center_vertical"
@@ -212,14 +263,14 @@
                     android:paddingVertical="@dimen/_3sdp"
                     android:src="@drawable/add_user"
                     android:tint="@color/black"
-                    tools:ignore="UseAppTint" />
+                    tools:ignore="UseAppTint" />-->
 
                 <TextView
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_4sdp"
-                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
                     android:fontFamily="@font/gilroy_medium"
                     android:paddingVertical="@dimen/_8sdp"
                     android:text="Active"
@@ -227,6 +278,12 @@
                     android:textSize="@dimen/_10ssp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+
+
+
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/llc_view_profile"
@@ -262,6 +319,11 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
+
+
+
+
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/llc_req_location"
                 android:layout_width="wrap_content"
@@ -272,21 +334,21 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <ImageView
+           <!--     <ImageView
                     android:layout_width="@dimen/_18sdp"
                     android:layout_height="@dimen/_18sdp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="@dimen/_12sdp"
                     android:src="@drawable/ic_location"
                     android:tint="@color/black"
-                    tools:ignore="UseAppTint" />
+                    tools:ignore="UseAppTint" />-->
 
                 <TextView
                     android:id="@+id/txt_req_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_4sdp"
-                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
                     android:fontFamily="@font/gilroy_medium"
                     android:paddingVertical="@dimen/_8sdp"
                     android:text="Request Location"

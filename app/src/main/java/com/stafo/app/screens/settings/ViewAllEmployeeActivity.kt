@@ -33,6 +33,7 @@ import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.stafo.app.screens.settings.dataClass.InActiveEmpRequest
+import com.stafo.app.screens.settings.dataClass.RemoveSelfieRequest
 import com.stafo.app.utils.doLogout
 import java.util.Calendar
 
@@ -82,6 +83,11 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         setupSearchListener()
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        settingsViewModel.getAllEmployeeList(this@ViewAllEmployeeActivity)
+    }
 
 
 
@@ -172,6 +178,18 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         }
 
 
+        settingsViewModel.mRemoveSelfieResponse.observe(this) {
+
+            if (it.status) {
+
+                settingsViewModel.getAllEmployeeList(this@ViewAllEmployeeActivity)
+                CustomToast(this, it.message)
+
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
+
 
 
         settingsViewModel.mShiftAssignmentResponse.observe(this) {
@@ -230,6 +248,31 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
             )
 
             settingsViewModel.postActiveInactiveEmp(this@ViewAllEmployeeActivity,request)
+
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+
+    fun showRemoveAlert(id:String) {
+        val builder =AlertDialog.Builder(this@ViewAllEmployeeActivity)
+        builder.setTitle(R.string.app_name)
+        builder.setMessage("Are you sure? You want to remove selfie image of this employee!")
+
+        builder.setPositiveButton("Yes") { dialog, _ ->
+
+            val request= RemoveSelfieRequest(
+               employee_id = id
+            )
+
+            settingsViewModel.postRemoveSelfie(this@ViewAllEmployeeActivity,request)
 
             dialog.dismiss()
         }

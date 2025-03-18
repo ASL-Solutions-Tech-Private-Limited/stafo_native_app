@@ -78,6 +78,9 @@ import com.stafo.app.screens.settings.dataClass.PunchInRequest
 import com.stafo.app.screens.settings.dataClass.PunchInResponse
 import com.stafo.app.screens.settings.dataClass.QRAttendanceMarkRequest
 import com.stafo.app.screens.settings.dataClass.QRAttendanceMarkResponse
+import com.stafo.app.screens.settings.dataClass.RemoveSelfieRequest
+import com.stafo.app.screens.settings.dataClass.RemoveSelfieResponse
+import com.stafo.app.screens.settings.dataClass.SelfieUploadResponse
 import com.stafo.app.screens.settings.dataClass.SendFeedbackRequest
 import com.stafo.app.screens.settings.dataClass.SendFeedbackResponse
 import com.stafo.app.screens.settings.dataClass.SetAttendanceTypeRequest
@@ -518,5 +521,19 @@ interface ApiStores {
         @Body request: InActiveEmpRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<InActiveEmpResponse>
+
+    @Multipart
+    @POST("api/employee/selfie-image-upload")
+    suspend fun uploadSelfieImage(
+        @Part("employee_id") employeeId: RequestBody,
+        @Part image: MultipartBody.Part,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<SelfieUploadResponse>
+
+    @POST("api/employee/selfie-image-remove")
+    suspend fun callRemoveSelfie(
+        @Body request: RemoveSelfieRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<RemoveSelfieResponse>
 
 }

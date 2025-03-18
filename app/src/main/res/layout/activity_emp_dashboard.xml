@@ -184,11 +184,14 @@
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tv_office_timing"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_12sdp"
+                            android:layout_marginHorizontal="@dimen/_9sdp"
+                            android:layout_marginVertical="@dimen/_12sdp"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
                             android:fontFamily="@font/gilroy_medium"
-                            android:text="Your Office timing is"
+                            android:text="No shift assigned yet"
                             android:textSize="@dimen/_12ssp" />
 
                         <androidx.appcompat.widget.AppCompatButton

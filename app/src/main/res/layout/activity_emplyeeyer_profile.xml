@@ -31,16 +31,17 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <de.hdodenhof.circleimageview.CircleImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:id="@+id/iv_header_profile_pic"
+                    app:shapeAppearanceOverlay="@style/Circular"
+                    android:background="@color/white"
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="@dimen/_100sdp"
-                    android:padding="@dimen/_4sdp"
-                    android:src="@drawable/demo_avatar" />
+                    android:padding="@dimen/_4sdp" />
 
 
                 <com.google.android.material.imageview.ShapeableImageView

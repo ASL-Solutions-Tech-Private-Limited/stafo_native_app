@@ -98,6 +98,9 @@ import com.stafo.app.screens.settings.dataClass.CreateLeavePolicyRequest
 import com.stafo.app.screens.settings.dataClass.CreateLeavePolicyResponse
 import com.stafo.app.screens.settings.dataClass.InActiveEmpRequest
 import com.stafo.app.screens.settings.dataClass.InActiveEmpResponse
+import com.stafo.app.screens.settings.dataClass.RemoveSelfieRequest
+import com.stafo.app.screens.settings.dataClass.RemoveSelfieResponse
+import com.stafo.app.screens.settings.dataClass.SelfieUploadResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -388,6 +391,128 @@ class SettingsViewModel : BaseViewModel() {
     private var mInActiveEmp: MutableLiveData<InActiveEmpResponse> = MutableLiveData()
 
     val mInActiveEmpResponse: LiveData<InActiveEmpResponse> get() = mInActiveEmp
+
+
+
+    private var mSelfieUpload: MutableLiveData<SelfieUploadResponse> = MutableLiveData()
+
+    val mSelfieUploadResponse: LiveData<SelfieUploadResponse> get() = mSelfieUpload
+
+
+    private var mRemoveSelfie: MutableLiveData<RemoveSelfieResponse> = MutableLiveData()
+
+    val mRemoveSelfieResponse: LiveData<RemoveSelfieResponse> get() = mRemoveSelfie
+
+    fun postRemoveSelfie(
+        mContext: Context,
+        request: RemoveSelfieRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callRemoveSelfie(request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mRemoveSelfie.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+    fun uploadSelfieAttendance(
+        mContext: Context,
+        employeeId: String,
+        file: File?
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                if (file == null) {
+                    withContext(Dispatchers.Main) {
+                        getLoaderLiveData().postValue("stop")
+                        CustomToast(mContext, "File is null, cannot upload image.")
+                    }
+                    return@launch
+                }
+                val requestBodyEmployeeId = RequestBody.create("text/plain".toMediaTypeOrNull(), employeeId)
+                val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+
+                val imagePart = MultipartBody.Part.createFormData("selfie_image", file.name, requestFile)
+
+                val response = ASLEmpMng.instance.apiStores()?.uploadSelfieImage(requestBodyEmployeeId,imagePart)
+
+
+                Log.d("res", "add selfie image :${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mSelfieUpload.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
 
 
     fun postActiveInactiveEmp(

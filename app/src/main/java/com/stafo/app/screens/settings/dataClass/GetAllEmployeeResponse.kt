@@ -1,5 +1,7 @@
 package com.stafo.app.screens.settings.dataClass
 
+import com.google.gson.annotations.SerializedName
+
 data class GetAllEmployeeResponse(
     val status: Boolean,
     val message: String,
@@ -14,6 +16,7 @@ data class GetEmployee(
     val phone: String,
     val position: String,
     val salary: String?,
+    @SerializedName("selfie_image") val selfieImage: String?,
     val company_id: Int,
     val branch_name: String,
     val department_name: String,

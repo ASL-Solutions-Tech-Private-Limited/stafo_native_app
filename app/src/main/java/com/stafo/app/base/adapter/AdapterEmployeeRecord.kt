@@ -51,8 +51,8 @@ class AdapterEmployeeRecord(
             } else {
                 llcAttend.visibility = View.VISIBLE
                 llcWeekOff.visibility = View.GONE
-                tvCheckIn.text = item.punchIn ?: ""
-                tvCheckOut.text = if (item.punchOut == "null") "" else item.punchOut ?: ""
+                tvCheckIn.text = item.punchIn
+                tvCheckOut.text = if (item.punchOut == "null") "" else item.punchOut
 
                 tvWorkingHrs.text =
                     if (!item.punchIn.isNullOrEmpty() && !item.punchOut.isNullOrEmpty()) {

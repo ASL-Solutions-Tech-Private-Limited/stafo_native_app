@@ -94,8 +94,7 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
-                            android:hint="Description"
-                            android:inputType="number"
+                            android:hint="Description ( optional )"
                             android:textSize="@dimen/_12ssp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
