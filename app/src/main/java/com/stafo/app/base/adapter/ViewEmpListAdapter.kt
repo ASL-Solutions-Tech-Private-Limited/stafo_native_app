@@ -33,7 +33,7 @@ class ViewEmpListAdapter (
                 binding.txtEmpName.text = this.name
                 binding.txtMobile.text = this.phone
                 binding.txtEmail.text = this.email
-                binding.txtJobTitle.text = this.position
+               // binding.txtJobTitle.text = this.position
                 binding.llcViewProfile.visibility = View.GONE
                 binding.llcAddAttendance.visibility = View.GONE
                 binding.llcShiftTime.visibility = View.GONE

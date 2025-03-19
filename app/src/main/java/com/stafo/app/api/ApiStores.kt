@@ -102,6 +102,9 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.Field
+import retrofit2.http.FieldMap
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.HeaderMap
 import retrofit2.http.Multipart
@@ -291,9 +294,11 @@ interface ApiStores {
     ): Response<PunchInResponse>
 
 
+    @FormUrlEncoded
     @POST("api/employees/assign-shift")
     suspend fun callAssignShift(
-        @Body request: AssignShiftRequest,
+        @Field("employee_id") employeeId: String,
+        @FieldMap shiftIds: Map<String, String>,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<ShiftAssignmentResponse>
 

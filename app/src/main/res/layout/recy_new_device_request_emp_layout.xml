@@ -110,7 +110,7 @@
             android:textSize="@dimen/_12ssp" />
 
 
-        <TextView
+   <!--     <TextView
             android:id="@+id/txt_job_title1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -135,13 +135,13 @@
             android:singleLine="true"
             android:text=""
             android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp" />
+            android:textSize="@dimen/_12ssp" />-->
 
         <TextView
             android:id="@+id/txt_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_job_title"
+            android:layout_below="@+id/txt_email"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_8sdp"
@@ -157,7 +157,7 @@
             android:id="@+id/rtl_approve_reject"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_job_title"
+            android:layout_below="@+id/txt_email"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_10sdp"
             android:orientation="horizontal"

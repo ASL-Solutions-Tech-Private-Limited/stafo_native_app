@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
@@ -34,6 +35,7 @@ import com.stafo.app.utils.getEmployeeComId
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.stafo.app.screens.settings.dataClass.InActiveEmpRequest
 import com.stafo.app.screens.settings.dataClass.RemoveSelfieRequest
+import com.stafo.app.screens.settings.dataClass.ShiftDataList
 import com.stafo.app.utils.doLogout
 import java.util.Calendar
 
@@ -50,6 +52,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
     private var empList: List<GetEmployee> = listOf()
     private var filteredList: List<GetEmployee> = listOf()
+    private var shiftList: List<ShiftDataList> = listOf()
 
     //for bottom sheet
     private lateinit var bottomSheetDialog: BottomSheetDialog
@@ -58,17 +61,20 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     private lateinit var rvRadioShiftAdapter: RadioShiftAdapter
     private val calendar = Calendar.getInstance()
 
-    private var attendanceLocation:String="from office"
+    private var attendanceLocation: String = "from office"
 
-    private  var isSelfie:String="false"
-    private  var isQR:String="false"
-    private  var isGeo:String="false"
-    private  var isAllow:String="false"
-    private  var attendanceType:String="false"
+    private var isSelfie: String = "false"
+    private var isQR: String = "false"
+    private var isGeo: String = "false"
+    private var isAllow: String = "false"
+    private var attendanceType: String = "false"
+
+
+    var selectedShiftIds: List<String> = emptyList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding=ActivityViewAllEmployeeBinding.inflate(layoutInflater)
+        binding = ActivityViewAllEmployeeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -90,7 +96,6 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     }
 
 
-
     private fun observeViewModel() {
 
 
@@ -98,65 +103,75 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
         settingsViewModel.mGetAllEmployeeResponse.observe(this) {
 
-           if (it.status) {
+            if (it.status) {
 
 
-               if (it.data.isNotEmpty()){
+                if (it.data.isNotEmpty()) {
 
-                   binding.etDirSearch.isFocusable = true
-                   binding.etDirSearch.isFocusableInTouchMode = true
+                    binding.etDirSearch.isFocusable = true
+                    binding.etDirSearch.isFocusableInTouchMode = true
 
-                   empList=it.data
-                   filteredList=empList
+                    empList = it.data
+                    filteredList = empList
 
-                   val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
-                   binding.rvViewEmpList.setLayoutManager(layoutManager)
-                   rvAdapter = EmpListAdapter(empList, this, mFrom, object : EmpListAdapter.onGeoClick {
-                       override fun onEMPClick(empID: String, type: String) {
-                           if (type == "Request Location") {
-                               settingsViewModel.sendGeoLocationRequest(
-                                   this@ViewAllEmployeeActivity,
-                                   empID, "0"
-                               )
-                           }
-                       }
+                    val layoutManager: RecyclerView.LayoutManager =
+                        LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                    binding.rvViewEmpList.setLayoutManager(layoutManager)
+                    rvAdapter =
+                        EmpListAdapter(empList, this, mFrom, object : EmpListAdapter.onGeoClick {
+                            override fun onEMPClick(empID: String, type: String) {
+                                if (type == "Request Location") {
+                                    settingsViewModel.sendGeoLocationRequest(
+                                        this@ViewAllEmployeeActivity,
+                                        empID, "0"
+                                    )
+                                }
+                            }
 
-                   })
-                   binding.rvViewEmpList.adapter = rvAdapter
-                   rvAdapter.notifyDataSetChanged()
-
-
-               }else{
-                   binding.etDirSearch.isFocusable = false
-                   binding.etDirSearch.isFocusableInTouchMode = false
-                   binding.txtMsg.visibility = View.VISIBLE
-               }
+                        })
+                    binding.rvViewEmpList.adapter = rvAdapter
+                    rvAdapter.notifyDataSetChanged()
 
 
+                } else {
+                    binding.etDirSearch.isFocusable = false
+                    binding.etDirSearch.isFocusableInTouchMode = false
+                    binding.txtMsg.visibility = View.VISIBLE
+                }
 
 
-           } else {
-               binding.etDirSearch.isFocusable = false
-               binding.etDirSearch.isFocusableInTouchMode = false
-               binding.txtMsg.visibility = View.VISIBLE
-           }
-       }
+            } else {
+                binding.etDirSearch.isFocusable = false
+                binding.etDirSearch.isFocusableInTouchMode = false
+                binding.txtMsg.visibility = View.VISIBLE
+            }
+        }
 
 
         settingsViewModel.mShiftListResponse.observe(this) {
 
             if (it.success) {
-                val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-                rvRadioShift.setLayoutManager(layoutManager)
-                rvRadioShiftAdapter = RadioShiftAdapter(it.data, this,
-                    object : RadioShiftAdapter.ActionClickListener {
-                        override fun onActionClick(action: String) {
-                            shiftID=action
-                        }
 
-                    })
-                rvRadioShift.adapter = rvRadioShiftAdapter
-                rvAdapter.notifyDataSetChanged()
+                if (it.data.isNotEmpty()) {
+                    shiftList = it.data
+                    val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+                    rvRadioShift.setLayoutManager(layoutManager)
+                    rvRadioShiftAdapter = RadioShiftAdapter(
+                        shiftList,
+                        this,
+                        object : RadioShiftAdapter.ActionClickListener {
+                            override fun onActionClick(selectedShifts: List<String>) {
+
+                                selectedShiftIds = selectedShifts
+                            }
+                        })
+                    rvRadioShift.adapter = rvRadioShiftAdapter
+                    rvAdapter.notifyDataSetChanged()
+                } else {
+                    CustomToast(this, "No shifts available.Please add shifts first!")
+                    shiftBottomSheetDialog.dismiss()
+                }
+
 
             } else {
                 CustomToast(this, it.message)
@@ -197,6 +212,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
             if (it.success) {
                 CustomToast(this, it.message)
                 shiftBottomSheetDialog.dismiss()
+                settingsViewModel.getAllEmployeeList(this@ViewAllEmployeeActivity)
 
             } else {
                 CustomToast(this, it.message)
@@ -206,7 +222,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         settingsViewModel.mSendGeoLocationResponse.observe(this) {
             if (it.status) {
                 CustomToast(this, it.message)
-            }else{
+            } else {
                 CustomToast(this, it.message)
             }
         }
@@ -215,7 +231,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
             if (it.status) {
                 CustomToast(this, it.message)
                 bottomSheetDialog.dismiss()
-            }else{
+            } else {
                 CustomToast(this, it.message)
             }
         }
@@ -232,22 +248,19 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     }
 
 
-
-
-
-    fun showActiveAlert(id:String,status:String) {
-        val builder =AlertDialog.Builder(this@ViewAllEmployeeActivity)
+    fun showActiveAlert(id: String, status: String) {
+        val builder = AlertDialog.Builder(this@ViewAllEmployeeActivity)
         builder.setTitle(R.string.app_name)
         builder.setMessage("Are you sure? You want to change status this employee!")
 
         builder.setPositiveButton("Yes") { dialog, _ ->
 
-            val request= InActiveEmpRequest(
-                id=id,
+            val request = InActiveEmpRequest(
+                id = id,
                 status = status
             )
 
-            settingsViewModel.postActiveInactiveEmp(this@ViewAllEmployeeActivity,request)
+            settingsViewModel.postActiveInactiveEmp(this@ViewAllEmployeeActivity, request)
 
             dialog.dismiss()
         }
@@ -261,18 +274,18 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     }
 
 
-    fun showRemoveAlert(id:String) {
-        val builder =AlertDialog.Builder(this@ViewAllEmployeeActivity)
+    fun showRemoveAlert(id: String) {
+        val builder = AlertDialog.Builder(this@ViewAllEmployeeActivity)
         builder.setTitle(R.string.app_name)
         builder.setMessage("Are you sure? You want to remove selfie image of this employee!")
 
         builder.setPositiveButton("Yes") { dialog, _ ->
 
-            val request= RemoveSelfieRequest(
-               employee_id = id
+            val request = RemoveSelfieRequest(
+                employee_id = id
             )
 
-            settingsViewModel.postRemoveSelfie(this@ViewAllEmployeeActivity,request)
+            settingsViewModel.postRemoveSelfie(this@ViewAllEmployeeActivity, request)
 
             dialog.dismiss()
         }
@@ -286,9 +299,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     }
 
 
-
     private fun setOnClickEvents() {
-
 
 
         settingsViewModel.getAllEmployeeList(this@ViewAllEmployeeActivity)
@@ -306,12 +317,11 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         }
 
 
-
     }
 
 
-     @SuppressLint("MissingInflatedId")
-     fun showCustomBottomSheet(id:Int) {
+    @SuppressLint("MissingInflatedId")
+    fun showCustomBottomSheet(id: Int, getAttendanceType: String?) {
         bottomSheetDialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.attendance_mode_bottom_sheet_layout, null)
 
@@ -335,83 +345,93 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
         val btnSetAttendanceType = view.findViewById<AppCompatButton>(R.id.btn_setAttendance_type)
 
-       /*  switchGeo.setOnCheckedChangeListener { _, isChecked ->
-             isGeo = if (isChecked) "true" else "false"
-         }
-         switchQr.setOnCheckedChangeListener { _, isChecked ->
-             isQR = if (isChecked) "true" else "false"
-         }
-         switchSelfie.setOnCheckedChangeListener { _, isChecked ->
-             isSelfie = if (isChecked) "true" else "false"
-         }*/
-         switchAllow.setOnCheckedChangeListener { _, isChecked ->
-             attendanceType = if (isChecked) "true" else "false"
-         }
+
+        when (getAttendanceType) {
+            "geo" -> {
+                switchGeo.isChecked = true
+                attendanceType = "geo"
+            }
+
+            "qr code" -> {
+                switchQr.isChecked = true
+                attendanceType = "qr code"
+            }
+
+            "selfie" -> {
+                switchSelfie.isChecked = true
+                attendanceType = "selfie"
+            }
+        }
 
 
-         switchGeo.setOnCheckedChangeListener { _, isChecked ->
-             if (isChecked) {
-                 attendanceType = "geo"
-                 switchQr.isChecked = false
-                 switchSelfie.isChecked = false
-             }
-         }
-
-         switchQr.setOnCheckedChangeListener { _, isChecked ->
-             if (isChecked) {
-                 attendanceType = "qr code"
-                 switchGeo.isChecked = false
-                 switchSelfie.isChecked = false
-             }
-         }
-
-         switchSelfie.setOnCheckedChangeListener { _, isChecked ->
-             if (isChecked) {
-                 attendanceType = "selfie"
-                 switchGeo.isChecked = false
-                 switchQr.isChecked = false
-             }
-         }
+        switchAllow.setOnCheckedChangeListener { _, isChecked ->
+            attendanceType = if (isChecked) "true" else "false"
+        }
 
 
+        switchGeo.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                attendanceType = "geo"
+                switchQr.isChecked = false
+                switchSelfie.isChecked = false
+            }
+        }
 
-         llFromOffice.setOnClickListener {
+        switchQr.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                attendanceType = "qr code"
+                switchGeo.isChecked = false
+                switchSelfie.isChecked = false
+            }
+        }
 
-             attendanceLocation="from office"
-             llFromOffice.setBackgroundResource(R.drawable.custom_switch_card_bg)
-             llFromAny.setBackgroundResource(R.drawable.custom_switch_card_bg2)
-
-             imgOffice.setImageResource(R.drawable.ic_lv_active_radio)
-             imgAny.setImageResource(R.drawable.ic_lv_inactive_radio)
-
-         }
-
-         llFromAny.setOnClickListener {
-             attendanceLocation="from anywhere"
-             llFromOffice.setBackgroundResource(R.drawable.custom_switch_card_bg2)
-             llFromAny.setBackgroundResource(R.drawable.custom_switch_card_bg)
-
-             imgOffice.setImageResource(R.drawable.ic_lv_inactive_radio)
-             imgAny.setImageResource(R.drawable.ic_lv_active_radio)
-         }
-
-         btnSetAttendanceType.setOnClickListener {
-
-             if (attendanceType=="false"){
-                 CustomToast(this,"Please select attendance type!")
-                 Log.d("res","get val $isGeo $isSelfie $isAllow $isQR $attendanceLocation")
-             }else{
-                 Log.d("res","get val $isGeo $isSelfie $isAllow $isQR $attendanceLocation")
-                 val request=SetAttendanceTypeRequest(
-                     employee_id = id,
-                     attendance_type = attendanceType
-                 )
-                 Log.d("res","post: $request")
-                 settingsViewModel.setAttendanceTypeEmployee(this,request)
-             }
+        switchSelfie.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                attendanceType = "selfie"
+                switchGeo.isChecked = false
+                switchQr.isChecked = false
+            }
+        }
 
 
-         }
+
+        llFromOffice.setOnClickListener {
+
+            attendanceLocation = "from office"
+            llFromOffice.setBackgroundResource(R.drawable.custom_switch_card_bg)
+            llFromAny.setBackgroundResource(R.drawable.custom_switch_card_bg2)
+
+            imgOffice.setImageResource(R.drawable.ic_lv_active_radio)
+            imgAny.setImageResource(R.drawable.ic_lv_inactive_radio)
+
+        }
+
+        llFromAny.setOnClickListener {
+            attendanceLocation = "from anywhere"
+            llFromOffice.setBackgroundResource(R.drawable.custom_switch_card_bg2)
+            llFromAny.setBackgroundResource(R.drawable.custom_switch_card_bg)
+
+            imgOffice.setImageResource(R.drawable.ic_lv_inactive_radio)
+            imgAny.setImageResource(R.drawable.ic_lv_active_radio)
+        }
+
+        btnSetAttendanceType.setOnClickListener {
+
+            if (attendanceType == "false") {
+                CustomToast(this, "Please select attendance type!")
+                Log.d("res", "get val $isGeo $isSelfie $isAllow $isQR $attendanceLocation")
+            } else {
+                Log.d("res", "get val $isGeo $isSelfie $isAllow $isQR $attendanceLocation")
+                val request = SetAttendanceTypeRequest(
+                    employee_id = id,
+                    attendance_type = attendanceType
+                )
+                Log.d("res", "post: $request")
+                settingsViewModel.setAttendanceTypeEmployee(this, request)
+            }
+
+
+        }
 
 
 
@@ -432,7 +452,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     }
 
     @SuppressLint("MissingInflatedId")
-    fun showShiftCustomBottomSheet(id:String) {
+    fun showShiftCustomBottomSheet(id: String) {
         shiftBottomSheetDialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.shift_time_bottom_sheet_layout, null)
 
@@ -447,21 +467,23 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         val btnCancel = view.findViewById<AppCompatImageView>(R.id.bottom_sheet_cancel)
         rvRadioShift = view.findViewById(R.id.rv_radio_shift)
         val btnSubmit = view.findViewById<AppCompatButton>(R.id.btn_submit)
+        val cbSelectAll = view.findViewById<CheckBox>(R.id.cbSelectAll)
+
+        cbSelectAll.setOnCheckedChangeListener { _, isChecked ->
+            rvRadioShiftAdapter.setMultiSelectionEnabled(isChecked)
+        }
 
 
 
         btnSubmit.setOnClickListener {
 
 
-            if (::shiftID.isInitialized && shiftID.isNotEmpty()){
-                val request=AssignShiftRequest(
-                    employeeId = id,
-                    shiftId = shiftID
-                )
-              Log.d("res","post: $request")
-                settingsViewModel.assignShift(this,request)
-            }else{
-                CustomToast(this,"Please select shift!")
+            if (selectedShiftIds.isNotEmpty()) {
+
+                settingsViewModel.assignShift(this, id, selectedShiftIds)
+
+            } else {
+                CustomToast(this, "Please select shift!")
             }
 
         }
@@ -474,7 +496,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
 
         btnCancel.setOnClickListener {
-            shiftID=""
+            shiftID = ""
             shiftBottomSheetDialog.dismiss()
         }
 
@@ -486,7 +508,6 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
 
     }
-
 
 
     private fun setupSearchListener() {

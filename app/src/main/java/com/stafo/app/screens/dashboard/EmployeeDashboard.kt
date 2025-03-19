@@ -692,6 +692,8 @@ class EmployeeDashboard : AppCompatActivity() {
             }
 
             if (wishList.isNotEmpty()) {
+                binding.llNoWishes.visibility = View.GONE
+                binding.rvWishes.visibility = View.VISIBLE
                 binding.rvWishes.adapter = AdapterWishList(wishList, this@EmployeeDashboard)
             } else {
                 binding.llNoWishes.visibility = View.VISIBLE
@@ -699,6 +701,10 @@ class EmployeeDashboard : AppCompatActivity() {
             }
 
             if (it.employeesOnLeave != null && it.employeesOnLeave.isNotEmpty()) {
+
+                binding.rvLeaves.visibility = View.VISIBLE
+                binding.llLeaves.visibility = View.GONE
+
                 binding.rvLeaves.layoutManager =
                     LinearLayoutManager(
                         this@EmployeeDashboard,
@@ -710,6 +716,7 @@ class EmployeeDashboard : AppCompatActivity() {
                 binding.rvLeaves.adapter = rvAdapter
                 // binding.tvLeaveViewAll.text = it.employeesOnLeave.size.toString()
             } else {
+                binding.rvLeaves.visibility = View.GONE
                 binding.llLeaves.visibility = View.VISIBLE
             }
         }

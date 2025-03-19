@@ -22,6 +22,8 @@ data class GetEmployee(
     val department_name: String,
     val geo_status: String?,
     val status: String,
+    @SerializedName("device_status") val deviceStatus: String?,
+    @SerializedName("attendance_type") val attendanceType: String?,
     val attendances: List<Attendance>
 )
 

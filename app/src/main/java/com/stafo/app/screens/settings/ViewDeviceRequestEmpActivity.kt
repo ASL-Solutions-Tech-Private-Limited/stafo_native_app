@@ -93,6 +93,12 @@ class ViewDeviceRequestEmpActivity : AppCompatActivity() {
         settingsViewModel.mChangeDeviceResponse.observe(this) {
            if (it.success){
                CustomToast(this,it.message)
+               getEmployeeComId()?.let {
+                   val request= CompanyViewRequestDevice(
+                       company_id = it.toInt()
+                   )
+                   settingsViewModel.companyAcceptRequestDeviceChange(this@ViewDeviceRequestEmpActivity,request)
+               }
            }else{
                CustomToast(this,it.message)
            }

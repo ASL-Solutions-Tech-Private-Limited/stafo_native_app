@@ -36,7 +36,7 @@ class AdapterDeviceRequest (
             with(list[position]) {
                 binding.txtEmpName.text = this.name
                 binding.txtMobile.text = this.phone
-                binding.txtJobTitle.text = this.position
+               // binding.txtJobTitle.text = this.position
                 binding.txtEmail.text = this.email
 
 

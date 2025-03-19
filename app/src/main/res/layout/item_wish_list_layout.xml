@@ -14,14 +14,13 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/_6sdp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+      <!--  <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_avatar"
             android:layout_width="@dimen/_45sdp"
             android:layout_height="@dimen/_45sdp"
-            android:src="@drawable/demo_avatar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />-->
 
         <LinearLayout
             android:id="@+id/ll_user_"
@@ -31,7 +30,7 @@
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/iv_birthday"
-            app:layout_constraintStart_toEndOf="@id/iv_avatar"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatTextView

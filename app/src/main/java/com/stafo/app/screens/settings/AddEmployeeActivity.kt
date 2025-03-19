@@ -270,7 +270,7 @@ class AddEmployeeActivity : AppCompatActivity() {
 
 
 
-            binding.genderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            /*binding.genderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
                 val radioButton = group.findViewById<RadioButton>(R.id.male)
                 val radioButton1 = group.findViewById<RadioButton>(R.id.female)
                 when (checkedId) {
@@ -310,6 +310,98 @@ class AddEmployeeActivity : AppCompatActivity() {
                             PorterDuff.Mode.SRC_IN
                         )
                         radioButton.setCompoundDrawables(drawable1, null, null, null)
+                    }
+                }
+
+
+            }*/
+
+            binding.genderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+                val radioButton = group.findViewById<RadioButton>(R.id.male)
+                val radioButton1 = group.findViewById<RadioButton>(R.id.female)
+                val radioButton3 = group.findViewById<RadioButton>(R.id.other)
+                when (checkedId) {
+                    R.id.male -> {
+                        selectGender = "male"
+                        radioButton.setTextColor(resources.getColor(R.color.white))
+                        val drawable = radioButton.compoundDrawables[0]
+                        drawable.setColorFilter(
+                            resources.getColor(R.color.white),
+                            PorterDuff.Mode.SRC_IN
+                        )
+                        radioButton.setCompoundDrawables(drawable, null, null, null)
+
+                        radioButton1.setTextColor(resources.getColor(R.color.black))
+                        val drawable1 = radioButton1.compoundDrawables[0]
+                        drawable1.setColorFilter(
+                            resources.getColor(R.color.black),
+                            PorterDuff.Mode.SRC_IN
+                        )
+                        radioButton1.setCompoundDrawables(drawable1, null, null, null)
+
+                        radioButton3.setTextColor(resources.getColor(R.color.black))
+                        val drawable3 = radioButton3.compoundDrawables[0]
+                        drawable3.setColorFilter(
+                            resources.getColor(R.color.black),
+                            PorterDuff.Mode.SRC_IN
+                        )
+                        radioButton3.setCompoundDrawables(drawable3, null, null, null)
+                    }
+
+                    R.id.female -> {
+                        selectGender = "female"
+                        radioButton1.setTextColor(resources.getColor(R.color.white))
+                        val drawable = radioButton1.compoundDrawables[0]
+                        drawable.setColorFilter(
+                            resources.getColor(R.color.white),
+                            PorterDuff.Mode.SRC_IN
+                        )
+                        radioButton1.setCompoundDrawables(drawable, null, null, null)
+
+                        radioButton.setTextColor(resources.getColor(R.color.black))
+                        val drawable1 = radioButton.compoundDrawables[0]
+                        drawable1.setColorFilter(
+                            resources.getColor(R.color.black),
+                            PorterDuff.Mode.SRC_IN
+                        )
+                        radioButton.setCompoundDrawables(drawable1, null, null, null)
+
+                        radioButton3.setTextColor(resources.getColor(R.color.black))
+                        val drawable3 = radioButton3.compoundDrawables[0]
+                        drawable3.setColorFilter(
+                            resources.getColor(R.color.black),
+                            PorterDuff.Mode.SRC_IN
+                        )
+                        radioButton3.setCompoundDrawables(drawable3, null, null, null)
+                    }
+
+                    R.id.other -> {
+                        selectGender = "other"
+                        radioButton3.setTextColor(resources.getColor(R.color.white))
+                        val drawable3 = radioButton3.compoundDrawables[0]
+                        drawable3.setColorFilter(
+                            resources.getColor(R.color.white),
+                            PorterDuff.Mode.SRC_IN
+                        )
+                        radioButton3.setCompoundDrawables(drawable3, null, null, null)
+
+                        radioButton.setTextColor(resources.getColor(R.color.black))
+                        val drawable = radioButton.compoundDrawables[0]
+                        drawable.setColorFilter(
+                            resources.getColor(R.color.black),
+                            PorterDuff.Mode.SRC_IN
+                        )
+                        radioButton.setCompoundDrawables(drawable, null, null, null)
+
+                        radioButton1.setTextColor(resources.getColor(R.color.black))
+                        val drawable1 = radioButton1.compoundDrawables[0]
+                        drawable1.setColorFilter(
+                            resources.getColor(R.color.black),
+                            PorterDuff.Mode.SRC_IN
+                        )
+                        radioButton1.setCompoundDrawables(drawable1, null, null, null)
+
+
                     }
                 }
 

@@ -360,7 +360,7 @@
                         android:layout_marginTop="@dimen/_4sdp"
                         android:checkedButton="@id/male"
                         android:orientation="horizontal"
-                        android:weightSum="2"
+                        android:weightSum="3"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txt_Gender">
@@ -394,6 +394,23 @@
                             android:fontFamily="@font/gilroy_medium"
                             android:padding="@dimen/_12sdp"
                             android:text="Female"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp"
+                            app:drawableTint="@color/black" />
+
+                        <RadioButton
+                            android:id="@+id/other"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_36sdp"
+                            android:layout_marginStart="@dimen/_8sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/gender_background_selector"
+                            android:button="@android:color/transparent"
+                            android:drawableStart="@drawable/resize_other_gender"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:padding="@dimen/_12sdp"
+                            android:text="Other"
                             android:textAlignment="center"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12ssp"

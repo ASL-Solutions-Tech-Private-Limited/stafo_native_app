@@ -41,7 +41,7 @@ class EmpListAdapter(
                 binding.txtEmpName.text = this.name
                 binding.txtMobile.text = this.phone
                 binding.txtEmail.text = this.email
-                binding.txtJobTitle.text = this.position
+               // binding.txtJobTitle.text = this.position
 
 
                 if (from == "View All") {
@@ -179,7 +179,7 @@ class EmpListAdapter(
                 }
 
                 binding.llcAddAttendance.setOnClickListener {
-                    (context as ViewAllEmployeeActivity).showCustomBottomSheet(this.id)
+                    (context as ViewAllEmployeeActivity).showCustomBottomSheet(this.id,this.attendanceType)
                 }
 
                 binding.llcShiftTime.setOnClickListener {

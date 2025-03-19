@@ -152,6 +152,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                     when (selectGender) {
                         "male" -> binding.genderRadioGroup.check(R.id.male)
                         "female" -> binding.genderRadioGroup.check(R.id.female)
+                        "other" -> binding.genderRadioGroup.check(R.id.other)
                     }
 
 
@@ -185,7 +186,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
 
-                    val position = data.position ?: ""
+                    /*val position = data.position ?: ""
 
                     selectJobTitle = position
 
@@ -194,7 +195,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                         if (index != -1) {
                             binding.spinnerJobTitle.setSelection(index)
                         }
-                    }
+                    }*/
 
 
                     val maritalStatusFromApi = data.maritalStatus ?: ""
@@ -287,7 +288,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
         }
 
 
-        settingsViewModel.mJobTitleResponse.observe(this@EmployeeProfileDetails) { response ->
+       /* settingsViewModel.mJobTitleResponse.observe(this@EmployeeProfileDetails) { response ->
             if (response.status) {
 
                 mJobTitleList = ArrayList(response.data.map { it.name })
@@ -317,7 +318,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
             } else {
                 CustomToast(this@EmployeeProfileDetails, response.message)
             }
-        }
+        }*/
 
 
 
@@ -480,6 +481,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
             binding.genderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
                 val radioButton = group.findViewById<RadioButton>(R.id.male)
                 val radioButton1 = group.findViewById<RadioButton>(R.id.female)
+                val radioButton3 = group.findViewById<RadioButton>(R.id.other)
                 when (checkedId) {
                     R.id.male -> {
                         selectGender = "male"
@@ -498,6 +500,14 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             PorterDuff.Mode.SRC_IN
                         )
                         radioButton1.setCompoundDrawables(drawable1, null, null, null)
+
+                        radioButton3.setTextColor(resources.getColor(R.color.black))
+                        val drawable3 = radioButton3.compoundDrawables[0]
+                        drawable3.setColorFilter(
+                            resources.getColor(R.color.black),
+                            PorterDuff.Mode.SRC_IN
+                        )
+                        radioButton3.setCompoundDrawables(drawable3, null, null, null)
                     }
 
                     R.id.female -> {
@@ -517,6 +527,43 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             PorterDuff.Mode.SRC_IN
                         )
                         radioButton.setCompoundDrawables(drawable1, null, null, null)
+
+                        radioButton3.setTextColor(resources.getColor(R.color.black))
+                        val drawable3 = radioButton3.compoundDrawables[0]
+                        drawable3.setColorFilter(
+                            resources.getColor(R.color.black),
+                            PorterDuff.Mode.SRC_IN
+                        )
+                        radioButton3.setCompoundDrawables(drawable3, null, null, null)
+                    }
+
+                    R.id.other -> {
+                        selectGender = "other"
+                        radioButton3.setTextColor(resources.getColor(R.color.white))
+                        val drawable3 = radioButton3.compoundDrawables[0]
+                        drawable3.setColorFilter(
+                            resources.getColor(R.color.white),
+                            PorterDuff.Mode.SRC_IN
+                        )
+                        radioButton3.setCompoundDrawables(drawable3, null, null, null)
+
+                        radioButton.setTextColor(resources.getColor(R.color.black))
+                        val drawable = radioButton.compoundDrawables[0]
+                        drawable.setColorFilter(
+                            resources.getColor(R.color.black),
+                            PorterDuff.Mode.SRC_IN
+                        )
+                        radioButton.setCompoundDrawables(drawable, null, null, null)
+
+                        radioButton1.setTextColor(resources.getColor(R.color.black))
+                        val drawable1 = radioButton1.compoundDrawables[0]
+                        drawable1.setColorFilter(
+                            resources.getColor(R.color.black),
+                            PorterDuff.Mode.SRC_IN
+                        )
+                        radioButton1.setCompoundDrawables(drawable1, null, null, null)
+
+
                     }
                 }
 

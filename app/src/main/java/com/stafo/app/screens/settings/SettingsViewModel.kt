@@ -2063,35 +2063,34 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-    fun assignShift(mContext: Context, request: AssignShiftRequest) {
+    fun assignShift(mContext: Context, employeeId: String, selectedShiftIds: List<String>) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                val shiftIdsMap = HashMap<String, String>()
+                selectedShiftIds.forEachIndexed { index, shiftId ->
+                    shiftIdsMap["shift_ids[$index]"] = shiftId
+                }
 
+                Log.d("res", "Final Shift Data: $shiftIdsMap, Employee ID: $employeeId")
 
-                val response = ASLEmpMng.instance.apiStores()?.callAssignShift(request)
-                Log.d("res", "mPunchIn: ${response?.body().toString()}")
+                val response = ASLEmpMng.instance.apiStores()?.callAssignShift(employeeId, shiftIdsMap)
+
+                Log.d("res", "Response: ${response?.body().toString()}")
+
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
                         if (it.isSuccessful) {
                             mShiftAssignment.postValue(it.body())
                         } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
-                            }
+                            val errorBody = it.errorBody()?.string()
+                            Log.e("API_ERROR", "Error response: $errorBody")
+
+                            CustomToast(mContext, errorBody ?: mContext.getString(R.string.error_something_went_wrong))
                         }
                     } ?: run {
-                        CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
-                        )
+                        CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
                     }
                 }
             } catch (e: Exception) {
@@ -2103,6 +2102,7 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
+
 
 
     fun punchInRequest(mContext: Context, request: PunchInRequest) {

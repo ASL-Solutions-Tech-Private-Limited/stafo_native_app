@@ -114,6 +114,7 @@ class LeaveManagementActivity : AppCompatActivity() {
                 filteredList = leaveList
 
                 if (leaveList.isNotEmpty()) {
+                    binding.rvShowLeaveList.visibility=View.VISIBLE
                     binding.txtMsg.visibility = View.GONE
 
                     binding.etDirSearch.isFocusable = true
@@ -125,6 +126,7 @@ class LeaveManagementActivity : AppCompatActivity() {
                     binding.rvShowLeaveList.adapter = rvAdapter
                     rvAdapter.notifyDataSetChanged()
                 } else {
+                    binding.rvShowLeaveList.visibility=View.GONE
                     binding.etDirSearch.isFocusable = false
                     binding.etDirSearch.isFocusableInTouchMode = false
                     binding.txtMsg.visibility = View.VISIBLE
@@ -132,6 +134,7 @@ class LeaveManagementActivity : AppCompatActivity() {
 
 
             } else {
+                binding.rvShowLeaveList.visibility=View.GONE
                 binding.etDirSearch.isFocusable = false
                 binding.etDirSearch.isFocusableInTouchMode = false
                 binding.txtMsg.visibility = View.VISIBLE

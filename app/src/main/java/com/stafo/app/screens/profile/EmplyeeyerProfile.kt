@@ -135,8 +135,6 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
                     Glide.with(this)
                         .load(imageUrl)
-                        .placeholder(R.drawable.demo_avatar)
-                        .error(R.drawable.demo_avatar)
                         .into(binding.ivHeaderProfilePic)
                 }
 
@@ -155,8 +153,6 @@ class EmplyeeyerProfile : AppCompatActivity() {
                 it.data?.companyLogo?.let { imageUrl ->
                     Glide.with(this)
                         .load(imageUrl)
-                        .placeholder(R.drawable.demo_avatar)
-                        .error(R.drawable.demo_avatar)
                         .into(binding.ivHeaderProfilePic)
                 } ?: run {
 
