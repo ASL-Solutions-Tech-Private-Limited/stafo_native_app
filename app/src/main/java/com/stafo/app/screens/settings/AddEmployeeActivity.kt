@@ -1,8 +1,11 @@
 package com.stafo.app.screens.settings
 
 import android.app.DatePickerDialog
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.net.Uri
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -13,6 +16,7 @@ import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -29,6 +33,8 @@ import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 import com.google.android.material.textfield.TextInputEditText
+import com.stafo.app.utils.setIsLock
+import com.stafo.app.utils.setIsLockUser
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -126,6 +132,23 @@ class AddEmployeeActivity : AppCompatActivity() {
             if (it.status) {
                 CustomToast(this, it.message)
                 onBackPressedDispatcher.onBackPressed()
+                finish()
+            } else {
+                if (it.message=="You have reached the maximum limit of employees. Please upgrade your plan to add more employees."){
+                    showUpgradeDialog()
+                }else{
+                    CustomToast(this, it.message)
+                }
+            }
+        }
+
+
+        settingsViewModel.mUpgradePackageResponse.observe(this) {
+
+            if (it.status) {
+                CustomToast(this, it.message)
+                onBackPressedDispatcher.onBackPressed()
+                finish()
             } else {
                 CustomToast(this, it.message)
             }
@@ -221,7 +244,33 @@ class AddEmployeeActivity : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
+    private fun showUpgradeDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("STAFO")
+        builder.setMessage("You have reached the maximum limit of employees.Upgrade your plan to continue adding employees.")
+        builder.setPositiveButton("Upgrade Now") { _, _ ->
+            settingsViewModel.upgradePackage(this@AddEmployeeActivity)
+        }
 
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+
+    private fun openUpgradeLink(url: String) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            intent.setPackage("com.android.chrome")
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
+        }
+    }
     private fun onClickListener() {
 
 

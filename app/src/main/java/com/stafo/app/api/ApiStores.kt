@@ -93,6 +93,7 @@ import com.stafo.app.screens.settings.dataClass.UpdateCompanyProfile
 import com.stafo.app.screens.settings.dataClass.UpdateCompanyProfileResponse
 import com.stafo.app.screens.settings.dataClass.UpdateEmployeeProfile
 import com.stafo.app.screens.settings.dataClass.UpdateEmployeeProfileResponse
+import com.stafo.app.screens.settings.dataClass.UpgradePackageResponse
 import com.stafo.app.screens.settings.dataClass.VerifyGSTNumberResponse
 import com.stafo.app.screens.settings.dataClass.VerifyRegisterNumberResponse
 import com.stafo.app.screens.settings.dataClass.ViewBranchResponse
@@ -540,5 +541,10 @@ interface ApiStores {
         @Body request: RemoveSelfieRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<RemoveSelfieResponse>
+
+    @POST("api/upgradeInterested")
+    suspend fun callUpgradePackage(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpgradePackageResponse>
 
 }
