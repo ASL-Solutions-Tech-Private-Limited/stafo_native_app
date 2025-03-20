@@ -61,6 +61,7 @@ class EmployerDashboard : AppCompatActivity() {
     private val mActionList = ArrayList<ActionModel>()
 
     private var companyStatus: Boolean = false
+    private var maxEmployeeAdd: String =""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -266,6 +267,9 @@ class EmployerDashboard : AppCompatActivity() {
         settingsViewModel.mAttendanceSummaryResponse.observe(this) {
             if (it.status) {
                 setEmployeeComId(it.companyId.toString())
+
+                maxEmployeeAdd=it.maxEmployeeAdd
+
                 wishList.clear()
                 binding.tvPresentEmp.text = it.presentCount.toString()
                 binding.tvAllEmp.text = it.employeeCount.toString()
@@ -349,6 +353,9 @@ class EmployerDashboard : AppCompatActivity() {
 
 
 
+
+
+
         settingsViewModel.mCompanyProfileResponse.observe(this) {
             if (it.status) {
 
@@ -369,6 +376,40 @@ class EmployerDashboard : AppCompatActivity() {
 
         }
 
+
+
+        settingsViewModel.mUpgradePackageResponse.observe(this) {
+
+            if (it.status) {
+                CustomToast(this, it.message)
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
+
+    }
+
+
+
+    private fun showUpgradeDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.app_name)
+        builder.setMessage("You have reached the maximum limit of employees.Upgrade your plan to continue adding employees.")
+        builder.setPositiveButton("Upgrade Now") { _, _ ->
+            settingsViewModel.upgradePackage(this@EmployerDashboard)
+        }
+
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.blue))
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.gray_colour))
+        }
+        dialog.show()
     }
 
     override fun onResume() {
@@ -447,7 +488,17 @@ class EmployerDashboard : AppCompatActivity() {
         binding.addEmp.setOnClickListener {
 
             if (companyStatus) {
-                startActivity(Intent(this, AddEmployeeActivity::class.java))
+
+                var getTotalEmp=binding.tvAllEmp.text.toString().trim()
+
+                if (getTotalEmp >= maxEmployeeAdd){
+                    showUpgradeDialog()
+                }else{
+                    startActivity(Intent(this, AddEmployeeActivity::class.java))
+                }
+
+
+
             } else {
                 showCompanyVerificationDialog()
             }

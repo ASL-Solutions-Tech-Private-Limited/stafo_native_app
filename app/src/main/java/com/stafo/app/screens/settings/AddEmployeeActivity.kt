@@ -134,25 +134,12 @@ class AddEmployeeActivity : AppCompatActivity() {
                 onBackPressedDispatcher.onBackPressed()
                 finish()
             } else {
-                if (it.message=="You have reached the maximum limit of employees. Please upgrade your plan to add more employees."){
-                    showUpgradeDialog()
-                }else{
-                    CustomToast(this, it.message)
-                }
-            }
-        }
-
-
-        settingsViewModel.mUpgradePackageResponse.observe(this) {
-
-            if (it.status) {
-                CustomToast(this, it.message)
-                onBackPressedDispatcher.onBackPressed()
-                finish()
-            } else {
                 CustomToast(this, it.message)
             }
         }
+
+
+
 
 
       /*  settingsViewModel.getJobTitleList(this)
@@ -244,33 +231,10 @@ class AddEmployeeActivity : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
-    private fun showUpgradeDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("STAFO")
-        builder.setMessage("You have reached the maximum limit of employees.Upgrade your plan to continue adding employees.")
-        builder.setPositiveButton("Upgrade Now") { _, _ ->
-            settingsViewModel.upgradePackage(this@AddEmployeeActivity)
-        }
-
-        builder.setNegativeButton("Cancel") { dialog, _ ->
-            dialog.dismiss()
-        }
-
-        val dialog = builder.create()
-        dialog.show()
-    }
 
 
-    private fun openUpgradeLink(url: String) {
-        try {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            intent.setPackage("com.android.chrome")
-            startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            startActivity(intent)
-        }
-    }
+
+
     private fun onClickListener() {
 
 
