@@ -9,8 +9,9 @@ import android.widget.TextView
 import com.stafo.app.R
 import com.bumptech.glide.Glide
 import com.smarteist.autoimageslider.SliderViewAdapter
+import com.stafo.app.screens.settings.dataClass.BannerData
 
-class SliderAdapter(private val context: Context,val sliderItems: MutableList<Int>) :
+class SliderAdapter(private val context: Context,var sliderItems: List<BannerData>) :
     SliderViewAdapter<SliderAdapter.SliderAdapterVH>() {
 
 
@@ -27,7 +28,7 @@ class SliderAdapter(private val context: Context,val sliderItems: MutableList<In
         val sliderItem = sliderItems[position]
 
         Glide.with(viewHolder.itemView)
-            .load(sliderItem)
+            .load(sliderItem.imageurl)
             .fitCenter()
             .into(viewHolder.imageViewBackground)
 

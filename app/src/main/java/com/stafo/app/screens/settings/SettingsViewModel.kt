@@ -94,6 +94,7 @@ import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getUserAccessToken
 import com.caverock.androidsvg.SVG
 import com.google.gson.Gson
+import com.stafo.app.screens.settings.dataClass.BannerResponse
 import com.stafo.app.screens.settings.dataClass.CreateLeavePolicyRequest
 import com.stafo.app.screens.settings.dataClass.CreateLeavePolicyResponse
 import com.stafo.app.screens.settings.dataClass.InActiveEmpRequest
@@ -408,6 +409,59 @@ class SettingsViewModel : BaseViewModel() {
     private var mUpgradePackage: MutableLiveData<UpgradePackageResponse> = MutableLiveData()
 
     val mUpgradePackageResponse: LiveData<UpgradePackageResponse> get() = mUpgradePackage
+
+
+    private var mBanner: MutableLiveData<BannerResponse> = MutableLiveData()
+
+    val mBannerResponse: LiveData<BannerResponse> get() = mBanner
+
+
+    fun getBannerImage(
+        mContext: Context
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callBannerImage()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mBanner.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+
 
     fun upgradePackage(
         mContext: Context

@@ -47,6 +47,12 @@
         tools:replace="android:label"
         tools:targetApi="31">
         <activity
+            android:name=".screens.payroll.GenerateSalaryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.payroll.PayRollHistoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.recharge.RechargeActivity"
             android:exported="false" />
         <activity
@@ -127,7 +133,8 @@
         <activity
             android:name=".screens.emp.EmployeeProfileDetails"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name=".screens.emp.EmployeeAttendanceRecordActivity"
             android:exported="false"
@@ -148,7 +155,8 @@
         <activity
             android:name=".screens.profile.CompanyProfileActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name=".screens.settings.AddPolicyActivity"
             android:exported="false"

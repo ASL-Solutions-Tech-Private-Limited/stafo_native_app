@@ -134,7 +134,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
         setupViews()
         onClickListener()
-        setupImageSlider()
+        //setupImageSlider()
     }
 
     private fun setupViews() {
@@ -232,6 +232,8 @@ class EmployeeDashboard : AppCompatActivity() {
                 this@EmployeeDashboard,
                 getEmployeeDetails()?.id.toString()
             )
+
+            settingsViewModel.getBannerImage(this@EmployeeDashboard)
 
             binding.tvLeaveViewAll.setOnClickListener {
                 startActivity(
@@ -757,6 +759,16 @@ class EmployeeDashboard : AppCompatActivity() {
         }
 
 
+        settingsViewModel.mBannerResponse.observe(this) {
+
+            if (it.status) {
+
+                val bannerList = listOf(it.data)
+                binding.imageSlider.setSliderAdapter(SliderAdapter(this@EmployeeDashboard, bannerList))
+            }
+        }
+
+
     }
 
 
@@ -1083,12 +1095,12 @@ class EmployeeDashboard : AppCompatActivity() {
         return mActionList
     }
 
-    private fun setupImageSlider() {
+  /*  private fun setupImageSlider() {
         val imageList = ArrayList<Int>()
         imageList.add(R.drawable.banner_one)
         imageList.add(R.drawable.banner_two)
         binding.imageSlider.setSliderAdapter(SliderAdapter(this, imageList))
-    }
+    }*/
 
     private fun openPlayStoreForReview(context: Context) {
         val appPackageName = context.packageName

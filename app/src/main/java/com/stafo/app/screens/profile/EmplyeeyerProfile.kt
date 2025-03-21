@@ -42,6 +42,7 @@ import com.stafo.app.utils.getIsCOMPANYLogin
 import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.gson.Gson
+import com.stafo.app.screens.reports.ReportsActivity
 import java.io.File
 
 class EmplyeeyerProfile : AppCompatActivity() {
@@ -218,6 +219,13 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         binding?.expandableOtherManagement?.setOnClickListener {
             binding.expandableOtherManagement.toggleLayout()
+        }
+
+        val tvReportsSettings = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_reports_settings)
+
+        tvReportsSettings?.setOnClickListener {
+            startActivity(Intent(this, ReportsActivity::class.java))
+            overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
         }
 
         val qrCodeSettings = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_generate_qr_settings)

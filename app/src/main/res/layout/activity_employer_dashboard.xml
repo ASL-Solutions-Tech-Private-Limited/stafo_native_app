@@ -106,12 +106,17 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_header_emp_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_12sdp"
                         android:layout_marginTop="@dimen/_6sdp"
                         android:fontFamily="@font/gilroy_bold"
                         android:textSize="@dimen/_15sdp"
+                        android:singleLine="true"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:paddingEnd="@dimen/_4sdp"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_header_profile_pic"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_header_greeting" />
 

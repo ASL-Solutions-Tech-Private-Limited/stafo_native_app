@@ -57,7 +57,7 @@
         android:text="Holiday"
         android:textColor="@color/white"
         android:textSize="@dimen/_12sdp" />
-  <!--  <androidx.appcompat.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_reports_settings"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_44sdp"
@@ -65,7 +65,7 @@
         android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginEnd="@dimen/_12sdp"
         android:background="@drawable/sub_button_normal_bg"
-        android:drawableLeft="@drawable/ic_policy"
+        android:drawableLeft="@drawable/resize_reports"
         android:drawablePadding="@dimen/_12sdp"
         android:drawableTint="@color/white"
         android:fontFamily="@font/gilroy_bold"
@@ -73,7 +73,7 @@
         android:padding="@dimen/_12sdp"
         android:text="Reports"
         android:textColor="@color/white"
-        android:textSize="@dimen/_12sdp" />-->
+        android:textSize="@dimen/_12sdp" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_generate_qr_settings"

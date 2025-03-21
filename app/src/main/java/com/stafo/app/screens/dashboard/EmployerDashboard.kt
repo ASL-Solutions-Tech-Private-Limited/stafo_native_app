@@ -93,7 +93,7 @@ class EmployerDashboard : AppCompatActivity() {
         initViews()
         setOnClickEvents()
         observeViewModel()
-        setupImageSlider()
+
     }
 
 
@@ -255,17 +255,7 @@ class EmployerDashboard : AppCompatActivity() {
                                 }
 
                             }
-                            "Reports" -> {
 
-
-                                if (companyStatus) {
-                                    startActivity(Intent(this@EmployerDashboard, ReportsActivity::class.java))
-                                    overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
-                                } else {
-                                    showCompanyVerificationDialog()
-                                }
-
-                            }
                         }
                     }
 
@@ -402,6 +392,16 @@ class EmployerDashboard : AppCompatActivity() {
             }
         }
 
+
+        settingsViewModel.mBannerResponse.observe(this) {
+
+            if (it.status) {
+
+                val bannerList = listOf(it.data)
+                binding.imageSlider.setSliderAdapter(SliderAdapter(this@EmployerDashboard, bannerList))
+            }
+        }
+
     }
 
 
@@ -456,6 +456,8 @@ class EmployerDashboard : AppCompatActivity() {
 
         settingsViewModel.getCompanyDetails(this@EmployerDashboard)
 
+        settingsViewModel.getBannerImage(this@EmployerDashboard)
+
         binding.tvHeaderSetting.setOnClickListener {
 
             if (companyStatus) {
@@ -503,9 +505,9 @@ class EmployerDashboard : AppCompatActivity() {
         binding.addEmp.setOnClickListener {
 
 
-            startActivity(Intent(this, RechargeActivity::class.java))
+           // startActivity(Intent(this, RechargeActivity::class.java))
 
-          /*  if (companyStatus) {
+            if (companyStatus) {
 
                 var getTotalEmp=binding.tvAllEmp.text.toString().trim()
 
@@ -519,7 +521,7 @@ class EmployerDashboard : AppCompatActivity() {
 
             } else {
                 showCompanyVerificationDialog()
-            }*/
+            }
 
         }
 
@@ -578,17 +580,16 @@ class EmployerDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
         mActionList.add(ActionModel("Location Track", R.drawable.ic_location_pin))
         mActionList.add(ActionModel("Request Device", R.drawable.resized_device))
-        mActionList.add(ActionModel("Reports", R.drawable.resize_reports))
         return mActionList
     }
 
-    private fun setupImageSlider() {
+   /* private fun setupImageSlider() {
         var imageList = ArrayList<Int>()
         imageList.add(R.drawable.banner_one)
         imageList.add(R.drawable.banner_two)
         binding.imageSlider.setSliderAdapter(SliderAdapter(this, imageList))
     }
-
+*/
 
     override fun onBackPressed() {
         super.onBackPressed()

@@ -24,6 +24,7 @@ import com.stafo.app.screens.settings.dataClass.ApproveLeaveRequest
 import com.stafo.app.screens.settings.dataClass.ApproveLeaveResponse
 import com.stafo.app.screens.settings.dataClass.AssignShiftRequest
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
+import com.stafo.app.screens.settings.dataClass.BannerResponse
 import com.stafo.app.screens.settings.dataClass.BranchListResponse
 import com.stafo.app.screens.settings.dataClass.ChangeDeviceRequest
 import com.stafo.app.screens.settings.dataClass.ChangeDeviceResponse
@@ -546,5 +547,10 @@ interface ApiStores {
     suspend fun callUpgradePackage(
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<UpgradePackageResponse>
+
+    @GET("api/app-banner")
+    suspend fun callBannerImage(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<BannerResponse>
 
 }

@@ -1,0 +1,19 @@
+Index: app/production/release/output-metadata.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n  \"version\": 3,\r\n  \"artifactType\": {\r\n    \"type\": \"APK\",\r\n    \"kind\": \"Directory\"\r\n  },\r\n  \"applicationId\": \"com.stafo.app\",\r\n  \"variantName\": \"productionRelease\",\r\n  \"elements\": [\r\n    {\r\n      \"type\": \"SINGLE\",\r\n      \"filters\": [],\r\n      \"attributes\": [],\r\n      \"versionCode\": 1,\r\n      \"versionName\": \"1.0.1\",\r\n      \"outputFile\": \"ASL_HR_productionRelease_1.0.1_1742399353628.apk\"\r\n    }\r\n  ],\r\n  \"elementType\": \"File\"\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/production/release/output-metadata.json b/app/production/release/output-metadata.json
+--- a/app/production/release/output-metadata.json	(revision 06b9b77101bce08907e670dbb906e3c9e1565804)
++++ b/app/production/release/output-metadata.json	(date 1742556107374)
+@@ -13,7 +13,7 @@
+       "attributes": [],
+       "versionCode": 1,
+       "versionName": "1.0.1",
+-      "outputFile": "ASL_HR_productionRelease_1.0.1_1742399353628.apk"
++      "outputFile": "ASL_HR_productionRelease_1.0.1_1742555991481.apk"
+     }
+   ],
+   "elementType": "File"
