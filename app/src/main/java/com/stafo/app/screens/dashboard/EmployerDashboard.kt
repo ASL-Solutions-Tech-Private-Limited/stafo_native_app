@@ -50,6 +50,8 @@ import com.stafo.app.utils.setIsLock
 import com.stafo.app.utils.setIsLockUser
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
+import com.stafo.app.screens.recharge.RechargeActivity
+import com.stafo.app.screens.reports.ReportsActivity
 
 class EmployerDashboard : AppCompatActivity() {
     private lateinit var binding: ActivityEmployerDashboardBinding
@@ -150,8 +152,8 @@ class EmployerDashboard : AppCompatActivity() {
             rvWishes.layoutManager =
                 LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
 
-            rvActions.layoutManager =
-                LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
+            rvActions.layoutManager = LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
+
             val actionsAdapter = ActionsListAdapter(actionList(),
                 this@EmployerDashboard,
                 object : ActionsListAdapter.ActionClickListener {
@@ -246,6 +248,19 @@ class EmployerDashboard : AppCompatActivity() {
                                             ViewDeviceRequestEmpActivity::class.java
                                         )
                                     )
+
+                                    overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                                } else {
+                                    showCompanyVerificationDialog()
+                                }
+
+                            }
+                            "Reports" -> {
+
+
+                                if (companyStatus) {
+                                    startActivity(Intent(this@EmployerDashboard, ReportsActivity::class.java))
+                                    overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
                                 } else {
                                     showCompanyVerificationDialog()
                                 }
@@ -487,7 +502,10 @@ class EmployerDashboard : AppCompatActivity() {
 
         binding.addEmp.setOnClickListener {
 
-            if (companyStatus) {
+
+            startActivity(Intent(this, RechargeActivity::class.java))
+
+          /*  if (companyStatus) {
 
                 var getTotalEmp=binding.tvAllEmp.text.toString().trim()
 
@@ -501,7 +519,7 @@ class EmployerDashboard : AppCompatActivity() {
 
             } else {
                 showCompanyVerificationDialog()
-            }
+            }*/
 
         }
 
@@ -560,6 +578,7 @@ class EmployerDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
         mActionList.add(ActionModel("Location Track", R.drawable.ic_location_pin))
         mActionList.add(ActionModel("Request Device", R.drawable.resized_device))
+        mActionList.add(ActionModel("Reports", R.drawable.resize_reports))
         return mActionList
     }
 

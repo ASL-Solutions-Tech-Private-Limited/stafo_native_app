@@ -26,4 +26,7 @@
     <color name="app_theme_colour">#3363AB</color>
 
     <color name="green_light_400">#80E8F5E9</color>
+
+    <color name="xp_blue">#0089D2</color>
+    <color name="xp_blue_lite">#0ECBF5</color>
 </resources>

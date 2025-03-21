@@ -142,15 +142,18 @@ class ViewDeviceRequestEmpActivity : AppCompatActivity() {
         }
 
         binding.imageBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-            finish()
+           onBackPressed()
         }
 
 
 
     }
 
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.slide_from_left,R.anim.slide_to_right)
+        finish()
+    }
 
 
 
