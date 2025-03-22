@@ -42,7 +42,7 @@ import java.util.Locale
 class AddEmployeeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddEmployeeBinding
     private val calendar = Calendar.getInstance()
-    private var mSteps = 1
+   // private var mSteps = 1
     private var selectGender: String="male"
     private var selectJobTitle: String=""
     private var selectBranch: Int = 1
@@ -74,11 +74,11 @@ class AddEmployeeActivity : AppCompatActivity() {
 
 
 
-        binding?.apply {
+       /* binding?.apply {
             rpbBasicInfo.setProgress(100f)
             rpbBasicInfo.setUnfilledColor(resources.getColor(R.color.tea_green))
             rpbBasicInfo.setFilledColor(resources.getColor(R.color.colorTextPrimary))
-        }
+        }*/
 
 
 
@@ -262,7 +262,7 @@ class AddEmployeeActivity : AppCompatActivity() {
                 }*/
 
 
-            val text = "Basic\nDetails*"
+          /*  val text = "Basic\nDetails*"
             val spannable = SpannableString(text)
             spannable.setSpan(
                 ForegroundColorSpan(Color.RED),
@@ -271,7 +271,7 @@ class AddEmployeeActivity : AppCompatActivity() {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
-            binding.tvBasicDetails.text = spannable
+            binding.tvBasicDetails.text = spannable*/
 
 
 
@@ -421,25 +421,8 @@ class AddEmployeeActivity : AppCompatActivity() {
 
             }
 
-            btnNext.setOnClickListener { it ->
-                if (mSteps == 1) {
-                    if (validateBasicInfo()) {
-                        mSteps++
-                        btnSkip.visibility = View.VISIBLE
-                        switchScreen(1)
-                    }
-                } else if (mSteps == 2) {
-
-                    mSteps++
-                    switchScreen(2)
-
-                } else if (mSteps == 3) {
-                    mSteps++
-                    btnSkip.visibility = View.GONE
-                    btnNext.text = "Submit"
-                    switchScreen(3)
-
-                } else {
+            btnNext.setOnClickListener { _ ->
+                if (validateBasicInfo()) {
                     val requestBody = AddEmpRequestBody(
 
                         name = tieStaffName.text.toString().trim(),
@@ -449,34 +432,16 @@ class AddEmployeeActivity : AppCompatActivity() {
                         branch_id = selectBranch,
                         department_id = selectDepartment,
                         date_of_joining = mDateOfJoining,
+                        salary = tieBasicSalary.text.toString().trim(),
                         gender = selectGender,
                         address = tieAddress.text.toString()
                     )
 
                     settingsViewModel.addEmployee(this@AddEmployeeActivity, requestBody)
-
                 }
             }
 
-            btnSkip.setOnClickListener {
-                if (mSteps == 1) {
-                    if (validateBasicInfo()) {
-                        mSteps++
-                        switchScreen(1)
-                    }
-                } else if (mSteps == 2) {
 
-                    mSteps++
-                    switchScreen(2)
-
-                } else if (mSteps == 3) {
-                    mSteps++
-                    btnSkip.visibility = View.GONE
-                    btnNext.text = "Submit"
-                    switchScreen(3)
-
-                }
-            }
 
             binding.tieDateJoining.setOnClickListener {
                 showDatePicker()
@@ -513,7 +478,13 @@ class AddEmployeeActivity : AppCompatActivity() {
             } else if (tieDateJoining.text.isNullOrEmpty()) {
                CustomToast(this@AddEmployeeActivity,"Please enter date of joining")
                 return false
-            } else if (tieAddress.text.isNullOrEmpty()) {
+            } else if (tieBasicSalary.text.isNullOrEmpty()) {
+                tieBasicSalary.error = "Please enter basic salary"
+                tieBasicSalary.requestFocus()
+                return false
+            }
+
+            else if (tieAddress.text.isNullOrEmpty()) {
                 tieAddress.error = "Please enter address"
                 tieAddress.requestFocus()
                 return false
@@ -544,43 +515,5 @@ class AddEmployeeActivity : AppCompatActivity() {
     }
 
 
-    private fun switchScreen(flag: Int) {
-        when (flag) {
-            1 -> {
-                binding?.llBasicInfo?.visibility = View.GONE
-                binding?.llPersonalInfo?.visibility = View.VISIBLE
-                binding?.llDocumentInfo?.visibility = View.GONE
-                binding?.llEmploymentDetails?.visibility = View.GONE
 
-                binding.rpbPersonalInfo.setProgress(100f)
-                binding.rpbPersonalInfo.setUnfilledColor(resources.getColor(R.color.tea_green))
-                binding.rpbPersonalInfo.setFilledColor(resources.getColor(R.color.colorTextPrimary))
-
-            }
-
-            2 -> {
-                binding?.llBasicInfo?.visibility = View.GONE
-                binding?.llPersonalInfo?.visibility = View.GONE
-                binding?.llDocumentInfo?.visibility = View.VISIBLE
-                binding?.llEmploymentDetails?.visibility = View.GONE
-
-                binding.rpbDocumentInfo.setProgress(100f)
-                binding.rpbDocumentInfo.setUnfilledColor(resources.getColor(R.color.tea_green))
-                binding.rpbDocumentInfo.setFilledColor(resources.getColor(R.color.colorTextPrimary))
-
-            }
-
-            3 -> {
-                binding?.llBasicInfo?.visibility = View.GONE
-                binding?.llPersonalInfo?.visibility = View.GONE
-                binding?.llDocumentInfo?.visibility = View.GONE
-                binding?.llEmploymentDetails?.visibility = View.VISIBLE
-
-                binding.rpbEmploymentDetails.setProgress(100f)
-                binding.rpbEmploymentDetails.setUnfilledColor(resources.getColor(R.color.tea_green))
-                binding.rpbEmploymentDetails.setFilledColor(resources.getColor(R.color.colorTextPrimary))
-
-            }
-        }
-    }
 }

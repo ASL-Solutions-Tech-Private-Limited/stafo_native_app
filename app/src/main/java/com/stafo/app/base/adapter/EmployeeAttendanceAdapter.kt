@@ -8,10 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.stafo.app.R
 import com.stafo.app.databinding.ItemEmpAttendaceLayoutBinding
 import com.stafo.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.stafo.app.screens.settings.dataClass.EmployeeDataList
+import com.stafo.app.utils.generateTextBitmap
 
 class EmployeeAttendanceAdapter(
     private var attendList: List<EmployeeDataList>,
@@ -36,6 +38,8 @@ class EmployeeAttendanceAdapter(
                 binding.tvEmpName.text = this.name
                 binding.tvEmpJobTitle.text = this.position
 
+                val placeholderBitmap = generateTextBitmap(this.name ?: "?")
+
                 if (!this.image.isNullOrEmpty()) {
                     binding.civEmp.visibility = View.VISIBLE
 
@@ -43,10 +47,11 @@ class EmployeeAttendanceAdapter(
 
                     Glide.with(context)
                         .load(imageUrl)
+                        .error(placeholderBitmap)
                         .into(binding.civEmp)
 
                 } else {
-                    binding.civEmp.visibility = View.GONE
+                    binding.civEmp.setImageBitmap(placeholderBitmap)
                 }
 
 

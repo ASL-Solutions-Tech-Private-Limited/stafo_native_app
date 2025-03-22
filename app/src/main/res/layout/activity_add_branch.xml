@@ -118,7 +118,7 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
-                            android:hint="Radius"
+                            android:hint="Radius (meter)"
                             android:inputType="number"
                             android:textSize="@dimen/_12ssp" />
                     </com.google.android.material.textfield.TextInputLayout>

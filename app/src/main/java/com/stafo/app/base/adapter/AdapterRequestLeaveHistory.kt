@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.R
 import com.stafo.app.databinding.RecyCompanyLeaveHistoryItemLayoutBinding
 import com.stafo.app.screens.settings.dataClass.LeaveData
+import com.stafo.app.utils.generateTextBitmap
 import com.stafo.app.utils.getFormatDate
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -40,6 +41,11 @@ class AdapterRequestLeaveHistory(
                 binding.txtStartDate.text = "${getFormatDate(this.fromDate)}"
                 binding.txtEndDate.text = "${getFormatDate(this.toDate)}"
                 binding.txtAppliedDate.text = "${getFormatDate(this.fromDate)}"
+
+                val placeholderBitmap = generateTextBitmap(this.employeeBasicInfo.name ?: "?")
+                binding.approveLvEmpImage.setImageBitmap(placeholderBitmap)
+
+
 
                 if (this.leaveType=="1"){
                     binding.txtLeaveType.text="Casual Leave"

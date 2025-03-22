@@ -401,7 +401,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
 
-
+<!--
 
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -421,7 +421,7 @@
                             android:inputType="textImeMultiLine"
                             android:textAlignment="viewStart" />
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>-->
 
                 </LinearLayout>
                 <!--End Of Owner Information-->

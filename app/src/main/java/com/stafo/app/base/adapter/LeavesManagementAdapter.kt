@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.stafo.app.databinding.RecyLeaveManagementChildLayoutBinding
 import com.stafo.app.screens.settings.LeaveManagementActivity
 import com.stafo.app.screens.settings.dataClass.LeaveData
+import com.stafo.app.utils.generateTextBitmap
 import com.stafo.app.utils.getFormatDate
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -43,6 +45,25 @@ class LeavesManagementAdapter(
                 binding.txtStartDate.text = "${getFormatDate(this.fromDate)}"
                 binding.txtEndDate.text = "${getFormatDate(this.toDate)}"
                 binding.txtAppliedDate.text = "${getFormatDate(this.fromDate)}"
+
+                val placeholderBitmap = generateTextBitmap(this.employeeBasicInfo.name ?: "?")
+
+                binding.approveLvEmpImage.setImageBitmap(placeholderBitmap)
+
+               /* if (!this.employeeBasicInfo..isNullOrEmpty()) {
+                    val imageUrl = "${this.selfieImagePath}/${this.selfieImage}".replace("\\", "")
+
+                    Glide.with(context)
+                        .load(imageUrl)
+                        .error(placeholderBitmap)
+                        .into(binding.approveLvEmpImage)
+
+                } else {
+
+                }*/
+
+
+
 
                 if (this.leaveType == "1") {
                     binding.txtLeaveType.text = "Casual Leave"

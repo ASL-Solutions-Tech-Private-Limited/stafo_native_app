@@ -17,6 +17,7 @@ data class GetEmployee(
     val position: String,
     val salary: String?,
     @SerializedName("selfie_image") val selfieImage: String?,
+    @SerializedName("selfie_image_path") val selfieImagePath: String?,
     val company_id: Int,
     val branch_name: String,
     val department_name: String,

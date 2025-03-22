@@ -12,6 +12,7 @@ import com.stafo.app.R
 import com.stafo.app.databinding.RecyNewDeviceRequestEmpLayoutBinding
 import com.stafo.app.screens.settings.ViewDeviceRequestEmpActivity
 import com.stafo.app.screens.settings.dataClass.DeviceRequest
+import com.stafo.app.utils.generateTextBitmap
 
 class AdapterDeviceRequest (
     private var list: List<DeviceRequest>,
@@ -38,7 +39,9 @@ class AdapterDeviceRequest (
                 binding.txtMobile.text = this.phone
                // binding.txtJobTitle.text = this.position
                 binding.txtEmail.text = this.email
+                val placeholderBitmap = generateTextBitmap(this.name ?: "?")
 
+                binding.approveLvEmpImage.setImageBitmap(placeholderBitmap)
 
                 if (this.device_status=="approved"){
                     binding.txtStatus.visibility= View.VISIBLE

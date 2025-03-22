@@ -8,6 +8,7 @@ data class AddEmpRequestBody(
     val branch_id: Int,
     val department_id: Int,
     val date_of_joining: String,
+    val salary: String,
     val gender: String,
     val address: String
 )

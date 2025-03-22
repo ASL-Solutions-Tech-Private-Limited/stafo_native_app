@@ -124,7 +124,7 @@ class AddShiftActivity : AppCompatActivity() {
     }
 
     private fun onClickListener() {
-        binding?.apply {
+        binding.apply {
 
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
@@ -183,9 +183,25 @@ class AddShiftActivity : AppCompatActivity() {
         val btnSubmit = view.findViewById<AppCompatButton>(R.id.btn_add_shift)
 
         btnSubmit.setOnClickListener {
-            if (isValidate()) {
 
+            if (isValidate()) {
                 val startTime = edtShiftStartTime.text.toString()
+                val endTime = edtShiftEndTime.text.toString()
+
+                val formattedStartTime = convertTo24HourFormat(startTime)
+                val formattedEndTime = convertTo24HourFormat(endTime)
+
+
+                val requestBody = ShiftCreateRequest(
+                    shift_name = edtShiftName.text.toString(),
+                    start_time = formattedStartTime,
+                    end_time = formattedEndTime
+                )
+                settingsViewModel.createNewShift(this, requestBody)
+
+
+
+            /*    val startTime = edtShiftStartTime.text.toString()
                 val endTime = edtShiftEndTime.text.toString()
 
                 if (!isEndTimeValid(startTime, endTime)) {
@@ -202,7 +218,7 @@ class AddShiftActivity : AppCompatActivity() {
                         end_time = formattedEndTime
                     )
                     settingsViewModel.createNewShift(this, requestBody)
-                }
+                }*/
 
 
             }
@@ -250,7 +266,7 @@ class AddShiftActivity : AppCompatActivity() {
 
 
     private fun isValidate(): Boolean {
-        binding?.apply {
+        binding.apply {
             if (edtShiftName.text.isNullOrEmpty()) {
                 edtShiftName.error = "Please enter shift name"
                 edtShiftName.requestFocus()

@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.base.model.DashboardWish
 import com.stafo.app.databinding.ItemLeaveListBinding
+import com.stafo.app.utils.generateTextBitmap
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -36,6 +37,9 @@ class AdapterWishList(
             with(list[position]) {
 
                 binding.tvName.text = this.name
+
+                val placeholderBitmap = generateTextBitmap(this.name ?: "?")
+                binding.ivProfile.setImageBitmap(placeholderBitmap)
 
                 if (this.type == "Anniversary") {
                    // binding.tvLeaveDate.text = "${this.date_of_joining}"

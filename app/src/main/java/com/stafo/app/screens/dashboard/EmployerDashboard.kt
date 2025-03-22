@@ -509,10 +509,13 @@ class EmployerDashboard : AppCompatActivity() {
 
             if (companyStatus) {
 
-                var getTotalEmp=binding.tvAllEmp.text.toString().trim()
+
+                val getTotalEmp=binding.tvAllEmp.text.toString().trim()
 
                 if (getTotalEmp >= maxEmployeeAdd){
-                    showUpgradeDialog()
+
+                    startActivity(Intent(this, AddEmployeeActivity::class.java))
+                  //  showUpgradeDialog()
                 }else{
                     startActivity(Intent(this, AddEmployeeActivity::class.java))
                 }

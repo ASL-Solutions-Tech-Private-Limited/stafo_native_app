@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.stafo.app.R
 import com.stafo.app.databinding.RecyViewEmployeeItemLayoutBinding
 import com.stafo.app.screens.emp.EmployeeProfileDetails
@@ -15,10 +16,11 @@ import com.stafo.app.screens.settings.UploadSelfieAttendanceActivity
 import com.stafo.app.screens.settings.ViewAllEmployeeActivity
 import com.stafo.app.screens.settings.dataClass.GetEmployee
 import com.stafo.app.screens.ui.AutoSearchPlaceActivity
+import com.stafo.app.utils.generateTextBitmap
 
 class EmpListAdapter(
     private var list: List<GetEmployee>,
-    var context: Activity,
+    var context: Context,
     var from: String,
     var onEmGeoClick: onGeoClick
 ) : RecyclerView.Adapter<EmpListAdapter.ViewHolder>() {
@@ -41,7 +43,23 @@ class EmpListAdapter(
                 binding.txtEmpName.text = this.name
                 binding.txtMobile.text = this.phone
                 binding.txtEmail.text = this.email
-               // binding.txtJobTitle.text = this.position
+
+                val placeholderBitmap = generateTextBitmap(this.name ?: "?")
+                if (!this.selfieImage.isNullOrEmpty()) {
+                    val imageUrl = "${this.selfieImagePath}/${this.selfieImage}".replace("\\", "")
+
+                    Glide.with(context)
+                        .load(imageUrl)
+                        .error(placeholderBitmap)
+                        .into(binding.approveLvEmpImage)
+
+                } else {
+                    binding.approveLvEmpImage.setImageBitmap(placeholderBitmap)
+                }
+
+
+
+
 
 
                 if (from == "View All") {

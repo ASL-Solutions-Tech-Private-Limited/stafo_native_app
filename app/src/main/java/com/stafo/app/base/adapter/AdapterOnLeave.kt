@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.databinding.ItemLeaveListBinding
 import com.stafo.app.screens.settings.dataClass.Leave
+import com.stafo.app.utils.generateTextBitmap
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -35,8 +36,11 @@ class AdapterOnLeave (
 
                 binding.tvName.text = this.employee_basic_info.name
 
-                var fromDate=getFormatDate(this.from_date)
-                var toDate=getFormatDate(this.to_date)
+                val placeholderBitmap = generateTextBitmap(this.employee_basic_info.name ?: "?")
+                binding.ivProfile.setImageBitmap(placeholderBitmap)
+
+                val fromDate=getFormatDate(this.from_date)
+                val toDate=getFormatDate(this.to_date)
 
                 if (fromDate == toDate) {
                     binding.tvLeaveDate.text = fromDate

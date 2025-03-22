@@ -334,7 +334,7 @@ class CompanyProfileActivity : AppCompatActivity() {
 
 
 
-                    binding.tieOwnerAddress.setText(data.proprietor?.currentAddress ?: "")
+
 
 
                     val companyTypeId = data.company?.company_type?.trim()?.toIntOrNull() ?: 0
@@ -627,7 +627,6 @@ class CompanyProfileActivity : AppCompatActivity() {
             binding.tieOwnerName to "Please enter owner name",
             binding.tieOwnerMobileNo to "Please enter mobile",
             binding.tieOwnerEmail to "Please enter email",
-            binding.tieOwnerAddress to "Please enter address"
         ).all { validateField(it.first, it.second) }
     }
 

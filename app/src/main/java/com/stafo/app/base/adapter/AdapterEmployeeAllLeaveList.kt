@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.R
 import com.stafo.app.databinding.RecyEmpLeaveHistoryChildLayoutBinding
 import com.stafo.app.screens.settings.dataClass.GetEmpLeaveData
+import com.stafo.app.utils.generateTextBitmap
 import com.stafo.app.utils.getFormatDate
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -35,6 +36,7 @@ class AdapterEmployeeAllLeaveList(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             with(list[position]) {
+
 
 
                 if (this.status == "approved") {

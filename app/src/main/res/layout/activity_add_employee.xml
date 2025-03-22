@@ -42,7 +42,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_registration_title">
 
-        <LinearLayout
+      <!--  <LinearLayout
             android:id="@+id/ll_progresslayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -158,13 +158,14 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </LinearLayout>-->
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
             android:layout_above="@id/layout_btn"
-            android:layout_below="@+id/ll_progresslayout">
+           android:layout_alignParentTop="true">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -176,7 +177,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/_12sdp"
-                    android:layout_marginTop="@dimen/_12sdp"
                     android:layout_marginEnd="@dimen/_12sdp"
                     android:orientation="vertical"
                     android:visibility="visible">
@@ -193,7 +193,7 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
-                            android:hint="Name"
+                            android:hint="Staff name"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -342,6 +342,29 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
 
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_basic_salary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_12sdp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tie_basic_salary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_background"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:hint="Basic Salary"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
+                            android:inputType="number" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/txt_Gender"
                         android:layout_width="match_parent"
@@ -443,7 +466,7 @@
                 </LinearLayout>
                 <!--End Of Basic Information-->
 
-                <!--Personal Details-->
+             <!--   Personal Details
                 <LinearLayout
                     android:id="@+id/ll_personal_info"
                     android:layout_width="match_parent"
@@ -616,7 +639,7 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!--     <com.google.android.material.textfield.TextInputLayout
+                         <com.google.android.material.textfield.TextInputLayout
                              android:id="@+id/til_emergency_contact_mobile_number"
                              android:layout_width="match_parent"
                              android:layout_height="wrap_content"
@@ -670,11 +693,10 @@
 
                          </com.google.android.material.textfield.TextInputLayout>
 
-     -->
                 </LinearLayout>
-                <!--End Of Owner Information-->
+                End Of Owner Information
 
-                <!--Document-->
+                Document
                 <LinearLayout
                     android:id="@+id/ll_document_info"
                     android:layout_width="match_parent"
@@ -861,10 +883,10 @@
 
 
                 </LinearLayout>
-                <!--End Of Document-->
+                End Of Document
 
 
-                <!--work details-->
+                work details
                 <LinearLayout
                     android:id="@+id/ll_employment_details"
                     android:layout_width="match_parent"
@@ -1161,8 +1183,8 @@
 
                 </LinearLayout>
 
-                <!--end of work details-->
-
+                end of work details
+-->
             </RelativeLayout>
 
         </ScrollView>
@@ -1176,9 +1198,9 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="1">
 
-            <Button
+       <!--     <Button
                 android:id="@+id/btn_skip"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
@@ -1190,7 +1212,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12ssp"
-                android:visibility="gone" />
+                android:visibility="gone" />-->
 
             <Button
                 android:id="@+id/btn_next"

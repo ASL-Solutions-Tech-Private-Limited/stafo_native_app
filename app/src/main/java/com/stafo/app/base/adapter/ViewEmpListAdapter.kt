@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.databinding.RecyViewEmployeeItemLayoutBinding
 import com.stafo.app.screens.settings.dataClass.GetEmployee
 import com.stafo.app.screens.ui.AutoSearchPlaceActivity
+import com.stafo.app.utils.generateTextBitmap
 
 class ViewEmpListAdapter (
     private var list: List<GetEmployee>,
@@ -41,7 +42,9 @@ class ViewEmpListAdapter (
                 binding.ivEdit.visibility = View.GONE
                 binding.llcViewMap.visibility = View.VISIBLE
                 binding.llcViewMap.visibility = View.VISIBLE
+                val placeholderBitmap = generateTextBitmap(this.name ?: "?")
 
+                binding.approveLvEmpImage.setImageBitmap(placeholderBitmap)
 
                 binding.llcViewMap.setOnClickListener {
                     context.startActivity(

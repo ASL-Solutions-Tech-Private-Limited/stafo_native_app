@@ -12,9 +12,13 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.LinearGradient
+import android.graphics.Paint
 import android.graphics.Shader
+import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -1464,6 +1468,30 @@ fun convertTo12HourFormat(time: String): String {
     val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
 
     return inputFormat.parse(time)?.let { outputFormat.format(it) } ?: time
+}
+
+
+ fun generateTextBitmap(name: String): Bitmap {
+    val size = 200 // Bitmap size
+    val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    val paint = Paint()
+
+    paint.color = Color.parseColor("#0ECBF5")
+    canvas.drawRect(0f, 0f, size.toFloat(), size.toFloat(), paint)
+
+    paint.color = Color.WHITE // Text color
+    paint.textSize = 80f
+    paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+    paint.textAlign = Paint.Align.CENTER
+
+    val firstLetter = name.take(1).uppercase()
+    val xPos = canvas.width / 2f
+    val yPos = (canvas.height / 2f - (paint.descent() + paint.ascent()) / 2f)
+
+    canvas.drawText(firstLetter, xPos, yPos, paint)
+
+    return bitmap
 }
 
 
