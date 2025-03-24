@@ -705,7 +705,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
                         Log.d("res", "post: $request")
 
-                        if (getIsCOMPANYLogin()==true){
+                        if (getIsCOMPANYLogin(this@EmployeeProfileDetails)==true){
                             settingsViewModel.updateEmployeeDetails(
                                 this@EmployeeProfileDetails,
                                 mEmpID,
@@ -752,7 +752,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             date_of_leaving = "",
                         )
 
-                        if (getIsCOMPANYLogin()==true){
+                        if (getIsCOMPANYLogin(this@EmployeeProfileDetails)==true){
                             settingsViewModel.updateEmployeeDetails(
                                 this@EmployeeProfileDetails,
                                 mEmpID,
@@ -784,7 +784,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
 
-                        if (getIsCOMPANYLogin()==true){
+                        if (getIsCOMPANYLogin(this@EmployeeProfileDetails)==true){
                             settingsViewModel.postEmpUploadDocument(
                                 this@EmployeeProfileDetails,
                                 mEmpID,

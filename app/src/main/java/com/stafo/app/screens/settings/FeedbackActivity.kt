@@ -82,7 +82,7 @@ class FeedbackActivity : AppCompatActivity() {
 
                 if (isValidate()) {
 
-                    if (getIsCOMPANYLogin() == true){
+                    if (getIsCOMPANYLogin(this@FeedbackActivity) == true){
                         val request= SendFeedbackRequest(
                             company_id = getEmployeeComId().toString(),
                             message = tieFeedback.text.toString()

@@ -55,7 +55,6 @@ import com.stafo.app.utils.doLogout
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getFormattedDate2
 import com.stafo.app.utils.getGreetingBasedOnTime
-import com.stafo.app.utils.getIsCOMPANYLogin
 import com.stafo.app.utils.setEmployeeBranchId
 import com.stafo.app.utils.setEmployeeComId
 import com.stafo.app.utils.setIsLock
@@ -296,7 +295,7 @@ class EmployeeDashboard : AppCompatActivity() {
                       }
                   }*/
 
-            Log.d("res", "${getIsCOMPANYLogin()}")
+
 
 
 

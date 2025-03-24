@@ -160,7 +160,7 @@ class SignUpActivity : AppCompatActivity() {
             if (it.success) {
 
                 setUserAccessToken(it.token)
-                setIsCOMPANYLogin(true)
+                setIsCOMPANYLogin(this,true)
                 it.company?.let { it1 -> setCompanyDetails(it1) }
                 CustomToast(this, it.message)
                 startActivity(Intent(this@SignUpActivity, EmployerDashboard::class.java))

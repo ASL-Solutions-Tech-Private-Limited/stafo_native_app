@@ -1,6 +1,7 @@
 package com.stafo.app.utils
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.orhanobut.hawk.Hawk
 import com.stafo.app.screens.auth.dataClass.CompanyData
 import com.stafo.app.screens.settings.dataClass.Employee
@@ -20,13 +21,30 @@ private val isLockSet = "is_lock_set"
 private val isLockUserSet = "is_lock_user_set"
 private val fbToken = "fb_token"
 
-fun isOnBoardingScreenShown(): Boolean {
+
+// SharedPreferences Helper
+private fun getPrefs(context: Context): SharedPreferences {
+    return context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+}
+
+fun setIsOnBoardingScreenShown(context: Context, isShown: Boolean) {
+    Hawk.put(isOnBoardingShown, isShown)
+    val prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+    prefs.edit().putBoolean(isOnBoardingShown, isShown).apply()
+}
+
+fun isOnBoardingScreenShown(context: Context): Boolean {
+    val prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+    return prefs.getBoolean(isOnBoardingShown, Hawk.get(isOnBoardingShown, false))
+}
+
+/*fun isOnBoardingScreenShown(): Boolean {
     return Hawk.get(isOnBoardingShown, false)
 }
 
 fun setIsOnBoardingScreenShown(isOnBoardingShown_: Boolean) {
     Hawk.put(isOnBoardingShown, isOnBoardingShown_)
-}
+}*/
 
 
 fun setIsLockUser(isLock: Boolean) {
@@ -56,11 +74,27 @@ fun isLoggedIn(context: Context): Boolean {
     val prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
     return prefs.getBoolean("is_logged_in", false)
 }
-fun setIsEMPLogin(islogin: Boolean) {
+fun setIsEMPLogin(context: Context,islogin: Boolean) {
     Hawk.put(isEMPLogin, islogin)
+    getPrefs(context).edit().putBoolean(isEMPLogin, islogin).apply()
 }
 
-fun getIsLogin(): Boolean? {
+fun getIsEMPLogin(context: Context): Boolean {
+    return getPrefs(context).getBoolean(isEMPLogin, Hawk.get(isEMPLogin, false))
+}
+
+
+// 🔹 Company Login
+fun setIsCOMPANYLogin(context: Context, isLogin: Boolean) {
+    Hawk.put(isCOMPANYLogin, isLogin)
+    getPrefs(context).edit().putBoolean(isCOMPANYLogin, isLogin).apply()
+}
+
+fun getIsCOMPANYLogin(context: Context): Boolean {
+    return getPrefs(context).getBoolean(isCOMPANYLogin, Hawk.get(isCOMPANYLogin, false))
+}
+
+/*fun getIsLogin(): Boolean? {
     return Hawk.get(isEMPLogin, false)
 }
 
@@ -70,7 +104,7 @@ fun setIsCOMPANYLogin(islogin: Boolean) {
 
 fun getIsCOMPANYLogin(): Boolean? {
     return Hawk.get(isCOMPANYLogin, false)
-}
+}*/
 
 fun setCompanyDetails(companyDetails: CompanyData) {
     Hawk.put(COMPANY_DETAILS, companyDetails)

@@ -1367,6 +1367,8 @@ fun getTodayDate(): String {
 
 fun doLogout(mContext: Context) {
     Hawk.deleteAll()
+    val prefs = mContext.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+    prefs.edit().clear().apply()
     val intent = Intent(mContext, LoginWithOTPActivity::class.java)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     mContext.startActivity(intent)

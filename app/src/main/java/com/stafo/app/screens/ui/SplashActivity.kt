@@ -21,7 +21,7 @@ import com.stafo.app.screens.dashboard.EmployeeDashboard
 import com.stafo.app.screens.dashboard.EmployerDashboard
 import com.stafo.app.utils.CommonViewModel
 import com.stafo.app.utils.getIsCOMPANYLogin
-import com.stafo.app.utils.getIsLogin
+import com.stafo.app.utils.getIsEMPLogin
 import com.stafo.app.utils.isOnBoardingScreenShown
 import com.stafo.app.utils.setFBToken
 
@@ -46,7 +46,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, CommonViewModel>() {
             viewDataBinding?.imgSplash?.startAnimation(animation)
         }, 100)
 
-        Handler(Looper.getMainLooper()).postDelayed({
+      /*  Handler(Looper.getMainLooper()).postDelayed({
             if (isOnBoardingScreenShown() && getIsCOMPANYLogin() == true) {
                 startActivity(Intent(this, EmployerDashboard::class.java))
                 finish()
@@ -60,7 +60,35 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, CommonViewModel>() {
                 startActivity(Intent(this, OnBoardingActivity::class.java))
                 finish()
             }
+        }, delayMillis)*/
+
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            val isCompanyLogin = getIsCOMPANYLogin(this)
+            val isEmployeeLogin = getIsEMPLogin(this)
+
+            Log.d("DEBUG", "isOnBoardingScreenShown: ${isOnBoardingScreenShown(this)}")
+            Log.d("DEBUG", "isCompanyLogin: $isCompanyLogin")
+            Log.d("DEBUG", "isEmployeeLogin: $isEmployeeLogin")
+
+            if (isOnBoardingScreenShown(this)) {
+                when {
+                    isCompanyLogin -> {
+                        startActivity(Intent(this, EmployerDashboard::class.java))
+                    }
+                    isEmployeeLogin -> {
+                        startActivity(Intent(this, EmployeeDashboard::class.java))
+                    }
+                    else -> {
+                        startActivity(Intent(this, LoginWithOTPActivity::class.java))
+                    }
+                }
+            } else {
+                startActivity(Intent(this, OnBoardingActivity::class.java))
+            }
+            finish()
         }, delayMillis)
+
 
 
     }

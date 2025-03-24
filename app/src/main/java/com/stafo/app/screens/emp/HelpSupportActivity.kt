@@ -44,7 +44,7 @@ class HelpSupportActivity : AppCompatActivity() {
 
     private fun onClickListener() {
         binding?.apply {
-            if (getIsCOMPANYLogin() == true) {
+            if (getIsCOMPANYLogin(this@HelpSupportActivity) == true) {
 
                 rtlCompany.visibility=View.VISIBLE
                 rtlEmployee.visibility=View.GONE

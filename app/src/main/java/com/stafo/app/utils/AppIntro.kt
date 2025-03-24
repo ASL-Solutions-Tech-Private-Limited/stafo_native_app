@@ -67,7 +67,7 @@ class AppIntro : Fragment() {
 
         //............................................................
         binding.btnSkip.setOnClickListener {
-            setIsOnBoardingScreenShown(true)
+            setIsOnBoardingScreenShown(requireContext(),true)
             startActivity(Intent(requireContext(), LoginWithOTPActivity::class.java))
             requireActivity().finish()
         }
@@ -75,7 +75,7 @@ class AppIntro : Fragment() {
         //............................................................
         binding.btnNext.setOnClickListener {
             if (binding.btnNext.text.toString() == getString(R.string.intro_get_started)) {
-                setIsOnBoardingScreenShown(true)
+                setIsOnBoardingScreenShown(requireContext(),true)
                 startActivity(Intent(requireContext(), LoginWithOTPActivity::class.java))
                 requireActivity().finish()
             } else {

@@ -117,7 +117,7 @@ class OtpVerifyActivity : AppCompatActivity() {
             if (it.success) {
                 if (it.data?.company != null) {
                         setUserAccessToken(it.data?.token ?: "")
-                        setIsCOMPANYLogin(true)
+                        setIsCOMPANYLogin(this,true)
                         setCompanyDetails(it.data.company)
                         startActivity(Intent(this@OtpVerifyActivity, EmployerDashboard::class.java))
                         finish()
@@ -125,7 +125,7 @@ class OtpVerifyActivity : AppCompatActivity() {
                     if (it.data?.device_change == "yes") {
                         setUserAccessToken(it.data?.token ?: "")
                         setEmployeeDetails(it.data.employee)
-                        setIsEMPLogin(true)
+                        setIsEMPLogin(this,true)
                         startActivity(
                             Intent(
                                 this@OtpVerifyActivity,
@@ -136,7 +136,7 @@ class OtpVerifyActivity : AppCompatActivity() {
                         finish()
                     } else {
                         setUserAccessToken(it.data?.token ?: "")
-                        setIsEMPLogin(true)
+                        setIsEMPLogin(this,true)
                         setEmployeeDetails(it.data.employee)
                         startActivity(
                             Intent(

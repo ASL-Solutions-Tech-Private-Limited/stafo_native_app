@@ -70,7 +70,7 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
     }
 
     private fun fetchAttendanceData() {
-        if (getIsCOMPANYLogin() == true) {
+        if (getIsCOMPANYLogin(this) == true) {
 
             settingsViewModel.getMonthlyAttendance(
                 this@EmployeeAttendanceRecordActivity,

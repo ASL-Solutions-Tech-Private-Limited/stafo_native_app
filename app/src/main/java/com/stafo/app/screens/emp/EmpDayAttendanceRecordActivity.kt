@@ -116,7 +116,7 @@ class EmpDayAttendanceRecordActivity : AppCompatActivity() {
     }
 
     private fun fetchAttendanceData(date:String) {
-        if (getIsCOMPANYLogin() == true) {
+        if (getIsCOMPANYLogin(this) == true) {
 
             val request = DayPunchINRequest(
                 employee_id = mEMPID,

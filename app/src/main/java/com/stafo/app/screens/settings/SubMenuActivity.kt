@@ -56,7 +56,7 @@ class SubMenuActivity : AppCompatActivity() {
             imageBack.setOnClickListener {
                 onBackPressed()
             }
-            if (getIsCOMPANYLogin()==true){
+            if (getIsCOMPANYLogin(this@SubMenuActivity)==true){
                 binding.rvActivities.layoutManager = GridLayoutManager(this@SubMenuActivity, 3)
 
                 val actionsAdapter = SubMneuActionsListAdapter(actionList(),

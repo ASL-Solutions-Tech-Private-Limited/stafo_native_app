@@ -71,7 +71,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
     private fun setupView(binding: ActivityEmplyeeyerProfileBinding) {
         binding?.apply {
             Log.e("TAG", "setupView: ${Gson().toJson(getEmployeeDetails())}")
-            if (getIsCOMPANYLogin() == true) {
+            if (getIsCOMPANYLogin(this@EmplyeeyerProfile) == true) {
 
                 settingsViewModel.getCompanyDetails(this@EmplyeeyerProfile)
 
@@ -97,7 +97,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
     }
 
     override fun onResume() {
-        if (getIsCOMPANYLogin() == true) {
+        if (getIsCOMPANYLogin(this) == true) {
             settingsViewModel.getCompanyDetails(this@EmplyeeyerProfile)
         } else {
             settingsViewModel.fetchEmployeeDetails(
@@ -438,7 +438,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
                         profileImage = file
 
 
-                        if (getIsCOMPANYLogin() == true) {
+                        if (getIsCOMPANYLogin(this) == true) {
 
                             settingsViewModel.changeCompanyProfileImage(this, file)
                         } else {

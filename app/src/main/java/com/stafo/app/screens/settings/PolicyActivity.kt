@@ -55,7 +55,7 @@ class PolicyActivity : AppCompatActivity() {
         binding.apply {
 
 
-            if (getIsCOMPANYLogin() == true) {
+            if (getIsCOMPANYLogin(this@PolicyActivity) == true) {
                 llcAddPolicy.visibility=View.VISIBLE
             } else {
                 llcAddPolicy.visibility=View.GONE
