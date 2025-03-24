@@ -66,12 +66,13 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, CommonViewModel>() {
         Handler(Looper.getMainLooper()).postDelayed({
             val isCompanyLogin = getIsCOMPANYLogin(this)
             val isEmployeeLogin = getIsEMPLogin(this)
+            val isOnBoardingScreenShown = isOnBoardingScreenShown(this)
 
-            Log.d("DEBUG", "isOnBoardingScreenShown: ${isOnBoardingScreenShown(this)}")
+            Log.d("DEBUG", "isOnBoardingScreenShown: $isOnBoardingScreenShown")
             Log.d("DEBUG", "isCompanyLogin: $isCompanyLogin")
             Log.d("DEBUG", "isEmployeeLogin: $isEmployeeLogin")
 
-            if (isOnBoardingScreenShown(this)) {
+            if (isOnBoardingScreenShown) {
                 when {
                     isCompanyLogin -> {
                         startActivity(Intent(this, EmployerDashboard::class.java))

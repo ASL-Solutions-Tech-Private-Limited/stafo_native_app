@@ -9,9 +9,9 @@ import com.stafo.app.screens.settings.dataClass.Employee
 //Session
 
 private val LOGIN_DETAILS = "user_details"
-private val isEMPLogin = "is_emp_login"
-private val isCOMPANYLogin = "is_company_login"
-private val isOnBoardingShown = "is_onboarding_shown"
+private const  val isEMPLogin = "is_emp_login"
+private const val isCOMPANYLogin = "is_company_login"
+private const  val isOnBoardingShown = "is_onboarding_shown"
 private val TOKEN = "token"
 private val COMPANY_DETAILS = "company_details"
 private val EMPLOYEE_DETAILS = "employee_details"
@@ -23,7 +23,7 @@ private val fbToken = "fb_token"
 
 
 // SharedPreferences Helper
-private fun getPrefs(context: Context): SharedPreferences {
+/*private fun getPrefs(context: Context): SharedPreferences {
     return context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
 }
 
@@ -37,6 +37,55 @@ fun isOnBoardingScreenShown(context: Context): Boolean {
     val prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
     return prefs.getBoolean(isOnBoardingShown, Hawk.get(isOnBoardingShown, false))
 }
+
+
+fun setIsEMPLogin(context: Context,islogin: Boolean) {
+    Hawk.put(isEMPLogin, islogin)
+    getPrefs(context).edit().putBoolean(isEMPLogin, islogin).apply()
+}
+
+fun getIsEMPLogin(context: Context): Boolean {
+    return getPrefs(context).getBoolean(isEMPLogin, Hawk.get(isEMPLogin, false))
+}
+
+
+// 🔹 Company Login
+fun setIsCOMPANYLogin(context: Context, isLogin: Boolean) {
+    Hawk.put(isCOMPANYLogin, isLogin)
+    getPrefs(context).edit().putBoolean(isCOMPANYLogin, isLogin).apply()
+}
+
+fun getIsCOMPANYLogin(context: Context): Boolean {
+    return getPrefs(context).getBoolean(isCOMPANYLogin, Hawk.get(isCOMPANYLogin, false))
+}*/
+private fun getPrefs(context: Context): SharedPreferences {
+    return context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+}
+
+fun setIsOnBoardingScreenShown(context: Context, isShown: Boolean) {
+    getPrefs(context).edit().putBoolean(isOnBoardingShown, isShown).apply()
+}
+fun isOnBoardingScreenShown(context: Context): Boolean {
+    return getPrefs(context).getBoolean(isOnBoardingShown, false)
+}
+fun setIsEMPLogin(context: Context, isLogin: Boolean) {
+    getPrefs(context).edit().putBoolean(isEMPLogin, isLogin).apply()
+}
+fun getIsEMPLogin(context: Context): Boolean {
+    return getPrefs(context).getBoolean(isEMPLogin, false)
+}
+fun setIsCOMPANYLogin(context: Context, isLogin: Boolean) {
+    getPrefs(context).edit().putBoolean(isCOMPANYLogin, isLogin).apply()
+}
+
+fun getIsCOMPANYLogin(context: Context): Boolean {
+    return getPrefs(context).getBoolean(isCOMPANYLogin, false)
+}
+
+
+
+
+
 
 /*fun isOnBoardingScreenShown(): Boolean {
     return Hawk.get(isOnBoardingShown, false)
@@ -74,25 +123,7 @@ fun isLoggedIn(context: Context): Boolean {
     val prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
     return prefs.getBoolean("is_logged_in", false)
 }
-fun setIsEMPLogin(context: Context,islogin: Boolean) {
-    Hawk.put(isEMPLogin, islogin)
-    getPrefs(context).edit().putBoolean(isEMPLogin, islogin).apply()
-}
 
-fun getIsEMPLogin(context: Context): Boolean {
-    return getPrefs(context).getBoolean(isEMPLogin, Hawk.get(isEMPLogin, false))
-}
-
-
-// 🔹 Company Login
-fun setIsCOMPANYLogin(context: Context, isLogin: Boolean) {
-    Hawk.put(isCOMPANYLogin, isLogin)
-    getPrefs(context).edit().putBoolean(isCOMPANYLogin, isLogin).apply()
-}
-
-fun getIsCOMPANYLogin(context: Context): Boolean {
-    return getPrefs(context).getBoolean(isCOMPANYLogin, Hawk.get(isCOMPANYLogin, false))
-}
 
 /*fun getIsLogin(): Boolean? {
     return Hawk.get(isEMPLogin, false)
