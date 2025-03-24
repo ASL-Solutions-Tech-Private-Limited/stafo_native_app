@@ -56,7 +56,11 @@ class LeaveManagementActivity : AppCompatActivity() {
         setupSearchListener()
 
     }
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
+        finish()
+    }
     private fun onClickListener() {
         binding?.apply {
 
@@ -91,8 +95,7 @@ class LeaveManagementActivity : AppCompatActivity() {
             }
 
             imageBack.setOnClickListener {
-                onBackPressedDispatcher.onBackPressed()
-                finish()
+               onBackPressed()
             }
 
 

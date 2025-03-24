@@ -1,9 +1,14 @@
 package com.stafo.app.screens.emp
 
 import android.app.DatePickerDialog
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +17,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.stafo.app.R
 import com.stafo.app.base.adapter.EmployeeAttendanceAdapter
 import com.stafo.app.base.model.EmployeeAttendanceModel
@@ -70,7 +76,7 @@ class EmployeeAttendance : AppCompatActivity() {
     }
 
     private fun onClickListener() {
-        binding?.apply {
+        binding.apply {
 
             val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
             binding.txtDate.setText(currentDate)
@@ -131,4 +137,7 @@ class EmployeeAttendance : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
+
+
+
 }

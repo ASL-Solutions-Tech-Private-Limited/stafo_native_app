@@ -66,6 +66,9 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.play.core.review.testing.FakeReviewManager
 import com.google.gson.Gson
+import com.stafo.app.screens.notification.NotificationActivity
+import com.stafo.app.screens.settings.SubMenuActivity
+import com.stafo.app.screens.settings.ViewDeviceRequestEmpActivity
 import com.stafo.app.utils.convertTo12HourFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -110,20 +113,17 @@ class EmployeeDashboard : AppCompatActivity() {
         reviewManager = FakeReviewManager(this)
 
 
+        /* if (getIsLockUser() ==true){
+             if (getIsLock() ==true){
+                 val delayMillis = 100L
+                 Handler(Looper.getMainLooper()).postDelayed({
+                     showLockScreen()
+                 }, delayMillis)
 
-
-
-       /* if (getIsLockUser() ==true){
-            if (getIsLock() ==true){
-                val delayMillis = 100L
-                Handler(Looper.getMainLooper()).postDelayed({
-                    showLockScreen()
-                }, delayMillis)
-
-            }
-        }else{
-            showScreenLockDialog()
-        }*/
+             }
+         }else{
+             showScreenLockDialog()
+         }*/
 
 
 
@@ -174,6 +174,10 @@ class EmployeeDashboard : AppCompatActivity() {
                                     putExtra("EMP_ID", "${getEmployeeDetails()?.id.toString()}")
                                 }
                             )
+                            overridePendingTransition(
+                                R.anim.slide_from_right,
+                                R.anim.slide_to_left
+                            )
                         }
 
                         "Leaves" -> {
@@ -182,6 +186,10 @@ class EmployeeDashboard : AppCompatActivity() {
                                     this@EmployeeDashboard,
                                     EmployeeLeaveHistoryActivity::class.java
                                 )
+                            )
+                            overridePendingTransition(
+                                R.anim.slide_from_right,
+                                R.anim.slide_to_left
                             )
                         }
 
@@ -192,6 +200,10 @@ class EmployeeDashboard : AppCompatActivity() {
                                     EmpBranchDetailsActivity::class.java
                                 )
                             )
+                            overridePendingTransition(
+                                R.anim.slide_from_right,
+                                R.anim.slide_to_left
+                            )
                         }
 
                         "Policy" -> {
@@ -200,6 +212,10 @@ class EmployeeDashboard : AppCompatActivity() {
                                     this@EmployeeDashboard,
                                     PolicyActivity::class.java
                                 )
+                            )
+                            overridePendingTransition(
+                                R.anim.slide_from_right,
+                                R.anim.slide_to_left
                             )
                         }
                     }
@@ -224,8 +240,25 @@ class EmployeeDashboard : AppCompatActivity() {
         binding.apply {
 
             ivLogout.setOnClickListener {
-                 showLogoutDialog()
-               // showRateDialog()
+                showLogoutDialog()
+                // showRateDialog()
+            }
+
+            ivNotification.setOnClickListener {
+                startActivity(Intent(this@EmployeeDashboard,NotificationActivity::class.java))
+                overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
+            }
+
+
+            tvActivitiesViewAll.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@EmployeeDashboard,
+                        SubMenuActivity::class.java
+                    )
+                )
+
+                overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
             }
 
             settingsViewModel.fetchEmployeeDetails(
@@ -393,12 +426,6 @@ class EmployeeDashboard : AppCompatActivity() {
     }
 
 
-
-
-
-
-
-
     private fun observeViewModel() {
 
 
@@ -414,7 +441,8 @@ class EmployeeDashboard : AppCompatActivity() {
                 it.employeeInfo.shift?.let { shift ->
                     val startTime12Hr = convertTo12HourFormat(shift.startTime)
                     val endTime12Hr = convertTo12HourFormat(shift.endTime)
-                    binding.tvOfficeTiming.text = "Your Office timing is $startTime12Hr to $endTime12Hr"
+                    binding.tvOfficeTiming.text =
+                        "Your Office timing is $startTime12Hr to $endTime12Hr"
                 }
 
 
@@ -590,7 +618,8 @@ class EmployeeDashboard : AppCompatActivity() {
 
                             if (isServiceRunning(LocationForegroundService::class.java)) {
 
-                                val serviceIntent = Intent(this, LocationForegroundService::class.java)
+                                val serviceIntent =
+                                    Intent(this, LocationForegroundService::class.java)
                                 stopService(serviceIntent)
                             }
 
@@ -637,14 +666,12 @@ class EmployeeDashboard : AppCompatActivity() {
                             if (shiftEndTime != null && currentDateTime.after(shiftEndCalendar)) {
                                 Log.d("res", "end time service")
                                 if (isServiceRunning(LocationForegroundService::class.java)) {
-                                    val serviceIntent = Intent(this, LocationForegroundService::class.java)
+                                    val serviceIntent =
+                                        Intent(this, LocationForegroundService::class.java)
                                     stopService(serviceIntent)
                                 }
                             }
                         }
-
-
-
 
 
                     } else {
@@ -764,15 +791,17 @@ class EmployeeDashboard : AppCompatActivity() {
             if (it.status) {
 
                 val bannerList = listOf(it.data)
-                binding.imageSlider.setSliderAdapter(SliderAdapter(this@EmployeeDashboard, bannerList))
+                binding.imageSlider.setSliderAdapter(
+                    SliderAdapter(
+                        this@EmployeeDashboard,
+                        bannerList
+                    )
+                )
             }
         }
 
 
     }
-
-
-
 
 
     override fun onBackPressed() {
@@ -818,6 +847,7 @@ class EmployeeDashboard : AppCompatActivity() {
                         is com.google.android.play.core.review.ReviewException -> {
                             Log.e("CheckReview", "Review API error: ${exception.message}")
                         }
+
                         else -> {
                             Log.e("CheckReview", "Unknown error: ${exception.message}")
                         }
@@ -928,13 +958,29 @@ class EmployeeDashboard : AppCompatActivity() {
         }
 
         bottomSheetDialogBinding.llSelfieAttendance.setOnClickListener {
-            startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
-            bottomSheetDialog.dismiss()
+
+            if (isLocationEnabled()) {
+                bottomSheetDialog.dismiss()
+                startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
+            } else {
+                requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+
+         /*   startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
+            bottomSheetDialog.dismiss()*/
         }
 
         bottomSheetDialogBinding.llQrAttendance.setOnClickListener {
-            startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
-            bottomSheetDialog.dismiss()
+
+
+            if (isLocationEnabled()) {
+                bottomSheetDialog.dismiss()
+                startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
+            } else {
+                requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+           /* startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
+            bottomSheetDialog.dismiss()*/
 
         }
 
@@ -1095,12 +1141,12 @@ class EmployeeDashboard : AppCompatActivity() {
         return mActionList
     }
 
-  /*  private fun setupImageSlider() {
-        val imageList = ArrayList<Int>()
-        imageList.add(R.drawable.banner_one)
-        imageList.add(R.drawable.banner_two)
-        binding.imageSlider.setSliderAdapter(SliderAdapter(this, imageList))
-    }*/
+    /*  private fun setupImageSlider() {
+          val imageList = ArrayList<Int>()
+          imageList.add(R.drawable.banner_one)
+          imageList.add(R.drawable.banner_two)
+          binding.imageSlider.setSliderAdapter(SliderAdapter(this, imageList))
+      }*/
 
     private fun openPlayStoreForReview(context: Context) {
         val appPackageName = context.packageName

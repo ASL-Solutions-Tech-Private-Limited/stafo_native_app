@@ -1,5 +1,6 @@
 package com.stafo.app.utils
 
+import android.content.Context
 import com.orhanobut.hawk.Hawk
 import com.stafo.app.screens.auth.dataClass.CompanyData
 import com.stafo.app.screens.settings.dataClass.Employee
@@ -43,6 +44,17 @@ fun setIsLock(isLock: Boolean) {
 
 fun getIsLock(): Boolean? {
     return Hawk.get(isLockSet, false)
+}
+
+
+fun setIsLoggedIn(context: Context, isLoggedIn: Boolean) {
+    val prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+    prefs.edit().putBoolean("is_logged_in", isLoggedIn).apply()
+}
+
+fun isLoggedIn(context: Context): Boolean {
+    val prefs = context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+    return prefs.getBoolean("is_logged_in", false)
 }
 fun setIsEMPLogin(islogin: Boolean) {
     Hawk.put(isEMPLogin, islogin)

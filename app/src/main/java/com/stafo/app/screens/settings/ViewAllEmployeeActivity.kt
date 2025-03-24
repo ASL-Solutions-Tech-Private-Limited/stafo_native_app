@@ -36,7 +36,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.stafo.app.screens.settings.dataClass.InActiveEmpRequest
 import com.stafo.app.screens.settings.dataClass.RemoveSelfieRequest
 import com.stafo.app.screens.settings.dataClass.ShiftDataList
-import com.stafo.app.utils.doLogout
 import java.util.Calendar
 
 class ViewAllEmployeeActivity : AppCompatActivity() {
@@ -298,7 +297,10 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         dialog.show()
     }
 
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
+    }
     private fun setOnClickEvents() {
 
 
@@ -312,8 +314,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         }
 
         binding.imageBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-            finish()
+           onBackPressed()
         }
 
 

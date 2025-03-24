@@ -133,9 +133,13 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
         }
     }
 
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
+        finish()
+    }
     private fun onClickListener() {
-        binding?.apply {
+        binding.apply {
 
 
             val options = resources.getStringArray(R.array.leave_type_search)
@@ -183,8 +187,7 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
 
 
             imageBack.setOnClickListener {
-                onBackPressedDispatcher.onBackPressed()
-                finish()
+                onBackPressed()
             }
 
 

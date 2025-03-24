@@ -57,7 +57,7 @@
         <ImageView
             android:id="@+id/iv_qr"
             android:layout_centerHorizontal="true"
-            android:scaleType="fitCenter"
+            android:scaleType="fitXY"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_180sdp"/>
 

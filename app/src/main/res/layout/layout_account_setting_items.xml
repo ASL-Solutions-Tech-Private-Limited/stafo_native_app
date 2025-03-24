@@ -57,7 +57,7 @@
         android:text="Holiday"
         android:textColor="@color/white"
         android:textSize="@dimen/_12sdp" />
-    <androidx.appcompat.widget.AppCompatTextView
+   <!-- <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_reports_settings"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_44sdp"
@@ -73,7 +73,7 @@
         android:padding="@dimen/_12sdp"
         android:text="Reports"
         android:textColor="@color/white"
-        android:textSize="@dimen/_12sdp" />
+        android:textSize="@dimen/_12sdp" />-->
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_generate_qr_settings"

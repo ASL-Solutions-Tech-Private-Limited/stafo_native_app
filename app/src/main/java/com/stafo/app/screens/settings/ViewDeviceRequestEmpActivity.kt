@@ -118,6 +118,8 @@ class ViewDeviceRequestEmpActivity : AppCompatActivity() {
         }
     }
 
+
+
     private fun setOnClickEvents() {
        getEmployeeComId()?.let {
            val request= CompanyViewRequestDevice(

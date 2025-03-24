@@ -70,18 +70,22 @@ class EmpBranchDetailsActivity : AppCompatActivity() {
         }
 
     }
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
+        finish()
+    }
 
     private fun onClickListener() {
-        binding?.apply {
+        binding.apply {
 
 
             getEmployeeComId()?.let { settingsViewModel.getViewBranchList(this@EmpBranchDetailsActivity, it) }
 
 
             imageBack.setOnClickListener {
-                onBackPressedDispatcher.onBackPressed()
-                finish()
+                onBackPressed()
+
             }
 
 

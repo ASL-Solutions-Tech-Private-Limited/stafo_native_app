@@ -47,6 +47,15 @@
         tools:replace="android:label"
         tools:targetApi="31">
         <activity
+            android:name=".screens.subscription.SubscriptionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.notification.NotificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.settings.SubMenuActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.payroll.GenerateSalaryActivity"
             android:exported="false" />
         <activity
@@ -134,7 +143,7 @@
             android:name=".screens.emp.EmployeeProfileDetails"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".screens.emp.EmployeeAttendanceRecordActivity"
             android:exported="false"
@@ -156,7 +165,7 @@
             android:name=".screens.profile.CompanyProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".screens.settings.AddPolicyActivity"
             android:exported="false"
@@ -349,6 +358,9 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="Notification" />
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="subject_segment" />
     </application>
 
 </manifest>

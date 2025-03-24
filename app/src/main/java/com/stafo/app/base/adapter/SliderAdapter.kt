@@ -27,8 +27,10 @@ class SliderAdapter(private val context: Context,var sliderItems: List<BannerDat
     override fun onBindViewHolder(viewHolder: SliderAdapterVH, position: Int) {
         val sliderItem = sliderItems[position]
 
+        val imageUrl="${sliderItem.path}/${sliderItem.banner[position].image}"
+
         Glide.with(viewHolder.itemView)
-            .load(sliderItem.imageurl)
+            .load(imageUrl)
             .fitCenter()
             .into(viewHolder.imageViewBackground)
 

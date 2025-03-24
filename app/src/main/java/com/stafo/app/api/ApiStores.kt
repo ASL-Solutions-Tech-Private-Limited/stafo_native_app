@@ -58,6 +58,8 @@ import com.stafo.app.screens.settings.dataClass.GenerateQCodeRequest
 import com.stafo.app.screens.settings.dataClass.GeoLocationHistResponse
 import com.stafo.app.screens.settings.dataClass.GeoLocationHistResquest
 import com.stafo.app.screens.settings.dataClass.GetAllEmployeeResponse
+import com.stafo.app.screens.settings.dataClass.GetAttendanceBranch
+import com.stafo.app.screens.settings.dataClass.GetAttendanceBranchRequest
 import com.stafo.app.screens.settings.dataClass.GetAttendanceRecordRequest
 import com.stafo.app.screens.settings.dataClass.GetEmpAttendanceRecord
 import com.stafo.app.screens.settings.dataClass.GetEmpAttendanceRecordBody
@@ -552,5 +554,11 @@ interface ApiStores {
     suspend fun callBannerImage(
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<BannerResponse>
+
+    @POST("api/employee-branch-info")
+    suspend fun callAttendanceBranch(
+        @Body request: GetAttendanceBranchRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<GetAttendanceBranch>
 
 }

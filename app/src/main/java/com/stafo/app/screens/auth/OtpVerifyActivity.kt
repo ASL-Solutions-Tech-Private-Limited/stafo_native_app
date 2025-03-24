@@ -28,6 +28,7 @@ import com.stafo.app.utils.setCompanyDetails
 import com.stafo.app.utils.setEmployeeDetails
 import com.stafo.app.utils.setIsCOMPANYLogin
 import com.stafo.app.utils.setIsEMPLogin
+import com.stafo.app.utils.setIsLoggedIn
 import com.stafo.app.utils.setUserAccessToken
 
 class OtpVerifyActivity : AppCompatActivity() {

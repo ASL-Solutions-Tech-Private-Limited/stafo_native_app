@@ -152,6 +152,7 @@
                         android:id="@+id/civ_emp"
                         app:shapeAppearanceOverlay="@style/Circular"
                         android:background="#4D90D6FF"
+                        android:scaleType="fitXY"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:layout_width="@dimen/_30sdp"
                         android:layout_height="@dimen/_30sdp" />

@@ -1,15 +1,23 @@
 package com.stafo.app.screens.settings
 
 import android.app.Activity
+import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -24,24 +32,33 @@ import com.stafo.app.R
 import com.stafo.app.databinding.ActivityUploadSelfieAttendanceBinding
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
-import com.stafo.app.utils.doLogout
-import com.stafo.app.utils.getEmployeeDetails
-import com.stafo.app.utils.getIsCOMPANYLogin
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.Response
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+
 
 class UploadSelfieAttendanceActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivityUploadSelfieAttendanceBinding
+    private lateinit var binding: ActivityUploadSelfieAttendanceBinding
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
     private var mEmpID = ""
 
     private var selfieImage: File? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding=ActivityUploadSelfieAttendanceBinding.inflate(layoutInflater)
+        binding = ActivityUploadSelfieAttendanceBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -76,20 +93,42 @@ class UploadSelfieAttendanceActivity : AppCompatActivity() {
 
             btnUploadSelfie.setOnClickListener {
                 if (selfieImage == null) {
-                    CustomToast(this@UploadSelfieAttendanceActivity,"Please upload a selfie first")
+                    CustomToast(this@UploadSelfieAttendanceActivity, "Please upload a selfie first")
                 } else {
-                    settingsViewModel.uploadSelfieAttendance(this@UploadSelfieAttendanceActivity,mEmpID, selfieImage)
+                    settingsViewModel.uploadSelfieAttendance(
+                        this@UploadSelfieAttendanceActivity,
+                        mEmpID,
+                        selfieImage
+                    )
                 }
             }
-
-
-
 
 
         }
 
 
     }
+
+
+    private fun bitmapToFile(bitmap: Bitmap, context: Context): File? {
+        return try {
+
+            val fileName = "selfie_${System.currentTimeMillis()}.jpg"
+            val file = File(context.cacheDir, fileName)
+            file.createNewFile()
+
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            outputStream.flush()
+            outputStream.close()
+            file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+
 
     private fun observeViewModel() {
 
@@ -106,7 +145,6 @@ class UploadSelfieAttendanceActivity : AppCompatActivity() {
 
 
         }
-
 
 
     }
@@ -143,14 +181,20 @@ class UploadSelfieAttendanceActivity : AppCompatActivity() {
             if (file != null) {
                 when (requestCode) {
                     1101 -> {
-                        selfieImage = file
 
-                        binding.sivEmpPunch.visibility= View.VISIBLE
-                        binding.tvRetakeSelfie.visibility= View.VISIBLE
+                        binding.sivEmpPunch.visibility = View.VISIBLE
+                        binding.tvRetakeSelfie.visibility = View.VISIBLE
 
-                        Glide.with(this)
-                            .load(file)
-                            .into(binding.sivEmpPunch)
+                        if (file != null) {
+                            removeBackgroundUsingRemoveBg(file)
+                        } else {
+
+                            CustomToast(this,"Failed to get image file")
+                        }
+
+                        /* Glide.with(this)
+                             .load(file)
+                             .into(binding.sivEmpPunch)*/
                     }
 
                 }
@@ -165,6 +209,65 @@ class UploadSelfieAttendanceActivity : AppCompatActivity() {
             // CustomToast(this, "Task Cancelled")
 
         }
+    }
+
+
+    private fun removeBackgroundUsingRemoveBg(file: File) {
+        val apiKey = "T13hChaJUYghAopjE1KoDe49"
+        val url = "https://api.remove.bg/v1.0/removebg"
+
+
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Processing image, please wait...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
+
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart(
+                "image_file", file.name,
+                file.asRequestBody("image/*".toMediaTypeOrNull())
+            )
+            .addFormDataPart("size", "auto")
+            .build()
+
+        val request = Request.Builder()
+            .url(url)
+            .addHeader("X-Api-Key", apiKey)
+            .post(requestBody)
+            .build()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                runOnUiThread {
+                    progressDialog.dismiss()
+                    CustomToast(this@UploadSelfieAttendanceActivity, "Failed to upload image")
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    progressDialog.dismiss()
+                    val inputStream = response.body?.byteStream()
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    selfieImage=bitmapToFile(bitmap, this@UploadSelfieAttendanceActivity)
+
+                    runOnUiThread {
+                        binding.sivEmpPunch.setImageBitmap(bitmap)
+                    }
+                } else {
+                    runOnUiThread {
+
+                        CustomToast(
+                            this@UploadSelfieAttendanceActivity,
+                            "API Error: ${response.message}"
+                        )
+                    }
+                }
+            }
+        })
     }
 
     private fun getFileFromUri(uri: Uri): File? {

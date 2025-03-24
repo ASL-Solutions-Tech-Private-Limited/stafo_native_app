@@ -1,6 +1,8 @@
 package com.stafo.app.screens.emp
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.location.Location
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -9,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.gms.location.LocationServices
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityQrcodeAttendanceEmpBinding
 import com.stafo.app.screens.settings.SettingsViewModel
@@ -23,6 +26,7 @@ class QRCodeAttendanceEmpActivity : AppCompatActivity() {
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +46,30 @@ class QRCodeAttendanceEmpActivity : AppCompatActivity() {
 
     }
 
+
+    @SuppressLint("MissingPermission")
+    fun getCurrentLocation(callback: (Double, Double) -> Unit) {
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                callback(location.latitude, location.longitude)
+            } else {
+                CustomToast(this, "Unable to fetch location. Ensure GPS is enabled.")
+            }
+        }
+    }
+
+    fun getDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float {
+        val results = FloatArray(1)
+        Location.distanceBetween(lat1, lon1, lat2, lon2, results)
+        return results[0]
+    }
+
     private fun onClickListener() {
         binding.apply {
 
             val intentIntegrator = IntentIntegrator(this@QRCodeAttendanceEmpActivity)
-            intentIntegrator.setPrompt("Scan barcode to mark Attendance")
+            intentIntegrator.setPrompt("Scan QRCode to mark Attendance")
             intentIntegrator.setOrientationLocked(true)
             intentIntegrator.initiateScan()
 

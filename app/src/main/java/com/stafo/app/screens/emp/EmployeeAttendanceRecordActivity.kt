@@ -216,9 +216,14 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
+        finish()
+    }
 
     private fun onClickListener() {
-        binding?.apply {
+        binding.apply {
 
             val currentDate =
                 SimpleDateFormat("MMM yy", Locale.getDefault()).format(calendar.time)
@@ -231,8 +236,7 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
             }
 
             imageBack.setOnClickListener {
-                onBackPressedDispatcher.onBackPressed()
-                finish()
+                onBackPressed()
             }
 
 

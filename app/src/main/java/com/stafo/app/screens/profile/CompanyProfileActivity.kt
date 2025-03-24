@@ -83,7 +83,9 @@ class CompanyProfileActivity : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
         onClickListener()
+        observeAuthViewModel()
         observeViewModel()
+
 
 
     }
@@ -285,6 +287,8 @@ class CompanyProfileActivity : AppCompatActivity() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
+
+
         settingsViewModel.mCompanyProfileResponse.observe(this) {
             if (it.status) {
                 it.data?.let { data ->
@@ -349,9 +353,8 @@ class CompanyProfileActivity : AppCompatActivity() {
                     selectedBusinessType = businessTypeId
 
                     val businessTypeName = mBusinessTypeList?.find { it.id == businessTypeId }?.business_name ?: ""
-                    binding.tieBusinessType.post {
-                        binding.tieBusinessType.setText(businessTypeName)
-                    }
+                    binding.tieBusinessType.setText(businessTypeName)
+
 
 
 
@@ -367,7 +370,7 @@ class CompanyProfileActivity : AppCompatActivity() {
                 CustomToast(this, it.message)
             }
 
-            observeAuthViewModel()
+
 
         }
 
@@ -434,7 +437,7 @@ class CompanyProfileActivity : AppCompatActivity() {
                         it1.tieBusinessType
                     )
 
-                    for (businessType in mCompanyTypeList?.indices!!) {
+                    for (businessType in mBusinessTypeList?.indices!!) {
                         if (mCompany?.business_type_id.toString() == mBusinessTypeList?.get(
                                 businessType
                             )?.id.toString()

@@ -2,6 +2,7 @@ package com.stafo.app
 
 import android.content.Context
 import android.os.StrictMode
+import android.util.Log
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.stafo.app.api.ApiClient
@@ -26,7 +27,9 @@ class ASLEmpMng : MultiDexApplication() {
         super.onCreate()
         MultiDex.install(this)
         globalContext = applicationContext
+
         Hawk.init(this).build()
+
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
       //  FirebaseApp.initializeApp(this)

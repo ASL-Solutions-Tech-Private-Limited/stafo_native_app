@@ -84,14 +84,24 @@ class EmpDayAttendanceRecordActivity : AppCompatActivity() {
 
 
         settingsViewModel.mDayPunchINEmpResponse.observe(this) { response ->
-            if (response.status && response.data != null) {
-                binding.txtMsg.visibility = View.GONE
-                binding.rvEmpAttendList.layoutManager = LinearLayoutManager(this)
-                val newAdapter = AdapterEmpDayAttendance(response.data,this)
-                binding.rvEmpAttendList.adapter = newAdapter
-                newAdapter.notifyDataSetChanged()
+            if (response.status) {
+                if (response.data.isNotEmpty()){
+                    binding.txtMsg.visibility = View.GONE
+                    binding.rvEmpAttendList.visibility = View.VISIBLE
+
+                    binding.rvEmpAttendList.layoutManager = LinearLayoutManager(this)
+                    val newAdapter = AdapterEmpDayAttendance(response.data,this)
+                    binding.rvEmpAttendList.adapter = newAdapter
+                    newAdapter.notifyDataSetChanged()
+
+                }else{
+                    binding.txtMsg.visibility = View.VISIBLE
+                    binding.rvEmpAttendList.visibility = View.GONE
+                }
+
             } else {
                 binding.txtMsg.visibility = View.VISIBLE
+                binding.rvEmpAttendList.visibility = View.GONE
             }
         }
 

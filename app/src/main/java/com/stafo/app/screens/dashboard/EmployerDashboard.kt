@@ -50,8 +50,10 @@ import com.stafo.app.utils.setIsLock
 import com.stafo.app.utils.setIsLockUser
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
+import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.recharge.RechargeActivity
 import com.stafo.app.screens.reports.ReportsActivity
+import com.stafo.app.screens.settings.SubMenuActivity
 
 class EmployerDashboard : AppCompatActivity() {
     private lateinit var binding: ActivityEmployerDashboardBinding
@@ -63,7 +65,7 @@ class EmployerDashboard : AppCompatActivity() {
     private val mActionList = ArrayList<ActionModel>()
 
     private var companyStatus: Boolean = false
-    private var maxEmployeeAdd: String =""
+    private var maxEmployeeAdd: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -77,17 +79,16 @@ class EmployerDashboard : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
 
-
-      /*  if (getIsLockUser()==true){
-            if (getIsLock()==true){
-                val delayMillis = 100L
-                Handler(Looper.getMainLooper()).postDelayed({
-                    showLockScreen()
-                }, delayMillis)
-            }
-        }else{
-            showScreenLockDialog()
-        }*/
+        /*  if (getIsLockUser()==true){
+              if (getIsLock()==true){
+                  val delayMillis = 100L
+                  Handler(Looper.getMainLooper()).postDelayed({
+                      showLockScreen()
+                  }, delayMillis)
+              }
+          }else{
+              showScreenLockDialog()
+          }*/
 
 
         initViews()
@@ -152,7 +153,8 @@ class EmployerDashboard : AppCompatActivity() {
             rvWishes.layoutManager =
                 LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
 
-            rvActions.layoutManager = LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
+            rvActions.layoutManager =
+                LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
 
             val actionsAdapter = ActionsListAdapter(actionList(),
                 this@EmployerDashboard,
@@ -170,6 +172,10 @@ class EmployerDashboard : AppCompatActivity() {
                                             putExtra("FROM", "View All")
                                         }
                                     )
+                                    overridePendingTransition(
+                                        R.anim.slide_from_right,
+                                        R.anim.slide_to_left
+                                    )
                                 } else {
                                     showCompanyVerificationDialog()
                                 }
@@ -185,6 +191,10 @@ class EmployerDashboard : AppCompatActivity() {
                                             LeaveManagementActivity::class.java
                                         )
                                     )
+                                    overridePendingTransition(
+                                        R.anim.slide_from_right,
+                                        R.anim.slide_to_left
+                                    )
                                 } else {
                                     showCompanyVerificationDialog()
                                 }
@@ -199,6 +209,10 @@ class EmployerDashboard : AppCompatActivity() {
                                             this@EmployerDashboard,
                                             BranchActivity::class.java
                                         )
+                                    )
+                                    overridePendingTransition(
+                                        R.anim.slide_from_right,
+                                        R.anim.slide_to_left
                                     )
                                 } else {
                                     showCompanyVerificationDialog()
@@ -217,6 +231,10 @@ class EmployerDashboard : AppCompatActivity() {
                                             PolicyActivity::class.java
                                         )
                                     )
+                                    overridePendingTransition(
+                                        R.anim.slide_from_right,
+                                        R.anim.slide_to_left
+                                    )
                                 } else {
                                     showCompanyVerificationDialog()
                                 }
@@ -233,11 +251,16 @@ class EmployerDashboard : AppCompatActivity() {
                                             ViewEmpLocationTrackActivity::class.java
                                         )
                                     )
+                                    overridePendingTransition(
+                                        R.anim.slide_from_right,
+                                        R.anim.slide_to_left
+                                    )
                                 } else {
                                     showCompanyVerificationDialog()
                                 }
 
                             }
+
                             "Request Device" -> {
 
 
@@ -249,7 +272,10 @@ class EmployerDashboard : AppCompatActivity() {
                                         )
                                     )
 
-                                    overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                                    overridePendingTransition(
+                                        R.anim.slide_from_right,
+                                        R.anim.slide_to_left
+                                    )
                                 } else {
                                     showCompanyVerificationDialog()
                                 }
@@ -261,6 +287,8 @@ class EmployerDashboard : AppCompatActivity() {
 
                 })
             rvActions.adapter = actionsAdapter
+
+
             settingsViewModel.getCompanyDashboard(this@EmployerDashboard)
             binding.tvOnLeaveEmp.text = "0"
         }
@@ -273,7 +301,7 @@ class EmployerDashboard : AppCompatActivity() {
             if (it.status) {
                 setEmployeeComId(it.companyId.toString())
 
-                maxEmployeeAdd=it.maxEmployeeAdd
+                maxEmployeeAdd = it.maxEmployeeAdd
 
                 wishList.clear()
                 binding.tvPresentEmp.text = it.presentCount.toString()
@@ -365,17 +393,17 @@ class EmployerDashboard : AppCompatActivity() {
             if (it.status) {
 
                 it.data?.companyLogo?.let { imageUrl ->
-                    binding.ivHeaderProfilePic.visibility=View.VISIBLE
+                    binding.ivHeaderProfilePic.visibility = View.VISIBLE
                     Glide.with(this)
                         .load(imageUrl)
                         .into(binding.ivHeaderProfilePic)
                 } ?: run {
-                    binding.ivHeaderProfilePic.visibility=View.GONE
+                    binding.ivHeaderProfilePic.visibility = View.GONE
                 }
 
 
             } else {
-                binding.ivHeaderProfilePic.visibility=View.GONE
+                binding.ivHeaderProfilePic.visibility = View.GONE
                 CustomToast(this, it.message)
             }
 
@@ -398,12 +426,16 @@ class EmployerDashboard : AppCompatActivity() {
             if (it.status) {
 
                 val bannerList = listOf(it.data)
-                binding.imageSlider.setSliderAdapter(SliderAdapter(this@EmployerDashboard, bannerList))
+                binding.imageSlider.setSliderAdapter(
+                    SliderAdapter(
+                        this@EmployerDashboard,
+                        bannerList
+                    )
+                )
             }
         }
 
     }
-
 
 
     private fun showUpgradeDialog() {
@@ -421,8 +453,10 @@ class EmployerDashboard : AppCompatActivity() {
         val dialog = builder.create()
 
         dialog.setOnShowListener {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.blue))
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.gray_colour))
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(ContextCompat.getColor(this, R.color.blue))
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setTextColor(ContextCompat.getColor(this, R.color.gray_colour))
         }
         dialog.show()
     }
@@ -451,6 +485,24 @@ class EmployerDashboard : AppCompatActivity() {
         binding.ivLogout.setOnClickListener {
             showLogoutDialog()
         }
+
+        binding.ivNotification.setOnClickListener {
+            startActivity(Intent(this@EmployerDashboard, NotificationActivity::class.java))
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
+        }
+
+        binding.tvActivitiesViewAll.setOnClickListener {
+            startActivity(
+                Intent(
+                    this@EmployerDashboard,
+                    SubMenuActivity::class.java
+                )
+            )
+
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
+        }
+
+
 
         stopLocationService()
 
@@ -505,21 +557,20 @@ class EmployerDashboard : AppCompatActivity() {
         binding.addEmp.setOnClickListener {
 
 
-           // startActivity(Intent(this, RechargeActivity::class.java))
+            // startActivity(Intent(this, RechargeActivity::class.java))
 
             if (companyStatus) {
 
 
-                val getTotalEmp=binding.tvAllEmp.text.toString().trim()
+                val getTotalEmp = binding.tvAllEmp.text.toString().trim()
 
-                if (getTotalEmp >= maxEmployeeAdd){
+                if (getTotalEmp >= maxEmployeeAdd) {
 
                     startActivity(Intent(this, AddEmployeeActivity::class.java))
-                  //  showUpgradeDialog()
-                }else{
+                    //  showUpgradeDialog()
+                } else {
                     startActivity(Intent(this, AddEmployeeActivity::class.java))
                 }
-
 
 
             } else {
@@ -541,12 +592,12 @@ class EmployerDashboard : AppCompatActivity() {
 
             startActivity(Intent(this, CompanyProfileActivity::class.java))
 
-           /* if (companyStatus) {
+            /* if (companyStatus) {
 
-               // startActivity(Intent(this, VerifyCompanyDetailsActivity::class.java))
-            } else {
-                showCompanyVerificationDialog()
-            }*/
+                // startActivity(Intent(this, VerifyCompanyDetailsActivity::class.java))
+             } else {
+                 showCompanyVerificationDialog()
+             }*/
 
         }
 
@@ -586,13 +637,13 @@ class EmployerDashboard : AppCompatActivity() {
         return mActionList
     }
 
-   /* private fun setupImageSlider() {
-        var imageList = ArrayList<Int>()
-        imageList.add(R.drawable.banner_one)
-        imageList.add(R.drawable.banner_two)
-        binding.imageSlider.setSliderAdapter(SliderAdapter(this, imageList))
-    }
-*/
+    /* private fun setupImageSlider() {
+         var imageList = ArrayList<Int>()
+         imageList.add(R.drawable.banner_one)
+         imageList.add(R.drawable.banner_two)
+         binding.imageSlider.setSliderAdapter(SliderAdapter(this, imageList))
+     }
+ */
 
     override fun onBackPressed() {
         super.onBackPressed()

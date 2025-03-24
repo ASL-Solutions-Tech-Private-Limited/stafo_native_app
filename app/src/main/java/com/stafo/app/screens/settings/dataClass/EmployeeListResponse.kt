@@ -20,6 +20,8 @@ data class EmployeeDataList(
     val salary: String? = null,
     val image: String?,
     @SerializedName("image_path") val imagePath: String,
+    @SerializedName("selfie_image") val selfieImage: String?,
+    @SerializedName("selfie_image_path") val selfieImagePath: String,
     val company_id: Int,
     val branch_name: String,
     val department_name: String,

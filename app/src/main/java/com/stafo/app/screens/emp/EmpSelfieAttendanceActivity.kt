@@ -1,10 +1,16 @@
 package com.stafo.app.screens.emp
 
+import android.annotation.SuppressLint
+import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.location.Location
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -14,20 +20,37 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.gms.location.LocationServices
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityEmpSelfieAttendanceBinding
 import com.stafo.app.screens.settings.SettingsViewModel
+import com.stafo.app.screens.settings.dataClass.GetAttendanceBranchRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeDetails
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.Response
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 
 class EmpSelfieAttendanceActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmpSelfieAttendanceBinding
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
+
+
+    private var selfieImage: File? = null
+    private var branchLat:Double = 0.0
+    private var branchLong :Double = 0.0
+    private var radar  :Float = 0.0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,11 +93,22 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     }
 
     private fun onClickListener() {
-        binding?.apply {
+        binding.apply {
 
             imageBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
                 finish()
+            }
+
+            val employeeId = getEmployeeDetails()?.id
+
+            employeeId?.let { empId ->
+
+                val request= GetAttendanceBranchRequest(
+                    employee_id =empId.toString()
+                )
+
+                settingsViewModel.getEmpAttendanceBranch(this@EmpSelfieAttendanceActivity, request)
             }
 
 
@@ -99,26 +133,36 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
             }
 
             btnPunchIn.setOnClickListener {
-                val bitmap = binding.sivEmpPunch.drawable?.toBitmap()
-
-                if (bitmap != null) {
-                    val file = bitmapToFile(bitmap, Bitmap.CompressFormat.JPEG, "jpg")
-                    val employeeId = getEmployeeDetails()?.id
-
-                    if (file != null) {
-                        employeeId?.let { empId ->
-                            settingsViewModel.selfieAttendanceEmpolyee(
-                                this@EmpSelfieAttendanceActivity,
-                                empId,
-                                file
-                            )
-                        }
-                    } else {
-                        CustomToast(this@EmpSelfieAttendanceActivity, "Failed to post image file.")
-                    }
+                if (selfieImage == null) {
+                    CustomToast(this@EmpSelfieAttendanceActivity, "Please upload a selfie first")
                 } else {
-                    CustomToast(this@EmpSelfieAttendanceActivity, "No image captured.")
+
+                    getCurrentLocation { userLat, userLong ->
+
+
+                        val distance = getDistance(userLat, userLong, branchLat, branchLong)
+
+                        if (distance <= radar) {
+
+                            val employeeId = getEmployeeDetails()?.id
+
+                            employeeId?.let { empId ->
+                                settingsViewModel.selfieAttendanceEmpolyee(
+                                    this@EmpSelfieAttendanceActivity,
+                                    empId,
+                                    selfieImage
+                                )
+                            }
+                        } else {
+                            CustomToast(this@EmpSelfieAttendanceActivity, "You are outside the allowed area. Move closer.")
+                        }
+                    }
+
+
+
                 }
+
+
             }
 
 
@@ -128,43 +172,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     }
 
 
-    /*    private fun bitmapToFile(bitmap: Bitmap): File? {
-            return try {
-                val file = File(cacheDir, "selfie_${System.currentTimeMillis()}.png")
-                file.createNewFile()
 
-                val outputStream = FileOutputStream(file)
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-                outputStream.flush()
-                outputStream.close()
-
-                file
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            }
-        }*/
-
-    private fun bitmapToFile(
-        bitmap: Bitmap,
-        format: Bitmap.CompressFormat,
-        fileExtension: String
-    ): File? {
-        return try {
-            val file = File(cacheDir, "selfie_${System.currentTimeMillis()}.$fileExtension")
-            file.createNewFile()
-
-            val outputStream = FileOutputStream(file)
-            bitmap.compress(format, 100, outputStream)
-            outputStream.flush()
-            outputStream.close()
-
-            file
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
 
 
     private fun observeViewModel() {
@@ -177,6 +185,8 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         settingsViewModel.mSelfieAttendanceEmpResponse.observe(this) {
 
             if (it.status) {
+
+                Log.d("res","${it.similarity}")
                 CustomToast(this, it.message)
                 onBackPressedDispatcher.onBackPressed()
                 finish()
@@ -187,9 +197,39 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
         }
 
+        settingsViewModel.mGetAttendanceBranchResponse.observe(this) {
+
+            if (it.status) {
+                 branchLat = it.data.latitude.toDouble()
+                 branchLong = it.data.longitude.toDouble()
+                 radar = it.data.radar.toFloat()
+
+            } else {
+                CustomToast(this, it.message)
+            }
+
+
+        }
+
 
     }
+    @SuppressLint("MissingPermission")
+    fun getCurrentLocation(callback: (Double, Double) -> Unit) {
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                callback(location.latitude, location.longitude)
+            } else {
+                CustomToast(this, "Unable to fetch location. Ensure GPS is enabled.")
+            }
+        }
+    }
 
+    fun getDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float {
+        val results = FloatArray(1)
+        Location.distanceBetween(lat1, lon1, lat2, lon2, results)
+        return results[0]
+    }
 
     private fun handleLoader(status: String) {
         if (status.equals("load", ignoreCase = true)) {
@@ -207,10 +247,97 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
             if (imageBitmap != null) {
                 binding.sivEmpPunch.visibility = View.VISIBLE
                 binding.sivEmpPunch.setImageBitmap(imageBitmap)
+
+                val imageFile = bitmapToFile(imageBitmap, this@EmpSelfieAttendanceActivity)
+
+                if (imageFile != null) {
+                    removeBackgroundUsingRemoveBg(imageFile)
+                } else {
+                    CustomToast(this, "Failed to process image.")
+                }
+
+
+
+
             } else {
                 CustomToast(this, "Failed to capture image. Try again.")
             }
         }
+    }
+
+    private fun bitmapToFile(bitmap: Bitmap, context: Context): File? {
+        return try {
+
+            val fileName = "selfie_${System.currentTimeMillis()}.jpg"
+            val file = File(context.cacheDir, fileName)
+            file.createNewFile()
+
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            outputStream.flush()
+            outputStream.close()
+            file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+    private fun removeBackgroundUsingRemoveBg(file: File) {
+        val apiKey = "T13hChaJUYghAopjE1KoDe49"
+        val url = "https://api.remove.bg/v1.0/removebg"
+
+
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Processing image, please wait...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
+
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart(
+                "image_file", file.name,
+                file.asRequestBody("image/*".toMediaTypeOrNull())
+            )
+            .addFormDataPart("size", "auto")
+            .build()
+
+        val request = Request.Builder()
+            .url(url)
+            .addHeader("X-Api-Key", apiKey)
+            .post(requestBody)
+            .build()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+                runOnUiThread {
+                    progressDialog.dismiss()
+                    CustomToast(this@EmpSelfieAttendanceActivity, "Failed to upload image")
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    progressDialog.dismiss()
+                    val inputStream = response.body?.byteStream()
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    selfieImage=bitmapToFile(bitmap, this@EmpSelfieAttendanceActivity)
+
+                    runOnUiThread {
+                        binding.sivEmpPunch.setImageBitmap(bitmap)
+                    }
+                } else {
+                    runOnUiThread {
+
+                        CustomToast(
+                            this@EmpSelfieAttendanceActivity,
+                            "API Error: ${response.message}"
+                        )
+                    }
+                }
+            }
+        })
     }
 
 

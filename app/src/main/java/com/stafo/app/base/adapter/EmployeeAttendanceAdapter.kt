@@ -1,5 +1,6 @@
 package com.stafo.app.base.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -11,13 +12,15 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.stafo.app.R
 import com.stafo.app.databinding.ItemEmpAttendaceLayoutBinding
+import com.stafo.app.screens.emp.EmployeeAttendance
 import com.stafo.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.stafo.app.screens.settings.dataClass.EmployeeDataList
 import com.stafo.app.utils.generateTextBitmap
+import com.stafo.app.utils.showFullScreenImage
 
 class EmployeeAttendanceAdapter(
     private var attendList: List<EmployeeDataList>,
-    var context: Context
+    var context: Activity
 ) : RecyclerView.Adapter<EmployeeAttendanceAdapter.ViewHolder>() {
     inner class ViewHolder(val binding: ItemEmpAttendaceLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -43,12 +46,16 @@ class EmployeeAttendanceAdapter(
                 if (!this.image.isNullOrEmpty()) {
                     binding.civEmp.visibility = View.VISIBLE
 
-                    val imageUrl = "${this.imagePath}/${this.image}".replace("\\", "")
+                    val imageUrl = "${this.selfieImagePath}/${this.selfieImage}".replace("\\", "")
 
                     Glide.with(context)
                         .load(imageUrl)
                         .error(placeholderBitmap)
                         .into(binding.civEmp)
+
+                    binding.civEmp.setOnClickListener {
+                        showFullScreenImage(context,imageUrl)
+                    }
 
                 } else {
                     binding.civEmp.setImageBitmap(placeholderBitmap)

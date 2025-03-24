@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
@@ -18,6 +19,7 @@ import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Shader
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -40,6 +42,7 @@ import android.util.Patterns
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
 import android.widget.ImageView
@@ -49,6 +52,8 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
+import com.bumptech.glide.Glide
+import com.google.android.material.imageview.ShapeableImageView
 import com.stafo.app.screens.auth.LoginWithOTPActivity
 import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
@@ -1492,6 +1497,28 @@ fun convertTo12HourFormat(time: String): String {
     canvas.drawText(firstLetter, xPos, yPos, paint)
 
     return bitmap
+}
+
+
+fun showFullScreenImage(activity:Activity,imageUrl: String) {
+    val dialog = Dialog(activity)
+    dialog.setContentView(R.layout.dialog_full_screen_image)
+
+    val fullScreenImageView = dialog.findViewById<ShapeableImageView>(R.id.fullScreenImageView)
+    val closeButton = dialog.findViewById<ImageView>(R.id.closeButton)
+
+    // Load image with Glide
+    Glide.with(activity)
+        .load(imageUrl)
+        .into(fullScreenImageView)
+    closeButton.setOnClickListener { dialog.dismiss() }
+
+    dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    dialog.window?.setLayout(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT
+    )
+    dialog.show()
 }
 
 
