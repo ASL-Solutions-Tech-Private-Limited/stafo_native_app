@@ -129,10 +129,21 @@ class EmployeeProfileDetails : AppCompatActivity() {
                         isFocusableField(binding.tieEmailId)
                     }
                     //binding.tieDateJoining.setText(data.dateOfJoining ?: "")
-                    mDateOfJoining= data.dateOfJoining.toString()
+                   /* mDateOfJoining= data.dateOfJoining.toString()
                     binding.tieDateJoining.setText("${getFormatDate(data.dateOfJoining?:"")}")
                     if (!data.dateOfJoining.isNullOrEmpty()) {
                         isFocusableField(binding.tieDateJoining)
+                    }*/
+
+
+
+                    mDateOfJoining = data.dateOfJoining?: ""
+
+                    if (!mDateOfJoining.isNullOrEmpty()) {
+                        binding.tieDateJoining.setText(getFormatDate(mDateOfJoining))
+                        isFocusableField(binding.tieDateJoining)
+                    } else {
+                        binding.tieDateJoining.setText("")
                     }
 
                     binding.tieAddress.setText(data.address ?: "")

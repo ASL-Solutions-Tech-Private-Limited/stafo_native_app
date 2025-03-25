@@ -120,6 +120,7 @@
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Radius (meter)"
                             android:inputType="number"
+                            android:maxLength="5"
                             android:textSize="@dimen/_12ssp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
