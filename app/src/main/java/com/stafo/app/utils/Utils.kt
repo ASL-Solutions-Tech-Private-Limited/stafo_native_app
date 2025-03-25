@@ -65,6 +65,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.orhanobut.hawk.Hawk
 import com.stafo.app.R
+import com.stafo.app.screens.ui.SplashActivity
 import com.trackier.sdk.TrackierEvent
 import com.trackier.sdk.TrackierSDK.trackEvent
 import org.json.JSONObject
@@ -1369,7 +1370,7 @@ fun doLogout(mContext: Context) {
     Hawk.deleteAll()
     val prefs = mContext.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
     prefs.edit().clear().apply()
-    val intent = Intent(mContext, LoginWithOTPActivity::class.java)
+    val intent = Intent(mContext, SplashActivity::class.java)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     mContext.startActivity(intent)
 }

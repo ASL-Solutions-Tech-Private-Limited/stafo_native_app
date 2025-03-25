@@ -297,8 +297,8 @@ class CompanyProfileActivity : AppCompatActivity() {
                     isFocusableField(binding.tieCompanyName)
                     binding.tieCompanyAddress.setText(data.company?.address ?: "")
                     binding.tieCompanyRegNo.setText(data.company?.registration_number ?: "")
-                    binding.tieCompanyGstNo.setText(data.company?.gst_number ?: "")
-                    binding.tieCompanyPanNo.setText(data.company?.pan_number ?: "")
+                    binding.tieCompanyGstNo.setText(data.company?.gst_number ?.uppercase()?: "")
+                    binding.tieCompanyPanNo.setText(data.company?.pan_number ?.uppercase()?: "")
 
 
                     //
@@ -315,7 +315,7 @@ class CompanyProfileActivity : AppCompatActivity() {
 
                     if (!data.cityName.isNullOrEmpty()){
                         enableDisableView(binding.tieSelectCity,false)
-                        binding.tieSelectCity.setText(data.cityName ?: "")
+                        binding.tieSelectCity.setText(data.cityName.lowercase().replaceFirstChar { it.uppercase() })
                     }
 
                     binding.tieOwnerEmail.setText(data.company?.email ?: "")

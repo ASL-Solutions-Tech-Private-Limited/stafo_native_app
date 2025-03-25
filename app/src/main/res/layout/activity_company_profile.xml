@@ -296,6 +296,7 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="@string/gst_number_if_applicable"
+                            android:textAllCaps="true"
                             android:inputType="textPersonName" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -313,7 +314,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="@string/company_pan_number"
-                            android:inputType="textPersonName" />
+                            android:textAllCaps="true"
+                            />
 
                     </com.google.android.material.textfield.TextInputLayout>
 

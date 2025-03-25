@@ -4,14 +4,18 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.ajithvgiri.searchdialog.OnSearchItemSelected
@@ -28,6 +32,8 @@ import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
+import java.io.File
+import java.io.FileOutputStream
 
 class GenerateQRActivity : AppCompatActivity() {
     private lateinit var binding:ActivityGenerateQractivityBinding
@@ -249,7 +255,7 @@ class GenerateQRActivity : AppCompatActivity() {
 
 
 
-    private fun saveBitmapToStorage(context: Context, bitmap: Bitmap): Uri? {
+    /*private fun saveBitmapToStorage(context: Context, bitmap: Bitmap): Uri? {
         val filename = "QRCode_${System.currentTimeMillis()}.png"
         val resolver = context.contentResolver
         val contentValues = ContentValues().apply {
@@ -275,12 +281,65 @@ class GenerateQRActivity : AppCompatActivity() {
             }
         }
         return uri
+    }*/
+
+    fun saveBitmapToStorage(context: Context, bitmap: Bitmap): Uri? {
+        val filename = "QR_Code_${System.currentTimeMillis()}.jpg"
+
+
+        val newWidth = bitmap.width * 2
+        val newHeight = bitmap.height * 2
+        val newBitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(newBitmap)
+        canvas.drawColor(Color.WHITE)
+
+        val centerX = (newWidth - bitmap.width) / 2f
+        val centerY = (newHeight - bitmap.height) / 2f
+        canvas.drawBitmap(bitmap, centerX, centerY, null)
+
+
+
+
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, filename)
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.Images.Media.IS_PENDING, 1)
+        }
+
+        val resolver = context.contentResolver
+        val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+        uri?.let {
+            try {
+                resolver.openOutputStream(it)?.use { outputStream ->
+                    newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                }
+
+
+                contentValues.clear()
+                contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
+                resolver.update(it, contentValues, null, null)
+
+                return it
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        return null
     }
+
+
+
+
+
+
 
 
     private fun shareImage(context: Context, uri: Uri) {
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "image/png"
+            type = "image/jpg"
             putExtra(Intent.EXTRA_STREAM, uri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }

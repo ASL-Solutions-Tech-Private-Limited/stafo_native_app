@@ -146,6 +146,9 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
         settingsViewModel.mAttendanceHistoryResponse.observe(this) { response ->
             if (response.status && response.data != null) {
+
+                Log.e("getRecord","data ${response.data}")
+
                 binding.txtMsg.visibility = View.GONE
                 val mMonth = getAllDatesFromMonth(mSelectedDate)
                 var mPresentCount = 0
