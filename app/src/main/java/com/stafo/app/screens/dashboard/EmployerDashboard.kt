@@ -303,6 +303,8 @@ class EmployerDashboard : AppCompatActivity() {
 
                 maxEmployeeAdd = it.maxEmployeeAdd
 
+
+
                 wishList.clear()
                 binding.tvPresentEmp.text = it.presentCount.toString()
                 binding.tvAllEmp.text = it.employeeCount.toString()

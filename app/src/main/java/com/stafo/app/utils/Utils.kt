@@ -1471,12 +1471,20 @@ fun calculateMinutes(inTime: String, outTime: String): Int {
 }
 
 
-fun convertTo12HourFormat(time: String): String {
-    val inputFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-    val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+fun convertTo12HourFormat(time: String?): String {
+    if (time.isNullOrEmpty()) return ""
 
-    return inputFormat.parse(time)?.let { outputFormat.format(it) } ?: time
+    return try {
+        val sdf24 = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val sdf12 = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val date = sdf24.parse(time) ?: return "Invalid Time"
+        sdf12.format(date)
+    } catch (e: Exception) {
+        Log.e("TimeConversion", "Error parsing time: $time", e)
+        "Invalid Time"
+    }
 }
+
 
 
  fun generateTextBitmap(name: String): Bitmap {
