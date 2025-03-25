@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +38,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.textfield.TextInputEditText
 import java.io.File
 import java.io.FileOutputStream
+import java.util.Locale
 
 
 class CompanyProfileActivity : AppCompatActivity() {
@@ -91,7 +94,14 @@ class CompanyProfileActivity : AppCompatActivity() {
     }
 
     private fun onClickListener() {
-        binding?.apply {
+        binding.apply {
+
+
+            binding.tieCompanyPanNo.addTextChangedListener(PANNumberFormattingTextWatcher(binding.tieCompanyPanNo))
+
+
+
+
 
 
             tieCompanyCertificate.setOnClickListener {
@@ -268,6 +278,36 @@ class CompanyProfileActivity : AppCompatActivity() {
 
 
     }
+
+    class PANNumberFormattingTextWatcher(private val editText: TextInputEditText) : TextWatcher {
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+        override fun afterTextChanged(editable: Editable?) {
+            if (editable.isNullOrEmpty()) return
+
+            editText.removeTextChangedListener(this)
+
+            val input = editable.toString().uppercase(Locale.getDefault()) // Convert to uppercase
+            val formatted = formatPAN(input) // Apply PAN format
+
+            if (input != formatted) {
+                editText.setText(formatted)
+                editText.setSelection(formatted.length) // Keep cursor at the end
+            }
+
+            editText.addTextChangedListener(this) // Reattach listener
+        }
+
+        private fun formatPAN(pan: String): String {
+            // Ensure the PAN format: 5 letters + 4 digits + 1 letter
+            return pan.replace(Regex("[^A-Z0-9]"), "") // Remove invalid characters
+                .take(10) // Limit to 10 characters
+        }
+    }
+
 
     private fun openPicker(req: Int) {
 

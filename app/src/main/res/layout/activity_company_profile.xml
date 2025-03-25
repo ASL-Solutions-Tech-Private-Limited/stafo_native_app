@@ -315,6 +315,7 @@
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="@string/company_pan_number"
                             android:textAllCaps="true"
+                            android:inputType="textCapCharacters"
                             />
 
                     </com.google.android.material.textfield.TextInputLayout>
