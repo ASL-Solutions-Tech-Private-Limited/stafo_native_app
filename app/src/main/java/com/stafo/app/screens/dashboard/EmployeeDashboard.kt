@@ -27,6 +27,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.play.core.review.testing.FakeReviewManager
+import com.google.gson.Gson
 import com.stafo.app.R
 import com.stafo.app.base.adapter.ActionsListAdapter
 import com.stafo.app.base.adapter.AdapterOnLeave
@@ -34,6 +40,7 @@ import com.stafo.app.base.adapter.AdapterWishList
 import com.stafo.app.base.adapter.SliderAdapter
 import com.stafo.app.base.model.ActionModel
 import com.stafo.app.base.model.DashboardWish
+import com.stafo.app.base.model.EmployeeInfo
 import com.stafo.app.base.model.FullScreenDialog
 import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmpDashboardBinding
@@ -45,12 +52,15 @@ import com.stafo.app.screens.emp.EmployeeLeaveHistoryActivity
 import com.stafo.app.screens.emp.EmployeeProfileDetails
 import com.stafo.app.screens.emp.EmployeePunchInActivity
 import com.stafo.app.screens.emp.QRCodeAttendanceEmpActivity
+import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
 import com.stafo.app.screens.settings.PolicyActivity
 import com.stafo.app.screens.settings.SettingsViewModel
+import com.stafo.app.screens.settings.SubMenuActivity
 import com.stafo.app.screens.ui.EmplyeeyerProfile
 import com.stafo.app.screens.ui.WishListActivity
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.convertTo12HourFormat
 import com.stafo.app.utils.doLogout
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getFormattedDate2
@@ -59,16 +69,6 @@ import com.stafo.app.utils.setEmployeeBranchId
 import com.stafo.app.utils.setEmployeeComId
 import com.stafo.app.utils.setIsLock
 import com.stafo.app.utils.setIsLockUser
-import com.bumptech.glide.Glide
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.play.core.review.testing.FakeReviewManager
-import com.google.gson.Gson
-import com.stafo.app.screens.notification.NotificationActivity
-import com.stafo.app.screens.settings.SubMenuActivity
-import com.stafo.app.screens.settings.ViewDeviceRequestEmpActivity
-import com.stafo.app.utils.convertTo12HourFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -95,6 +95,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private val calendar = Calendar.getInstance()
     private lateinit var reviewManager: FakeReviewManager
+    private var mEmplyeeInfo: EmployeeInfo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -430,22 +431,15 @@ class EmployeeDashboard : AppCompatActivity() {
 
         settingsViewModel.mEmployeeDashboardResponse.observe(this) {
             if (it.status) {
-
-
+                mEmplyeeInfo = it.employeeInfo
                 setEmployeeComId(it.employeeInfo.companyId.toString())
-
                 setEmployeeBranchId(it.employeeInfo.branchId.toString())
-
-
                 it.employeeInfo.shift?.let { shift ->
                     val startTime12Hr = convertTo12HourFormat(shift.startTime)
                     val endTime12Hr = convertTo12HourFormat(shift.endTime)
                     binding.tvOfficeTiming.text =
                         "Your Office timing is $startTime12Hr to $endTime12Hr"
                 }
-
-
-
 
                 if (it.employeeInfo.geoStatus != null && it.employeeInfo.geoStatus == "0") {
 
@@ -947,23 +941,25 @@ class EmployeeDashboard : AppCompatActivity() {
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialogBinding.llGeoAttendance.setOnClickListener {
-
-            if (isLocationEnabled()) {
-                bottomSheetDialog.dismiss()
-                startActivity(Intent(this, EmployeePunchInActivity::class.java))
-            } else {
-                requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-            }
+            if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo" || mEmplyeeInfo?.attendance_type == null) {
+                if (isLocationEnabled()) {
+                    bottomSheetDialog.dismiss()
+                    startActivity(Intent(this, EmployeePunchInActivity::class.java))
+                } else {
+                    requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+            } else CustomToast(this, "Geo Attendance is not enabled for you")
         }
 
         bottomSheetDialogBinding.llSelfieAttendance.setOnClickListener {
-
+            if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "selfie") {
             if (isLocationEnabled()) {
                 bottomSheetDialog.dismiss()
                 startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
             } else {
                 requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             }
+            } else CustomToast(this, "Selfie Attendance is not enabled for you")
 
          /*   startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
             bottomSheetDialog.dismiss()*/
@@ -971,13 +967,14 @@ class EmployeeDashboard : AppCompatActivity() {
 
         bottomSheetDialogBinding.llQrAttendance.setOnClickListener {
 
-
-            if (isLocationEnabled()) {
-                bottomSheetDialog.dismiss()
-                startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
-            } else {
-                requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-            }
+            if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "qr code") {
+                if (isLocationEnabled()) {
+                    bottomSheetDialog.dismiss()
+                    startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
+                } else {
+                    requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+            } else CustomToast(this, "QR Attendance is not enabled for you")
            /* startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
             bottomSheetDialog.dismiss()*/
 

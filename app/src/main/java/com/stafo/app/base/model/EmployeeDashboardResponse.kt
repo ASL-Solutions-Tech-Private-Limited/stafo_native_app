@@ -99,6 +99,8 @@ data class EmployeeInfo(
     val createdAt: String,
     @SerializedName("updated_at")
     val updatedAt: String,
+    @SerializedName("attendance_type")
+    val attendance_type: String,
     val branch: Branch,
     @SerializedName("shift") val shift: Shift,
     val punches: List<Punch>?,
