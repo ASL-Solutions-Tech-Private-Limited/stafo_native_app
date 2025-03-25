@@ -292,6 +292,8 @@
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Mobile number"
                             android:textSize="@dimen/_12ssp"
+                            android:importantForAutofill="no"
+                            android:autofillHints=""
                             android:textColor="@color/black"
                             android:inputType="number"
                             android:maxLength="10" />
@@ -356,6 +358,8 @@
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Basic Salary"
                             android:textSize="@dimen/_12ssp"
+                            android:importantForAutofill="no"
+                            android:autofillHints=""
                             android:textColor="@color/black"
                             android:inputType="number" />
 

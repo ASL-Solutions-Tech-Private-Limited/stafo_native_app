@@ -289,7 +289,9 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         }
     }
     private fun removeBackgroundUsingRemoveBg(file: File) {
+
         val apiKey = "T13hChaJUYghAopjE1KoDe49"
+
         val url = "https://api.remove.bg/v1.0/removebg"
 
 
