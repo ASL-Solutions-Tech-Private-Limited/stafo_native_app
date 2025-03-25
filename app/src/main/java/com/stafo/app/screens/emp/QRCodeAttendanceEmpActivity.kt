@@ -202,9 +202,12 @@ class QRCodeAttendanceEmpActivity : AppCompatActivity() {
         settingsViewModel.mGetAttendanceBranchResponse.observe(this) {
 
             if (it.status) {
-                branchLat = it.data.latitude.toDouble()
-                branchLong = it.data.longitude.toDouble()
-                radar = it.data.radar.toFloat()
+
+                if (it.data.latitude != null && it.data.longitude!=null ){
+                    branchLat = it.data.latitude.toDouble()
+                    branchLong = it.data.longitude.toDouble()
+                    radar = it.data.radar.toFloat()
+                }
 
             } else {
                 CustomToast(this, it.message)
