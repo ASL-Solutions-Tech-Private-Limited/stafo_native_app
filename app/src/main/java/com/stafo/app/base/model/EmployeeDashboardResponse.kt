@@ -102,7 +102,7 @@ data class EmployeeInfo(
     @SerializedName("attendance_type")
     val attendance_type: String,
     val branch: Branch,
-    @SerializedName("shift") val shift: Shift,
+    @SerializedName("shifts") val shifts: List<Shift>,
     val punches: List<Punch>?,
 )
 
@@ -144,5 +144,12 @@ data class Shift(
     @SerializedName("end_time") val endTime: String,
     @SerializedName("company_id") val companyId: Int,
     @SerializedName("created_at") val createdAt: String,
-    @SerializedName("updated_at") val updatedAt: String
+    @SerializedName("updated_at") val updatedAt: String,
+    @SerializedName("pivot") val pivot: Pivot
+)
+
+data class Pivot(
+    @SerializedName("employee_id") val employeeId: Int,
+    @SerializedName("shift_id") val shiftId: Int,
+    @SerializedName("company_id") val companyId: Int
 )

@@ -27,6 +27,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.play.core.review.testing.FakeReviewManager
+import com.google.gson.Gson
 import com.stafo.app.R
 import com.stafo.app.base.adapter.ActionsListAdapter
 import com.stafo.app.base.adapter.AdapterOnLeave
@@ -34,6 +40,7 @@ import com.stafo.app.base.adapter.AdapterWishList
 import com.stafo.app.base.adapter.SliderAdapter
 import com.stafo.app.base.model.ActionModel
 import com.stafo.app.base.model.DashboardWish
+import com.stafo.app.base.model.EmployeeInfo
 import com.stafo.app.base.model.FullScreenDialog
 import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmpDashboardBinding
@@ -45,12 +52,15 @@ import com.stafo.app.screens.emp.EmployeeLeaveHistoryActivity
 import com.stafo.app.screens.emp.EmployeeProfileDetails
 import com.stafo.app.screens.emp.EmployeePunchInActivity
 import com.stafo.app.screens.emp.QRCodeAttendanceEmpActivity
+import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
 import com.stafo.app.screens.settings.PolicyActivity
 import com.stafo.app.screens.settings.SettingsViewModel
+import com.stafo.app.screens.settings.SubMenuActivity
 import com.stafo.app.screens.ui.EmplyeeyerProfile
 import com.stafo.app.screens.ui.WishListActivity
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.convertTo12HourFormat
 import com.stafo.app.utils.doLogout
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getFormattedDate2
@@ -59,16 +69,6 @@ import com.stafo.app.utils.setEmployeeBranchId
 import com.stafo.app.utils.setEmployeeComId
 import com.stafo.app.utils.setIsLock
 import com.stafo.app.utils.setIsLockUser
-import com.bumptech.glide.Glide
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.play.core.review.testing.FakeReviewManager
-import com.google.gson.Gson
-import com.stafo.app.screens.notification.NotificationActivity
-import com.stafo.app.screens.settings.SubMenuActivity
-import com.stafo.app.screens.settings.ViewDeviceRequestEmpActivity
-import com.stafo.app.utils.convertTo12HourFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -95,6 +95,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private val calendar = Calendar.getInstance()
     private lateinit var reviewManager: FakeReviewManager
+    private var mEmplyeeInfo: EmployeeInfo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -430,22 +431,22 @@ class EmployeeDashboard : AppCompatActivity() {
 
         settingsViewModel.mEmployeeDashboardResponse.observe(this) {
             if (it.status) {
-
-
+                mEmplyeeInfo = it.employeeInfo
                 setEmployeeComId(it.employeeInfo.companyId.toString())
-
                 setEmployeeBranchId(it.employeeInfo.branchId.toString())
+               /* it.employeeInfo.shift?.let { shift ->
+                    val startTime12Hr = convertTo12HourFormat(shift.startTime)
+                    val endTime12Hr = convertTo12HourFormat(shift.endTime)
+                    binding.tvOfficeTiming.text =
+                        "Your Office timing is $startTime12Hr to $endTime12Hr"
+                }*/
 
-
-                it.employeeInfo.shift?.let { shift ->
+                it.employeeInfo.shifts.firstOrNull()?.let { shift ->
                     val startTime12Hr = convertTo12HourFormat(shift.startTime)
                     val endTime12Hr = convertTo12HourFormat(shift.endTime)
                     binding.tvOfficeTiming.text =
                         "Your Office timing is $startTime12Hr to $endTime12Hr"
                 }
-
-
-
 
                 if (it.employeeInfo.geoStatus != null && it.employeeInfo.geoStatus == "0") {
 
@@ -481,108 +482,7 @@ class EmployeeDashboard : AppCompatActivity() {
                 wishList.clear()
 
 
-                /* if (!it.employeeInfo.punches.isNullOrEmpty()) {
 
-                     Log.d("res", "true ")
-
-                     val punchData = it.employeeInfo.punches[0]
-                     val punchInTime = punchData.punchIn
-                     val punchOutTime = punchData.punchOut
-                     val shiftEndTime = it.employeeInfo.shift?.endTime
-                     val geoStatus = it.employeeInfo.geoStatus
-
-                     val currentDate =
-                         SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-
-                     val punchInDate = punchInTime?.let {
-                         SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(it)
-                     }?.let {
-                         SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
-                     }
-
-                     if (punchInDate == currentDate) {
-
-                         if (punchInTime != null && geoStatus == "1") {
-                             Log.d("res", "check time service")
-                             if (!isServiceRunning(LocationForegroundService::class.java)) {
-                                 Log.d("res", "start time service")
-                                 startService(Intent(this, LocationForegroundService::class.java))
-                             }
-
-
-                         }
-
-
-
-
-                         if (punchInTime != null && punchOutTime != null) {
-                             binding.btnPunchIn.text = "Punched Out"
-                             binding.btnPunchIn.isEnabled = false
-                             binding.btnPunchIn.setBackgroundResource(R.drawable.disable_btn_punch)
-
-                             binding.tvOfficeTiming.text = "Punched Out At ${
-                                 getFormattedDate2(
-                                     punchOutTime,
-                                     listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
-                                     "hh:mm a dd-MMM-yyyy"
-                                 )
-                             }"
-
-                             if (isServiceRunning(LocationForegroundService::class.java)) {
-
-                                 val serviceIntent =
-                                     Intent(this, LocationForegroundService::class.java)
-                                 stopService(serviceIntent)
-                             }
-
-
-                         } else if (punchInTime != null) {
-                             binding.btnPunchIn.text = "Punch Out"
-                             binding.btnPunchIn.isEnabled = true
-                             binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-                             binding.tvOfficeTiming.text = "Punched In At ${
-                                 getFormattedDate2(
-                                     punchInTime,
-                                     listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
-                                     "hh:mm a dd-MMM-yyyy"
-                                 )
-                             }"
-                         } else {
-                             binding.btnPunchIn.text = "Punch In"
-                             binding.btnPunchIn.isEnabled = true
-                             binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-                         }
-
-                         if (shiftEndTime != null) {
-
-
-                             val currentDateTime = Calendar.getInstance()
-                             val shiftEndCalendar = Calendar.getInstance()
-                             val shiftEndTimeDate =
-                                 SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
-
-                             shiftEndTimeDate?.let {
-                                 shiftEndCalendar.set(Calendar.HOUR_OF_DAY, it.hours)
-                                 shiftEndCalendar.set(Calendar.MINUTE, it.minutes)
-                                 shiftEndCalendar.set(Calendar.SECOND, 0)
-                             }
-
-                             if (shiftEndTime != null && currentDateTime.after(shiftEndCalendar)) {
-                                 Log.d("res", "end time service")
-                                 if (isServiceRunning(LocationForegroundService::class.java)) {
-                                     val serviceIntent =
-                                         Intent(this, LocationForegroundService::class.java)
-                                     stopService(serviceIntent)
-                                 }
-                             }
-                         }
-
-                     } else {
-                         binding.btnPunchIn.text = "Punch In"
-                         binding.btnPunchIn.isEnabled = true
-                         binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-                     }
-                 }*/
 
                 if (!it.employeeInfo.punches.isNullOrEmpty()) {
                     Log.d("res", "true ")
@@ -604,7 +504,7 @@ class EmployeeDashboard : AppCompatActivity() {
                         val punchInTime = lastPunch.punchIn
                         val punchOutTime = lastPunch.punchOut
                         val geoStatus = it.employeeInfo.geoStatus
-                        val shiftEndTime = it.employeeInfo.shift?.endTime
+                        val shiftEndTime = it.employeeInfo.shifts.firstOrNull()?.endTime
 
                         if (punchInTime != null && geoStatus == "1") {
 
@@ -947,39 +847,42 @@ class EmployeeDashboard : AppCompatActivity() {
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialogBinding.llGeoAttendance.setOnClickListener {
-
-            if (isLocationEnabled()) {
-                bottomSheetDialog.dismiss()
-                startActivity(Intent(this, EmployeePunchInActivity::class.java))
-            } else {
-                requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-            }
+            if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo" || mEmplyeeInfo?.attendance_type == null) {
+                if (isLocationEnabled()) {
+                    bottomSheetDialog.dismiss()
+                    startActivity(Intent(this, EmployeePunchInActivity::class.java))
+                } else {
+                    requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+            } else CustomToast(this, "Geo Attendance is not enabled for you")
         }
 
         bottomSheetDialogBinding.llSelfieAttendance.setOnClickListener {
+            if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "selfie") {
+                if (isLocationEnabled()) {
+                    bottomSheetDialog.dismiss()
+                    startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
+                } else {
+                    requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+            } else CustomToast(this, "Selfie Attendance is not enabled for you")
 
-            if (isLocationEnabled()) {
-                bottomSheetDialog.dismiss()
-                startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
-            } else {
-                requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-            }
-
-         /*   startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
-            bottomSheetDialog.dismiss()*/
+            /*   startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
+               bottomSheetDialog.dismiss()*/
         }
 
         bottomSheetDialogBinding.llQrAttendance.setOnClickListener {
 
-
-            if (isLocationEnabled()) {
-                bottomSheetDialog.dismiss()
-                startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
-            } else {
-                requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-            }
-           /* startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
-            bottomSheetDialog.dismiss()*/
+            if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "qr code") {
+                if (isLocationEnabled()) {
+                    bottomSheetDialog.dismiss()
+                    startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
+                } else {
+                    requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+            } else CustomToast(this, "QR Attendance is not enabled for you")
+            /* startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
+             bottomSheetDialog.dismiss()*/
 
         }
 

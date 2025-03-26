@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
@@ -344,18 +345,23 @@ class CompanyProfileActivity : AppCompatActivity() {
                     //
 
                     if (!data.countryName.isNullOrEmpty()){
-                        enableDisableView(binding.tieSelectCountry,false)
-                        binding.tieSelectCountry.setText(data.countryName ?: "")
+                        setEditTextValueAndDisable(binding.tieSelectCountry,data.countryName ?: "")
+                       // binding.tieSelectCountry.setText(data.countryName ?: "")
                     }
 
                     if (!data.stateName.isNullOrEmpty()){
-                        enableDisableView(binding.tieSelectState,false)
-                        binding.tieSelectState.setText(data.stateName ?: "")
+
+                        setEditTextValueAndDisable(binding.tieSelectState,data.stateName ?: "")
+                     /*   enableDisableView(binding.tieSelectState,false)
+
+                        binding.tieSelectState.setText(data.stateName ?: "")*/
                     }
 
                     if (!data.cityName.isNullOrEmpty()){
-                        enableDisableView(binding.tieSelectCity,false)
-                        binding.tieSelectCity.setText(data.cityName.lowercase().replaceFirstChar { it.uppercase() })
+                        setEditTextValueAndDisable(binding.tieSelectCity,data.cityName.lowercase().replaceFirstChar { it.uppercase() })
+
+                      /*  enableDisableView(binding.tieSelectCity,false)
+                        binding.tieSelectCity.setText(data.cityName.lowercase().replaceFirstChar { it.uppercase() })*/
                     }
 
                     binding.tieOwnerEmail.setText(data.company?.email ?: "")
@@ -741,7 +747,18 @@ class CompanyProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun enableDisableView(view: View, enabled: Boolean) {
+    fun setEditTextValueAndDisable(editText: TextInputEditText, value: String) {
+        editText.setText(value)
+        editText.isFocusable = false
+        editText.isFocusableInTouchMode = false
+        editText.isCursorVisible = false
+        editText.isClickable = false
+        editText.inputType = InputType.TYPE_NULL
+
+        editText.setOnTouchListener { _, _ -> true }
+    }
+
+    /*private fun enableDisableView(view: View, enabled: Boolean) {
         view.setEnabled(enabled)
         if (view is ViewGroup) {
             val group = view
@@ -749,5 +766,5 @@ class CompanyProfileActivity : AppCompatActivity() {
                 enableDisableView(group.getChildAt(idx), enabled)
             }
         }
-    }
+    }*/
 }

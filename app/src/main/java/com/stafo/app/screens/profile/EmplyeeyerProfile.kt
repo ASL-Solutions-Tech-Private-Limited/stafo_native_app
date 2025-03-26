@@ -117,11 +117,13 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         settingsViewModel.mEmployeeUploadImageResponse.observe(this) {
             if (it.status) {
-                CustomToast(this, it.message)
                 settingsViewModel.fetchEmployeeDetails(
                     this@EmplyeeyerProfile,
                     getEmployeeDetails()?.id.toString()
                 )
+
+                CustomToast(this, it.message)
+
             } else {
                 CustomToast(this, it.message)
             }
