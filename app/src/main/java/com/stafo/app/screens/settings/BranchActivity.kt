@@ -86,6 +86,7 @@ class BranchActivity : AppCompatActivity() {
 
             if (it.data.isNotEmpty()){
                 binding.txtMsg.visibility = View.GONE
+                binding.rvShowBranchList.visibility = View.VISIBLE
                 branchList=it.data
                 filteredList=branchList
 
@@ -99,6 +100,7 @@ class BranchActivity : AppCompatActivity() {
                 binding.rvShowBranchList.adapter = rvAdapter
                 rvAdapter.notifyDataSetChanged()
             } else {
+                binding.rvShowBranchList.visibility = View.GONE
                 binding.etDirSearch.isFocusable = false
                 binding.etDirSearch.isFocusableInTouchMode = false
                 binding.txtMsg.visibility = View.VISIBLE

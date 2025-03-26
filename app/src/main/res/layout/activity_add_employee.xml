@@ -1204,19 +1204,7 @@
             android:orientation="horizontal"
             android:weightSum="1">
 
-       <!--     <Button
-                android:id="@+id/btn_skip"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_margin="@dimen/_12sdp"
-                android:layout_weight="1"
-                android:background="@drawable/skip_button_bg"
-                android:fontFamily="@font/gilroy_semi_bold"
-                android:text="Skip"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp"
-                android:visibility="gone" />-->
+
 
             <Button
                 android:id="@+id/btn_next"

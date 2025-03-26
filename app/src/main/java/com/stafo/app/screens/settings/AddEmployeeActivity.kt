@@ -88,190 +88,43 @@ class AddEmployeeActivity : AppCompatActivity() {
 
     }
 
-
-
-    private fun observeViewModel() {
-
-
-        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-        getEmployeeComId()?.let { settingsViewModel.getBranchList(this, it) }
-
-
-
-        settingsViewModel.mBranchListResponse.observe(this) {
-            mBranchList = it.data
-            binding?.let { it1 ->
-                setupSearchableDialog(
-                    mBranchList,
-                    "Branch",
-                    it1.tieBranch
-                )
-            }
-        }
-
-        getEmployeeComId()?.let {
-            settingsViewModel.getDepartmentList(this@AddEmployeeActivity,
-                it
-            )
-        }
-
-
-        settingsViewModel.mDepartmentListResponse.observe(this) {
-            mDepartmentList = it.data
-            binding?.let { it1 ->
-                setupSearchableDialog(
-                    mDepartmentList,
-                    "Department",
-                    it1.tieDepartment
-                )
-            }
-        }
-
-        settingsViewModel.mAddEmpResponse.observe(this) {
-
-            if (it.status) {
-                CustomToast(this, it.message)
-                onBackPressedDispatcher.onBackPressed()
-                finish()
-            } else {
-                CustomToast(this, it.message)
-            }
-        }
-
-
-
-
-
-      /*  settingsViewModel.getJobTitleList(this)
-
-
-        settingsViewModel.mJobTitleResponse.observe(this) {
-          if (it.status){
-
-             val jobTitles = it.data.map { it.name }
-             // val jobTitles = mutableListOf("Select Job Title") + it.data.map { it.name }
-
-              val adapterTitle =
-                  ArrayAdapter(this@AddEmployeeActivity, R.layout.custom_spinner_item, jobTitles)
-              binding.spinnerJobTitle.setAdapter(adapterTitle)
-
-              binding.spinnerJobTitle.onItemSelectedListener =
-                  object : AdapterView.OnItemSelectedListener {
-                      override fun onItemSelected(
-                          parent: AdapterView<*>,
-                          view: View?,
-                          position: Int,
-                          id: Long
-                      ) {
-                          val selectedItem = parent.getItemAtPosition(position).toString()
-                          selectJobTitle = selectedItem
-                      }
-
-                      override fun onNothingSelected(parent: AdapterView<*>) {
-                      }
-                  }
-
-
-
-          }else{
-              CustomToast(this,it.message)
-          }
-
-        }*/
-
-
-    }
-
-    private fun setupSearchableDialog(
-        dataList: List<Any>?,
-        title: String,
-        field: TextInputEditText
-    ) {
-        val items = dataList?.map {
-            val name = when (it) {
-                is DataBranch -> it.branch_name
-                is DataDepartment -> it.name
-                else -> "Unknown"
-            }
-
-            val id = when (it) {
-                is DataBranch -> it.id
-                is DataDepartment -> it.id
-                else -> -1
-            }
-
-            SearchListItem(id, name)
-        } ?: emptyList()
-
-        val dialog = SearchableDialog(this, items as ArrayList<SearchListItem>, title)
-        dialog.setOnItemSelected(object : OnSearchItemSelected {
-            override fun onClick(position: Int, searchListItem: SearchListItem) {
-                field.setText(searchListItem.title)
-                if (title == "Branch") {
-                    selectBranch = searchListItem.id
-                } else if (title == "Department") {
-                    selectDepartment = searchListItem.id
-                }
-
-                dialog.dismiss()
-
-
-            }
-        })
-        when (title) {
-            "Branch" -> branchDialog = dialog
-            "Department" -> departmentDialog = dialog
-        }
-    }
-
-    private fun handleLoader(status: String) {
-        if (status.equals("load", ignoreCase = true)) {
-            if (!customLoader.isShowing) customLoader.show()
-        } else if (status.equals("stop", ignoreCase = true)) {
-            if (customLoader.isShowing) customLoader.dismiss()
-        }
-    }
-
-
-
-
     private fun onClickListener() {
 
 
         binding.apply {
 
-         /*   val options = resources.getStringArray(R.array.position_type)
-            val adapterTitle =
-                ArrayAdapter(this@AddEmployeeActivity, R.layout.custom_spinner_item, options)
-            binding.spinnerJobTitle.setAdapter(adapterTitle)
+            /*   val options = resources.getStringArray(R.array.position_type)
+               val adapterTitle =
+                   ArrayAdapter(this@AddEmployeeActivity, R.layout.custom_spinner_item, options)
+               binding.spinnerJobTitle.setAdapter(adapterTitle)
 
-            binding.spinnerJobTitle.onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parent: AdapterView<*>,
-                        view: View?,
-                        position: Int,
-                        id: Long
-                    ) {
-                        val selectedItem = parent.getItemAtPosition(position).toString()
-                        selectJobTitle = selectedItem
-                    }
+               binding.spinnerJobTitle.onItemSelectedListener =
+                   object : AdapterView.OnItemSelectedListener {
+                       override fun onItemSelected(
+                           parent: AdapterView<*>,
+                           view: View?,
+                           position: Int,
+                           id: Long
+                       ) {
+                           val selectedItem = parent.getItemAtPosition(position).toString()
+                           selectJobTitle = selectedItem
+                       }
 
-                    override fun onNothingSelected(parent: AdapterView<*>) {
-                    }
-                }*/
+                       override fun onNothingSelected(parent: AdapterView<*>) {
+                       }
+                   }*/
 
 
-          /*  val text = "Basic\nDetails*"
-            val spannable = SpannableString(text)
-            spannable.setSpan(
-                ForegroundColorSpan(Color.RED),
-                text.length - 1,
-                text.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            /*  val text = "Basic\nDetails*"
+              val spannable = SpannableString(text)
+              spannable.setSpan(
+                  ForegroundColorSpan(Color.RED),
+                  text.length - 1,
+                  text.length,
+                  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+              )
 
-            binding.tvBasicDetails.text = spannable*/
+              binding.tvBasicDetails.text = spannable*/
 
 
 
@@ -421,24 +274,35 @@ class AddEmployeeActivity : AppCompatActivity() {
 
             }
 
+
+
+
             btnNext.setOnClickListener { _ ->
-                if (validateBasicInfo()) {
-                    val requestBody = AddEmpRequestBody(
 
-                        name = tieStaffName.text.toString().trim(),
-                        email = tieEmailId.text.toString().trim(),
-                        position = selectJobTitle,
-                        phone = tieMobileNo.text.toString(),
-                        branch_id = selectBranch,
-                        department_id = selectDepartment,
-                        date_of_joining = mDateOfJoining,
-                        salary = tieBasicSalary.text.toString().trim(),
-                        gender = selectGender,
-                        address = tieAddress.text.toString()
-                    )
+                if (!mBranchList.isNullOrEmpty() && !mDepartmentList.isNullOrEmpty()){
+                    if (validateBasicInfo()) {
+                        val requestBody = AddEmpRequestBody(
 
-                    settingsViewModel.addEmployee(this@AddEmployeeActivity, requestBody)
+                            name = tieStaffName.text.toString().trim(),
+                            email = tieEmailId.text.toString().trim(),
+                            position = selectJobTitle,
+                            phone = tieMobileNo.text.toString(),
+                            branch_id = selectBranch,
+                            department_id = selectDepartment,
+                            date_of_joining = mDateOfJoining,
+                            salary = tieBasicSalary.text.toString().trim(),
+                            gender = selectGender,
+                            address = tieAddress.text.toString()
+                        )
+
+                        settingsViewModel.addEmployee(this@AddEmployeeActivity, requestBody)
+                    }
+                }else{
+                    CustomToast(this@AddEmployeeActivity,"Please add Branch and Department first!")
                 }
+
+
+
             }
 
 
@@ -447,12 +311,199 @@ class AddEmployeeActivity : AppCompatActivity() {
                 showDatePicker()
             }
 
-            tieBranch.setOnClickListener { branchDialog.show() }
-            tieDepartment.setOnClickListener { departmentDialog.show() }
+            tieBranch.setOnClickListener {
+
+                if (!mBranchList.isNullOrEmpty()){
+                    branchDialog.show()
+                }else{
+                    startActivity(Intent(this@AddEmployeeActivity,AddBranchActivity::class.java))
+                }
+
+            }
+            tieDepartment.setOnClickListener {
+
+                if (!mDepartmentList.isNullOrEmpty()){
+                    departmentDialog.show()
+                }else{
+                    startActivity(Intent(this@AddEmployeeActivity,AddDepartmentActivity::class.java))
+                }
+
+            }
 
 
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        getEmployeeComId()?.let {
+            settingsViewModel.getDepartmentList(this@AddEmployeeActivity,
+                it
+            )
+        }
+
+        getEmployeeComId()?.let { settingsViewModel.getBranchList(this, it) }
+    }
+
+    private fun observeViewModel() {
+
+
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+        getEmployeeComId()?.let { settingsViewModel.getBranchList(this, it) }
+
+
+
+        settingsViewModel.mBranchListResponse.observe(this) {
+
+            if (it.data.isNotEmpty()){
+                mBranchList = it.data
+                binding?.let { it1 ->
+                    setupSearchableDialog(
+                        mBranchList,
+                        "Branch",
+                        it1.tieBranch
+                    )
+                }
+            }
+
+        }
+
+        getEmployeeComId()?.let {
+            settingsViewModel.getDepartmentList(this@AddEmployeeActivity,
+                it
+            )
+        }
+
+
+        settingsViewModel.mDepartmentListResponse.observe(this) {
+
+            if (it.data.isNotEmpty()){
+                mDepartmentList = it.data
+                binding?.let { it1 ->
+                    setupSearchableDialog(
+                        mDepartmentList,
+                        "Department",
+                        it1.tieDepartment
+                    )
+                }
+            }
+
+        }
+
+        settingsViewModel.mAddEmpResponse.observe(this) {
+
+            if (it.status) {
+                CustomToast(this, it.message)
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
+
+
+
+
+
+      /*  settingsViewModel.getJobTitleList(this)
+
+
+        settingsViewModel.mJobTitleResponse.observe(this) {
+          if (it.status){
+
+             val jobTitles = it.data.map { it.name }
+             // val jobTitles = mutableListOf("Select Job Title") + it.data.map { it.name }
+
+              val adapterTitle =
+                  ArrayAdapter(this@AddEmployeeActivity, R.layout.custom_spinner_item, jobTitles)
+              binding.spinnerJobTitle.setAdapter(adapterTitle)
+
+              binding.spinnerJobTitle.onItemSelectedListener =
+                  object : AdapterView.OnItemSelectedListener {
+                      override fun onItemSelected(
+                          parent: AdapterView<*>,
+                          view: View?,
+                          position: Int,
+                          id: Long
+                      ) {
+                          val selectedItem = parent.getItemAtPosition(position).toString()
+                          selectJobTitle = selectedItem
+                      }
+
+                      override fun onNothingSelected(parent: AdapterView<*>) {
+                      }
+                  }
+
+
+
+          }else{
+              CustomToast(this,it.message)
+          }
+
+        }*/
+
+
+    }
+
+    private fun updateNextButtonState() {
+        binding.btnNext.isEnabled = !mBranchList.isNullOrEmpty() && !mDepartmentList.isNullOrEmpty()
+        binding.btnNext.alpha = if (binding.btnNext.isEnabled) 1.0f else 0.8f
+    }
+
+    private fun setupSearchableDialog(
+        dataList: List<Any>?,
+        title: String,
+        field: TextInputEditText
+    ) {
+        val items = dataList?.map {
+            val name = when (it) {
+                is DataBranch -> it.branch_name
+                is DataDepartment -> it.name
+                else -> "Unknown"
+            }
+
+            val id = when (it) {
+                is DataBranch -> it.id
+                is DataDepartment -> it.id
+                else -> -1
+            }
+
+            SearchListItem(id, name)
+        } ?: emptyList()
+
+        val dialog = SearchableDialog(this, items as ArrayList<SearchListItem>, title)
+        dialog.setOnItemSelected(object : OnSearchItemSelected {
+            override fun onClick(position: Int, searchListItem: SearchListItem) {
+                field.setText(searchListItem.title)
+                if (title == "Branch") {
+                    selectBranch = searchListItem.id
+                } else if (title == "Department") {
+                    selectDepartment = searchListItem.id
+                }
+
+                dialog.dismiss()
+
+
+            }
+        })
+        when (title) {
+            "Branch" -> branchDialog = dialog
+            "Department" -> departmentDialog = dialog
+        }
+    }
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
+        }
+    }
+
+
+
+
+
 
 
     private fun validateBasicInfo(): Boolean {
