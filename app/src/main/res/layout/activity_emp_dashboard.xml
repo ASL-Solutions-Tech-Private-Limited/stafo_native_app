@@ -35,13 +35,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/iv_app_icon"
                         android:layout_width="@dimen/_24sdp"
                         android:layout_height="@dimen/_24sdp"
                         android:layout_marginStart="@dimen/_12sdp"
                         android:layout_marginTop="@dimen/_12sdp"
-                        android:src="@drawable/ic_user"
+                        android:src="@drawable/final_asl_hr_logo"
+                        app:shapeAppearanceOverlay="@style/Circular"
+                        android:scaleType="fitCenter"
+                        android:background="@color/primaryColor"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,12 +56,22 @@
                         android:layout_marginTop="@dimen/_12sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:gravity="center"
-                        android:text="Asl HR Wala"
+                        android:text="STAFO"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_14ssp"
 
                         app:layout_constraintBottom_toTopOf="@id/header_view"
                         app:layout_constraintStart_toEndOf="@id/iv_app_icon"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_logout"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:src="@drawable/ic_logout"
+                        app:layout_constraintBottom_toTopOf="@id/header_view"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_notification"
                         app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -87,22 +100,27 @@
                         android:layout_marginStart="@dimen/_12sdp"
                         android:layout_marginTop="@dimen/_12sdp"
                         android:fontFamily="@font/gilroy_bold"
-                        android:textSize="@dimen/_15sdp"
+                        android:textSize="@dimen/_13ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/header_view"
                         tools:text="Good Morning" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_header_emp_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_12sdp"
                         android:layout_marginTop="@dimen/_6sdp"
                         android:fontFamily="@font/gilroy_bold"
-                        android:textSize="@dimen/_15sdp"
+                        android:textSize="@dimen/_12ssp"
+                        android:singleLine="true"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:paddingEnd="@dimen/_4sdp"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_header_profile_pic"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_header_greeting"
-                        tools:text="Md Injamamul Hoque" />
+                        tools:text="" />
 
                     <LinearLayout
                         android:id="@+id/header_ll_view_profile"
@@ -120,7 +138,7 @@
                             android:layout_marginStart="@dimen/_12sdp"
                             android:fontFamily="@font/gilroy_bold"
                             android:textSize="@dimen/_10sdp"
-                            tools:text="Emp-0001" />
+                            tools:text="" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tv_header_view_profile"
@@ -131,7 +149,7 @@
                             android:padding="@dimen/_6sdp"
                             android:text="View Profile"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_12ssp" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tv_header_setting"
@@ -142,7 +160,7 @@
                             android:padding="@dimen/_6sdp"
                             android:text="Settings"
                             android:textColor="@color/red"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_12ssp" />
                     </LinearLayout>
 
                     <de.hdodenhof.circleimageview.CircleImageView
@@ -151,6 +169,7 @@
                         android:layout_height="@dimen/_54sdp"
                         android:layout_marginEnd="@dimen/_12sdp"
                         android:src="@drawable/demo_avatar"
+                        android:visibility="invisible"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_header_greeting" />
 
@@ -170,12 +189,15 @@
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tv_office_timing"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_12sdp"
+                            android:layout_marginHorizontal="@dimen/_9sdp"
+                            android:layout_marginVertical="@dimen/_12sdp"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
                             android:fontFamily="@font/gilroy_medium"
-                            android:text="Your Office timing is 9:00 AM to 5:00 PM"
-                            android:textSize="@dimen/_12sdp" />
+                            android:text="No shift assigned yet"
+                            android:textSize="@dimen/_12ssp" />
 
                         <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/btn_punch_in"
@@ -184,6 +206,7 @@
                             android:layout_gravity="center"
                             android:background="@drawable/button_background"
                             android:text="Punch In"
+                            android:textSize="@dimen/_12ssp"
                             android:textAllCaps="false"
                             android:textColor="@color/white" />
                     </LinearLayout>
@@ -199,7 +222,7 @@
                     android:layout_marginTop="@dimen/_16sdp"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:text="Activities"
-                    android:textSize="@dimen/_14sdp"
+                    android:textSize="@dimen/_12ssp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/header_layout" />
 
@@ -211,7 +234,8 @@
                     android:layout_marginEnd="@dimen/_12sdp"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:text="View All"
-                    android:textSize="@dimen/_14sdp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/header_layout" />
 
@@ -266,7 +290,7 @@
                     android:layout_marginTop="@dimen/_16sdp"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:text="On Leave"
-                    android:textSize="@dimen/_14sdp"
+                    android:textSize="@dimen/_12ssp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_banners" />
 
@@ -278,7 +302,8 @@
                     android:layout_marginEnd="@dimen/_12sdp"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:text="View All"
-                    android:textSize="@dimen/_14sdp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rv_banners" />
 
@@ -334,7 +359,7 @@
                     android:layout_marginTop="@dimen/_16sdp"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:text="Wishes"
-                    android:textSize="@dimen/_14sdp"
+                    android:textSize="@dimen/_12ssp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rl_leaves_panel" />
 
@@ -346,7 +371,8 @@
                     android:layout_marginEnd="@dimen/_12sdp"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:text="View All"
-                    android:textSize="@dimen/_14sdp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rl_leaves_panel" />
 

@@ -12,7 +12,7 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/primaryColorDark"
+        android:background="@color/colorTextPrimary"
         app:elevation="0dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -199,7 +199,7 @@
         android:layout_height="wrap_content">
         <RelativeLayout
             android:layout_weight="0.4"
-            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginHorizontal="@dimen/_10sdp"
             android:id="@+id/rl_spn_subordinate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -229,18 +229,6 @@
                 tools:ignore="UseAppTint" />
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/iv_search_date"
-            android:layout_weight="1.6"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_28sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:src="@drawable/filter"
-            android:padding="@dimen/_4sdp"
-            android:layout_gravity="center_vertical"
-            android:tint="@color/black"
-            tools:ignore="UseAppTint" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -262,6 +250,36 @@
             android:layout_below="@+id/include_01"
             tools:listitem="@layout/recy_emp_leave_history_child_layout"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/txt_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        android:text="No apply leave present"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/img_leave_request"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="@dimen/_18sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+       android:background="@color/blue"
+        app:shapeAppearanceOverlay="@style/Circular"
+        android:src="@drawable/ic_add"
+        android:scaleType="center"
+        app:tint="@color/white"
+        android:layout_width="@dimen/_34sdp"
+        android:layout_height="@dimen/_34sdp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

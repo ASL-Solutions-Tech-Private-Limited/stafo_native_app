@@ -45,14 +45,14 @@
 
     <LinearLayout
         android:id="@+id/layout2"
-        android:layout_marginBottom="@dimen/_28sdp"
+        android:layout_marginBottom="@dimen/_32sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_16sdp"
         android:background="@drawable/custom_card_bg2"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/btn_submit"
+        app:layout_constraintBottom_toTopOf="@+id/btn_setAttendance_type"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout1">
@@ -75,8 +75,10 @@
                 android:textSize="@dimen/_11ssp" />
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_allow"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
+                android:visibility="invisible"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:checked="true"
@@ -117,6 +119,7 @@
                 android:textSize="@dimen/_11ssp" />
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_selfie"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
@@ -158,6 +161,7 @@
                 android:textSize="@dimen/_11ssp" />
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_qr"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
@@ -199,11 +203,11 @@
                 android:textSize="@dimen/_11ssp" />
 
             <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_geo"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:checked="true"
                 android:thumb="@drawable/thumb_selector"
                 app:track="@drawable/track_selector" />
 
@@ -212,10 +216,12 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:visibility="invisible"
             android:layout_marginHorizontal="1dp"
             android:background="@color/tea_green" />
 
         <LinearLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -291,7 +297,7 @@
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_submit"
+        android:id="@+id/btn_setAttendance_type"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:text="Submit"
         android:textAllCaps="false"

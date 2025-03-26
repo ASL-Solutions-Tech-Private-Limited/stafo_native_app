@@ -7,29 +7,29 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.asl_emp_mng.app.screens.ui.home.HomeFragment"
+        android:name="com.stafo.app.screens.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.asl_emp_mng.app.screens.ui.profile.ProfileFragment"
+        android:name="com.stafo.app.screens.ui.profile.ProfileFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
         android:id="@+id/nav_emp_list"
-        android:name="com.asl_emp_mng.app.screens.ui.employeeList.EmployeeListFragment"
+        android:name="com.stafo.app.screens.ui.employeeList.EmployeeListFragment"
         android:label="@string/employees"
         tools:layout="@layout/fragment_slideshow" />
     <fragment
         android:id="@+id/nav_leaves"
-        android:name="com.asl_emp_mng.app.screens.ui.leaves.LeavesFragment"
+        android:name="com.stafo.app.screens.ui.leaves.LeavesFragment"
         android:label="@string/leaves"
         tools:layout="@layout/fragment_slideshow" />
     <fragment
         android:id="@+id/nav_policy"
-        android:name="com.asl_emp_mng.app.screens.ui.policy.PolicyFragment"
+        android:name="com.stafo.app.screens.ui.policy.PolicyFragment"
         android:label="@string/policy_"
         tools:layout="@layout/fragment_slideshow" />
 </navigation>

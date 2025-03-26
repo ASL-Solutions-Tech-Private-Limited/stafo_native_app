@@ -72,7 +72,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_10sdp" />
 
-                    <com.asl_emp_mng.app.utils.RoundedCornerProgressBar
+                    <com.stafo.app.utils.RoundedCornerProgressBar
                         android:id="@+id/rpb_basic_info"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_8sdp"
@@ -99,7 +99,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_10sdp" />
 
-                    <com.asl_emp_mng.app.utils.RoundedCornerProgressBar
+                    <com.stafo.app.utils.RoundedCornerProgressBar
                         android:id="@+id/rpb_owner_info"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_8sdp"
@@ -126,7 +126,7 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/_10sdp" />
 
-                    <com.asl_emp_mng.app.utils.RoundedCornerProgressBar
+                    <com.stafo.app.utils.RoundedCornerProgressBar
                         android:id="@+id/rpb_document_info"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_8sdp"

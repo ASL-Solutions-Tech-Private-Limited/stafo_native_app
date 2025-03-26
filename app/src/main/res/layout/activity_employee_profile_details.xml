@@ -12,7 +12,7 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/primaryColorDark"
+        android:background="@color/colorTextPrimary"
         app:elevation="0dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:fontFamily="@font/gilroy_semi_bold"
-                android:text="My Profile"
+                android:text="Profile"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14ssp" />
 
@@ -63,7 +63,6 @@
             android:id="@+id/rdgp_profile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/include_01"
             android:orientation="horizontal">
 
 
@@ -163,17 +162,27 @@
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+              <!--  <TextView
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:text="Select Job Title*"
+                    android:paddingStart="@dimen/_2sdp"
+                    android:textSize="@dimen/_12ssp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
                 <RelativeLayout
                     android:id="@+id/rl_spn_subordinate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginTop="@dimen/_4sdp"
                     android:visibility="visible">
 
                     <Spinner
                         android:id="@+id/spinner_job_title"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_36sdp"
+                        android:layout_height="@dimen/_39sdp"
                         android:background="@drawable/edit_text_background"
                         android:dropDownVerticalOffset="@dimen/_34sdp"
                         android:gravity="center_vertical"
@@ -187,12 +196,12 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/_16sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_arrow_down"
                         android:tint="@color/black"
                         tools:ignore="UseAppTint" />
-                </RelativeLayout>
+                </RelativeLayout>-->
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_branch"
@@ -316,7 +325,7 @@
                     android:layout_marginTop="@dimen/_4sdp"
                     android:checkedButton="@id/male"
                     android:orientation="horizontal"
-                    android:weightSum="2"
+                    android:weightSum="3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txt_Gender">
@@ -324,7 +333,7 @@
                     <RadioButton
                         android:id="@+id/male"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_38sdp"
+                        android:layout_height="@dimen/_36sdp"
                         android:layout_marginEnd="@dimen/_8sdp"
                         android:layout_weight="1"
                         android:background="@drawable/gender_background_selector"
@@ -341,7 +350,7 @@
                     <RadioButton
                         android:id="@+id/female"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_38sdp"
+                        android:layout_height="@dimen/_36sdp"
                         android:layout_marginStart="@dimen/_8sdp"
                         android:layout_weight="1"
                         android:background="@drawable/gender_background_selector"
@@ -350,6 +359,23 @@
                         android:fontFamily="@font/gilroy_medium"
                         android:padding="@dimen/_12sdp"
                         android:text="Female"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12ssp"
+                        app:drawableTint="@color/black" />
+
+                    <RadioButton
+                        android:id="@+id/other"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_36sdp"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_weight="1"
+                        android:background="@drawable/gender_background_selector"
+                        android:button="@android:color/transparent"
+                        android:drawableStart="@drawable/resize_other_gender"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:padding="@dimen/_12sdp"
+                        android:text="Other"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12ssp"
@@ -461,8 +487,48 @@
                         android:hint="Date of Birth" />
 
                 </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:text="Select Marital Status"
+                    android:paddingStart="@dimen/_2sdp"
+                    android:textSize="@dimen/_12ssp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <RelativeLayout
+                    android:id="@+id/rl_spn_marital_sts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:visibility="visible">
 
-                <com.google.android.material.textfield.TextInputLayout
+                    <Spinner
+                        android:id="@+id/spinner_marital_sts"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_36sdp"
+                        android:background="@drawable/edit_text_background"
+                        android:dropDownVerticalOffset="@dimen/_34sdp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dip"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12ssp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_arrow_down"
+                        android:tint="@color/black"
+                        tools:ignore="UseAppTint" />
+                </RelativeLayout>
+
+
+            <!--    <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_marital_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -482,7 +548,7 @@
                         android:fontFamily="@font/gilroy_medium"
                         android:hint="Marital Status" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>-->
 
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -519,7 +585,7 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
+               <!-- <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_emergency_contact_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -531,10 +597,12 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_text_background"
                         android:fontFamily="@font/gilroy_medium"
-                        android:hint="Emergency Contact Name"
-                        android:inputType="textPersonName" />
+                        android:hint="Emergency Contact"
+                        android:maxLines="1"
+                        android:maxLength="10"
+                        android:inputType="number" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>-->
 
                 <!--     <com.google.android.material.textfield.TextInputLayout
                          android:id="@+id/til_emergency_contact_mobile_number"
@@ -617,7 +685,7 @@
                     app:endIconMode="custom">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tie_company_certificate"
+                        android:id="@+id/tie_aadhaar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_text_background"
@@ -640,7 +708,7 @@
                     app:endIconMode="custom">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tie_company_pan_certificate"
+                        android:id="@+id/tie_pan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_text_background"
@@ -662,7 +730,7 @@
                     app:endIconMode="custom">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tie_company_gst_certificate"
+                        android:id="@+id/tie_licence"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_text_background"
@@ -684,7 +752,7 @@
                     app:endIconMode="custom">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tie_company_aadhar_certificate"
+                        android:id="@+id/tie_voter_id"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_text_background"
@@ -695,7 +763,7 @@
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
+                <!--<com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_company_bank_statement"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -715,9 +783,9 @@
                         android:fontFamily="@font/gilroy_medium"
                         android:hint="UAN"
                         android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>-->
 
-                <com.google.android.material.textfield.TextInputLayout
+                <!--<com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_current_address"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_126sdp"
@@ -762,7 +830,7 @@
                         android:inputType="textImeMultiLine"
                         android:textAlignment="viewStart" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>-->
 
 
             </LinearLayout>
@@ -781,7 +849,7 @@
                 android:visibility="gone">
 
 
-                <com.google.android.material.textfield.TextInputLayout
+               <!-- <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_school_collage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -833,7 +901,7 @@
                         android:fontFamily="@font/gilroy_medium"
                         android:hint="Special Courses or Training"
                         android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>-->
 
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -852,7 +920,7 @@
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
+               <!-- <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_12sdp">
@@ -878,7 +946,7 @@
                         android:fontFamily="@font/gilroy_medium"
                         android:hint="Department"
                         android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>-->
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -894,7 +962,7 @@
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
+                <!--<com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_12sdp"
@@ -912,7 +980,7 @@
                         android:fontFamily="@font/gilroy_medium"
                         android:hint="Date of Joining"
                         android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>-->
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -924,6 +992,7 @@
                     app:endIconMode="custom">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_date_of_leaving"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_text_background"
@@ -940,6 +1009,7 @@
                     android:layout_marginTop="@dimen/_12sdp">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_employee_id"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_text_background"
@@ -949,19 +1019,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12sdp">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/edit_text_background"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:hint="Job Title"
-                        android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -969,6 +1027,7 @@
                     android:layout_marginTop="@dimen/_12sdp">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_official_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_text_background"
@@ -983,6 +1042,7 @@
                     android:layout_marginTop="@dimen/_12sdp">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_esi_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_text_background"
@@ -997,6 +1057,7 @@
                     android:layout_marginTop="@dimen/_12sdp">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_pf_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_text_background"
@@ -1019,7 +1080,7 @@
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
+               <!-- <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_12sdp">
@@ -1031,7 +1092,7 @@
                         android:fontFamily="@font/gilroy_medium"
                         android:hint="Special Training and Skills"
                         android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>-->
 
 
             </LinearLayout>

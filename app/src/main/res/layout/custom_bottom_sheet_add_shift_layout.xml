@@ -88,7 +88,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edt_shift_name" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+       <!-- <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/txt_can_punch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -145,7 +145,7 @@
                 android:textColor="@color/radio_flat_text_selector"
                 android:textSize="@dimen/_12ssp" />
 
-        </RadioGroup>
+        </RadioGroup>-->
 
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -167,10 +167,10 @@
             android:textSize="@dimen/_12ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rg_punch_in" />
+            app:layout_constraintTop_toBottomOf="@+id/edt_shift_start_time" />
 
 
-        <androidx.appcompat.widget.AppCompatTextView
+       <!-- <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/txt_can_punch_out"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -227,7 +227,7 @@
                 android:textColor="@color/radio_flat_text_selector"
                 android:textSize="@dimen/_12ssp" />
 
-        </RadioGroup>
+        </RadioGroup>-->
 
 
         <androidx.appcompat.widget.AppCompatButton
@@ -236,9 +236,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/_12sdp"
-            android:layout_marginTop="@dimen/_32sdp"
+            android:layout_marginTop="@dimen/_38sdp"
             android:layout_marginEnd="@dimen/_12sdp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="@dimen/_32sdp"
             android:background="@drawable/button_background"
             android:elevation="10dp"
             android:fontFamily="@font/gilroy_medium"
@@ -250,7 +250,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rg_punch_out" />
+            app:layout_constraintTop_toBottomOf="@+id/edt_shift_end_time" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

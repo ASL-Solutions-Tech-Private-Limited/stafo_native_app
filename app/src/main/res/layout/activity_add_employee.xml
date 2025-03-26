@@ -28,7 +28,7 @@
         android:padding="@dimen/_4sdp"
         android:text="Add Staff"
         android:textColor="@color/white"
-        android:textSize="@dimen/_18sdp"
+        android:textSize="@dimen/_14ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_back" />
 
@@ -42,7 +42,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_registration_title">
 
-        <LinearLayout
+      <!--  <LinearLayout
             android:id="@+id/ll_progresslayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,16 +57,17 @@
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_basic_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:gravity="center"
                     android:padding="@dimen/_2sdp"
-                    android:text="Basic\nDetails"
+                    android:text="Basic\nDetails*"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_9ssp" />
 
-                <com.asl_emp_mng.app.utils.RoundedCornerProgressBar
+                <com.stafo.app.utils.RoundedCornerProgressBar
                     android:id="@+id/rpb_basic_info"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_8sdp"
@@ -93,7 +94,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_9ssp" />
 
-                <com.asl_emp_mng.app.utils.RoundedCornerProgressBar
+                <com.stafo.app.utils.RoundedCornerProgressBar
                     android:id="@+id/rpb_personal_info"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_8sdp"
@@ -120,7 +121,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_9ssp" />
 
-                <com.asl_emp_mng.app.utils.RoundedCornerProgressBar
+                <com.stafo.app.utils.RoundedCornerProgressBar
                     android:id="@+id/rpb_document_info"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_8sdp"
@@ -147,7 +148,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_9ssp" />
 
-                <com.asl_emp_mng.app.utils.RoundedCornerProgressBar
+                <com.stafo.app.utils.RoundedCornerProgressBar
                     android:id="@+id/rpb_employment_details"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_8sdp"
@@ -157,13 +158,14 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </LinearLayout>-->
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
             android:layout_above="@id/layout_btn"
-            android:layout_below="@+id/ll_progresslayout">
+           android:layout_alignParentTop="true">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -175,32 +177,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/_12sdp"
-                    android:layout_marginTop="@dimen/_12sdp"
                     android:layout_marginEnd="@dimen/_12sdp"
                     android:orientation="vertical"
                     android:visibility="visible">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_profile_picture"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        app:endIconDrawable="@drawable/ic_down"
-                        app:endIconMode="custom">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tie_profile_picture"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/edit_text_background"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:hint="Profile Picture"
-                            android:inputType="textPersonName" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_staff_name"
@@ -214,21 +193,21 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
-                            android:hint="Name"
+                            android:hint="Staff name"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <RelativeLayout
+                   <!-- <RelativeLayout
                         android:id="@+id/rl_spn_subordinate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_6sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
                         android:visibility="visible">
 
                         <Spinner
                             android:id="@+id/spinner_job_title"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_36sdp"
+                            android:layout_height="@dimen/_39sdp"
                             android:background="@drawable/edit_text_background"
                             android:dropDownVerticalOffset="@dimen/_34sdp"
                             android:gravity="center_vertical"
@@ -247,7 +226,7 @@
                             android:src="@drawable/ic_arrow_down"
                             android:tint="@color/black"
                             tools:ignore="UseAppTint" />
-                    </RelativeLayout>
+                    </RelativeLayout>-->
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_branch"
@@ -268,6 +247,8 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Branch"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -291,6 +272,8 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Department"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -308,6 +291,10 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Mobile number"
+                            android:textSize="@dimen/_12ssp"
+                            android:importantForAutofill="no"
+                            android:autofillHints=""
+                            android:textColor="@color/black"
                             android:inputType="number"
                             android:maxLength="10" />
 
@@ -326,6 +313,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Email Id"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textEmailAddress" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -346,11 +335,38 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:focusable="false"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Date of Joining" />
 
                     </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_basic_salary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_12sdp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tie_basic_salary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_background"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:hint="Basic Salary"
+                            android:textSize="@dimen/_12ssp"
+                            android:importantForAutofill="no"
+                            android:autofillHints=""
+                            android:textColor="@color/black"
+                            android:inputType="number" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+
 
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -371,7 +387,7 @@
                         android:layout_marginTop="@dimen/_4sdp"
                         android:checkedButton="@id/male"
                         android:orientation="horizontal"
-                        android:weightSum="2"
+                        android:weightSum="3"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txt_Gender">
@@ -410,6 +426,23 @@
                             android:textSize="@dimen/_12ssp"
                             app:drawableTint="@color/black" />
 
+                        <RadioButton
+                            android:id="@+id/other"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_36sdp"
+                            android:layout_marginStart="@dimen/_8sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/gender_background_selector"
+                            android:button="@android:color/transparent"
+                            android:drawableStart="@drawable/resize_other_gender"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:padding="@dimen/_12sdp"
+                            android:text="Other"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp"
+                            app:drawableTint="@color/black" />
+
                     </RadioGroup>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -426,6 +459,9 @@
                             android:fontFamily="@font/gilroy_medium"
                             android:gravity="start|top"
                             android:hint="Address"
+                            android:maxLines="3"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textImeMultiLine"
                             android:textAlignment="viewStart" />
 
@@ -434,7 +470,7 @@
                 </LinearLayout>
                 <!--End Of Basic Information-->
 
-                <!--Personal Details-->
+             <!--   Personal Details
                 <LinearLayout
                     android:id="@+id/ll_personal_info"
                     android:layout_width="match_parent"
@@ -458,6 +494,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Name"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -474,6 +512,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="@string/mobile_number"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="phone" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -490,6 +530,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="@string/email"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -511,6 +553,8 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:focusable="false"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Date of Birth" />
@@ -533,6 +577,8 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:focusable="false"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Marital Status" />
@@ -553,6 +599,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Blood Group"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -570,6 +618,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Gurdian's Name"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -587,11 +637,13 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Emergency Contact Name"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!--     <com.google.android.material.textfield.TextInputLayout
+                         <com.google.android.material.textfield.TextInputLayout
                              android:id="@+id/til_emergency_contact_mobile_number"
                              android:layout_width="match_parent"
                              android:layout_height="wrap_content"
@@ -645,11 +697,10 @@
 
                          </com.google.android.material.textfield.TextInputLayout>
 
-     -->
                 </LinearLayout>
-                <!--End Of Owner Information-->
+                End Of Owner Information
 
-                <!--Document-->
+                Document
                 <LinearLayout
                     android:id="@+id/ll_document_info"
                     android:layout_width="match_parent"
@@ -680,6 +731,8 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Copy of Aadhaar"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -703,6 +756,8 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="@string/copy_of_pan_card"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -725,6 +780,8 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Driving Licence"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -747,6 +804,8 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Copy of Voter ID"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -769,6 +828,8 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="UAN"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -786,6 +847,8 @@
                             android:fontFamily="@font/gilroy_medium"
                             android:gravity="start|top"
                             android:hint="Current Address"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textImeMultiLine"
                             android:textAlignment="viewStart" />
 
@@ -798,7 +861,8 @@
                         android:layout_marginTop="@dimen/_12sdp"
                         android:padding="7dp"
                         android:text="Same as current address"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/_12ssp"
+                        android:textColor="@color/black" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_permanent_address"
@@ -814,6 +878,8 @@
                             android:fontFamily="@font/gilroy_medium"
                             android:gravity="start|top"
                             android:hint="Permanent Address"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textImeMultiLine"
                             android:textAlignment="viewStart" />
 
@@ -821,10 +887,10 @@
 
 
                 </LinearLayout>
-                <!--End Of Document-->
+                End Of Document
 
 
-                <!--work details-->
+                work details
                 <LinearLayout
                     android:id="@+id/ll_employment_details"
                     android:layout_width="match_parent"
@@ -848,6 +914,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Name of School,Collage,University"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -871,6 +939,8 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Degree or Certificate"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -887,6 +957,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Special Courses or Training"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -904,6 +976,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Current Employment"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -918,6 +992,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Branches"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -932,6 +1008,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Department"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -946,6 +1024,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Employee Type"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -966,6 +1046,8 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Date of Joining"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -986,6 +1068,8 @@
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Date of Leaving"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -1000,6 +1084,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Employee ID"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -1015,6 +1101,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Job Title"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -1029,6 +1117,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Officail Email ID"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -1043,6 +1133,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="ESI Number"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -1071,6 +1163,8 @@
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Work Experience"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -1084,6 +1178,8 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
                             android:hint="Special Training and Skills"
                             android:inputType="textPersonName" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -1091,8 +1187,8 @@
 
                 </LinearLayout>
 
-                <!--end of work details-->
-
+                end of work details
+-->
             </RelativeLayout>
 
         </ScrollView>
@@ -1106,21 +1202,9 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="1">
 
-            <Button
-                android:id="@+id/btn_skip"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_margin="@dimen/_12sdp"
-                android:layout_weight="1"
-                android:background="@drawable/skip_button_bg"
-                android:fontFamily="@font/gilroy_semi_bold"
-                android:text="Skip"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="16dp"
-                android:visibility="gone" />
+
 
             <Button
                 android:id="@+id/btn_next"
@@ -1134,7 +1218,7 @@
                 android:text="Next"
                 android:textAllCaps="false"
                 android:textColor="@color/colorButtonText"
-                android:textSize="16dp" />
+                android:textSize="@dimen/_12ssp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </RelativeLayout>

@@ -7,6 +7,11 @@
       </config>
     </shared>
     <layouts>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_aadhaar_otp_verify.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_account_settings.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
@@ -15,6 +20,11 @@
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_add_branch.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_add_department.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_add_employee.xml">
@@ -37,6 +47,16 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_attendance_report.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_auto_search_place.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_branch.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
@@ -52,9 +72,24 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_dashboard.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_emp_branch_details.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_emp_dashboard.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_emp_day_attendance_record.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_emp_leave.xml">
@@ -65,6 +100,11 @@
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_emp_profile.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_emp_selfie_attendance.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_employee_attendance.xml">
@@ -92,14 +132,44 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_employee_view_document.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_employer_dashboard.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_emplyee_attendace_list.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_emplyeeyer_profile.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_feedback.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_generate_qractivity.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_generate_salary.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_help_support.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_holiday.xml">
@@ -137,6 +207,16 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_new_device_register.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_notification.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_on_boarding.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
@@ -152,6 +232,11 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_pay_roll_history.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_place_search.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
@@ -162,9 +247,24 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_qrcode_attendance_emp.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_recharge.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_registration.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_reports.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_set_attendance.xml">
@@ -182,9 +282,44 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_sub_menu.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_subscription.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_upload_selfie_attendance.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_verify_company_details.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_view_all_employee.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_view_device_request_emp.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_view_emp_location_track.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_wish_list.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/app_bar_main.xml">
@@ -220,6 +355,16 @@
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/custom_spinner_item.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_full_screen_image.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/generate_qr_code_bottom_sheet_layout.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/image_slider_layout_item.xml">
@@ -292,6 +437,11 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/layout_others_items.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/layout_profile.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
@@ -305,6 +455,16 @@
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/nav_header_main.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/pan_verify_bottom_sheet_layout.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/payroll_history_item_layout.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/radio_shift_item_layout.xml">
@@ -325,6 +485,11 @@
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/recy_company_leave_history_item_layout.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/recy_day_attendance_record.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/recy_dynamic_child_layout.xml">
@@ -357,6 +522,11 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/recy_emp_view_doc_item_layout.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/recy_holiday_item_layout.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
@@ -365,6 +535,11 @@
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/recy_leave_management_child_layout.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/recy_new_device_request_emp_layout.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/recy_on_leave_emp_item_layout.xml">
@@ -390,6 +565,11 @@
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/shift_time_bottom_sheet_layout.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/sub_menu_item_action_layout.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/menu/activity_main_drawer.xml">
@@ -418,7 +598,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eeb3fca-a4a9-48ce-a4f9-f3fda60e9524" name="Changes" comment="Update Add Staff API">
+    <list default="true" id="1eeb3fca-a4a9-48ce-a4f9-f3fda60e9524" name="Changes" comment="Added Intro Image and TestK">
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" afterDir="false" />
@@ -428,25 +608,11 @@
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/api/ApiStores.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/api/ApiStores.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterRequestLeaveHistory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/AdapterRequestLeaveHistory.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/LeavesManagementAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/base/adapter/LeavesManagementAdapter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/EmpProfileActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/EmpProfileActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployerDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/dashboard/EmployerDashboard.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/profile/EmplyeeyerProfile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/profile/EmplyeeyerProfile.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/CompanyProfileActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/CompanyProfileActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/EmployeeProfileDetails.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/EmployeeProfileDetails.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/LeaveManagementActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/LeaveManagementActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/LeaveRequestHistoryActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/LeaveRequestHistoryActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/SettingsViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/settings/SettingsViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/EmployeeLeaveHistoryActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui/EmployeeLeaveHistoryActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_emp_profile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_emp_profile.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_leave_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_leave_history.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_profile_details.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_profile_details.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/recy_company_leave_history_item_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/recy_company_leave_history_item_layout.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/recy_emp_leave_history_child_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/recy_emp_leave_history_child_layout.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/recy_leave_management_child_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/recy_leave_management_child_layout.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/production/release/STAFO-25-03-5th.apk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/production/release/output-metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/production/release/output-metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AddEmployeeActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AddEmployeeActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/BranchActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/BranchActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_add_employee.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_add_employee.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -504,28 +670,28 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Kotlin File" />
-        <option value="Kotlin Interface" />
         <option value="Class" />
         <option value="valueResourceFile" />
-        <option value="Kotlin Enum" />
+        <option value="Kotlin Interface" />
         <option value="Kotlin Object" />
-        <option value="layoutResourceFile" />
+        <option value="Kotlin Enum" />
+        <option value="Kotlin Class" />
         <option value="resourceFile" />
         <option value="Kotlin Data Class" />
-        <option value="Kotlin Class" />
+        <option value="layoutResourceFile" />
       </list>
     </option>
   </component>
   <component name="GenerateSignedApkSettings">
-    <option name="KEY_STORE_PATH" value="$PROJECT_DIR$/../../Files/New KEY-Store/skypoint_key_store1.jks" />
-    <option name="KEY_ALIAS" value="skypoint@123" />
+    <option name="KEY_STORE_PATH" value="D:\ASL Solution\asl_hr_project.jks" />
+    <option name="KEY_ALIAS" value="key0" />
     <option name="REMEMBER_PASSWORDS" value="true" />
     <option name="BUILD_TARGET_KEY" value="apk" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feature/settings" />
+        <entry key="$PROJECT_DIR$" value="feature/settings_upload_selfie_attendance" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -550,11 +716,12 @@
   &quot;keyToString&quot;: {
     &quot;Android App.Asl_EMP__1.0.app.executor&quot;: &quot;Run&quot;,
     &quot;Android App.app.executor&quot;: &quot;Run&quot;,
-    &quot;ApkExportedModule&quot;: &quot;Softmint_UPI_1.0.app&quot;,
+    &quot;ApkExportedModule&quot;: &quot;Asl_EMP__1.0.app&quot;,
     &quot;BundleExportedModule&quot;: &quot;Softmint_UPI_1.0.app&quot;,
-    &quot;DEBUGGABLE_DEVICE&quot;: &quot;Pixel_7_Pro_API_33 [emulator-5554]&quot;,
-    &quot;DEBUGGABLE_PROCESS&quot;: &quot;com.softmint_upi.app&quot;,
+    &quot;DEBUGGABLE_DEVICE&quot;: &quot;vivo-v2153-13911499310008M&quot;,
+    &quot;DEBUGGABLE_PROCESS&quot;: &quot;com.asl_emp_mng.app&quot;,
     &quot;DEBUGGER_ID&quot;: &quot;Auto&quot;,
+    &quot;ExportApk.ApkPathForAsl_EMP__1.0.app&quot;: &quot;D:\\asl_hr_app_and\\app&quot;,
     &quot;ExportApk.ApkPathForSoftmint_KYC.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app&quot;,
     &quot;ExportApk.ApkPathForSoftmint_UPI_1.0.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app&quot;,
     &quot;ExportBundle.BundlePathForSoftmint_KYC.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app&quot;,
@@ -572,14 +739,14 @@
     &quot;com.android.tools.idea.devicemanager.tab&quot;: &quot;Physical&quot;,
     &quot;com.codeium.enabled&quot;: &quot;true&quot;,
     &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/company__dashboard&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/settings__api__integration&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_directory_selection&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/ASL Projects/ASLHRManagement/app/src/main/res/drawable&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/asl_hr_app_and/app/src/main/res/drawable&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.intentionPowerPack&quot;,
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -590,6 +757,12 @@
 }</component>
   <component name="RecentsManager">
     <key name="android.template.-1659704359">
+      <recent name="com.asl_emp_mng.app.screens.settings" />
+    </key>
+    <key name="android.template.-1792958730">
+      <recent name="com.asl_emp_mng.app.screens.settings" />
+    </key>
+    <key name="android.template.576855869">
       <recent name="com.asl_emp_mng.app.screens.settings" />
     </key>
     <key name="android.template.1010459408">
@@ -604,11 +777,11 @@
     <key name="android.template.771554936">
       <recent name="com.softmint_pro.app.screens.agentOnBoard" />
     </key>
-    <key name="android.template.-1856986408">
-      <recent name="com.asl_emp_mng.app.screens" />
-    </key>
     <key name="android.template.-1062607416">
       <recent name="com.asl_emp_mng.app.screens.ui" />
+    </key>
+    <key name="android.template.907282134">
+      <recent name="com.asl_emp_mng.app.screens.emp" />
     </key>
     <key name="android.template.-1490477050">
       <recent name="com.softmint_pro.app.screens.report" />
@@ -626,10 +799,6 @@
     <key name="CreateKotlinClassDialog.RecentsKey">
       <recent name="com.softmint_pro.app.utils" />
     </key>
-    <key name="android.template.1981905723">
-      <recent name="com.softmint_pro.app.screens.report" />
-      <recent name="com.softmint_pro.app.screens.report.user" />
-    </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
       <recent name="com.asl_emp_mng.app.base.request" />
       <recent name="com.softmint_upi.app.screens.account.bank" />
@@ -640,9 +809,6 @@
     <key name="android.template.-1940949072">
       <recent name="com.softmint_pro.app.screens.report" />
     </key>
-    <key name="android.template.-1901062974">
-      <recent name="com.softmint_pro.app.screens.agentOnBoard" />
-    </key>
     <key name="android.template.188208528">
       <recent name="com.asl_emp_mng.app.screens.ui" />
     </key>
@@ -652,27 +818,17 @@
     <key name="android.template.-99510378">
       <recent name="com.asl_emp_mng.app.screens.settings" />
     </key>
-    <key name="android.template.-838999855">
-      <recent name="com.softmint_upi.app.screens.history.tabs" />
+    <key name="android.template.1663466035">
+      <recent name="com.asl_emp_mng.app.screens.emp" />
     </key>
     <key name="android.template.-288818840">
       <recent name="com.asl_emp_mng.app.screens.settings" />
     </key>
-    <key name="android.template.-321272910">
-      <recent name="com.asl_emp_mng.app.screens.auth" />
-    </key>
-    <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
-      <recent name="com.asl_emp_mng.app.base.adapter" />
-      <recent name="com.asl_emp_mng.app.utils" />
-      <recent name="com.softmint_upi.app.screens.account" />
-      <recent name="com.softmint_upi.app.screens.account.staff" />
-      <recent name="com.softmint_upi.app.screens.history.tabs.adapters" />
+    <key name="android.template.177528348">
+      <recent name="com.asl_emp_mng.app.screens.emp" />
     </key>
     <key name="android.template.-1628015020">
       <recent name="com.asl_emp_mng.app.screens" />
-    </key>
-    <key name="android.template.648208985">
-      <recent name="com.softmint_upi.app.screens.account.bank.staff" />
     </key>
     <key name="android.template.824711770">
       <recent name="com.asl_emp_mng.app.screens" />
@@ -683,12 +839,65 @@
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.softmint_upi.app.screens.dashboard.adapter" />
     </key>
+    <key name="android.template.-124362806">
+      <recent name="com.asl_emp_mng.app.screens" />
+    </key>
+    <key name="android.template.1544000632">
+      <recent name="com.asl_emp_mng.app.screens" />
+    </key>
+    <key name="android.template.1943598628">
+      <recent name="com.asl_emp_mng.app.screens.emp" />
+    </key>
+    <key name="android.template.146323653">
+      <recent name="com.stafo.app.screens.subscription" />
+      <recent name="com.stafo.app.screens.notification" />
+      <recent name="com.stafo.app.screens.settings" />
+    </key>
+    <key name="android.template.-1856986408">
+      <recent name="com.asl_emp_mng.app.screens" />
+    </key>
+    <key name="android.template.-672194589">
+      <recent name="com.asl_emp_mng.app.screens.emp" />
+    </key>
+    <key name="android.template.-725947550">
+      <recent name="com.asl_emp_mng.app.screens.emp" />
+    </key>
+    <key name="android.template.1981905723">
+      <recent name="com.softmint_pro.app.screens.report" />
+      <recent name="com.softmint_pro.app.screens.report.user" />
+    </key>
+    <key name="android.template.-2113371898">
+      <recent name="com.asl_emp_mng.app.screens.settings" />
+    </key>
+    <key name="android.template.-1901062974">
+      <recent name="com.softmint_pro.app.screens.agentOnBoard" />
+    </key>
+    <key name="android.template.-1439221148">
+      <recent name="com.stafo.app.screens.payroll" />
+      <recent name="com.stafo.app.screens.reports" />
+    </key>
+    <key name="android.template.-838999855">
+      <recent name="com.softmint_upi.app.screens.history.tabs" />
+    </key>
+    <key name="android.template.-321272910">
+      <recent name="com.asl_emp_mng.app.screens.auth" />
+    </key>
+    <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="com.stafo.app.utils" />
+      <recent name="com.asl_emp_mng.app.base.adapter" />
+      <recent name="com.asl_emp_mng.app.utils" />
+      <recent name="com.softmint_upi.app.screens.account" />
+      <recent name="com.softmint_upi.app.screens.account.staff" />
+    </key>
+    <key name="android.template.648208985">
+      <recent name="com.softmint_upi.app.screens.account.bank.staff" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\asl_hr_app_and\app\src\main\res\drawable" />
+      <recent name="$PROJECT_DIR$/app" />
+      <recent name="D:\asl_hr_app_and\app\libs" />
       <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
       <recent name="D:\asl_hr_app_and\app\src\main\java\com\asl_emp_mng\app\base\model" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/layout" />
-      <recent name="$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/ui" />
     </key>
     <key name="android.template.708963382">
       <recent name="com.asl_emp_mng.app.screens.ui" />
@@ -697,8 +906,8 @@
     <key name="android.template.-469554553">
       <recent name="com.asl_emp_mng.app.screens.settings" />
     </key>
-    <key name="android.template.-124362806">
-      <recent name="com.asl_emp_mng.app.screens" />
+    <key name="android.template.-1405872134">
+      <recent name="com.asl_emp_mng.app.screens.emp" />
     </key>
     <key name="android.template.1484537167">
       <recent name="com.softmint_pro.app.screens.aeps" />
@@ -708,14 +917,21 @@
     <key name="android.template.-396451063">
       <recent name="com.asl_emp_mng.app.screens.settings" />
     </key>
+    <key name="android.template.-1938452959">
+      <recent name="com.asl_emp_mng.app.screens.settings" />
+      <recent name="com.asl_emp_mng.app.screens.dashboard" />
+    </key>
     <key name="android.template.1718060039">
       <recent name="com.softmint_pro.app.screens.aeps" />
     </key>
     <key name="android.template.305654280">
       <recent name="com.asl_emp_mng.app.screens" />
     </key>
-    <key name="android.template.1544000632">
-      <recent name="com.asl_emp_mng.app.screens" />
+    <key name="android.template.-1826973453">
+      <recent name="com.asl_emp_mng.app.screens.ui" />
+    </key>
+    <key name="android.template.1596483858">
+      <recent name="com.stafo.app.screens.settings" />
     </key>
   </component>
   <component name="RunManager" selected="Android App.app">
@@ -1122,7 +1338,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739545222808</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Added Intro Image and TestK">
+      <option name="closed" value="true" />
+      <created>1742967246454</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1742967246454</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -1130,7 +1354,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="feature/settings_modify_qr_scanner" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -1157,63 +1393,64 @@
     <MESSAGE value="Implement QR Code" />
     <MESSAGE value="Fixed Issue" />
     <MESSAGE value="Update Add Staff API" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update Add Staff API" />
+    <MESSAGE value="Added Intro Image and TestK" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Intro Image and TestK" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
           <line>53</line>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
           <line>54</line>
           <option name="timeStamp" value="50" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
           <line>243</line>
           <option name="timeStamp" value="51" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
           <line>244</line>
           <option name="timeStamp" value="52" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/aeps/AepsTransactionReceiptActivity.kt</url>
           <line>245</line>
           <option name="timeStamp" value="53" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/MerchantDocumentUploadActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/MerchantDocumentUploadActivity.kt</url>
           <line>133</line>
           <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/FOOTPActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/FOOTPActivity.kt</url>
           <line>104</line>
           <option name="timeStamp" value="58" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/FOOTPActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/FOOTPActivity.kt</url>
           <line>106</line>
           <option name="timeStamp" value="59" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/FOOTPActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/FOOTPActivity.kt</url>
           <line>107</line>
           <option name="timeStamp" value="60" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/FOOTPActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/FOOTPActivity.kt</url>
           <line>108</line>
           <option name="timeStamp" value="61" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/FinalSuccessScreen.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/FinalSuccessScreen.kt</url>
           <line>28</line>
           <properties>
             <option name="lambda-ordinal" value="-1" />
@@ -1221,7 +1458,7 @@
           <option name="timeStamp" value="62" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/FinalSuccessScreen.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/FinalSuccessScreen.kt</url>
           <line>36</line>
           <properties>
             <option name="lambda-ordinal" value="-1" />
@@ -1229,122 +1466,122 @@
           <option name="timeStamp" value="63" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/OnBoardingBusinessScreenActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/OnBoardingBusinessScreenActivity.kt</url>
           <line>78</line>
           <option name="timeStamp" value="65" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/agentOnBoard/OnBoardingBusinessScreenActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/agentOnBoard/OnBoardingBusinessScreenActivity.kt</url>
           <line>79</line>
           <option name="timeStamp" value="66" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/UserEarningReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/UserEarningReportActivity.kt</url>
           <line>83</line>
           <option name="timeStamp" value="72" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/UserEarningReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/UserEarningReportActivity.kt</url>
           <line>90</line>
           <option name="timeStamp" value="73" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/user/ViewUserListActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/user/ViewUserListActivity.kt</url>
           <line>181</line>
           <option name="timeStamp" value="74" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/user/ViewUserListActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/user/ViewUserListActivity.kt</url>
           <line>182</line>
           <option name="timeStamp" value="75" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/user/ViewUserListActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/user/ViewUserListActivity.kt</url>
           <line>187</line>
           <option name="timeStamp" value="77" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>57</line>
           <option name="timeStamp" value="78" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>59</line>
           <option name="timeStamp" value="80" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>60</line>
           <option name="timeStamp" value="81" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>62</line>
           <option name="timeStamp" value="82" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>63</line>
           <option name="timeStamp" value="84" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>64</line>
           <option name="timeStamp" value="85" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>65</line>
           <option name="timeStamp" value="86" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/adapters/ViewUserAdapter.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/adapters/ViewUserAdapter.kt</url>
           <line>69</line>
           <option name="timeStamp" value="87" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/AepsReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/AepsReportActivity.kt</url>
           <line>75</line>
           <option name="timeStamp" value="88" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/AepsReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/AepsReportActivity.kt</url>
           <line>76</line>
           <option name="timeStamp" value="89" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/AepsReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/AepsReportActivity.kt</url>
           <line>77</line>
           <option name="timeStamp" value="90" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/AepsReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/AepsReportActivity.kt</url>
           <line>82</line>
           <option name="timeStamp" value="91" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/AepsReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/AepsReportActivity.kt</url>
           <line>83</line>
           <option name="timeStamp" value="92" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/AepsReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/AepsReportActivity.kt</url>
           <line>86</line>
           <option name="timeStamp" value="93" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/report/AepsReportActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/report/AepsReportActivity.kt</url>
           <line>87</line>
           <option name="timeStamp" value="94" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/history/HistoryFragment.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/history/HistoryFragment.kt</url>
           <line>73</line>
           <option name="timeStamp" value="100" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/com/asl_emp_mng/app/screens/account/staff/ViewStaffActivity.kt</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/account/staff/ViewStaffActivity.kt</url>
           <line>27</line>
           <option name="timeStamp" value="101" />
         </line-breakpoint>
@@ -1362,6 +1599,16 @@
         <entry key="com.asl_emp_mng.app.test">
           <value>
             <CheckInfo lastCheckTimestamp="1739288345341" />
+          </value>
+        </entry>
+        <entry key="com.stafo.app">
+          <value>
+            <CheckInfo lastCheckTimestamp="1742024042271" />
+          </value>
+        </entry>
+        <entry key="com.stafo.app.test">
+          <value>
+            <CheckInfo lastCheckTimestamp="1742024042270" />
           </value>
         </entry>
       </map>

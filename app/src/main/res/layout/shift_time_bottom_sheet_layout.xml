@@ -44,14 +44,26 @@
             android:background="@color/color_grey" />
     </RelativeLayout>
 
+
+    <CheckBox
+        android:id="@+id/cbSelectAll"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/layout1"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Select Both"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_radio_shift"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_24sdp"
+        tools:itemCount="2"
         app:layout_constraintBottom_toTopOf="@+id/btn_submit"
-        app:layout_constraintTop_toBottomOf="@+id/layout1"
+        app:layout_constraintTop_toBottomOf="@+id/cbSelectAll"
         tools:listitem="@layout/radio_shift_item_layout" />
 
 

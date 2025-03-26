@@ -179,12 +179,12 @@
     <string name="intro_skip">Skip</string>
     <string name="intro_get_started">Get Started</string>
     <string name="intro_next">Next</string>
-    <string name="intro_title_1">Intro Title One</string>
-    <string name="intro_description_1">Description One</string>
-    <string name="intro_title_2">Intro Title Two</string>
-    <string name="intro_description_2">Description Two</string>
-    <string name="intro_title_3">Intro Title Three</string>
-    <string name="intro_description_3">Description Three</string>
+    <string name="intro_title_1">Simplify Staff Management</string>
+    <string name="intro_description_1">Meet the smartest staff management system to manage attendance, payroll, compliances, and much more.</string>
+    <string name="intro_title_2">Easy to manage attendance</string>
+    <string name="intro_description_2">Smartest and easy to mark attendace and geo location tracking</string>
+    <string name="intro_title_3">Manage Employees payroll</string>
+    <string name="intro_description_3">Easy to manage payroll and salary</string>
     <string name="company_name">Company Name</string>
     <string name="company_type">Company Type</string>
     <string name="gst_number_if_applicable">GST Number (if applicable)</string>
@@ -216,7 +216,7 @@
 
     <string name="foreground_service_sample_notification_channel_general_name">General notification</string>
     <string name="foreground_service_sample_notification_title">Foreground Service</string>
-    <string name="foreground_service_sample_notification_description">Sample app is running in the background.</string>
+    <string name="foreground_service_sample_notification_description">STAFO app is running in the background.</string>
 
     <string name="foreground_service_sample_description">This sample app demonstrates how to use the foreground service on Android 14.\n\nIt will start a foreground service to fetch last known location and to observe any updates to the location.\n\nIt also shows how to bind to a service to update UI.</string>
 

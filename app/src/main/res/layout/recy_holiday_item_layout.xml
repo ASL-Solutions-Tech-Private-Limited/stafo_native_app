@@ -13,14 +13,96 @@
         android:layout_marginEnd="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_5sdp"
         android:background="@drawable/custom_item_card_bg"
-        android:padding="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <TextView
+
+        <LinearLayout
+            android:id="@+id/ll_date"
+            android:paddingHorizontal="@dimen/_6sdp"
+            android:paddingVertical="@dimen/_14sdp"
+            android:background="@drawable/holiday_item_bg"
+            android:orientation="horizontal"
+            android:layout_width="@dimen/_58sdp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txt_holiday_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:textAllCaps="true"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+            <View
+
+                android:layout_width="1dp"
+                android:layout_marginHorizontal="@dimen/_4sdp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/white"
+                android:layout_height="@dimen/_10sdp" />
+
+            <TextView
+                android:id="@+id/txt_holiday_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_regular"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+        </LinearLayout>
+
+
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_toLeftOf="@+id/item_delete"
+            android:paddingEnd="@dimen/_10sdp"
+            android:orientation="vertical"
+            android:layout_toRightOf="@+id/ll_date"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txt_holiday_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
+            <TextView
+                android:id="@+id/txt_holiday_day"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="@font/gilroy_regular"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/item_delete"
+            android:src="@drawable/delete"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:tint="@color/pastel_red"
+            app:shapeAppearanceOverlay="@style/Circular"
+            android:background="@color/tea_green"
+            app:contentPadding="@dimen/_3sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"/>
+
+
+        <!--<TextView
             android:id="@+id/txt_holiday_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -86,7 +168,7 @@
             android:singleLine="true"
             android:text="13/02/2025"
             android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp" />
+            android:textSize="@dimen/_12ssp" />-->
 
 
     </RelativeLayout>

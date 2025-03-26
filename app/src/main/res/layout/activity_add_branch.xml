@@ -28,7 +28,7 @@
         android:padding="@dimen/_4sdp"
         android:text="Add Branch"
         android:textColor="@color/white"
-        android:textSize="@dimen/_18sdp"
+        android:textSize="@dimen/_14ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_back" />
 
@@ -118,8 +118,9 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
-                            android:hint="Radius"
+                            android:hint="Radius (meter)"
                             android:inputType="number"
+                            android:maxLength="5"
                             android:textSize="@dimen/_12ssp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -145,6 +146,6 @@
             android:text="Submit"
             android:textAllCaps="false"
             android:textColor="@color/colorButtonText"
-            android:textSize="16dp" />
+            android:textSize="@dimen/_12ssp" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,7 +26,7 @@
         android:padding="@dimen/_4sdp"
         android:text="Create Policy"
         android:textColor="@color/white"
-        android:textSize="@dimen/_18sdp"
+        android:textSize="@dimen/_14ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_back" />
 
@@ -51,13 +51,13 @@
             android:layout_marginBottom="@dimen/_3sdp"
             tools:listitem="@layout/recy_dynamic_policy_item_layout"
             tools:itemCount="1"
-            app:layout_constraintBottom_toTopOf="@+id/llc_add_more"
+            app:layout_constraintBottom_toTopOf="@+id/btn_add_policy"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+       <!-- <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/llc_add_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
                 android:textColor="@color/blue"
                 android:textSize="@dimen/_12ssp" />
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>-->
 
         <Button
             android:id="@+id/btn_add_policy"
@@ -101,7 +101,7 @@
             android:text="Submit"
             android:textAllCaps="false"
             android:textColor="@color/colorButtonText"
-            android:textSize="16dp"
+            android:textSize="@dimen/_12ssp"
             app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

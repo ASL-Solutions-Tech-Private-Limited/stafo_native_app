@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screens.settings.VerifyCompanyDetailsActivity">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorTextPrimary"
+        app:elevation="0dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            tools:ignore="UseCompoundDrawables">
+
+
+
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="Verify Documents"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14ssp" />
+
+
+        </RelativeLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/ll_document_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llc_aadhaar_verify"
+            android:weightSum="2"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:background="@drawable/edit_text_background"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:textSize="@dimen/_12ssp"
+                android:layout_weight="0.5"
+                android:fontFamily="@font/gilroy_medium"
+                android:textColor="@color/black"
+                android:text="Aadhaar*"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_aadhaar_verify"
+                android:layout_weight="1.5"
+                android:textSize="@dimen/_12ssp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:textColor="@color/black"
+                android:text="Verify"
+                android:gravity="end"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/_13ssp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llc_pan_verify"
+            android:weightSum="2"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:background="@drawable/edit_text_background"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:textSize="@dimen/_12ssp"
+                android:layout_weight="0.5"
+                android:fontFamily="@font/gilroy_medium"
+                android:textColor="@color/black"
+                android:text="Pan Card (optional)"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_pan_verify"
+                android:layout_weight="1.5"
+                android:textSize="@dimen/_12ssp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:textColor="@color/black"
+                android:text="Verify"
+                android:gravity="end"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/_13ssp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llc_company_verify"
+            android:weightSum="2"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:background="@drawable/edit_text_background"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:textSize="@dimen/_12ssp"
+                android:layout_weight="0.5"
+                android:fontFamily="@font/gilroy_medium"
+                android:textColor="@color/black"
+                android:text="Registration Number (optional)"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_company_verify"
+                android:layout_weight="1.5"
+                android:textSize="@dimen/_12ssp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:textColor="@color/black"
+                android:text="Verify"
+                android:gravity="end"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/_13ssp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llc_gst_verify"
+            android:weightSum="2"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:background="@drawable/edit_text_background"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_38sdp">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:textSize="@dimen/_12ssp"
+                android:layout_weight="0.5"
+                android:fontFamily="@font/gilroy_medium"
+                android:textColor="@color/black"
+                android:text="GST Number (optional)"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_gst_verify"
+                android:layout_weight="1.5"
+                android:textSize="@dimen/_12ssp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:textColor="@color/black"
+                android:text="Verify"
+                android:gravity="end"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/_13ssp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

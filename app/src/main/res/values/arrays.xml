@@ -42,7 +42,14 @@
     <string-array name="leave_type">
         <item>Sick Leave</item>
         <item>Casual Leave</item>
-        <item> Earned Leave</item>
+        <item>Previllage  Leave</item>
+    </string-array>
+
+    <string-array name="leave_type_search">
+        <item>All</item>
+        <item>Sick Leave</item>
+        <item>Casual Leave</item>
+        <item>Privillage Leave</item>
     </string-array>
     <string-array name="leave_settings">
         <item>Create Leave Policy</item>
@@ -56,6 +63,11 @@
         <item>Professional</item>
         <item>Educational</item>
         <item>Document &amp; Certificates</item>
+    </string-array>
+
+    <string-array name="marital_status">
+        <item>Single</item>
+        <item>Married</item>
     </string-array>
 
     <string-array name="position_type">

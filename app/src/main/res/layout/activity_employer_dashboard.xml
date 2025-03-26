@@ -36,13 +36,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/iv_app_icon"
                         android:layout_width="@dimen/_24sdp"
                         android:layout_height="@dimen/_24sdp"
                         android:layout_marginStart="@dimen/_12sdp"
                         android:layout_marginTop="@dimen/_12sdp"
-                        android:src="@drawable/ic_user"
+                        android:src="@drawable/final_asl_hr_logo"
+                        app:shapeAppearanceOverlay="@style/Circular"
+                        android:scaleType="fitXY"
+                        android:background="@color/primaryColor"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,13 +57,22 @@
                         android:layout_marginTop="@dimen/_12sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:gravity="center"
-                        android:text="Asl HR Wala"
+                        android:text="STAFO"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_14ssp"
                         app:layout_constraintBottom_toTopOf="@id/header_view"
                         app:layout_constraintStart_toEndOf="@id/iv_app_icon"
                         app:layout_constraintTop_toTopOf="parent" />
-
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_logout"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:src="@drawable/ic_logout"
+                        app:layout_constraintBottom_toTopOf="@id/header_view"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_notification"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/iv_notification"
@@ -87,19 +99,24 @@
                         android:layout_marginStart="@dimen/_12sdp"
                         android:layout_marginTop="@dimen/_12sdp"
                         android:fontFamily="@font/gilroy_bold"
-                        android:textSize="@dimen/_15sdp"
+                        android:textSize="@dimen/_12ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/header_view"
                         tools:text="Good Morning" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_header_emp_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_12sdp"
                         android:layout_marginTop="@dimen/_6sdp"
                         android:fontFamily="@font/gilroy_bold"
                         android:textSize="@dimen/_15sdp"
+                        android:singleLine="true"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:paddingEnd="@dimen/_4sdp"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_header_profile_pic"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_header_greeting" />
 
@@ -108,7 +125,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-
+                        android:layout_marginTop="@dimen/_8sdp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_header_emp_name">
 
@@ -119,7 +136,11 @@
                             android:layout_marginStart="@dimen/_12sdp"
                             android:fontFamily="@font/gilroy_bold"
                             android:text="View Profile"
-                            android:textSize="@dimen/_12sdp"
+                            android:background="@drawable/custom_view_profile_bg"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp"
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:paddingVertical="@dimen/_6sdp"
                             android:visibility="visible" />
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -129,17 +150,20 @@
                             android:layout_marginStart="@dimen/_12sdp"
                             android:fontFamily="@font/gilroy_bold"
                             android:text="Settings"
-
                             android:textColor="@color/red"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="@dimen/_12ssp" />
                     </LinearLayout>
 
-                    <de.hdodenhof.circleimageview.CircleImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/iv_header_profile_pic"
                         android:layout_width="@dimen/_54sdp"
                         android:layout_height="@dimen/_54sdp"
                         android:layout_marginEnd="@dimen/_12sdp"
-                        android:src="@drawable/demo_avatar"
+                        app:shapeAppearanceOverlay="@style/Circular"
+                        android:scaleType="fitXY"
+                        android:visibility="invisible"
+                        android:background="@color/white"
+                        android:src="@drawable/ic_organization"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_header_greeting" />
 
@@ -163,7 +187,7 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="Today's Report(29 Jan 25)"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_12ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -175,7 +199,8 @@
                         android:layout_marginEnd="@dimen/_12sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="View All"
-                        android:textSize="@dimen/_14sdp"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12ssp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -185,7 +210,7 @@
                         android:layout_height="@dimen/_100sdp"
                         android:layout_marginTop="@dimen/_6sdp"
                         android:orientation="horizontal"
-                        android:weightSum="2"
+                        android:weightSum="3"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_lets_check">
@@ -200,6 +225,54 @@
                             app:cardElevation="@dimen/_4sdp">
 
                             <LinearLayout
+                                android:id="@+id/llc_card_all_emp"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/gradient_header"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <androidx.appcompat.widget.AppCompatImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/resized_all_emp_icon" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/txt_all_emp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/gilroy_semi_bold"
+                                    android:gravity="center"
+                                    android:padding="@dimen/_4sdp"
+                                    android:text="All Employee"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_12ssp" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/tv_all_emp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/gilroy_bold"
+                                    android:gravity="center"
+                                    android:padding="@dimen/_4sdp"
+                                    android:text="0"
+                                    android:textSize="@dimen/_16sdp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="@dimen/_6sdp"
+                            android:layout_weight="1"
+                            android:padding="@dimen/_6sdp"
+                            app:cardCornerRadius="@dimen/_8sdp"
+                            app:cardElevation="@dimen/_4sdp">
+
+                            <LinearLayout
+                                android:id="@+id/llc_card_present"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:background="@drawable/gradient_header"
@@ -219,7 +292,7 @@
                                     android:padding="@dimen/_4sdp"
                                     android:text="Present"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_14sdp" />
+                                    android:textSize="@dimen/_12ssp" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/tv_present_emp"
@@ -244,9 +317,10 @@
                             app:cardElevation="@dimen/_4sdp">
 
                             <LinearLayout
+                                android:id="@+id/llc_card_on_leave"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/gradient_header"
+                                android:background="@drawable/onleave_card_bg"
                                 android:gravity="center"
                                 android:padding="@dimen/_6sdp"
                                 android:orientation="vertical">
@@ -263,7 +337,7 @@
                                     android:padding="@dimen/_4sdp"
                                     android:text=" On Leave"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/_14sdp" />
+                                    android:textSize="@dimen/_12ssp" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/tv_on_leave_emp"
@@ -278,7 +352,37 @@
 
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
+
+
                     </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_activities"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_16sdp"
+                        android:fontFamily="@font/gilroy_semi_bold"
+                        android:text="Activities"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ll_todays_report" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_activities_viewAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_16sdp"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:fontFamily="@font/gilroy_semi_bold"
+                        android:text="View All"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/ll_todays_report" />
+
+
+
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_actions"
@@ -287,7 +391,7 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/ll_todays_report"
+                        app:layout_constraintTop_toBottomOf="@id/tv_activities_viewAll"
                         tools:itemCount="1"
                         tools:listitem="@layout/item_action_layout" />
 
@@ -330,7 +434,7 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="On Leave"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_12ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/card_banners" />
 
@@ -342,7 +446,8 @@
                         android:layout_marginEnd="@dimen/_12sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="View All"
-                        android:textSize="@dimen/_14sdp"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12ssp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/card_banners" />
 
@@ -360,7 +465,6 @@
                         android:layout_marginStart="@dimen/_6sdp"
                         android:layout_marginTop="@dimen/_6sdp"
                         android:layout_marginEnd="@dimen/_6sdp"
-
                         tools:itemCount="1"
                         tools:listitem="@layout/item_leave_list" />
 
@@ -397,7 +501,7 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="Wishes"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_12ssp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/rl_leaves_panel" />
 
@@ -409,7 +513,8 @@
                         android:layout_marginEnd="@dimen/_12sdp"
                         android:fontFamily="@font/gilroy_semi_bold"
                         android:text="View All"
-                        android:textSize="@dimen/_14sdp"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12ssp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/rl_leaves_panel" />
 
@@ -419,15 +524,16 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_wishes">
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_wishes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_6sdp"
-                        android:layout_marginTop="@dimen/_6sdp"
-                        android:layout_marginEnd="@dimen/_6sdp"
-                        tools:itemCount="1"
-                        tools:listitem="@layout/item_leave_list" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_wishes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_6sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:layout_marginEnd="@dimen/_6sdp"
+                            tools:itemCount="1"
+                            tools:listitem="@layout/item_leave_list" />
 
                         <LinearLayout
                             android:id="@+id/ll_no_wishes"
@@ -463,7 +569,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_12sdp"
-            android:backgroundTint="@color/primaryColor"
+            android:backgroundTint="@color/colorTextPrimary"
             android:src="@drawable/ic_user"
             android:text="Add Employee"
             app:layout_constraintBottom_toBottomOf="parent"

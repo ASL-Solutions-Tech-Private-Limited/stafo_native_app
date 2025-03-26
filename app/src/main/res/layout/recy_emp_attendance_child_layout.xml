@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/cl_layout"
+    android:background="@color/white"
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_10sdp"
-        android:background="@drawable/custom_card_background"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,8 +34,8 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_32sdp"
+                    android:layout_height="@dimen/_34sdp"
                     android:background="@drawable/custom_date_bg"
                     android:orientation="vertical">
 
@@ -70,10 +71,7 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/white" />
+
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_check_in"
@@ -85,15 +83,11 @@
                 android:fontFamily="@font/gilroy_medium"
                 android:gravity="center"
                 android:maxLines="3"
-                tools:text="09:32 AM"
                 android:textColor="#565656"
                 android:textSize="@dimen/_10ssp"
                 app:drawableTint="@color/black" />
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/white" />
+
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_check_out"
@@ -104,15 +98,11 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/gilroy_medium"
                 android:gravity="center"
-                tools:text="09:32 PM"
                 android:textColor="#565656"
                 android:textSize="@dimen/_10ssp"
                 app:drawableTint="@color/black" />
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/white" />
+
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_working_hrs"
@@ -123,7 +113,6 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/gilroy_medium"
                 android:gravity="center"
-                tools:text="10 Hrs"
                 android:textColor="#565656"
                 android:textSize="@dimen/_10ssp"
                 app:drawableTint="@color/black" />
@@ -201,8 +190,7 @@
                     android:fontFamily="@font/gilroy_medium"
                     android:gravity="center"
                     android:maxLines="3"
-                    android:text="Week off"
-
+                    android:text="Week Off"
                     android:textColor="#565656"
                     android:textSize="@dimen/_12ssp"
                     app:drawableTint="@color/black" />
