@@ -517,9 +517,13 @@ class EmployeeDashboard : AppCompatActivity() {
 
                             if (isServiceRunning(LocationForegroundService::class.java)) {
 
-                                val serviceIntent =
-                                    Intent(this, LocationForegroundService::class.java)
-                                stopService(serviceIntent)
+                                val stopIntent = Intent(this, LocationForegroundService::class.java)
+                                stopIntent.action = "STOP_FOREGROUND_SERVICE"
+                                startService(stopIntent)
+
+                                /*val serviceIntent = Intent(this, LocationForegroundService::class.java)
+                                stopService(serviceIntent)*/
+                                Log.d("res", "Stopped service after punch out.")
                             }
 
                             // If last punch has both In and Out, allow another Punch In
@@ -564,10 +568,16 @@ class EmployeeDashboard : AppCompatActivity() {
 
                             if (shiftEndTime != null && currentDateTime.after(shiftEndCalendar)) {
                                 Log.d("res", "end time service")
+
+
                                 if (isServiceRunning(LocationForegroundService::class.java)) {
-                                    val serviceIntent =
-                                        Intent(this, LocationForegroundService::class.java)
-                                    stopService(serviceIntent)
+
+                                    val stopIntent = Intent(this, LocationForegroundService::class.java)
+                                    stopIntent.action = "STOP_FOREGROUND_SERVICE"
+                                    startService(stopIntent)
+                                    /*val serviceIntent = Intent(this, LocationForegroundService::class.java)
+                                    stopService(serviceIntent)*/
+                                    Log.d("res", "Stopped service after shift end.")
                                 }
                             }
                         }

@@ -190,7 +190,7 @@
                     android:fontFamily="@font/gilroy_medium"
                     android:gravity="center"
                     android:maxLines="3"
-                    android:text="Week Off"
+                    android:text="Absent"
                     android:textColor="#565656"
                     android:textSize="@dimen/_12ssp"
                     app:drawableTint="@color/black" />

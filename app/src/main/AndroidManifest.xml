@@ -47,6 +47,9 @@
         tools:replace="android:label"
         tools:targetApi="31">
         <activity
+            android:name=".screens.payroll.SalarySlipActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.subscription.SubscriptionActivity"
             android:exported="false" />
         <activity

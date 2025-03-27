@@ -109,27 +109,6 @@ class UploadSelfieAttendanceActivity : AppCompatActivity() {
 
     }
 
-
-    private fun bitmapToFile(bitmap: Bitmap, context: Context): File? {
-        return try {
-
-            val fileName = "selfie_${System.currentTimeMillis()}.jpg"
-            val file = File(context.cacheDir, fileName)
-            file.createNewFile()
-
-            val outputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-            outputStream.flush()
-            outputStream.close()
-            file
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-
-
     private fun observeViewModel() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
@@ -185,16 +164,12 @@ class UploadSelfieAttendanceActivity : AppCompatActivity() {
                         binding.sivEmpPunch.visibility = View.VISIBLE
                         binding.tvRetakeSelfie.visibility = View.VISIBLE
 
-                        if (file != null) {
-                            removeBackgroundUsingRemoveBg(file)
-                        } else {
+                        selfieImage=file
+                        Glide.with(this)
+                            .load(file)
+                            .into(binding.sivEmpPunch)
 
-                            CustomToast(this,"Failed to get image file")
-                        }
 
-                        /* Glide.with(this)
-                             .load(file)
-                             .into(binding.sivEmpPunch)*/
                     }
 
                 }
@@ -212,63 +187,7 @@ class UploadSelfieAttendanceActivity : AppCompatActivity() {
     }
 
 
-    private fun removeBackgroundUsingRemoveBg(file: File) {
-        val apiKey = "T13hChaJUYghAopjE1KoDe49"
-        val url = "https://api.remove.bg/v1.0/removebg"
 
-
-        val progressDialog = ProgressDialog(this)
-        progressDialog.setMessage("Processing image, please wait...")
-        progressDialog.setCancelable(false)
-        progressDialog.show()
-
-        val requestBody = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart(
-                "image_file", file.name,
-                file.asRequestBody("image/*".toMediaTypeOrNull())
-            )
-            .addFormDataPart("size", "auto")
-            .build()
-
-        val request = Request.Builder()
-            .url(url)
-            .addHeader("X-Api-Key", apiKey)
-            .post(requestBody)
-            .build()
-
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-                runOnUiThread {
-                    progressDialog.dismiss()
-                    CustomToast(this@UploadSelfieAttendanceActivity, "Failed to upload image")
-                }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                if (response.isSuccessful) {
-                    progressDialog.dismiss()
-                    val inputStream = response.body?.byteStream()
-                    val bitmap = BitmapFactory.decodeStream(inputStream)
-                    selfieImage=bitmapToFile(bitmap, this@UploadSelfieAttendanceActivity)
-
-                    runOnUiThread {
-                        binding.sivEmpPunch.setImageBitmap(bitmap)
-                    }
-                } else {
-                    runOnUiThread {
-
-                        CustomToast(
-                            this@UploadSelfieAttendanceActivity,
-                            "API Error: ${response.message}"
-                        )
-                    }
-                }
-            }
-        })
-    }
 
     private fun getFileFromUri(uri: Uri): File? {
         val fileName = getFileName(uri) ?: return null

@@ -228,4 +228,5 @@
 
     <string name="foreground_service_sample_last_location_title">Last location: </string>
     <string name="foreground_service_sample_last_location_fetching">Fetching…</string>
+    <string name="terms_condition_text">By placing this order,you agree to the Terms of Service and Privacy Policy.Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period</string>
 </resources>
