@@ -45,20 +45,20 @@ class AddEmployeeActivity : AppCompatActivity() {
    // private var mSteps = 1
     private var selectGender: String="male"
     private var selectJobTitle: String=""
-    private var selectBranch: Int = 1
-    private var selectDepartment: Int = 1
+   // private var selectBranch: Int = 1
+    //private var selectDepartment: Int = 1
 
     private var mDateOfJoining: String = ""
 
 
-    private lateinit var branchDialog: SearchableDialog
-    private lateinit var departmentDialog: SearchableDialog
+    //private lateinit var branchDialog: SearchableDialog
+    //private lateinit var departmentDialog: SearchableDialog
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
 
-    private var mDepartmentList: ArrayList<DataDepartment>? = ArrayList()
-    private var mBranchList: ArrayList<DataBranch>? = ArrayList()
+   // private var mDepartmentList: ArrayList<DataDepartment>? = ArrayList()
+   // private var mBranchList: ArrayList<DataBranch>? = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -279,28 +279,21 @@ class AddEmployeeActivity : AppCompatActivity() {
 
             btnNext.setOnClickListener { _ ->
 
-                if (!mBranchList.isNullOrEmpty() && !mDepartmentList.isNullOrEmpty()){
-                    if (validateBasicInfo()) {
-                        val requestBody = AddEmpRequestBody(
+                if (validateBasicInfo()) {
+                    val requestBody = AddEmpRequestBody(
 
-                            name = tieStaffName.text.toString().trim(),
-                            email = tieEmailId.text.toString().trim(),
-                            position = selectJobTitle,
-                            phone = tieMobileNo.text.toString(),
-                            branch_id = selectBranch,
-                            department_id = selectDepartment,
-                            date_of_joining = mDateOfJoining,
-                            salary = tieBasicSalary.text.toString().trim(),
-                            gender = selectGender,
-                            address = tieAddress.text.toString()
-                        )
+                        name = tieStaffName.text.toString().trim(),
+                        email = tieEmailId.text.toString().trim(),
+                        position = selectJobTitle,
+                        phone = tieMobileNo.text.toString(),
+                        date_of_joining = mDateOfJoining,
+                        salary = tieBasicSalary.text.toString().trim(),
+                        gender = selectGender,
+                        address = tieAddress.text.toString()
+                    )
 
-                        settingsViewModel.addEmployee(this@AddEmployeeActivity, requestBody)
-                    }
-                }else{
-                    CustomToast(this@AddEmployeeActivity,"Please add Branch and Department first!")
+                    settingsViewModel.addEmployee(this@AddEmployeeActivity, requestBody)
                 }
-
 
 
             }
@@ -311,7 +304,7 @@ class AddEmployeeActivity : AppCompatActivity() {
                 showDatePicker()
             }
 
-            tieBranch.setOnClickListener {
+            /*tieBranch.setOnClickListener {
 
                 if (!mBranchList.isNullOrEmpty()){
                     branchDialog.show()
@@ -328,7 +321,7 @@ class AddEmployeeActivity : AppCompatActivity() {
                     startActivity(Intent(this@AddEmployeeActivity,AddDepartmentActivity::class.java))
                 }
 
-            }
+            }*/
 
 
         }
@@ -349,9 +342,10 @@ class AddEmployeeActivity : AppCompatActivity() {
 
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-        getEmployeeComId()?.let { settingsViewModel.getBranchList(this, it) }
 
 
+
+        /*getEmployeeComId()?.let { settingsViewModel.getBranchList(this, it) }
 
         settingsViewModel.mBranchListResponse.observe(this) {
 
@@ -388,7 +382,10 @@ class AddEmployeeActivity : AppCompatActivity() {
                 }
             }
 
-        }
+        }*/
+
+
+
 
         settingsViewModel.mAddEmpResponse.observe(this) {
 
@@ -445,12 +442,9 @@ class AddEmployeeActivity : AppCompatActivity() {
 
     }
 
-    private fun updateNextButtonState() {
-        binding.btnNext.isEnabled = !mBranchList.isNullOrEmpty() && !mDepartmentList.isNullOrEmpty()
-        binding.btnNext.alpha = if (binding.btnNext.isEnabled) 1.0f else 0.8f
-    }
 
-    private fun setupSearchableDialog(
+
+ /*   private fun setupSearchableDialog(
         dataList: List<Any>?,
         title: String,
         field: TextInputEditText
@@ -490,7 +484,7 @@ class AddEmployeeActivity : AppCompatActivity() {
             "Branch" -> branchDialog = dialog
             "Department" -> departmentDialog = dialog
         }
-    }
+    }*/
 
     private fun handleLoader(status: String) {
         if (status.equals("load", ignoreCase = true)) {
@@ -512,13 +506,7 @@ class AddEmployeeActivity : AppCompatActivity() {
                 tieStaffName.error = "Please enter staff name"
                 tieStaffName.requestFocus()
                 return false
-            }  else if (tieBranch.text.isNullOrEmpty()) {
-                CustomToast(this@AddEmployeeActivity,"Please enter branch")
-                return false
-            } else if (tieDepartment.text.isNullOrEmpty()) {
-                CustomToast(this@AddEmployeeActivity,"Please enter department")
-                return false
-            }  else if (tieMobileNo.text.isNullOrEmpty()) {
+            }   else if (tieMobileNo.text.isNullOrEmpty()) {
                 tieMobileNo.error = "Please enter mobile number"
                 tieMobileNo.requestFocus()
                 return false
