@@ -446,6 +446,9 @@ class EmployeeDashboard : AppCompatActivity() {
                     val endTime12Hr = convertTo12HourFormat(shift.endTime)
                     binding.tvOfficeTiming.text =
                         "Your Office timing is $startTime12Hr to $endTime12Hr"
+
+                }?: run {
+                    binding.tvOfficeTiming.text = "Your Office timing is 10 AM to 8 PM"
                 }
 
                 if (it.employeeInfo.geoStatus != null && it.employeeInfo.geoStatus == "0") {
@@ -551,11 +554,10 @@ class EmployeeDashboard : AppCompatActivity() {
                                 )
                             }"
                         }
-
+                       /* val currentDateTime = Calendar.getInstance()
                         if (shiftEndTime != null) {
 
 
-                            val currentDateTime = Calendar.getInstance()
                             val shiftEndCalendar = Calendar.getInstance()
                             val shiftEndTimeDate =
                                 SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
@@ -567,6 +569,7 @@ class EmployeeDashboard : AppCompatActivity() {
                             }
 
                             if (shiftEndTime != null && currentDateTime.after(shiftEndCalendar)) {
+
                                 Log.d("res", "end time service")
 
 
@@ -575,12 +578,63 @@ class EmployeeDashboard : AppCompatActivity() {
                                     val stopIntent = Intent(this, LocationForegroundService::class.java)
                                     stopIntent.action = "STOP_FOREGROUND_SERVICE"
                                     startService(stopIntent)
-                                    /*val serviceIntent = Intent(this, LocationForegroundService::class.java)
-                                    stopService(serviceIntent)*/
+                                    *//*val serviceIntent = Intent(this, LocationForegroundService::class.java)
+                                    stopService(serviceIntent)*//*
                                     Log.d("res", "Stopped service after shift end.")
                                 }
                             }
+                        }else{
+                            if (isServiceRunning(LocationForegroundService::class.java)) {
+
+                                val stopIntent = Intent(this, LocationForegroundService::class.java)
+                                stopIntent.action = "STOP_FOREGROUND_SERVICE"
+                                startService(stopIntent)
+                                Log.d("res", "Stopped service not find shift time.")
+                            }
+
+                        }*/
+
+                        val currentDateTime = Calendar.getInstance()
+
+                        if (!shiftEndTime.isNullOrEmpty()) {
+                            val shiftEndCalendar = Calendar.getInstance()
+                            val shiftEndTimeDate =
+                                SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
+
+                            shiftEndTimeDate?.let {
+                                shiftEndCalendar.set(Calendar.HOUR_OF_DAY, it.hours)
+                                shiftEndCalendar.set(Calendar.MINUTE, it.minutes)
+                                shiftEndCalendar.set(Calendar.SECOND, 0)
+                            }
+
+                            if (currentDateTime.after(shiftEndCalendar)) {
+                                Log.d("res", "End time reached, stopping service.")
+
+                                if (isServiceRunning(LocationForegroundService::class.java)) {
+                                    val stopIntent = Intent(this, LocationForegroundService::class.java)
+                                    stopIntent.action = "STOP_FOREGROUND_SERVICE"
+                                    startService(stopIntent)
+                                    Log.d("res", "Stopped service after shift end.")
+                                }
+                            }
+                        } else {
+
+                            val currentHour = currentDateTime.get(Calendar.HOUR_OF_DAY)
+                            val currentMinute = currentDateTime.get(Calendar.MINUTE)
+
+                            if (currentHour == 20 && currentMinute == 0) {
+
+                                Log.d("res", "Shift time is empty, checking 8:00 PM condition.")
+
+                                if (isServiceRunning(LocationForegroundService::class.java)) {
+                                    val stopIntent = Intent(this, LocationForegroundService::class.java)
+                                    stopIntent.action = "STOP_FOREGROUND_SERVICE"
+                                    startService(stopIntent)
+                                    Log.d("res", "Stopped service at 8:00 PM as shift time was empty.")
+                                }
+                            }
                         }
+
 
 
                     } else {
@@ -857,7 +911,7 @@ class EmployeeDashboard : AppCompatActivity() {
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialogBinding.llGeoAttendance.setOnClickListener {
-            if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo" || mEmplyeeInfo?.attendance_type == null) {
+            if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo") {
                 if (isLocationEnabled()) {
                     bottomSheetDialog.dismiss()
                     startActivity(Intent(this, EmployeePunchInActivity::class.java))
@@ -868,7 +922,7 @@ class EmployeeDashboard : AppCompatActivity() {
         }
 
         bottomSheetDialogBinding.llSelfieAttendance.setOnClickListener {
-            if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "selfie") {
+            if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "selfie" || mEmplyeeInfo?.attendance_type == null) {
                 if (isLocationEnabled()) {
                     bottomSheetDialog.dismiss()
                     startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
@@ -876,6 +930,7 @@ class EmployeeDashboard : AppCompatActivity() {
                     requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                 }
             } else CustomToast(this, "Selfie Attendance is not enabled for you")
+
 
             /*   startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
                bottomSheetDialog.dismiss()*/

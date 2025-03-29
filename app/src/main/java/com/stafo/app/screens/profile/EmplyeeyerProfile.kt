@@ -69,7 +69,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
     }
 
     private fun setupView(binding: ActivityEmplyeeyerProfileBinding) {
-        binding?.apply {
+        binding.apply {
             Log.e("TAG", "setupView: ${Gson().toJson(getEmployeeDetails())}")
             if (getIsCOMPANYLogin(this@EmplyeeyerProfile) == true) {
 
@@ -117,6 +117,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         settingsViewModel.mEmployeeUploadImageResponse.observe(this) {
             if (it.status) {
+
                 settingsViewModel.fetchEmployeeDetails(
                     this@EmplyeeyerProfile,
                     getEmployeeDetails()?.id.toString()

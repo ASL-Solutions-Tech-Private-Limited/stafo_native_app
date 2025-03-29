@@ -51,6 +51,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     private var branchLat:Double = 0.0
     private var branchLong :Double = 0.0
     private var radar  :Float = 0.0f
+    private var checkBranch  :Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,26 +138,40 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                     CustomToast(this@EmpSelfieAttendanceActivity, "Please upload a selfie first")
                 } else {
 
-                    getCurrentLocation { userLat, userLong ->
+
+                    if (checkBranch){
+                        getCurrentLocation { userLat, userLong ->
 
 
-                        val distance = getDistance(userLat, userLong, branchLat, branchLong)
+                            val distance = getDistance(userLat, userLong, branchLat, branchLong)
 
-                        if (distance <= radar) {
+                            if (distance <= radar) {
 
-                            val employeeId = getEmployeeDetails()?.id
+                                val employeeId = getEmployeeDetails()?.id
 
-                            employeeId?.let { empId ->
-                                settingsViewModel.selfieAttendanceEmpolyee(
-                                    this@EmpSelfieAttendanceActivity,
-                                    empId,
-                                    selfieImage
-                                )
+                                employeeId?.let { empId ->
+                                    settingsViewModel.selfieAttendanceEmpolyee(
+                                        this@EmpSelfieAttendanceActivity,
+                                        empId,
+                                        selfieImage
+                                    )
+                                }
+                            } else {
+                                CustomToast(this@EmpSelfieAttendanceActivity, "You are outside the allowed area. Move closer.")
                             }
-                        } else {
-                            CustomToast(this@EmpSelfieAttendanceActivity, "You are outside the allowed area. Move closer.")
+                        }
+                    }else{
+                        val employeeId = getEmployeeDetails()?.id
+
+                        employeeId?.let { empId ->
+                            settingsViewModel.selfieAttendanceEmpolyee(
+                                this@EmpSelfieAttendanceActivity,
+                                empId,
+                                selfieImage
+                            )
                         }
                     }
+
 
 
 
@@ -199,23 +214,26 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
         }
 
-        settingsViewModel.mGetAttendanceBranchResponse.observe(this) {
+        settingsViewModel.mGetAttendanceBranchResponse.observe(this) { response ->
 
-            if (it.status) {
-
-                if (it.data.latitude != null && it.data.longitude!=null ){
-                    branchLat = it.data.latitude.toDouble()
-                    branchLong = it.data.longitude.toDouble()
-                    radar = it.data.radar.toFloat()
+            if (response?.status == true) {
+                val branchData = response.data
+                if (branchData != null && branchData.latitude != null && branchData.longitude != null) {
+                    Log.d("res","check branch")
+                    checkBranch = true
+                    branchLat = branchData.latitude.toDouble()
+                    branchLong = branchData.longitude.toDouble()
+                    radar = branchData.radar.toFloat()
+                } else {
+                    checkBranch = false
                 }
-
-
             } else {
-                CustomToast(this, it.message)
+                checkBranch = false
+
             }
-
-
         }
+
+
 
 
     }

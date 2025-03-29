@@ -50,14 +50,14 @@ class EmployeeProfileDetails : AppCompatActivity() {
     private var selectJobTitle: String = ""
     private var selectBranch: Int = 1
     private var selectDepartment: Int = 1
-    private lateinit var branchDialog: SearchableDialog
-    private lateinit var departmentDialog: SearchableDialog
+  //  private lateinit var branchDialog: SearchableDialog
+   // private lateinit var departmentDialog: SearchableDialog
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
 
-    private var mDepartmentList: ArrayList<DataDepartment>? = ArrayList()
-    private var mBranchList: ArrayList<DataBranch>? = ArrayList()
+   // private var mDepartmentList: ArrayList<DataDepartment>? = ArrayList()
+   // private var mBranchList: ArrayList<DataBranch>? = ArrayList()
     private var mJobTitleList: ArrayList<String>? = ArrayList()
 
 
@@ -169,7 +169,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
 
-                    selectBranch = data.branchId
+                  /*  selectBranch = data.branchId
 
 
                     if (selectBranch != null) {
@@ -177,9 +177,9 @@ class EmployeeProfileDetails : AppCompatActivity() {
                         if (index != -1) {
                             binding.tieBranch.setText(index?.let { it1 -> mBranchList?.get(it1)?.branch_name })
                         }
-                    }
+                    }*/
 
-
+/*
                     selectDepartment = data.departmentId
 
                     if (selectDepartment != null) {
@@ -191,7 +191,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                                 )?.name
                             })
                         }
-                    }
+                    }*/
 
 
 
@@ -334,7 +334,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
 
-        settingsViewModel.mBranchListResponse.observe(this) {
+  /*      settingsViewModel.mBranchListResponse.observe(this) {
 
 
             mBranchList = it.data
@@ -370,7 +370,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                     }
                 }
             }
-        }
+        }*/
 
     }
 
@@ -382,7 +382,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
         }
     }
 
-    private fun setupSearchableDialog(
+  /*  private fun setupSearchableDialog(
         dataList: List<Any>?,
         title: String,
         field: TextInputEditText
@@ -423,7 +423,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
             "Branch" -> branchDialog = dialog
             "Department" -> departmentDialog = dialog
         }
-    }
+    }*/
 
 
     private fun onClickListener() {
@@ -651,8 +651,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
             initMarital()
 
-            tieBranch.setOnClickListener { branchDialog.show() }
-            tieDepartment.setOnClickListener { departmentDialog.show() }
+
 
 
 
@@ -689,8 +688,6 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             phone = tieMobileNo.text.toString(),
                             position = selectJobTitle,
                             salary = 0,
-                            branchId = selectBranch,
-                            departmentId = selectDepartment,
                             maritalStatus = selectMarital,
                             guardianName = "",
                             bloodGroup = " ",
@@ -743,8 +740,6 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             phone = tieMobileNo.text.toString(),
                             position = selectJobTitle,
                             salary = 0,
-                            branchId = selectBranch,
-                            departmentId = selectDepartment,
                             maritalStatus = selectMarital,
                             guardianName = tieGurdianName.text.toString(),
                             bloodGroup = tieBloodGroup.text.toString(),
@@ -826,8 +821,6 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             phone = tieMobileNo.text.toString(),
                             position = selectJobTitle,
                             salary = 0,
-                            branchId = selectBranch,
-                            departmentId = selectDepartment,
                             maritalStatus = selectMarital,
                             guardianName = tieGurdianName.text.toString(),
                             bloodGroup = tieBloodGroup.text.toString(),
@@ -981,8 +974,6 @@ class EmployeeProfileDetails : AppCompatActivity() {
     private fun validateBasicInfo(): Boolean {
         return listOf(
             binding.tieStaffName to "Please enter  name",
-            binding.tieBranch to "Please enter branch ",
-            binding.tieDepartment to "Please enter department",
             binding.tieMobileNo to "Please enter mobile no ",
             binding.tieEmailId to "Please enter email",
             binding.tieDateJoining to "Please enter date of joining",

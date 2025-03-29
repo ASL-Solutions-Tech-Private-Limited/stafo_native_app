@@ -2,6 +2,7 @@ package com.stafo.app.screens.emp
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -52,17 +53,22 @@ class EmpBranchDetailsActivity : AppCompatActivity() {
                 val branchDetails = it.data.find { it.id == branchId }
 
                 if (branchDetails != null) {
+                    binding.rlEmp.visibility= View.VISIBLE
+                    binding.txtStatusBranch.visibility= View.GONE
 
                     binding.txtBranchName.text = branchDetails.branch_name
                     binding.txtBranchAddress.text = branchDetails.branch_address
                 } else {
-                    Log.e("Branch", "No branch found with ID: $branchId")
+                    binding.rlEmp.visibility= View.GONE
+                    binding.txtStatusBranch.visibility= View.VISIBLE
+
                 }
 
 
 
             }else{
-
+                binding.rlEmp.visibility= View.GONE
+                binding.txtStatusBranch.visibility= View.VISIBLE
             }
 
 
