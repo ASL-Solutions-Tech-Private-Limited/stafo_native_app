@@ -43,6 +43,8 @@ import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.gson.Gson
 import com.stafo.app.screens.reports.ReportsActivity
+import com.stafo.app.screens.settings.AssignBranchActivity
+import com.stafo.app.screens.settings.UploadSelfieAttendanceActivity
 import java.io.File
 
 class EmplyeeyerProfile : AppCompatActivity() {
@@ -265,10 +267,29 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         }
 
-        val setAttendanceSetting =
-            binding?.expandableAttandancenManagement?.findViewById<AppCompatTextView>(R.id.tv_set_attendance_settings)
+        val setAttendanceSetting = binding?.expandableAttandancenManagement?.findViewById<AppCompatTextView>(R.id.tv_set_attendance_settings)
+        val assignBranchSettings = binding?.expandableAttandancenManagement?.findViewById<AppCompatTextView>(R.id.tv_assign_branch_settings)
+        val assignDepartmentSettings = binding?.expandableAttandancenManagement?.findViewById<AppCompatTextView>(R.id.tv_assign_department_settings)
 
+        assignBranchSettings?.setOnClickListener {
+            startActivity(
+                Intent(
+                    this@EmplyeeyerProfile,
+                    AssignBranchActivity::class.java
+                ).apply {
+                    putExtra("Assign_Type", "branch")
+                })
+        }
 
+        assignDepartmentSettings?.setOnClickListener {
+            startActivity(
+                Intent(
+                    this@EmplyeeyerProfile,
+                    AssignBranchActivity::class.java
+                ).apply {
+                    putExtra("Assign_Type", "department")
+                })
+        }
 
 
         setAttendanceSetting?.setOnClickListener {

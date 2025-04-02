@@ -45,20 +45,17 @@ class AddEmployeeActivity : AppCompatActivity() {
    // private var mSteps = 1
     private var selectGender: String="male"
     private var selectJobTitle: String=""
-   // private var selectBranch: Int = 1
-    //private var selectDepartment: Int = 1
+
 
     private var mDateOfJoining: String = ""
 
 
-    //private lateinit var branchDialog: SearchableDialog
-    //private lateinit var departmentDialog: SearchableDialog
+
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
 
-   // private var mDepartmentList: ArrayList<DataDepartment>? = ArrayList()
-   // private var mBranchList: ArrayList<DataBranch>? = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -444,47 +441,7 @@ class AddEmployeeActivity : AppCompatActivity() {
 
 
 
- /*   private fun setupSearchableDialog(
-        dataList: List<Any>?,
-        title: String,
-        field: TextInputEditText
-    ) {
-        val items = dataList?.map {
-            val name = when (it) {
-                is DataBranch -> it.branch_name
-                is DataDepartment -> it.name
-                else -> "Unknown"
-            }
 
-            val id = when (it) {
-                is DataBranch -> it.id
-                is DataDepartment -> it.id
-                else -> -1
-            }
-
-            SearchListItem(id, name)
-        } ?: emptyList()
-
-        val dialog = SearchableDialog(this, items as ArrayList<SearchListItem>, title)
-        dialog.setOnItemSelected(object : OnSearchItemSelected {
-            override fun onClick(position: Int, searchListItem: SearchListItem) {
-                field.setText(searchListItem.title)
-                if (title == "Branch") {
-                    selectBranch = searchListItem.id
-                } else if (title == "Department") {
-                    selectDepartment = searchListItem.id
-                }
-
-                dialog.dismiss()
-
-
-            }
-        })
-        when (title) {
-            "Branch" -> branchDialog = dialog
-            "Department" -> departmentDialog = dialog
-        }
-    }*/
 
     private fun handleLoader(status: String) {
         if (status.equals("load", ignoreCase = true)) {

@@ -610,23 +610,34 @@
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am_[Changes]/buildOutputCleanup.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am_[Changes]/executionHistory.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am_[Changes]/executionHistory.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am_[Changes]/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am_[Changes]/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am_[Changes]/resourceHashesCache.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am_[Changes]1/buildOutputCleanup.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am_[Changes]1/executionHistory.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am_[Changes]1/executionHistory.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am_[Changes]1/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am_[Changes]1/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am_[Changes]1/resourceHashesCache.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am_[Changes]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_25_am__Changes_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_50_am_[Changes]1/buildOutputCleanup.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_50_am_[Changes]1/executionHistory.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_50_am_[Changes]1/executionHistory.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_50_am_[Changes]1/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_50_am_[Changes]1/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_50_am_[Changes]1/resourceHashesCache.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_50_am_[Changes]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_26-03-2025_12_50_am__Changes_1.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/production/release/STAFO-27-03-1st.apk" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/production/release/output-metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/production/release/output-metadata.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/EmpProfileActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/EmpProfileActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/dashboard/EmployeeDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/dashboard/EmployeeDashboard.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmpBranchDetailsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmpBranchDetailsActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmpSelfieAttendanceActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmpSelfieAttendanceActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmployeeProfileDetails.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmployeeProfileDetails.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/QRCodeAttendanceEmpActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/QRCodeAttendanceEmpActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/profile/EmplyeeyerProfile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/profile/EmplyeeyerProfile.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/UpdateEmployeeProfile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/UpdateEmployeeProfile.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_emp_branch_details.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_emp_branch_details.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_emp_profile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_emp_profile.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_profile_details.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_profile_details.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/attendance_mode_bottom_sheet_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/attendance_mode_bottom_sheet_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/EmployeeAttendanceAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/EmployeeAttendanceAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/EmployeeAttendanceModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/model/EmployeeAttendanceModel.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -636,7 +647,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[13911499310008M]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\ASUS\.android\avd\Pixel_3a_API_33_x86_64.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -705,7 +716,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feature/settings_modify_qr_scanner" />
+        <entry key="$PROJECT_DIR$" value="feature/settings_payroll_ui_design" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
