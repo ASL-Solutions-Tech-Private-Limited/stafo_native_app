@@ -50,14 +50,14 @@ class EmployeeProfileDetails : AppCompatActivity() {
     private var selectJobTitle: String = ""
     private var selectBranch: Int = 1
     private var selectDepartment: Int = 1
-  //  private lateinit var branchDialog: SearchableDialog
-   // private lateinit var departmentDialog: SearchableDialog
+    //  private lateinit var branchDialog: SearchableDialog
+    // private lateinit var departmentDialog: SearchableDialog
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
 
-   // private var mDepartmentList: ArrayList<DataDepartment>? = ArrayList()
-   // private var mBranchList: ArrayList<DataBranch>? = ArrayList()
+    // private var mDepartmentList: ArrayList<DataDepartment>? = ArrayList()
+    // private var mBranchList: ArrayList<DataBranch>? = ArrayList()
     private var mJobTitleList: ArrayList<String>? = ArrayList()
 
 
@@ -76,6 +76,8 @@ class EmployeeProfileDetails : AppCompatActivity() {
     private var mDateOfJoining: String = ""
     private var mDateOfLeaving: String = ""
 
+    private var isCompanyUser: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -89,6 +91,11 @@ class EmployeeProfileDetails : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
         mEmpID = intent.getStringExtra("EMP_ID").toString()
         mEmpType = intent.getStringExtra("EMP_TYPE").toString()
+
+        isCompanyUser = getIsCOMPANYLogin(this)
+
+        Log.d("res", "$isCompanyUser")
+
         onClickListener()
         observeViewModel()
 
@@ -111,52 +118,153 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
-        settingsViewModel.mFetchEmployeeDetailsResponse.observe(this) {
-            if (it.status) {
-                it.data?.let { data ->
+        /*  settingsViewModel.mFetchEmployeeDetailsResponse.observe(this) {
+              if (it.status) {
+                  it.data?.let { data ->
+                      mEMPDetails = data
+                      binding.tieStaffName.setText(data.name ?: "")
+                      if (!data.name.isNullOrEmpty()) {
+                          isFocusableField(binding.tieStaffName)
+                      }
+
+                      binding.tieMobileNo.setText(data.phone ?: "")
+                      if (!data.phone.isNullOrEmpty()) {
+                          isFocusableField(binding.tieMobileNo)
+                      }
+                      binding.tieEmailId.setText(data.email ?: "")
+                      if (!data.email.isNullOrEmpty()) {
+                          isFocusableField(binding.tieEmailId)
+                      }
+
+
+
+
+                      mDateOfJoining = data.dateOfJoining?: ""
+
+                      if (!mDateOfJoining.isNullOrEmpty()) {
+                          binding.tieDateJoining.setText(getFormatDate(mDateOfJoining))
+                          isFocusableField(binding.tieDateJoining)
+                      } else {
+                          binding.tieDateJoining.setText("")
+                      }
+
+                      binding.tieAddress.setText(data.address ?: "")
+                      if (!data.address.isNullOrEmpty()) {
+                          isFocusableField(binding.tieAddress)
+                      }
+
+                     // binding.tieDateOfBirth.setText(data.dateOfBirth ?: "")
+                      if (!data.dateOfBirth.isNullOrEmpty()) {
+                          mDateOfBirth=data.dateOfBirth
+                          binding.tieDateOfBirth.setText("${getFormatDate(data.dateOfBirth ?: "")}")
+                          isFocusableField(binding.tieDateOfBirth)
+                      }
+
+
+                      selectGender = data.gender.toString().lowercase(Locale.ROOT)
+                      when (selectGender) {
+                          "male" -> binding.genderRadioGroup.check(R.id.male)
+                          "female" -> binding.genderRadioGroup.check(R.id.female)
+                          "other" -> binding.genderRadioGroup.check(R.id.other)
+                      }
+
+
+
+
+                      val maritalStatusFromApi = data.maritalStatus ?: ""
+
+                      if (maritalStatusFromApi.isNotEmpty()) {
+                          val mOptions = resources.getStringArray(R.array.marital_status)
+                          for (item in mOptions) {
+                              if (item == maritalStatusFromApi)
+                                  binding.spinnerMaritalSts.setSelection(mOptions.indexOf(item))
+                          }
+                      }
+
+
+
+
+
+
+
+
+                      binding.tieBloodGroup.setText(data.bloodGroup ?: "")
+                      if (!data.bloodGroup.isNullOrEmpty()) {
+                          isFocusableField(binding.tieBloodGroup)
+                      }
+
+                      binding.tieGurdianName.setText(data.guardianName ?: "")
+                      if (!data.guardianName.isNullOrEmpty()) {
+                          isFocusableField(binding.tieGurdianName)
+                      }
+
+
+
+                      if (!data.dateOfLeaving.isNullOrBlank()) {
+                          mDateOfLeaving=data.dateOfLeaving
+                         // binding.tieDateOfLeaving.setText(data.dateOfLeaving)
+                          binding.tieDateOfLeaving.setText("${getFormatDate(data.dateOfLeaving)}")
+                          isFocusableField(binding.tieDateOfLeaving)
+                      }
+
+                      if (!data.esiNumber.isNullOrBlank()) {
+                          binding.tieEsiNumber.setText(data.esiNumber)
+                          isFocusableField(binding.tieEsiNumber)
+                      }
+
+                      if (!data.pfNumber.isNullOrBlank()) {
+                          binding.tiePfNumber.setText(data.pfNumber)
+                          isFocusableField(binding.tiePfNumber)
+                      }
+
+                      if (!data.officialEmailId.isNullOrBlank()) {
+                          binding.tieOfficialEmail.setText(data.officialEmailId)
+                          isFocusableField(binding.tieOfficialEmail)
+                      }
+
+
+                  }
+              } else {
+                  CustomToast(this, it.message)
+              }
+
+
+          }*/
+
+
+        settingsViewModel.mFetchEmployeeDetailsResponse.observe(this) { response ->
+            if (response.status) {
+                response.data?.let { data ->
                     mEMPDetails = data
-                    binding.tieStaffName.setText(data.name ?: "")
-                    if (!data.name.isNullOrEmpty()) {
-                        isFocusableField(binding.tieStaffName)
-                    }
 
-                    binding.tieMobileNo.setText(data.phone ?: "")
-                    if (!data.phone.isNullOrEmpty()) {
-                        isFocusableField(binding.tieMobileNo)
-                    }
-                    binding.tieEmailId.setText(data.email ?: "")
-                    if (!data.email.isNullOrEmpty()) {
-                        isFocusableField(binding.tieEmailId)
-                    }
-                    //binding.tieDateJoining.setText(data.dateOfJoining ?: "")
-                   /* mDateOfJoining= data.dateOfJoining.toString()
-                    binding.tieDateJoining.setText("${getFormatDate(data.dateOfJoining?:"")}")
-                    if (!data.dateOfJoining.isNullOrEmpty()) {
-                        isFocusableField(binding.tieDateJoining)
-                    }*/
+                    setField(binding.tieStaffName, data.name, isCompanyUser, true,true)
 
+                    setField(binding.tieMobileNo, data.phone, isCompanyUser,false,true)
 
+                    setField(binding.tieEmailId, data.email, isCompanyUser)
+                    setField(binding.tieAddress, data.address, isCompanyUser)
+                    setField(binding.tieBloodGroup, data.bloodGroup, isCompanyUser)
+                    setField(binding.tieGurdianName, data.guardianName, isCompanyUser, true)
+                    setField(binding.tieEsiNumber, data.esiNumber, isCompanyUser)
+                    setField(binding.tiePfNumber, data.pfNumber, isCompanyUser)
+                    setField(binding.tieOfficialEmail, data.officialEmailId, isCompanyUser)
 
-                    mDateOfJoining = data.dateOfJoining?: ""
+                    mDateOfJoining = data.dateOfJoining ?: ""
+                    mDateOfBirth = data.dateOfBirth ?: ""
+                    mDateOfLeaving = data.dateOfLeaving ?: ""
 
-                    if (!mDateOfJoining.isNullOrEmpty()) {
-                        binding.tieDateJoining.setText(getFormatDate(mDateOfJoining))
-                        isFocusableField(binding.tieDateJoining)
-                    } else {
-                        binding.tieDateJoining.setText("")
-                    }
+                    // Date Fields with Formatting
+                    val formattedDateOfJoining =
+                        if (!mDateOfJoining.isNullOrBlank()) getFormatDate(mDateOfJoining) else ""
+                    binding.tieDateJoining.setText(formattedDateOfJoining)
 
-                    binding.tieAddress.setText(data.address ?: "")
-                    if (!data.address.isNullOrEmpty()) {
-                        isFocusableField(binding.tieAddress)
-                    }
+                    val formattedDateOfBirth =
+                        if (!mDateOfBirth.isNullOrBlank()) getFormatDate(mDateOfBirth) else ""
+                    binding.tieDateOfBirth.setText(formattedDateOfBirth)
 
-                   // binding.tieDateOfBirth.setText(data.dateOfBirth ?: "")
-                    if (!data.dateOfBirth.isNullOrEmpty()) {
-                        mDateOfBirth=data.dateOfBirth
-                        binding.tieDateOfBirth.setText("${getFormatDate(data.dateOfBirth ?: "")}")
-                        isFocusableField(binding.tieDateOfBirth)
-                    }
+                    val formattedDateOfLeaving =
+                        if (!mDateOfLeaving.isNullOrBlank()) getFormatDate(mDateOfLeaving) else ""
+                    binding.tieDateOfLeaving.setText(formattedDateOfLeaving)
 
 
                     selectGender = data.gender.toString().lowercase(Locale.ROOT)
@@ -166,51 +274,8 @@ class EmployeeProfileDetails : AppCompatActivity() {
                         "other" -> binding.genderRadioGroup.check(R.id.other)
                     }
 
-
-
-
-                  /*  selectBranch = data.branchId
-
-
-                    if (selectBranch != null) {
-                        val index = mBranchList?.indexOfFirst { it.id == selectBranch }
-                        if (index != -1) {
-                            binding.tieBranch.setText(index?.let { it1 -> mBranchList?.get(it1)?.branch_name })
-                        }
-                    }*/
-
-/*
-                    selectDepartment = data.departmentId
-
-                    if (selectDepartment != null) {
-                        val index = mDepartmentList?.indexOfFirst { it.id == selectDepartment }
-                        if (index != -1) {
-                            binding.tieDepartment.setText(index?.let { it1 ->
-                                mDepartmentList?.get(
-                                    it1
-                                )?.name
-                            })
-                        }
-                    }*/
-
-
-
-
-
-                    /*val position = data.position ?: ""
-
-                    selectJobTitle = position
-
-                    if (position.isNotEmpty() && mJobTitleList != null) {
-                        val index = mJobTitleList!!.indexOf(position)
-                        if (index != -1) {
-                            binding.spinnerJobTitle.setSelection(index)
-                        }
-                    }*/
-
-
+                    // Marital Status Selection
                     val maritalStatusFromApi = data.maritalStatus ?: ""
-
                     if (maritalStatusFromApi.isNotEmpty()) {
                         val mOptions = resources.getStringArray(R.array.marital_status)
                         for (item in mOptions) {
@@ -218,62 +283,15 @@ class EmployeeProfileDetails : AppCompatActivity() {
                                 binding.spinnerMaritalSts.setSelection(mOptions.indexOf(item))
                         }
                     }
-
-
-
-
-
-
-
-
-                    binding.tieBloodGroup.setText(data.bloodGroup ?: "")
-                    if (!data.bloodGroup.isNullOrEmpty()) {
-                        isFocusableField(binding.tieBloodGroup)
-                    }
-
-                    binding.tieGurdianName.setText(data.guardianName ?: "")
-                    if (!data.guardianName.isNullOrEmpty()) {
-                        isFocusableField(binding.tieGurdianName)
-                    }
-
-                   /* if (data.position != null && data.position.isNotEmpty()) {
-                        val options = resources.getStringArray(R.array.position_type)
-                        for (item in options) {
-                            if (item == data.position)
-                                binding.spinnerJobTitle.setSelection(options.indexOf(item))
-                        }
-                    }*/
-
-                    if (!data.dateOfLeaving.isNullOrBlank()) {
-                        mDateOfLeaving=data.dateOfLeaving
-                       // binding.tieDateOfLeaving.setText(data.dateOfLeaving)
-                        binding.tieDateOfLeaving.setText("${getFormatDate(data.dateOfLeaving)}")
-                        isFocusableField(binding.tieDateOfLeaving)
-                    }
-
-                    if (!data.esiNumber.isNullOrBlank()) {
-                        binding.tieEsiNumber.setText(data.esiNumber)
-                        isFocusableField(binding.tieEsiNumber)
-                    }
-
-                    if (!data.pfNumber.isNullOrBlank()) {
-                        binding.tiePfNumber.setText(data.pfNumber)
-                        isFocusableField(binding.tiePfNumber)
-                    }
-
-                    if (!data.officialEmailId.isNullOrBlank()) {
-                        binding.tieOfficialEmail.setText(data.officialEmailId)
-                        isFocusableField(binding.tieOfficialEmail)
-                    }
-
-
                 }
             } else {
-                CustomToast(this, it.message)
+                CustomToast(this, response.message)
             }
-
-
         }
+
+
+
+
 
         settingsViewModel.mmUpdateEmployeeProfileResponse.observe(this) {
 
@@ -299,78 +317,76 @@ class EmployeeProfileDetails : AppCompatActivity() {
         }
 
 
-       /* settingsViewModel.mJobTitleResponse.observe(this@EmployeeProfileDetails) { response ->
-            if (response.status) {
+        /* settingsViewModel.mJobTitleResponse.observe(this@EmployeeProfileDetails) { response ->
+             if (response.status) {
 
-                mJobTitleList = ArrayList(response.data.map { it.name })
+                 mJobTitleList = ArrayList(response.data.map { it.name })
 
-                val adapterTitle = ArrayAdapter(
-                    this@EmployeeProfileDetails,
-                    R.layout.custom_spinner_item,
-                    mJobTitleList!!
-                )
+                 val adapterTitle = ArrayAdapter(
+                     this@EmployeeProfileDetails,
+                     R.layout.custom_spinner_item,
+                     mJobTitleList!!
+                 )
 
-                binding.spinnerJobTitle.adapter = adapterTitle
+                 binding.spinnerJobTitle.adapter = adapterTitle
 
-                binding.spinnerJobTitle.onItemSelectedListener =
-                    object : AdapterView.OnItemSelectedListener {
-                        override fun onItemSelected(
-                            parent: AdapterView<*>,
-                            view: View?,
-                            position: Int,
-                            id: Long
-                        ) {
-                            selectJobTitle = parent.getItemAtPosition(position).toString()
-                        }
+                 binding.spinnerJobTitle.onItemSelectedListener =
+                     object : AdapterView.OnItemSelectedListener {
+                         override fun onItemSelected(
+                             parent: AdapterView<*>,
+                             view: View?,
+                             position: Int,
+                             id: Long
+                         ) {
+                             selectJobTitle = parent.getItemAtPosition(position).toString()
+                         }
 
-                        override fun onNothingSelected(parent: AdapterView<*>) {}
-                    }
+                         override fun onNothingSelected(parent: AdapterView<*>) {}
+                     }
 
-            } else {
-                CustomToast(this@EmployeeProfileDetails, response.message)
-            }
-        }*/
-
-
+             } else {
+                 CustomToast(this@EmployeeProfileDetails, response.message)
+             }
+         }*/
 
 
-  /*      settingsViewModel.mBranchListResponse.observe(this) {
+        /*      settingsViewModel.mBranchListResponse.observe(this) {
 
 
-            mBranchList = it.data
-            binding?.let { it1 ->
-                setupSearchableDialog(
-                    mBranchList,
-                    "Branch",
-                    it1.tieBranch
-                )
+                  mBranchList = it.data
+                  binding?.let { it1 ->
+                      setupSearchableDialog(
+                          mBranchList,
+                          "Branch",
+                          it1.tieBranch
+                      )
 
-                for (brnach in mBranchList!!) {
-                    if (mEMPDetails?.branchId == brnach.id) {
-                        selectBranch = brnach.id
-                        binding.tieBranch.setText(brnach.branch_name)
-                    }
-                }
-            }
+                      for (brnach in mBranchList!!) {
+                          if (mEMPDetails?.branchId == brnach.id) {
+                              selectBranch = brnach.id
+                              binding.tieBranch.setText(brnach.branch_name)
+                          }
+                      }
+                  }
 
-        }
+              }
 
-        settingsViewModel.mDepartmentListResponse.observe(this) {
-            mDepartmentList = it.data
-            binding?.let { it1 ->
-                setupSearchableDialog(
-                    mDepartmentList,
-                    "Department",
-                    it1.tieDepartment
-                )
-                for (department in mDepartmentList!!) {
-                    if (mEMPDetails?.departmentId == department.id) {
-                        selectDepartment = department.id
-                        binding.tieDepartment.setText(department.name)
-                    }
-                }
-            }
-        }*/
+              settingsViewModel.mDepartmentListResponse.observe(this) {
+                  mDepartmentList = it.data
+                  binding?.let { it1 ->
+                      setupSearchableDialog(
+                          mDepartmentList,
+                          "Department",
+                          it1.tieDepartment
+                      )
+                      for (department in mDepartmentList!!) {
+                          if (mEMPDetails?.departmentId == department.id) {
+                              selectDepartment = department.id
+                              binding.tieDepartment.setText(department.name)
+                          }
+                      }
+                  }
+              }*/
 
     }
 
@@ -382,48 +398,48 @@ class EmployeeProfileDetails : AppCompatActivity() {
         }
     }
 
-  /*  private fun setupSearchableDialog(
-        dataList: List<Any>?,
-        title: String,
-        field: TextInputEditText
-    ) {
-        val items = dataList?.map {
-            val name = when (it) {
-                is DataBranch -> it.branch_name
-                is DataDepartment -> it.name
-                else -> "Unknown"
-            }
+    /*  private fun setupSearchableDialog(
+          dataList: List<Any>?,
+          title: String,
+          field: TextInputEditText
+      ) {
+          val items = dataList?.map {
+              val name = when (it) {
+                  is DataBranch -> it.branch_name
+                  is DataDepartment -> it.name
+                  else -> "Unknown"
+              }
 
-            val id = when (it) {
-                is DataBranch -> it.id
-                is DataDepartment -> it.id
-                else -> -1
-            }
+              val id = when (it) {
+                  is DataBranch -> it.id
+                  is DataDepartment -> it.id
+                  else -> -1
+              }
 
-            SearchListItem(id, name)
-        } ?: emptyList()
+              SearchListItem(id, name)
+          } ?: emptyList()
 
-        val dialog = SearchableDialog(this, items as ArrayList<SearchListItem>, title)
-        dialog.setOnItemSelected(object : OnSearchItemSelected {
-            override fun onClick(position: Int, searchListItem: SearchListItem) {
-                field.setText(searchListItem.title)
-                if (title == "Branch") {
-                    selectBranch = searchListItem.id
-                } else if (title == "Department") {
-                    selectDepartment = searchListItem.id
-                }
+          val dialog = SearchableDialog(this, items as ArrayList<SearchListItem>, title)
+          dialog.setOnItemSelected(object : OnSearchItemSelected {
+              override fun onClick(position: Int, searchListItem: SearchListItem) {
+                  field.setText(searchListItem.title)
+                  if (title == "Branch") {
+                      selectBranch = searchListItem.id
+                  } else if (title == "Department") {
+                      selectDepartment = searchListItem.id
+                  }
 
-                dialog.dismiss()
+                  dialog.dismiss()
 
 
-            }
-        })
+              }
+          })
 
-        when (title) {
-            "Branch" -> branchDialog = dialog
-            "Department" -> departmentDialog = dialog
-        }
-    }*/
+          when (title) {
+              "Branch" -> branchDialog = dialog
+              "Department" -> departmentDialog = dialog
+          }
+      }*/
 
 
     private fun onClickListener() {
@@ -454,9 +470,6 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
             settingsViewModel.getJobTitleList(this@EmployeeProfileDetails)
-
-
-
 
 
             /* val options = resources.getStringArray(R.array.position_type)
@@ -621,7 +634,6 @@ class EmployeeProfileDetails : AppCompatActivity() {
             }
 
 
-
             /*binding.tieDateJoining.setOnClickListener {
                 showDatePicker(binding.tieDateJoining)
             }
@@ -678,7 +690,6 @@ class EmployeeProfileDetails : AppCompatActivity() {
             btnUpdateProfile.setOnClickListener {
 
 
-
                 if (profileType == "basic_details") {
                     if (validateBasicInfo()) {
                         Log.d("res", "post: ")
@@ -713,21 +724,19 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
                         Log.d("res", "post: $request")
 
-                        if (getIsCOMPANYLogin(this@EmployeeProfileDetails)==true){
+                        if (getIsCOMPANYLogin(this@EmployeeProfileDetails) == true) {
                             settingsViewModel.updateEmployeeDetails(
                                 this@EmployeeProfileDetails,
                                 mEmpID,
                                 request
                             )
-                        }else{
+                        } else {
                             settingsViewModel.updateEmployeeDetails(
                                 this@EmployeeProfileDetails,
                                 getEmployeeDetails()?.id.toString(),
                                 request
                             )
                         }
-
-
 
 
                     }
@@ -742,7 +751,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             salary = 0,
                             maritalStatus = selectMarital,
                             guardianName = tieGurdianName.text.toString(),
-                            bloodGroup = tieBloodGroup.text.toString(),
+                            bloodGroup = tieBloodGroup.text?.toString()?.trim() ?: "",
                             dateOfJoining = mDateOfJoining,
                             dateOfBirth = mDateOfBirth,
                             gender = selectGender,
@@ -758,20 +767,19 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             date_of_leaving = "",
                         )
 
-                        if (getIsCOMPANYLogin(this@EmployeeProfileDetails)==true){
+                        if (getIsCOMPANYLogin(this@EmployeeProfileDetails) == true) {
                             settingsViewModel.updateEmployeeDetails(
                                 this@EmployeeProfileDetails,
                                 mEmpID,
                                 request
                             )
-                        }else{
+                        } else {
                             settingsViewModel.updateEmployeeDetails(
                                 this@EmployeeProfileDetails,
                                 getEmployeeDetails()?.id.toString(),
                                 request
                             )
                         }
-
 
 
                     }
@@ -779,67 +787,80 @@ class EmployeeProfileDetails : AppCompatActivity() {
                 } else if (profileType == "document_details") {
 
 
-                    if (documentInfo()) {
-
-                        val documentList = mutableListOf<Triple<String, String, File>>()
-
-                        aadhaarFile?.let { documentList.add(Triple("aadhaar", "2", it)) }
-                        panFile?.let { documentList.add(Triple("Pan card", "1", it)) }
-                        licenceFile?.let { documentList.add(Triple("Driving Licence", "3", it)) }
-                        voterIdFile?.let { documentList.add(Triple("Voter ID", "4", it)) }
+                    val documentList = mutableListOf<Triple<String, String, File>>()
 
 
+                    aadhaarFile?.let { documentList.add(Triple("aadhaar", "2", it)) }
+                    panFile?.let { documentList.add(Triple("Pan card", "1", it)) }
+                    licenceFile?.let { documentList.add(Triple("Driving Licence", "3", it)) }
+                    voterIdFile?.let { documentList.add(Triple("Voter ID", "4", it)) }
 
-                        if (getIsCOMPANYLogin(this@EmployeeProfileDetails)==true){
+
+                    if (documentList.isEmpty()) {
+                        CustomToast(
+                            this@EmployeeProfileDetails,
+                            "Please select at least one document to upload"
+                        )
+                    } else {
+                        if (getIsCOMPANYLogin(this@EmployeeProfileDetails) == true) {
                             settingsViewModel.postEmpUploadDocument(
                                 this@EmployeeProfileDetails,
                                 mEmpID,
                                 documentList
                             )
-                        }else{
+                        } else {
                             settingsViewModel.postEmpUploadDocument(
                                 this@EmployeeProfileDetails,
                                 getEmployeeDetails()?.id.toString(),
                                 documentList
                             )
                         }
-
-
-
-
-
-
                     }
 
 
-                } else if (profileType == "employee_details") {
+                    /*if (documentInfo()) {
 
-                    if (validateWorkDetails()) {
-                        val request = UpdateEmployeeProfile(
-                            name = tieStaffName.text.toString(),
-                            email = tieEmailId.text.toString(),
-                            phone = tieMobileNo.text.toString(),
-                            position = selectJobTitle,
-                            salary = 0,
-                            maritalStatus = selectMarital,
-                            guardianName = tieGurdianName.text.toString(),
-                            bloodGroup = tieBloodGroup.text.toString(),
-                            dateOfJoining = mDateOfJoining,
-                            dateOfBirth = mDateOfBirth,
-                            gender = selectGender,
-                            address = tieAddress.text.toString(),
-                            country = 0,
-                            state = 0,
-                            city = 0,
-                            job_title_id = 0,
-                            employee_type_id = 0,
-                            official_email_id = tieOfficialEmail.text.toString(),
-                            pf_number = tiePfNumber.text.toString(),
-                            esi_number = tieEsiNumber.text.toString(),
-                            date_of_leaving = mDateOfLeaving,
+
+                    }*/
+
+
+                } else if (profileType == "employee_details") {
+                    val request = UpdateEmployeeProfile(
+                        name = tieStaffName.text.toString(),
+                        email = tieEmailId.text.toString(),
+                        phone = tieMobileNo.text.toString(),
+                        position = selectJobTitle,
+                        salary = 0,
+                        maritalStatus = selectMarital,
+                        guardianName = tieGurdianName.text.toString(),
+                        bloodGroup = tieBloodGroup.text.toString(),
+                        dateOfJoining = mDateOfJoining,
+                        dateOfBirth = mDateOfBirth,
+                        gender = selectGender,
+                        address = tieAddress.text.toString(),
+                        country = 0,
+                        state = 0,
+                        city = 0,
+                        job_title_id = 0,
+                        employee_type_id = 0,
+                        official_email_id = tieOfficialEmail.text?.toString()?.trim() ?: "",
+                        pf_number = tiePfNumber.text?.toString()?.trim() ?: "",
+                        esi_number = tieEsiNumber.text?.toString()?.trim() ?: "",
+                        date_of_leaving = mDateOfLeaving,
+                    )
+
+
+
+                    if (getIsCOMPANYLogin(this@EmployeeProfileDetails) == true) {
+
+                        settingsViewModel.updateEmployeeDetails(
+                            this@EmployeeProfileDetails,
+                            mEmpID,
+                            request
                         )
 
 
+                    } else {
                         settingsViewModel.updateEmployeeDetails(
                             this@EmployeeProfileDetails,
                             getEmployeeDetails()?.id.toString(),
@@ -945,7 +966,6 @@ class EmployeeProfileDetails : AppCompatActivity() {
     }
 
 
-
     private fun documentInfo(): Boolean {
         return listOf(
             binding.tieAadhaar to "Please select aadhaar",
@@ -971,6 +991,67 @@ class EmployeeProfileDetails : AppCompatActivity() {
     }
 
 
+    private fun capitalizeEachWord(value: String?): String {
+        return value?.lowercase()
+            ?.split(" ")
+            ?.joinToString(" ") { it.replaceFirstChar { char -> char.titlecase() } } ?: ""
+    }
+
+   /* private fun setField(
+        editText: TextInputEditText,
+        value: String?,
+        isCompany: Boolean,
+        isNameField: Boolean = false,
+        isNonEditField: Boolean = false
+    ) {
+        val formattedValue = if (isNameField) capitalizeEachWord(value) else value ?: ""
+
+        editText.setText(formattedValue)
+
+        if (isCompany) {
+            editText.isFocusable = true
+            editText.isFocusableInTouchMode = true
+        } else {
+            if (!value.isNullOrEmpty()) {
+                isFocusableField(editText)
+            } else {
+                editText.isFocusable = true
+                editText.isFocusableInTouchMode = true
+            }
+        }
+    }*/
+
+    private fun setField(
+        editText: TextInputEditText,
+        value: String?,
+        isCompany: Boolean,
+        isNameField: Boolean = false,
+        isNonEditField: Boolean = false
+    ) {
+
+        val formattedValue = if (isNameField) capitalizeEachWord(value ?: "") else value ?: ""
+
+        editText.setText(formattedValue)
+
+        when {
+            isNonEditField -> isFocusableField(editText)
+            isCompany -> {
+                editText.isFocusable = true
+                editText.isFocusableInTouchMode = true
+            }
+            else -> {
+                if (!value.isNullOrEmpty()) {
+                    isFocusableField(editText)
+                } else {
+                    editText.isFocusable = true
+                    editText.isFocusableInTouchMode = true
+                }
+            }
+        }
+    }
+
+
+
     private fun validateBasicInfo(): Boolean {
         return listOf(
             binding.tieStaffName to "Please enter  name",
@@ -984,7 +1065,6 @@ class EmployeeProfileDetails : AppCompatActivity() {
     private fun validatePersonalInfo(): Boolean {
         return listOf(
             binding.tieDateOfBirth to "Please enter  date of birth",
-            binding.tieBloodGroup to "Please enter blood group ",
             binding.tieGurdianName to "Please enter guardian name",
         ).all { validateField(it.first, it.second) }
     }
@@ -1002,7 +1082,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
     private fun validateField3(view: TextInputEditText?, errorMsg: String): Boolean {
         return if (view?.text.isNullOrEmpty()) {
-           CustomToast(this,errorMsg)
+            CustomToast(this, errorMsg)
             false
         } else {
             true
@@ -1010,28 +1090,28 @@ class EmployeeProfileDetails : AppCompatActivity() {
     }
 
 
-/*    private fun showDatePicker(view: TextInputEditText?) {
-        val datePickerDialog = DatePickerDialog(
-            this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
-                val selectedDate = Calendar.getInstance()
-                selectedDate.set(year, monthOfYear, dayOfMonth)
-                val dateFormat = SimpleDateFormat("yyy-MM-dd", Locale.getDefault())
-                val formattedDate = dateFormat.format(selectedDate.time)
-                view?.setText("$formattedDate")
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
-        datePickerDialog.show()
-    }*/
-/*private fun formatDate(inputDate: String): String {
-    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
+    /*    private fun showDatePicker(view: TextInputEditText?) {
+            val datePickerDialog = DatePickerDialog(
+                this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+                    val selectedDate = Calendar.getInstance()
+                    selectedDate.set(year, monthOfYear, dayOfMonth)
+                    val dateFormat = SimpleDateFormat("yyy-MM-dd", Locale.getDefault())
+                    val formattedDate = dateFormat.format(selectedDate.time)
+                    view?.setText("$formattedDate")
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+            datePickerDialog.show()
+        }*/
+    /*private fun formatDate(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd/MMM/yy", Locale.getDefault())
 
-    val date = inputFormat.parse(inputDate)
-    return outputFormat.format(date!!)
-}*/
+        val date = inputFormat.parse(inputDate)
+        return outputFormat.format(date!!)
+    }*/
     private fun showDatePicker(view: TextInputEditText?, fieldType: String) {
         val calendar = Calendar.getInstance()
 

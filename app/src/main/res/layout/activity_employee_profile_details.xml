@@ -150,6 +150,8 @@
                     android:id="@+id/til_staff_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:layout_marginTop="@dimen/_12sdp">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -159,6 +161,8 @@
                         android:background="@drawable/edit_text_background"
                         android:fontFamily="@font/gilroy_medium"
                         android:hint="Name"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -253,6 +257,8 @@
                     android:id="@+id/til_mobile_no"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:layout_marginTop="@dimen/_12sdp">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -263,6 +269,8 @@
                         android:fontFamily="@font/gilroy_medium"
                         android:hint="Mobile number"
                         android:inputType="number"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:maxLength="10" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -904,7 +912,7 @@
                 </com.google.android.material.textfield.TextInputLayout>-->
 
 
-                <com.google.android.material.textfield.TextInputLayout
+           <!--     <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_current_employment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -918,7 +926,7 @@
                         android:fontFamily="@font/gilroy_medium"
                         android:hint="Current Employment"
                         android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>-->
 
                <!-- <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -948,7 +956,7 @@
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>-->
 
-                <com.google.android.material.textfield.TextInputLayout
+               <!-- <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_12sdp">
@@ -960,7 +968,7 @@
                         android:fontFamily="@font/gilroy_medium"
                         android:hint="Employee Type"
                         android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>-->
 
                 <!--<com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -1006,6 +1014,8 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
                     android:layout_marginTop="@dimen/_12sdp">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -1015,6 +1025,8 @@
                         android:background="@drawable/edit_text_background"
                         android:fontFamily="@font/gilroy_medium"
                         android:hint="Employee ID"
+                        android:focusableInTouchMode="false"
+                        android:focusable="false"
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 

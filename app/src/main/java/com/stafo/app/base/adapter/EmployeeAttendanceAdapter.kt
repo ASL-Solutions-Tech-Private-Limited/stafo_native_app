@@ -39,7 +39,7 @@ class EmployeeAttendanceAdapter(
         with(holder) {
             with(attendList[position]) {
                 binding.tvEmpName.text = this.name
-                binding.tvEmpJobTitle.text = this.position
+               // binding.tvEmpJobTitle.text = this.position
 
                 val placeholderBitmap = generateTextBitmap(this.name ?: "?")
 
