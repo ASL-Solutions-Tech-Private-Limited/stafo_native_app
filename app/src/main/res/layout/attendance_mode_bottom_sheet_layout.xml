@@ -220,7 +220,7 @@
             android:layout_marginHorizontal="1dp"
             android:background="@color/tea_green" />
 
-        <LinearLayout
+        <!--<LinearLayout
             android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -291,7 +291,7 @@
 
 
 
-        </LinearLayout>
+        </LinearLayout>-->
 
 
     </LinearLayout>

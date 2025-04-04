@@ -335,10 +335,10 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         bottomSheetDialog.setCancelable(false)
 
         val btnCancel = view.findViewById<AppCompatImageView>(R.id.bottom_sheet_cancel)
-        val llFromOffice = view.findViewById<LinearLayout>(R.id.ll_from_office)
+   /*     val llFromOffice = view.findViewById<LinearLayout>(R.id.ll_from_office)
         val llFromAny = view.findViewById<LinearLayout>(R.id.ll_from_any)
         val imgOffice = view.findViewById<ImageView>(R.id.img_office)
-        val imgAny = view.findViewById<ImageView>(R.id.img_any)
+        val imgAny = view.findViewById<ImageView>(R.id.img_any)*/
         val switchAllow = view.findViewById<SwitchCompat>(R.id.switch_allow)
         val switchSelfie = view.findViewById<SwitchCompat>(R.id.switch_selfie)
         val switchQr = view.findViewById<SwitchCompat>(R.id.switch_qr)
@@ -396,7 +396,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
 
 
-        llFromOffice.setOnClickListener {
+     /*   llFromOffice.setOnClickListener {
 
             attendanceLocation = "from office"
             llFromOffice.setBackgroundResource(R.drawable.custom_switch_card_bg)
@@ -414,7 +414,10 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
             imgOffice.setImageResource(R.drawable.ic_lv_inactive_radio)
             imgAny.setImageResource(R.drawable.ic_lv_active_radio)
-        }
+        }*/
+
+
+
 
         btnSetAttendanceType.setOnClickListener {
 

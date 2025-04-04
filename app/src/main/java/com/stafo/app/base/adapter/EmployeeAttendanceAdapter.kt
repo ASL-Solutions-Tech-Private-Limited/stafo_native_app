@@ -43,13 +43,13 @@ class EmployeeAttendanceAdapter(
 
                 val placeholderBitmap = generateTextBitmap(this.name ?: "?")
 
-                if (!this.attendances[position].punchOutImage.isNullOrEmpty()) {
+                if (!this.attendances[0].punchOutImage.isNullOrBlank()) {
                     binding.civEmp.visibility = View.VISIBLE
 
                     //val imageUrl = "${this.punchOutImage}/${this.selfieImage}".replace("\\", "")
-                    val imageUrl = "${this.attendances[position].punchOutImage}"
+                    val imageUrl = "${this.attendances[0].punchOutImage}"
 
-                    Log.d("res","url image  punchOutImage ${this.attendances[position].punchOutImage}")
+                    Log.d("res","url image  punchOutImage ${this.attendances[0].punchOutImage}")
 
                     Glide.with(context)
                         .load(imageUrl)
@@ -60,12 +60,12 @@ class EmployeeAttendanceAdapter(
                         showFullScreenImage(context,imageUrl)
                     }
 
-                } else if (!this.attendances[position].punchInImage.isNullOrEmpty()){
+                } else if (!this.attendances[0].punchInImage.isNullOrBlank()){
                     binding.civEmp.visibility = View.VISIBLE
 
-                    val imageUrl = "${this.attendances[position].punchInImage}"
+                    val imageUrl = "${this.attendances[0].punchInImage}"
 
-                    Log.d("res","url image punchInImage ${this.attendances[position].punchInImage}")
+                    Log.d("res","url image punchInImage ${this.attendances[0].punchInImage}")
 
                     Glide.with(context)
                         .load(imageUrl)
