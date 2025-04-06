@@ -94,6 +94,10 @@ import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getUserAccessToken
 import com.caverock.androidsvg.SVG
 import com.google.gson.Gson
+import com.stafo.app.screens.settings.dataClass.AssignBranchRequest
+import com.stafo.app.screens.settings.dataClass.AssignBranchResponse
+import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
+import com.stafo.app.screens.settings.dataClass.AssignDepartmentResponse
 import com.stafo.app.screens.settings.dataClass.BannerResponse
 import com.stafo.app.screens.settings.dataClass.CreateLeavePolicyRequest
 import com.stafo.app.screens.settings.dataClass.CreateLeavePolicyResponse
@@ -420,6 +424,100 @@ class SettingsViewModel : BaseViewModel() {
     private var mGetAttendanceBranch: MutableLiveData<GetAttendanceBranch> = MutableLiveData()
 
     val mGetAttendanceBranchResponse: LiveData<GetAttendanceBranch> get() = mGetAttendanceBranch
+
+
+    private var mAssignBranch: MutableLiveData<AssignBranchResponse> = MutableLiveData()
+
+    val mAssignBranchResponse: LiveData<AssignBranchResponse> get() = mAssignBranch
+
+    private var mAssignDepartment: MutableLiveData<AssignDepartmentResponse> = MutableLiveData()
+
+    val mAssignDepartmentResponse: LiveData<AssignDepartmentResponse> get() = mAssignDepartment
+
+
+    fun assignBranch(
+        mContext: Context,
+        request: AssignBranchRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callAssignBranch(request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAssignBranch.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun assignDepartment(
+        mContext: Context,
+        request: AssignDepartmentRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callAssignDepartment(request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAssignDepartment.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
     fun getEmpAttendanceBranch(

@@ -67,11 +67,23 @@ class EmpProfileActivity : AppCompatActivity() {
             settingsViewModel.getJobTitleList(this@EmpProfileActivity)
 
 
-            val profileType = ProfileType.valueOf(
-                intent.getStringExtra("PROFILE_TYPE") ?: ProfileType.BASIC.name
-            )
+            val profileType = runCatching {
+                ProfileType.valueOf(intent.getStringExtra("PROFILE_TYPE") ?: ProfileType.BASIC.name)
+            }.getOrElse {
+                ProfileType.BASIC
+            }
 
-            if (profileType == ProfileType.BASIC) {
+            Log.d("res","type p: $profileType")
+
+
+            when (profileType) {
+                ProfileType.BASIC -> binding.rlBasicDetails.visibility = View.VISIBLE
+                ProfileType.EDUCATION -> binding.rlEducationDetails.visibility = View.VISIBLE
+                ProfileType.DOCUMENT -> binding.rlDocumentDetails.visibility = View.VISIBLE
+                else -> binding.nsvCompanyDetail.visibility = View.VISIBLE
+            }
+
+       /*     if (profileType == ProfileType.BASIC) {
                 binding.rlBasicDetails.visibility = View.VISIBLE
 
             } else if (profileType == ProfileType.EDUCATION) {
@@ -81,7 +93,7 @@ class EmpProfileActivity : AppCompatActivity() {
                 binding.rlDocumentDetails.visibility = View.VISIBLE
             } else {
                 binding.nsvCompanyDetail.visibility = View.VISIBLE
-            }
+            }*/
 
 
 

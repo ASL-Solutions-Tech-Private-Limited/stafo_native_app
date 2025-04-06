@@ -43,6 +43,8 @@ class QRCodeAttendanceEmpActivity : AppCompatActivity() {
     private var branchLong :Double = 0.0
     private var radar  :Float = 0.0f
 
+    private var checkBranch  :Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -131,31 +133,39 @@ class QRCodeAttendanceEmpActivity : AppCompatActivity() {
 
         codeScanner.decodeCallback = DecodeCallback {
             runOnUiThread {
+                Log.d("res","scan value: $it.text")
+                if (checkBranch){
+                    getCurrentLocation { userLat, userLong ->
 
 
-                Log.d("res",it.text)
+                        val distance = getDistance(userLat, userLong, branchLat, branchLong)
 
-                getCurrentLocation { userLat, userLong ->
+                        if (distance <= radar) {
 
+                            val employeeId = getEmployeeDetails()?.id
+                            employeeId?.let { empId ->
 
-                    val distance = getDistance(userLat, userLong, branchLat, branchLong)
-
-                    if (distance <= radar) {
-
-                        val employeeId = getEmployeeDetails()?.id
-                        employeeId?.let { empId ->
-
-                            val request = QRAttendanceMarkRequest(
-                                employee_id = empId,
-                                qrcode = it.text
-                            )
-                            settingsViewModel.markAttendanceQREmp(this@QRCodeAttendanceEmpActivity, request)
+                                val request = QRAttendanceMarkRequest(
+                                    employee_id = empId,
+                                    qrcode = it.text
+                                )
+                                settingsViewModel.markAttendanceQREmp(this@QRCodeAttendanceEmpActivity, request)
+                            }
+                        } else {
+                            CustomToast(this@QRCodeAttendanceEmpActivity, "You are outside the allowed area. Move closer.")
                         }
-                    } else {
-                        CustomToast(this@QRCodeAttendanceEmpActivity, "You are outside the allowed area. Move closer.")
+                    }
+                }else{
+                    val employeeId = getEmployeeDetails()?.id
+                    employeeId?.let { empId ->
+
+                        val request = QRAttendanceMarkRequest(
+                            employee_id = empId,
+                            qrcode = it.text
+                        )
+                        settingsViewModel.markAttendanceQREmp(this@QRCodeAttendanceEmpActivity, request)
                     }
                 }
-
                 codeScanner.releaseResources()
             }
         }
@@ -203,21 +213,22 @@ class QRCodeAttendanceEmpActivity : AppCompatActivity() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
-        settingsViewModel.mGetAttendanceBranchResponse.observe(this) {
+        settingsViewModel.mGetAttendanceBranchResponse.observe(this) { response ->
 
-            if (it.status) {
-
-                if (it.data.latitude != null && it.data.longitude!=null ){
-                    branchLat = it.data.latitude.toDouble()
-                    branchLong = it.data.longitude.toDouble()
-                    radar = it.data.radar.toFloat()
+            if (response?.status == true) {
+                val branchData = response.data
+                if (branchData != null && branchData.latitude != null && branchData.longitude != null) {
+                    checkBranch = true
+                    branchLat = branchData.latitude.toDouble()
+                    branchLong = branchData.longitude.toDouble()
+                    radar = branchData.radar.toFloat()
+                } else {
+                    checkBranch = false
                 }
-
             } else {
-                CustomToast(this, it.message)
+                checkBranch = false
+
             }
-
-
         }
 
 

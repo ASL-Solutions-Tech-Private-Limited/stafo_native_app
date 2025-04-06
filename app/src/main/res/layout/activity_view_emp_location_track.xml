@@ -73,7 +73,7 @@
             android:drawableStart="@drawable/ic_search_grey"
             android:drawablePadding="@dimen/_5sdp"
             android:fontFamily="@font/gilroy_regular"
-            android:hint="Search employee by name,mobile,branch"
+            android:hint="Search employee by name,mobile"
             android:imeOptions="actionSearch"
             android:paddingStart="5dp"
             android:paddingLeft="5dp"

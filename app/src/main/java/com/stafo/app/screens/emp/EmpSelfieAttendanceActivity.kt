@@ -51,6 +51,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     private var branchLat:Double = 0.0
     private var branchLong :Double = 0.0
     private var radar  :Float = 0.0f
+    private var checkBranch  :Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,26 +138,40 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                     CustomToast(this@EmpSelfieAttendanceActivity, "Please upload a selfie first")
                 } else {
 
-                    getCurrentLocation { userLat, userLong ->
+
+                    if (checkBranch){
+                        getCurrentLocation { userLat, userLong ->
 
 
-                        val distance = getDistance(userLat, userLong, branchLat, branchLong)
+                            val distance = getDistance(userLat, userLong, branchLat, branchLong)
 
-                        if (distance <= radar) {
+                            if (distance <= radar) {
 
-                            val employeeId = getEmployeeDetails()?.id
+                                val employeeId = getEmployeeDetails()?.id
 
-                            employeeId?.let { empId ->
-                                settingsViewModel.selfieAttendanceEmpolyee(
-                                    this@EmpSelfieAttendanceActivity,
-                                    empId,
-                                    selfieImage
-                                )
+                                employeeId?.let { empId ->
+                                    settingsViewModel.selfieAttendanceEmpolyee(
+                                        this@EmpSelfieAttendanceActivity,
+                                        empId,
+                                        selfieImage
+                                    )
+                                }
+                            } else {
+                                CustomToast(this@EmpSelfieAttendanceActivity, "You are outside the allowed area. Move closer.")
                             }
-                        } else {
-                            CustomToast(this@EmpSelfieAttendanceActivity, "You are outside the allowed area. Move closer.")
+                        }
+                    }else{
+                        val employeeId = getEmployeeDetails()?.id
+
+                        employeeId?.let { empId ->
+                            settingsViewModel.selfieAttendanceEmpolyee(
+                                this@EmpSelfieAttendanceActivity,
+                                empId,
+                                selfieImage
+                            )
                         }
                     }
+
 
 
 
@@ -199,23 +214,26 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
         }
 
-        settingsViewModel.mGetAttendanceBranchResponse.observe(this) {
+        settingsViewModel.mGetAttendanceBranchResponse.observe(this) { response ->
 
-            if (it.status) {
-
-                if (it.data.latitude != null && it.data.longitude!=null ){
-                    branchLat = it.data.latitude.toDouble()
-                    branchLong = it.data.longitude.toDouble()
-                    radar = it.data.radar.toFloat()
+            if (response?.status == true) {
+                val branchData = response.data
+                if (branchData != null && branchData.latitude != null && branchData.longitude != null) {
+                    Log.d("res","check branch")
+                    checkBranch = true
+                    branchLat = branchData.latitude.toDouble()
+                    branchLong = branchData.longitude.toDouble()
+                    radar = branchData.radar.toFloat()
+                } else {
+                    checkBranch = false
                 }
-
-
             } else {
-                CustomToast(this, it.message)
+                checkBranch = false
+
             }
-
-
         }
+
+
 
 
     }
@@ -257,11 +275,15 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                 val imageFile = bitmapToFile(imageBitmap, this@EmpSelfieAttendanceActivity)
 
                 if (imageFile != null) {
-                    removeBackgroundUsingRemoveBg(imageFile)
-                } else {
-                    CustomToast(this, "Failed to process image.")
+
+                    selfieImage=imageFile
                 }
 
+                } else {
+
+                    CustomToast(this, "Failed to process image.")
+
+                }
 
 
 
@@ -269,7 +291,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                 CustomToast(this, "Failed to capture image. Try again.")
             }
         }
-    }
+
 
     private fun bitmapToFile(bitmap: Bitmap, context: Context): File? {
         return try {
@@ -288,85 +310,8 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
             null
         }
     }
-    private fun removeBackgroundUsingRemoveBg(file: File) {
-
-        val apiKey = "T13hChaJUYghAopjE1KoDe49"
-
-        val url = "https://api.remove.bg/v1.0/removebg"
 
 
-        val progressDialog = ProgressDialog(this)
-        progressDialog.setMessage("Processing image, please wait...")
-        progressDialog.setCancelable(false)
-        progressDialog.show()
-
-        val requestBody = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart(
-                "image_file", file.name,
-                file.asRequestBody("image/*".toMediaTypeOrNull())
-            )
-            .addFormDataPart("size", "auto")
-            .build()
-
-        val request = Request.Builder()
-            .url(url)
-            .addHeader("X-Api-Key", apiKey)
-            .post(requestBody)
-            .build()
-
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-                runOnUiThread {
-                    progressDialog.dismiss()
-                    CustomToast(this@EmpSelfieAttendanceActivity, "Failed to upload image")
-                }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                if (response.isSuccessful) {
-                    progressDialog.dismiss()
-                    val inputStream = response.body?.byteStream()
-                    val bitmap = BitmapFactory.decodeStream(inputStream)
-                    selfieImage=bitmapToFile(bitmap, this@EmpSelfieAttendanceActivity)
-
-                    runOnUiThread {
-                        binding.sivEmpPunch.setImageBitmap(bitmap)
-                    }
-                } else {
-                    runOnUiThread {
-
-                        CustomToast(
-                            this@EmpSelfieAttendanceActivity,
-                            "API Error: ${response.message}"
-                        )
-                    }
-                }
-            }
-        })
     }
 
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 123) {
-            if (grantResults.size != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-               /* val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                cameraIntent.putExtra("android.intent.extras.CAMERA_FACING", 1)
-                startActivityForResult(cameraIntent, 123)*/
-
-                val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                cameraIntent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1)
-                startActivityForResult(cameraIntent, 123)
-            } else {
-                CustomToast(this, "Camera Permission Denined..")
-            }
-        }
-    }
-}

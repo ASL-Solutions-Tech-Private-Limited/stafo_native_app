@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_bg_bottom_sheet">
+
+    <RelativeLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:fontFamily="@font/gilroy_semi_bold"
+            android:text="Assign Branch"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/bottom_sheet_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:src="@drawable/ic_cancel" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_below="@+id/bottom_sheet_cancel"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:background="@color/color_grey" />
+    </RelativeLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_branch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:focusable="false"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/layout1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:focusableInTouchMode="false"
+        app:endIconDrawable="@drawable/ic_down"
+        app:endIconMode="custom">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tie_branch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text_background"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:fontFamily="@font/gilroy_medium"
+            android:hint="Branch"
+            android:inputType="textPersonName"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_department"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:focusable="false"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/layout1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:focusableInTouchMode="false"
+        app:endIconDrawable="@drawable/ic_down"
+        app:endIconMode="custom">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tie_department"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text_background"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:fontFamily="@font/gilroy_medium"
+            android:hint="Department"
+            android:inputType="textPersonName"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <Button
+        android:id="@+id/btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_weight="1"
+        android:background="@drawable/button_background"
+        android:backgroundTint="@color/colorTextPrimary"
+        android:fontFamily="@font/gilroy_semi_bold"
+        android:text="Submit"
+        android:layout_marginTop="@dimen/_90sdp"
+        app:layout_constraintTop_toBottomOf="@+id/layout1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/_32sdp"
+        android:textAllCaps="false"
+        android:textColor="@color/colorButtonText"
+        android:textSize="@dimen/_12ssp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

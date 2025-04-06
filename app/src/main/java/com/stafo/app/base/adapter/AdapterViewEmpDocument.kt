@@ -31,6 +31,9 @@ class AdapterViewEmpDocument (
         with(holder) {
             with(list[position]) {
                 binding.txtPolicyName.text = this.document_name
+                    ?.split(" ")
+                    ?.joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
+                    ?: ""
 
                 binding.llcViewPolicy.setOnClickListener {
                     val pdfUrl = this.file_path

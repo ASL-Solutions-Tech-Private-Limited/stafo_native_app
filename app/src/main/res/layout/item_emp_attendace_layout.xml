@@ -172,12 +172,12 @@
                             android:fontFamily="@font/gilroy_medium"
                             android:gravity="center"
                             android:maxLines="3"
-                            android:text="John Doe"
+                            android:text=""
                             android:textColor="#565656"
                             android:textSize="@dimen/_12ssp"
                             app:drawableTint="@color/black" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
+                    <!--    <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tv_emp_job_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -190,7 +190,7 @@
                             android:text="EMP-001 - Manager"
                             android:textColor="#565656"
                             android:textSize="@dimen/_8sdp"
-                            app:drawableTint="@color/black" />
+                            app:drawableTint="@color/black" />-->
 
                     </LinearLayout>
 
@@ -209,7 +209,7 @@
                     android:textColor="#565656"
                     android:textSize="@dimen/_12ssp"
                     app:drawableTint="@color/black"
-                    tools:text="10:30 AM" />
+                    tools:text="" />
 
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -224,7 +224,7 @@
                     android:textColor="#565656"
                     android:textSize="@dimen/_12ssp"
                     app:drawableTint="@color/black"
-                    tools:text="7:45 PM" />
+                    tools:text="" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>

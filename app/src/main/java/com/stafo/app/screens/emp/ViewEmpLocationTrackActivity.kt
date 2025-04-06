@@ -146,8 +146,7 @@ class ViewEmpLocationTrackActivity : AppCompatActivity() {
         } else {
             empList.filter {
                 it.name.contains(query, ignoreCase = true) ||
-                        it.phone.contains(query, ignoreCase = true) ||
-                        it.branch_name.contains(query, ignoreCase = true)
+                        it.phone.contains(query, ignoreCase = true)
             }
         }
 

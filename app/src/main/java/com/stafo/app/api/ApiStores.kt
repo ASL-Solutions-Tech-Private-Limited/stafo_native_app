@@ -22,6 +22,10 @@ import com.stafo.app.screens.settings.dataClass.AddEmpRequestBody
 import com.stafo.app.screens.settings.dataClass.AddEmpResponse
 import com.stafo.app.screens.settings.dataClass.ApproveLeaveRequest
 import com.stafo.app.screens.settings.dataClass.ApproveLeaveResponse
+import com.stafo.app.screens.settings.dataClass.AssignBranchRequest
+import com.stafo.app.screens.settings.dataClass.AssignBranchResponse
+import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
+import com.stafo.app.screens.settings.dataClass.AssignDepartmentResponse
 import com.stafo.app.screens.settings.dataClass.AssignShiftRequest
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.stafo.app.screens.settings.dataClass.BannerResponse
@@ -560,5 +564,17 @@ interface ApiStores {
         @Body request: GetAttendanceBranchRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<GetAttendanceBranch>
+
+    @POST("api/employee/assign-branch")
+    suspend fun callAssignBranch(
+        @Body request: AssignBranchRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AssignBranchResponse>
+
+    @POST("api/employee/assign-department")
+    suspend fun callAssignDepartment(
+        @Body request: AssignDepartmentRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AssignDepartmentResponse>
 
 }

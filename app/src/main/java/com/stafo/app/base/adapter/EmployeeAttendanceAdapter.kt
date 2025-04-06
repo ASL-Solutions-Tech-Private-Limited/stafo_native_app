@@ -39,14 +39,17 @@ class EmployeeAttendanceAdapter(
         with(holder) {
             with(attendList[position]) {
                 binding.tvEmpName.text = this.name
-                binding.tvEmpJobTitle.text = this.position
+               // binding.tvEmpJobTitle.text = this.position
 
                 val placeholderBitmap = generateTextBitmap(this.name ?: "?")
 
-                if (!this.image.isNullOrEmpty()) {
+                if (!this.attendances[0].punchOutImage.isNullOrBlank()) {
                     binding.civEmp.visibility = View.VISIBLE
 
-                    val imageUrl = "${this.selfieImagePath}/${this.selfieImage}".replace("\\", "")
+                    //val imageUrl = "${this.punchOutImage}/${this.selfieImage}".replace("\\", "")
+                    val imageUrl = "${this.attendances[0].punchOutImage}"
+
+                    Log.d("res","url image  punchOutImage ${this.attendances[0].punchOutImage}")
 
                     Glide.with(context)
                         .load(imageUrl)
@@ -57,7 +60,24 @@ class EmployeeAttendanceAdapter(
                         showFullScreenImage(context,imageUrl)
                     }
 
-                } else {
+                } else if (!this.attendances[0].punchInImage.isNullOrBlank()){
+                    binding.civEmp.visibility = View.VISIBLE
+
+                    val imageUrl = "${this.attendances[0].punchInImage}"
+
+                    Log.d("res","url image punchInImage ${this.attendances[0].punchInImage}")
+
+                    Glide.with(context)
+                        .load(imageUrl)
+                        .error(placeholderBitmap)
+                        .into(binding.civEmp)
+
+                    binding.civEmp.setOnClickListener {
+                        showFullScreenImage(context,imageUrl)
+                    }
+                }
+
+                else {
                     binding.civEmp.setImageBitmap(placeholderBitmap)
                 }
 
