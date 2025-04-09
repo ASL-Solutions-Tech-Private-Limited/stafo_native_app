@@ -40,6 +40,7 @@ import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 
 class AssignBranchActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityAssignBranchBinding
     private var mAssignType = ""
 

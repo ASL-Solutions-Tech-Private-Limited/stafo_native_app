@@ -21,6 +21,8 @@ import javax.net.ssl.SSLContext
 object ApiClient {
 
     var mRetrofit: Retrofit? = null
+    private var retrofitStaging: Retrofit? = null
+
     var mRetrofitForGame: Retrofit? = null
     var mRetrofitForCSP: Retrofit? = null
     private val device_type = "device_type"

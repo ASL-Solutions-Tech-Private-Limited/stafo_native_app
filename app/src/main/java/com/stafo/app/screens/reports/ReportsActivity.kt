@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.stafo.app.R
 import com.stafo.app.base.adapter.AdapterDownloadReports
 import com.stafo.app.databinding.ActivityReportsBinding
+import com.stafo.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.stafo.app.screens.settings.dataClass.OwnerInfo
 import com.stafo.app.screens.settings.dataClass.UpdateCompanyProfile
 
@@ -69,8 +70,22 @@ class ReportsActivity : AppCompatActivity() {
 
 
             rtlAttendanceReport.setOnClickListener {
-                startActivity(Intent(this@ReportsActivity,AttendanceReportActivity::class.java))
+              /*  startActivity(Intent(this@ReportsActivity,AttendanceReportActivity::class.java))
+                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)*/
+
+                val intent = Intent(this@ReportsActivity, AttendanceReportActivity::class.java).apply {
+                    putExtra("reports_type", "attendance_reports")
+                }
                 overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                startActivity(intent)
+            }
+
+            rtlEmployeeReports.setOnClickListener {
+                val intent = Intent(this@ReportsActivity, AttendanceReportActivity::class.java).apply {
+                    putExtra("reports_type", "emp_reports")
+                }
+                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                startActivity(intent)
             }
 
 

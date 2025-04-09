@@ -87,6 +87,8 @@ import com.stafo.app.screens.settings.dataClass.QRAttendanceMarkRequest
 import com.stafo.app.screens.settings.dataClass.QRAttendanceMarkResponse
 import com.stafo.app.screens.settings.dataClass.RemoveSelfieRequest
 import com.stafo.app.screens.settings.dataClass.RemoveSelfieResponse
+import com.stafo.app.screens.settings.dataClass.ReportsEmployeeListRequest
+import com.stafo.app.screens.settings.dataClass.ReportsEmployeeListResponse
 import com.stafo.app.screens.settings.dataClass.SelfieUploadResponse
 import com.stafo.app.screens.settings.dataClass.SendFeedbackRequest
 import com.stafo.app.screens.settings.dataClass.SendFeedbackResponse
@@ -576,5 +578,24 @@ interface ApiStores {
         @Body request: AssignDepartmentRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<AssignDepartmentResponse>
+
+
+    @POST("api/report/export-employee")
+    suspend fun callReportsEmployeeList(
+        @Body request: ReportsEmployeeListRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ReportsEmployeeListResponse>
+
+    @POST("api/report/export-leave")
+    suspend fun callReportsLeave(
+        @Body request: ReportsEmployeeListRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ReportsEmployeeListResponse>
+
+    @POST("api/report/export-attendace")
+    suspend fun callReportsAttendance(
+        @Body request: ReportsEmployeeListRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ReportsEmployeeListResponse>
 
 }

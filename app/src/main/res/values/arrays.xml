@@ -70,6 +70,12 @@
         <item>Married</item>
     </string-array>
 
+
+    <string-array name="reports_type">
+        <item>Attendance Reports</item>
+        <item>Leave Reports</item>
+    </string-array>
+
     <string-array name="position_type">
         <item>Junior Software Developer</item>
         <item>Software Engineer</item>
