@@ -753,13 +753,14 @@ class EmployeeDashboard : AppCompatActivity() {
 
             if (it.status) {
 
-                val bannerList = listOf(it.data)
-                binding.imageSlider.setSliderAdapter(
-                    SliderAdapter(
-                        this@EmployeeDashboard,
-                        bannerList
+                if (it.data.banner.isNotEmpty()){
+                    binding.imageSlider.setSliderAdapter(
+                        SliderAdapter(
+                            it.data.path,
+                            it.data.banner
+                        )
                     )
-                )
+                }
             }
         }
 

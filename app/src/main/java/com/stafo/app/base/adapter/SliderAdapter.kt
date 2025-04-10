@@ -9,9 +9,10 @@ import android.widget.TextView
 import com.stafo.app.R
 import com.bumptech.glide.Glide
 import com.smarteist.autoimageslider.SliderViewAdapter
+import com.stafo.app.screens.settings.dataClass.Banner
 import com.stafo.app.screens.settings.dataClass.BannerData
 
-class SliderAdapter(private val context: Context,var sliderItems: List<BannerData>) :
+class SliderAdapter(private val path: String,var sliderItems: List<Banner>) :
     SliderViewAdapter<SliderAdapter.SliderAdapterVH>() {
 
 
@@ -27,7 +28,7 @@ class SliderAdapter(private val context: Context,var sliderItems: List<BannerDat
     override fun onBindViewHolder(viewHolder: SliderAdapterVH, position: Int) {
         val sliderItem = sliderItems[position]
 
-        val imageUrl="${sliderItem.path}/${sliderItem.banner[position].image}"
+        val imageUrl="$path/${sliderItem.image}"
 
         Glide.with(viewHolder.itemView)
             .load(imageUrl)

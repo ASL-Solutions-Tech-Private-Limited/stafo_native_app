@@ -223,6 +223,7 @@
                             android:layout_margin="@dimen/_6sdp"
                             android:layout_weight="1"
                             android:padding="@dimen/_6sdp"
+                            android:outlineSpotShadowColor="@android:color/white"
                             app:cardCornerRadius="@dimen/_8sdp"
                             app:cardElevation="@dimen/_4sdp">
 
@@ -270,6 +271,7 @@
                             android:layout_margin="@dimen/_6sdp"
                             android:layout_weight="1"
                             android:padding="@dimen/_6sdp"
+                            android:outlineSpotShadowColor="@android:color/white"
                             app:cardCornerRadius="@dimen/_8sdp"
                             app:cardElevation="@dimen/_4sdp">
 
@@ -277,7 +279,7 @@
                                 android:id="@+id/llc_card_present"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/gradient_header"
+                                android:background="@drawable/present_card_bg"
                                 android:gravity="center"
                                 android:orientation="vertical">
 
@@ -315,6 +317,7 @@
                             android:layout_height="match_parent"
                             android:layout_margin="@dimen/_6sdp"
                             android:layout_weight="1"
+                            android:outlineSpotShadowColor="@android:color/white"
                             app:cardCornerRadius="@dimen/_8sdp"
                             app:cardElevation="@dimen/_4sdp">
 
