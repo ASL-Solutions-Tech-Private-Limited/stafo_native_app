@@ -619,21 +619,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1eeb3fca-a4a9-48ce-a4f9-f3fda60e9524" name="Changes" comment="Added Intro Image and TestK">
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/ASLEmpMng.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/ASLEmpMng.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/api/ApiClient.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/api/ApiClient.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/api/ApiStores.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/api/ApiStores.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/profile/EmplyeeyerProfile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/profile/EmplyeeyerProfile.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/reports/AttendanceReportActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/reports/AttendanceReportActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/reports/ReportsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/reports/ReportsActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AddEmployeeActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AddEmployeeActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AssignBranchActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AssignBranchActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/SettingsViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/SettingsViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_attendance_report.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_attendance_report.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_reports.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_reports.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/layout_account_setting_items.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/layout_account_setting_items.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/arrays.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/arrays.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmployeePunchInActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmployeePunchInActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_punch_in.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_employee_punch_in.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_employer_dashboard.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_employer_dashboard.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/themes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/themes.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
