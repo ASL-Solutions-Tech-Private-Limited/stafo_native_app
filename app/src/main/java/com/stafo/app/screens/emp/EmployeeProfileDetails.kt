@@ -237,9 +237,9 @@ class EmployeeProfileDetails : AppCompatActivity() {
                 response.data?.let { data ->
                     mEMPDetails = data
 
-                    setField(binding.tieStaffName, data.name, isCompanyUser, true,true)
+                    setField(binding.tieStaffName, data.name, isCompanyUser, true, true)
 
-                    setField(binding.tieMobileNo, data.phone, isCompanyUser,false,true)
+                    setField(binding.tieMobileNo, data.phone, isCompanyUser, false, true)
 
                     setField(binding.tieEmailId, data.email, isCompanyUser)
                     setField(binding.tieAddress, data.address, isCompanyUser)
@@ -997,29 +997,29 @@ class EmployeeProfileDetails : AppCompatActivity() {
             ?.joinToString(" ") { it.replaceFirstChar { char -> char.titlecase() } } ?: ""
     }
 
-   /* private fun setField(
-        editText: TextInputEditText,
-        value: String?,
-        isCompany: Boolean,
-        isNameField: Boolean = false,
-        isNonEditField: Boolean = false
-    ) {
-        val formattedValue = if (isNameField) capitalizeEachWord(value) else value ?: ""
+    /* private fun setField(
+         editText: TextInputEditText,
+         value: String?,
+         isCompany: Boolean,
+         isNameField: Boolean = false,
+         isNonEditField: Boolean = false
+     ) {
+         val formattedValue = if (isNameField) capitalizeEachWord(value) else value ?: ""
 
-        editText.setText(formattedValue)
+         editText.setText(formattedValue)
 
-        if (isCompany) {
-            editText.isFocusable = true
-            editText.isFocusableInTouchMode = true
-        } else {
-            if (!value.isNullOrEmpty()) {
-                isFocusableField(editText)
-            } else {
-                editText.isFocusable = true
-                editText.isFocusableInTouchMode = true
-            }
-        }
-    }*/
+         if (isCompany) {
+             editText.isFocusable = true
+             editText.isFocusableInTouchMode = true
+         } else {
+             if (!value.isNullOrEmpty()) {
+                 isFocusableField(editText)
+             } else {
+                 editText.isFocusable = true
+                 editText.isFocusableInTouchMode = true
+             }
+         }
+     }*/
 
     private fun setField(
         editText: TextInputEditText,
@@ -1039,6 +1039,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                 editText.isFocusable = true
                 editText.isFocusableInTouchMode = true
             }
+
             else -> {
                 if (!value.isNullOrEmpty()) {
                     isFocusableField(editText)
@@ -1049,7 +1050,6 @@ class EmployeeProfileDetails : AppCompatActivity() {
             }
         }
     }
-
 
 
     private fun validateBasicInfo(): Boolean {

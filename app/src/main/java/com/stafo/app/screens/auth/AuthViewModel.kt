@@ -184,12 +184,12 @@ class AuthViewModel() : BaseViewModel() {
 
 
 
-    fun registerUser(mContext: Context, companyInfo: CompanyInfo, ownerInfo: OwnerInfo) {
+    fun registerUser(mContext: Context, request: RegisterRequest) {
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val request = RegisterRequest(company_info = companyInfo, owner_info = ownerInfo)
+
 
                 val response = ASLEmpMng.instance.apiStores()?.registerUser(request)
 

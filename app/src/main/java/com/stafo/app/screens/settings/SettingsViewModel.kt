@@ -94,6 +94,8 @@ import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getUserAccessToken
 import com.caverock.androidsvg.SVG
 import com.google.gson.Gson
+import com.stafo.app.screens.payroll.dataClass.SalaryRequest
+import com.stafo.app.screens.payroll.dataClass.SalaryResponse
 import com.stafo.app.screens.settings.dataClass.AssignBranchRequest
 import com.stafo.app.screens.settings.dataClass.AssignBranchResponse
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
@@ -109,6 +111,14 @@ import com.stafo.app.screens.settings.dataClass.RemoveSelfieRequest
 import com.stafo.app.screens.settings.dataClass.RemoveSelfieResponse
 import com.stafo.app.screens.settings.dataClass.ReportsEmployeeListRequest
 import com.stafo.app.screens.settings.dataClass.ReportsEmployeeListResponse
+import com.stafo.app.screens.settings.dataClass.SalaryGeneratedRequest
+import com.stafo.app.screens.settings.dataClass.SalaryGeneratedResponse
+import com.stafo.app.screens.settings.dataClass.SalaryTypeDeleteRequest
+import com.stafo.app.screens.settings.dataClass.SalaryTypeDeleteResponse
+import com.stafo.app.screens.settings.dataClass.SalaryTypeListRequest
+import com.stafo.app.screens.settings.dataClass.SalaryTypeListResponse
+import com.stafo.app.screens.settings.dataClass.SalaryTypeRequest
+import com.stafo.app.screens.settings.dataClass.SalaryTypeResponse
 import com.stafo.app.screens.settings.dataClass.SelfieUploadResponse
 import com.stafo.app.screens.settings.dataClass.UpgradePackageResponse
 import kotlinx.coroutines.Dispatchers
@@ -439,6 +449,254 @@ class SettingsViewModel : BaseViewModel() {
     private var mReportsEmployeeList: MutableLiveData<ReportsEmployeeListResponse> = MutableLiveData()
 
     val mReportsEmployeeListResponse: LiveData<ReportsEmployeeListResponse> get() = mReportsEmployeeList
+
+
+    private var mSalaryType: MutableLiveData<SalaryTypeResponse> = MutableLiveData()
+
+    val mSalaryTypeResponse: LiveData<SalaryTypeResponse> get() = mSalaryType
+
+
+    private var mSalaryTypeList: MutableLiveData<SalaryTypeListResponse> = MutableLiveData()
+
+    val mSalaryTypeListResponse: LiveData<SalaryTypeListResponse> get() = mSalaryTypeList
+
+    private var mSalaryTypeDelete: MutableLiveData<SalaryTypeDeleteResponse> = MutableLiveData()
+
+    val mSalaryTypeDeleteResponse: LiveData<SalaryTypeDeleteResponse> get() = mSalaryTypeDelete
+
+    private var mSalaryGenerated: MutableLiveData<SalaryGeneratedResponse> = MutableLiveData()
+
+    val mSalaryGeneratedResponse: LiveData<SalaryGeneratedResponse> get() = mSalaryGenerated
+
+    private var mSaveSalary: MutableLiveData<SalaryResponse> = MutableLiveData()
+
+    val mSaveSalaryResponse: LiveData<SalaryResponse> get() = mSaveSalary
+
+
+
+    fun saveSalary(
+        mContext: Context,
+        request: SalaryRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callSaveSalary(request)
+
+                Log.d("res","save salary  $response")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mSaveSalary.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+    fun generateSalary(
+        mContext: Context,
+        request: SalaryGeneratedRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callSalaryGenerate(request)
+
+                Log.d("res","genearte salary  $response")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mSalaryGenerated.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun deleteSalaryType(
+        mContext: Context,
+        request: SalaryTypeDeleteRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callDeleteSalaryType(request)
+
+                Log.d("res","delete s_type  $response")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mSalaryTypeDelete.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun salaryTypeList(
+        mContext: Context,
+        request: SalaryTypeListRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callSalaryTypeList(request)
+
+                Log.d("res","leave reports $response")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mSalaryTypeList.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun createSalaryType(
+        mContext: Context,
+        request: SalaryTypeRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callSalaryType(request)
+
+                Log.d("res","leave reports $response")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mSalaryType.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
     fun reportsAllEmployeeLeave(

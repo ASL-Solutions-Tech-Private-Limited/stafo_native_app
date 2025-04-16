@@ -40,6 +40,7 @@ import com.stafo.app.screens.settings.dataClass.ReportsEmployeeListRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -48,7 +49,7 @@ import java.util.Locale
 
 class AttendanceReportActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivityAttendanceReportBinding
+    private lateinit var binding: ActivityAttendanceReportBinding
 
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
@@ -56,22 +57,24 @@ class AttendanceReportActivity : AppCompatActivity() {
 
     private val calendar = Calendar.getInstance()
     private var mDateOfReports: String = ""
+    private var mEndDateOfReports: String = ""
     private var selectBranch: Int = 0
     private var selectDepartment: Int = 0
-    private var selectedFormat : String="pdf"
-    private var selectedReportsType : String="Attendance Reports"
-    private var getReportType : String=""
+    private var selectedFormat: String = "pdf"
+    private var selectedReportsType: String = "Attendance Reports"
+    private var getReportType: String = ""
 
     private lateinit var branchDialog: SearchableDialog
     private lateinit var departmentDialog: SearchableDialog
 
     private var mDepartmentList: ArrayList<DataDepartment>? = ArrayList()
     private var mBranchList: ArrayList<DataBranch>? = ArrayList()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding=ActivityAttendanceReportBinding.inflate(layoutInflater)
+        binding = ActivityAttendanceReportBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -91,21 +94,20 @@ class AttendanceReportActivity : AppCompatActivity() {
         binding.apply {
 
 
+            if (getReportType == "emp_reports") {
+                title.text = "Employee List Reports"
+                rlSpnAttendanceReportsType.visibility = View.GONE
 
-            if (getReportType=="emp_reports"){
-                title.text="Employee List Reports"
-                rlSpnAttendanceReportsType.visibility=View.GONE
-
-            }else{
-                title.text="Attendance Summary Reports"
-                rlSpnAttendanceReportsType.visibility=View.VISIBLE
+            } else {
+                title.text = "Attendance Summary Reports"
+                rlSpnAttendanceReportsType.visibility = View.VISIBLE
                 initAttendanceReports()
             }
 
 
 
             imageBack.setOnClickListener {
-               onBackPressed()
+                onBackPressed()
             }
 
             rgFormat.setOnCheckedChangeListener { group, checkedId ->
@@ -132,13 +134,12 @@ class AttendanceReportActivity : AppCompatActivity() {
                     PorterDuff.Mode.SRC_IN
                 )
 
-                val getSelectValue=selectedRadioButton.text.toString().lowercase()
-                selectedFormat = if (getSelectValue=="xls"){
+                val getSelectValue = selectedRadioButton.text.toString().lowercase()
+                selectedFormat = if (getSelectValue == "xls") {
                     "excel"
-                }else{
+                } else {
                     selectedRadioButton.text.toString().lowercase()
                 }
-
 
 
             }
@@ -149,7 +150,7 @@ class AttendanceReportActivity : AppCompatActivity() {
                 if (!mBranchList.isNullOrEmpty()) {
                     branchDialog.show()
                 } else {
-                    CustomToast(this@AttendanceReportActivity,"Please first add branch!")
+                    CustomToast(this@AttendanceReportActivity, "Please first add branch!")
                 }
 
             }
@@ -158,26 +159,42 @@ class AttendanceReportActivity : AppCompatActivity() {
                 if (!mDepartmentList.isNullOrEmpty()) {
                     departmentDialog.show()
                 } else {
-                    CustomToast(this@AttendanceReportActivity,"Please first add department!")
+                    CustomToast(this@AttendanceReportActivity, "Please first add department!")
                 }
 
             }
 
+
+
+
             binding.tieDateReports.setOnClickListener {
-                showDatePicker()
+                showDatePicker(binding.tieDateReports, "start")
             }
 
-            getEmployeeComId()?.let { settingsViewModel.getBranchList(this@AttendanceReportActivity, it) }
+            binding.tieEndDateReports.setOnClickListener {
+                showDatePicker(binding.tieEndDateReports, "end")
+            }
 
-            getEmployeeComId()?.let { settingsViewModel.getDepartmentList(this@AttendanceReportActivity, it) }
+
+
+
+            getEmployeeComId()?.let {
+                settingsViewModel.getBranchList(
+                    this@AttendanceReportActivity,
+                    it
+                )
+            }
+
+            getEmployeeComId()?.let {
+                settingsViewModel.getDepartmentList(
+                    this@AttendanceReportActivity,
+                    it
+                )
+            }
 
 
 
             btnReports.setOnClickListener {
-
-
-
-
 
 
                 if (selectedFormat.isNullOrEmpty()) {
@@ -186,83 +203,96 @@ class AttendanceReportActivity : AppCompatActivity() {
                 }
 
                 if (mDateOfReports.isNullOrEmpty()) {
-                    CustomToast(this@AttendanceReportActivity, "Please select a date.")
+                    CustomToast(this@AttendanceReportActivity, "Please select start date.")
                     return@setOnClickListener
                 }
 
+                if (mEndDateOfReports.isNullOrEmpty()) {
+                    CustomToast(this@AttendanceReportActivity, "Please select end date.")
+                    return@setOnClickListener
+                }
+
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 try {
-                    val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
-                    val date = LocalDate.parse(mDateOfReports, formatter)
+                    val startDate = dateFormat.parse(mDateOfReports)
+                    val endDate = dateFormat.parse(mEndDateOfReports)
 
-                    val year = date.year
-                    val month = date.monthValue
+                    if (startDate != null && endDate != null && endDate.before(startDate)) {
+                        CustomToast(this@AttendanceReportActivity, "End date cannot be earlier than start date.")
+                        return@setOnClickListener
+                    }
+                } catch (e: ParseException) {
+                    CustomToast(this@AttendanceReportActivity, "Invalid date format.")
+                    return@setOnClickListener
+                }
 
-                    if (getReportType=="emp_reports"){
+
+                if (getReportType == "emp_reports") {
+                    getEmployeeComId()?.let { companyId ->
+                        val request = ReportsEmployeeListRequest(
+                            start_date = mDateOfReports,
+                            end_date = mEndDateOfReports,
+                            format = selectedFormat,
+                            company_id = companyId,
+                            department = selectDepartment,
+                            branch = selectBranch
+                        )
+
+                        settingsViewModel.reportsEmployeeList(
+                            this@AttendanceReportActivity,
+                            request
+                        )
+
+                    } ?: run {
+                        CustomToast(this@AttendanceReportActivity, "Company ID not found.")
+                    }
+
+                } else {
+                    if (selectedReportsType == "Attendance Reports") {
+
+
                         getEmployeeComId()?.let { companyId ->
                             val request = ReportsEmployeeListRequest(
-                                month = month,
-                                year = year,
+                                start_date = mDateOfReports,
+                                end_date = mEndDateOfReports,
                                 format = selectedFormat,
                                 company_id = companyId,
                                 department = selectDepartment,
                                 branch = selectBranch
                             )
 
-                            settingsViewModel.reportsEmployeeList(this@AttendanceReportActivity, request)
+                            settingsViewModel.reportsAllEmployeeAttendance(
+                                this@AttendanceReportActivity,
+                                request
+                            )
 
                         } ?: run {
                             CustomToast(this@AttendanceReportActivity, "Company ID not found.")
                         }
+                    } else {
+                        getEmployeeComId()?.let { companyId ->
+                            val request = ReportsEmployeeListRequest(
+                                start_date = mDateOfReports,
+                                end_date = mEndDateOfReports,
+                                format = selectedFormat,
+                                company_id = companyId,
+                                department = selectDepartment,
+                                branch = selectBranch
+                            )
 
-                    }else{
-                        if (selectedReportsType=="Attendance Reports"){
+                            settingsViewModel.reportsAllEmployeeLeave(
+                                this@AttendanceReportActivity,
+                                request
+                            )
 
-
-
-                            getEmployeeComId()?.let { companyId ->
-                                val request = ReportsEmployeeListRequest(
-                                    month = month,
-                                    year = year,
-                                    format = selectedFormat,
-                                    company_id = companyId,
-                                    department = selectDepartment,
-                                    branch = selectBranch
-                                )
-
-                                settingsViewModel.reportsAllEmployeeAttendance(this@AttendanceReportActivity, request)
-
-                            } ?: run {
-                                CustomToast(this@AttendanceReportActivity, "Company ID not found.")
-                            }
-                        }else{
-                            getEmployeeComId()?.let { companyId ->
-                                val request = ReportsEmployeeListRequest(
-                                    month = month,
-                                    year = year,
-                                    format = selectedFormat,
-                                    company_id = companyId,
-                                    department = selectDepartment,
-                                    branch = selectBranch
-                                )
-
-                                settingsViewModel.reportsAllEmployeeLeave(this@AttendanceReportActivity, request)
-
-                            } ?: run {
-                                CustomToast(this@AttendanceReportActivity, "Company ID not found.")
-                            }
+                        } ?: run {
+                            CustomToast(this@AttendanceReportActivity, "Company ID not found.")
                         }
                     }
-
-
-
-
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    CustomToast(this@AttendanceReportActivity, "Invalid date format.")
                 }
-            }
 
+
+            }
 
 
         }
@@ -270,26 +300,35 @@ class AttendanceReportActivity : AppCompatActivity() {
 
     }
 
-    private fun showDatePicker() {
-        val datePickerDialog = DatePickerDialog(
-            this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
-                val selectedDate = Calendar.getInstance()
-                selectedDate.set(year, monthOfYear, dayOfMonth)
-                val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
-                val formattedDate = dateFormat.format(selectedDate.time)
-                mDateOfReports=formattedDate
+    private fun showDatePicker(view: TextInputEditText?, fieldType: String) {
+        val calendar = Calendar.getInstance()
 
-                val displayFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
+        val datePickerDialog = DatePickerDialog(
+            this, { _, year, month, dayOfMonth ->
+                val selectedDate = Calendar.getInstance().apply {
+                    set(year, month, dayOfMonth)
+                }
+
+                val displayFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
                 val formattedDisplayDate = displayFormat.format(selectedDate.time)
 
-                binding.tieDateReports.setText("$formattedDisplayDate")
+                val apiFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val formattedApiDate = apiFormat.format(selectedDate.time)
+
+                view?.setText(formattedDisplayDate)
+                when (fieldType) {
+                    "start" -> mDateOfReports = formattedApiDate
+                    "end" -> mEndDateOfReports = formattedApiDate
+                }
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         )
+
         datePickerDialog.show()
     }
+
     private fun observeViewModel() {
 
 
@@ -328,33 +367,37 @@ class AttendanceReportActivity : AppCompatActivity() {
         }
         settingsViewModel.mReportsEmployeeListResponse.observe(this) {
 
-         if (it.success){
-             val fileUrl = it.download_url
+            if (it.success) {
+                val fileUrl = it.download_url
 
-             if (!fileUrl.isNullOrEmpty()) {
-                 val fileName = fileUrl.substringAfterLast("/")
-                 val mimeType = getMimeType(fileUrl)
+                if (!fileUrl.isNullOrEmpty()) {
+                    val fileName = fileUrl.substringAfterLast("/")
+                    val mimeType = getMimeType(fileUrl)
 
-                 Log.d("res", "get reports $fileUrl mimeType: $mimeType")
+                    Log.d("res", "get reports $fileUrl mimeType: $mimeType")
 
-                 // Start download
-                 downloadFile(this, fileUrl, fileName, mimeType)
-             } else {
-                 CustomToast(this, "Download URL is missing.")
-             }
-         }else{
-             CustomToast(this,it.message)
-         }
+                    // Start download
+                    downloadFile(this, fileUrl, fileName, mimeType)
+                } else {
+                    CustomToast(this, "Download URL is missing.")
+                }
+            } else {
+                CustomToast(this, it.message)
+            }
 
         }
 
 
-
     }
+
     fun getMimeType(url: String): String {
         return when {
             url.endsWith(".pdf", ignoreCase = true) -> "application/pdf"
-            url.endsWith(".xls", ignoreCase = true) || url.endsWith(".xlsx", ignoreCase = true) -> "application/vnd.ms-excel"
+            url.endsWith(".xls", ignoreCase = true) || url.endsWith(
+                ".xlsx",
+                ignoreCase = true
+            ) -> "application/vnd.ms-excel"
+
             else -> "*/*"
         }
     }
@@ -372,9 +415,8 @@ class AttendanceReportActivity : AppCompatActivity() {
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val downloadId = downloadManager.enqueue(request)
 
-        CustomToast(this,"Download started...")
+        CustomToast(this, "Download started...")
     }
-
 
 
     private fun handleLoader(status: String) {
@@ -430,7 +472,7 @@ class AttendanceReportActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        overridePendingTransition(R.anim.slide_from_left,R.anim.slide_to_right)
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
         finish()
     }
 

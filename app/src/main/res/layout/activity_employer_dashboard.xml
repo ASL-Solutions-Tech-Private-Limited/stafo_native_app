@@ -42,12 +42,12 @@
                         android:layout_height="@dimen/_24sdp"
                         android:layout_marginStart="@dimen/_12sdp"
                         android:layout_marginTop="@dimen/_12sdp"
-                        android:src="@drawable/final_asl_hr_logo"
-                        app:shapeAppearanceOverlay="@style/Circular"
-                        android:scaleType="fitXY"
                         android:background="@color/primaryColor"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/final_asl_hr_logo"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:shapeAppearanceOverlay="@style/Circular" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_app_name"
@@ -63,6 +63,7 @@
                         app:layout_constraintBottom_toTopOf="@id/header_view"
                         app:layout_constraintStart_toEndOf="@id/iv_app_icon"
                         app:layout_constraintTop_toTopOf="parent" />
+
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/iv_logout"
                         android:layout_width="@dimen/_24sdp"
@@ -110,12 +111,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_12sdp"
                         android:layout_marginTop="@dimen/_6sdp"
-                        android:fontFamily="@font/gilroy_bold"
-                        android:textSize="@dimen/_15sdp"
-                        android:singleLine="true"
-                        android:maxLines="1"
                         android:ellipsize="end"
+                        android:fontFamily="@font/gilroy_bold"
+                        android:maxLines="1"
                         android:paddingEnd="@dimen/_4sdp"
+                        android:singleLine="true"
+                        android:textSize="@dimen/_15sdp"
                         app:layout_constraintEnd_toStartOf="@+id/iv_header_profile_pic"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_header_greeting" />
@@ -124,8 +125,8 @@
                         android:id="@+id/header_ll_view_profile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:layout_marginTop="@dimen/_8sdp"
+                        android:orientation="horizontal"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_header_emp_name">
 
@@ -134,13 +135,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_12sdp"
-                            android:fontFamily="@font/gilroy_bold"
-                            android:text="View Profile"
                             android:background="@drawable/custom_view_profile_bg"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12ssp"
+                            android:fontFamily="@font/gilroy_bold"
                             android:paddingHorizontal="@dimen/_6sdp"
                             android:paddingVertical="@dimen/_6sdp"
+                            android:text="View Profile"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp"
                             android:visibility="visible" />
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -159,13 +160,13 @@
                         android:layout_width="@dimen/_54sdp"
                         android:layout_height="@dimen/_54sdp"
                         android:layout_marginEnd="@dimen/_12sdp"
-                        app:shapeAppearanceOverlay="@style/Circular"
-                        android:scaleType="fitXY"
-                        android:visibility="invisible"
                         android:background="@color/white"
+                        android:scaleType="fitXY"
                         android:src="@drawable/ic_organization"
+                        android:visibility="invisible"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_header_greeting" />
+                        app:layout_constraintTop_toBottomOf="@id/tv_header_greeting"
+                        app:shapeAppearanceOverlay="@style/Circular" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -216,28 +217,28 @@
                         app:layout_constraintTop_toBottomOf="@+id/tv_lets_check">
 
 
-
                         <androidx.cardview.widget.CardView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_margin="@dimen/_6sdp"
                             android:layout_weight="1"
-                            android:padding="@dimen/_6sdp"
                             android:outlineSpotShadowColor="@android:color/white"
-                            app:cardCornerRadius="@dimen/_8sdp"
+                            android:padding="@dimen/_6sdp"
+                            app:cardCornerRadius="16dp"
                             app:cardElevation="@dimen/_4sdp">
 
                             <LinearLayout
                                 android:id="@+id/llc_card_all_emp"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/gradient_header"
+                                android:background="@drawable/raised_plate_bg"
                                 android:gravity="center"
                                 android:orientation="vertical">
 
                                 <androidx.appcompat.widget.AppCompatImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_4sdp"
                                     android:src="@drawable/resized_all_emp_icon" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
@@ -259,8 +260,8 @@
                                     android:gravity="center"
                                     android:padding="@dimen/_4sdp"
                                     android:text="0"
-                                    android:textSize="@dimen/_16sdp"
-                                    android:textStyle="bold" />
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_13ssp" />
 
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
@@ -270,22 +271,23 @@
                             android:layout_height="match_parent"
                             android:layout_margin="@dimen/_6sdp"
                             android:layout_weight="1"
-                            android:padding="@dimen/_6sdp"
                             android:outlineSpotShadowColor="@android:color/white"
-                            app:cardCornerRadius="@dimen/_8sdp"
+                            android:padding="@dimen/_6sdp"
+                            app:cardCornerRadius="16dp"
                             app:cardElevation="@dimen/_4sdp">
 
                             <LinearLayout
                                 android:id="@+id/llc_card_present"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/present_card_bg"
+                                android:background="@drawable/raised_plate_present_bg"
                                 android:gravity="center"
                                 android:orientation="vertical">
 
                                 <androidx.appcompat.widget.AppCompatImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_4sdp"
                                     android:src="@drawable/ic_present" />
 
                                 <androidx.appcompat.widget.AppCompatTextView
@@ -306,7 +308,8 @@
                                     android:gravity="center"
                                     android:padding="@dimen/_4sdp"
                                     android:text="0"
-                                    android:textSize="@dimen/_16sdp"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_13ssp"
                                     android:textStyle="bold" />
 
                             </LinearLayout>
@@ -318,22 +321,24 @@
                             android:layout_margin="@dimen/_6sdp"
                             android:layout_weight="1"
                             android:outlineSpotShadowColor="@android:color/white"
-                            app:cardCornerRadius="@dimen/_8sdp"
+                            app:cardCornerRadius="16dp"
                             app:cardElevation="@dimen/_4sdp">
 
                             <LinearLayout
                                 android:id="@+id/llc_card_on_leave"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/onleave_card_bg"
+                                android:background="@drawable/raised_plate_leave_bg"
                                 android:gravity="center"
-                                android:padding="@dimen/_6sdp"
-                                android:orientation="vertical">
+                                android:orientation="vertical"
+                                android:padding="@dimen/_6sdp">
 
                                 <androidx.appcompat.widget.AppCompatImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_4sdp"
                                     android:src="@drawable/ic_exit" />
+
                                 <androidx.appcompat.widget.AppCompatTextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -352,8 +357,8 @@
                                     android:gravity="center"
                                     android:padding="@dimen/_4sdp"
                                     android:text="0"
-                                    android:textSize="@dimen/_16sdp"
-                                    android:textStyle="bold" />
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_13ssp" />
 
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
@@ -387,13 +392,11 @@
                         app:layout_constraintTop_toBottomOf="@id/ll_todays_report" />
 
 
-
-
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_actions"
                         android:layout_width="match_parent"
-                        android:layout_marginTop="@dimen/_8sdp"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_activities_viewAll"
@@ -463,15 +466,16 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_on_leave">
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_leaves"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_6sdp"
-                        android:layout_marginTop="@dimen/_6sdp"
-                        android:layout_marginEnd="@dimen/_6sdp"
-                        tools:itemCount="1"
-                        tools:listitem="@layout/item_leave_list" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_leaves"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_6sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:layout_marginEnd="@dimen/_6sdp"
+                            tools:itemCount="1"
+                            tools:listitem="@layout/item_leave_list" />
 
                         <LinearLayout
                             android:id="@+id/ll_leaves"

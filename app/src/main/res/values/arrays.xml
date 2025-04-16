@@ -69,7 +69,15 @@
         <item>Single</item>
         <item>Married</item>
     </string-array>
+    <string-array name="payment_type">
+        <item>Earning</item>
+        <item>Deduction</item>
+    </string-array>
 
+    <string-array name="amount_type">
+        <item>Flat</item>
+        <item>Percentage</item>
+    </string-array>
 
     <string-array name="reports_type">
         <item>Attendance Reports</item>

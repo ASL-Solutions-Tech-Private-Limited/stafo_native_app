@@ -96,7 +96,7 @@ class BranchActivity : AppCompatActivity() {
                 val layoutManager: RecyclerView.LayoutManager =
                     LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                 binding.rvShowBranchList.setLayoutManager(layoutManager)
-                rvAdapter = BranchAdapter(it.data, this)
+                rvAdapter = BranchAdapter(branchList, this)
                 binding.rvShowBranchList.adapter = rvAdapter
                 rvAdapter.notifyDataSetChanged()
             } else {

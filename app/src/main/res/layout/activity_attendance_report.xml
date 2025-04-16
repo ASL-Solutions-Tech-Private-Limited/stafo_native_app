@@ -71,30 +71,65 @@
         android:layout_height="wrap_content">
 
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_date_joining"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:orientation="horizontal"
+            android:weightSum="2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            app:endIconDrawable="@drawable/ic_calendar_month"
-            app:endIconMode="custom">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/tie_date_reports"
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/edit_text_background"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginEnd="@dimen/_6sdp"
                 android:focusable="false"
-                android:textSize="@dimen/_12ssp"
-                android:textColor="@color/black"
+                android:layout_weight="1"
                 android:focusableInTouchMode="false"
-                android:fontFamily="@font/gilroy_medium"
-                android:hint="Select Month" />
+                app:endIconDrawable="@drawable/ic_calendar_month"
+                app:endIconMode="custom">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tie_date_reports"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_background"
+                    android:focusable="false"
+                    android:textSize="@dimen/_12ssp"
+                    android:textColor="@color/black"
+                    android:focusableInTouchMode="false"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:hint="Start Date" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:focusable="false"
+                android:layout_weight="1"
+                android:focusableInTouchMode="false"
+                app:endIconDrawable="@drawable/ic_calendar_month"
+                app:endIconMode="custom">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tie_end_date_reports"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_background"
+                    android:focusable="false"
+                    android:textSize="@dimen/_12ssp"
+                    android:textColor="@color/black"
+                    android:focusableInTouchMode="false"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:hint="End Date" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+
 
 
 
