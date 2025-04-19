@@ -1,6 +1,7 @@
 package com.stafo.app.screens.recharge
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -28,7 +29,7 @@ class RechargeActivity : AppCompatActivity() {
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
-        val tabData = listOf(
+      /*  val tabData = listOf(
             listOf(
                 RechargeInfo("199", "1GB/day", "28 Days", "Calls : Unlimited local, STD & Roaming | Data : 1.5GB/Day | SMS : 100SMS/day | Details: You can also recharge with above plan instead of Rs 299 plan pack"),
                 RechargeInfo("399", "2GB/day", "56 Days", "Calls : Unlimited local, STD & Roaming | Data : 1GB/day | SMS : 100 SMS/Day | Details: Revised price for Rs 239 pack"),
@@ -68,9 +69,44 @@ class RechargeActivity : AppCompatActivity() {
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = tabTitles[position]
-        }.attach()
+        }.attach()*/
+
+        onClickListener()
 
 
 
+    }
+
+    private fun onClickListener() {
+        binding.apply {
+
+
+
+            binding.imgBackBtn.setOnClickListener {
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            }
+
+
+            binding.tvPrepaid.setOnClickListener {
+                binding.tvPrepaid.setTextColor(getColor(R.color.black))
+                binding.preView.visibility = View.VISIBLE
+
+                binding.tvPostpaid.setTextColor(getColor(R.color.gray_colour))
+                binding.postView.visibility = View.GONE
+            }
+
+            binding.tvPostpaid.setOnClickListener {
+                binding.tvPostpaid.setTextColor(getColor(R.color.black))
+                binding.postView.visibility = View.VISIBLE
+
+                binding.tvPrepaid.setTextColor(getColor(R.color.gray_colour))
+                binding.preView.visibility = View.GONE
+            }
+
+
+
+
+        }
     }
 }

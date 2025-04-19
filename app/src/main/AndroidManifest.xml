@@ -47,6 +47,9 @@
         tools:replace="android:label"
         tools:targetApi="31">
         <activity
+            android:name=".screens.recharge.PlanActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.payroll.SalaryTypeActivity"
             android:exported="false" />
         <activity
@@ -74,7 +77,7 @@
             android:name=".screens.payroll.GenerateSalaryActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".screens.payroll.PayRollHistoryActivity"
             android:exported="false" />
