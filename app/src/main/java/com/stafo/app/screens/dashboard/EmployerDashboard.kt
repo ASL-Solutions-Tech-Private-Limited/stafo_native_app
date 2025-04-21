@@ -428,7 +428,7 @@ class EmployerDashboard : AppCompatActivity() {
 
             if (it.status) {
 
-                if (it.data.banner.isNotEmpty()){
+                if (it.data.banner.isNotEmpty()) {
                     binding.imageSlider.setSliderAdapter(
                         SliderAdapter(
                             it.data.path,
@@ -511,7 +511,7 @@ class EmployerDashboard : AppCompatActivity() {
 
 
         binding.llcRecharge.setOnClickListener {
-            startActivity(Intent(this,RechargeActivity::class.java))
+            startActivity(Intent(this, DashboardActivity::class.java))
         }
 
 
@@ -577,7 +577,7 @@ class EmployerDashboard : AppCompatActivity() {
                 val getTotalEmp = binding.tvAllEmp.text.toString().trim()
 
                 if (getTotalEmp >= maxEmployeeAdd) {
-                   showUpgradeDialog()
+                    showUpgradeDialog()
                 } else {
                     startActivity(Intent(this, AddEmployeeActivity::class.java))
                 }

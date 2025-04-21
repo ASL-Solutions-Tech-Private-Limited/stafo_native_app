@@ -49,6 +49,12 @@
         tools:replace="android:label"
         tools:targetApi="31">
         <activity
+            android:name=".screens.recharge.CircleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.recharge.OperatorActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.recharge.PayRechargeActivity"
             android:exported="false" />
         <activity
