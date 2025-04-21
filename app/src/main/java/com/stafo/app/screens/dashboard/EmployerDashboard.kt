@@ -56,6 +56,7 @@ import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.screens.settings.SubMenuActivity
 
 class EmployerDashboard : AppCompatActivity() {
+
     private lateinit var binding: ActivityEmployerDashboardBinding
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
@@ -505,6 +506,12 @@ class EmployerDashboard : AppCompatActivity() {
             )
 
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
+        }
+
+
+
+        binding.llcRecharge.setOnClickListener {
+            startActivity(Intent(this,RechargeActivity::class.java))
         }
 
 

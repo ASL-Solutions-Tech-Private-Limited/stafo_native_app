@@ -1,15 +1,24 @@
 package com.stafo.app.screens.recharge
 
+import android.animation.ValueAnimator
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayoutMediator
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityPlanBinding
 import com.stafo.app.screens.recharge.adapter.ViewPagerAdapter
+import com.stafo.app.screens.recharge.dataclass.ContactsAdapter
 import com.stafo.app.screens.recharge.dataclass.RechargeInfo
 
 class PlanActivity : AppCompatActivity() {
@@ -17,9 +26,11 @@ class PlanActivity : AppCompatActivity() {
     private lateinit var binding:ActivityPlanBinding
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         binding=ActivityPlanBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -29,6 +40,8 @@ class PlanActivity : AppCompatActivity() {
         }
 
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
+
+        onClickListener()
 
         val tabData = listOf(
             listOf(
@@ -71,5 +84,82 @@ class PlanActivity : AppCompatActivity() {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = tabTitles[position]
         }.attach()
+    }
+    private fun onClickListener() {
+        binding.apply {
+
+
+
+            binding.imgBackBtn.setOnClickListener {
+                onBackPressed()
+            }
+
+            val minWidth = resources.getDimensionPixelSize(R.dimen.miniWidth)
+            val maxWidth = resources.getDimensionPixelSize(R.dimen.maxWidth)
+
+            binding.edtSearch.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    val animator = ValueAnimator.ofInt(minWidth, maxWidth)
+                    animator.addUpdateListener {
+                        val value = it.animatedValue as Int
+                        val layoutParams = binding.llcSearch.layoutParams
+                        layoutParams.width = value
+                        binding.llcSearch.layoutParams = layoutParams
+                    }
+                    animator.duration = 300
+                    animator.start()
+
+                    // Animate tabLayout out (slide + fade)
+                    binding.tabLayout.animate()
+                        .translationX(binding.tabLayout.width.toFloat())
+                        .alpha(0f)
+                        .setDuration(300)
+                        .withEndAction {
+                            binding.tabLayout.visibility = View.INVISIBLE
+                            binding.tvCancelSearch.visibility = View.VISIBLE
+                        }
+                        .start()
+                }
+            }
+
+
+
+            binding.tvCancelSearch.setOnClickListener {
+                val animator = ValueAnimator.ofInt(maxWidth, minWidth)
+                animator.addUpdateListener {
+                    val value = it.animatedValue as Int
+                    val layoutParams = binding.llcSearch.layoutParams
+                    layoutParams.width = value
+                    binding.llcSearch.layoutParams = layoutParams
+                }
+                animator.duration = 300
+                animator.start()
+
+                // Bring back tabLayout
+                binding.tabLayout.visibility = View.VISIBLE
+                binding.tabLayout.translationX = binding.tabLayout.width.toFloat()
+                binding.tabLayout.animate()
+                    .translationX(0f)
+                    .alpha(1f)
+                    .setDuration(300)
+                    .start()
+
+                binding.tvCancelSearch.visibility = View.GONE
+                binding.edtSearch.clearFocus()
+
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(binding.edtSearch.windowToken, 0)
+            }
+
+
+
+
+        }
+    }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this, ContactsActivity::class.java))
+        overridePendingTransition(R.anim.slide_from_left,R.anim.slide_to_right)
+        finish()
     }
 }

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/custom_bg_bottom_sheet">
+
+
+    <View
+        android:id="@+id/view"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@color/gray_colour"
+        android:layout_width="@dimen/_32sdp"
+        android:layout_height="@dimen/_2sdp"/>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llc_search"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:background="@drawable/recharge_edit_text_background"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_37sdp">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_marginStart="@dimen/_8sdp"
+            android:src="@drawable/ic_search"
+            android:layout_weight="1.8"
+            android:paddingVertical="@dimen/_4sdp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edt_search"
+            android:layout_weight="0.2"
+            android:paddingStart="@dimen/_10sdp"
+            android:textSize="@dimen/_12ssp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:fontFamily="@font/poppins_regular"
+            android:textColor="@color/black"
+            android:hint="Search your contacts or enter number"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:background="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_coupon_list"
+        app:layout_constraintTop_toBottomOf="@id/llc_search"
+        android:layout_marginTop="@dimen/_6sdp"
+        tools:listitem="@layout/coupon_item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

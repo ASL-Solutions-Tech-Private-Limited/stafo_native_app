@@ -1,14 +1,17 @@
 package com.stafo.app.screens.recharge.adapter
 
+import android.app.Activity
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.R
+import com.stafo.app.screens.recharge.PayRechargeActivity
 import com.stafo.app.screens.recharge.dataclass.RechargeInfo
 
-class AdapterMobilePlan (private val items: List<RechargeInfo>) : RecyclerView.Adapter<AdapterMobilePlan.ViewHolder>() {
+class AdapterMobilePlan (val context:Activity,private val items: List<RechargeInfo>) : RecyclerView.Adapter<AdapterMobilePlan.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val price: TextView = itemView.findViewById(R.id.txt_amount)
@@ -28,6 +31,10 @@ class AdapterMobilePlan (private val items: List<RechargeInfo>) : RecyclerView.A
         holder.details.text = item.details
         holder.validity.text = item.validity
         holder.offer.text = item.offer
+
+        holder.itemView.setOnClickListener {
+            context.startActivity(Intent(context,PayRechargeActivity::class.java))
+        }
     }
 
     override fun getItemCount(): Int = items.size
