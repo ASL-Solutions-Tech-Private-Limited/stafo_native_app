@@ -17,7 +17,7 @@
             android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/layout_bottom_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -580,10 +580,10 @@
             android:backgroundTint="@color/colorTextPrimary"
             android:src="@drawable/ic_user"
             android:text="Add Employee"
-            app:layout_constraintBottom_toTopOf="@+id/layout_bottom_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+    <!--    <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/layout_bottom_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_56sdp"
@@ -726,7 +726,7 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
