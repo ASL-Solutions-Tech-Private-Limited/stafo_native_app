@@ -1,23 +1,32 @@
 package com.stafo.app.screens.payroll
 
 import android.app.DatePickerDialog
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.view.View
-import android.widget.RadioButton
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.ajithvgiri.searchdialog.OnSearchItemSelected
+import com.ajithvgiri.searchdialog.SearchListItem
+import com.ajithvgiri.searchdialog.SearchableDialog
+import com.google.android.material.textfield.TextInputEditText
 import com.stafo.app.R
+import com.stafo.app.base.adapter.DynamicDeductionAdapter
+import com.stafo.app.base.adapter.DynamicSalaryAdapter
 import com.stafo.app.databinding.ActivityGenerateSalaryBinding
-import com.stafo.app.screens.settings.dataClass.AddEmpRequestBody
+import com.stafo.app.screens.payroll.dataClass.SalaryRequest
+import com.stafo.app.screens.settings.SettingsViewModel
+import com.stafo.app.screens.settings.dataClass.GetEmployee
+import com.stafo.app.screens.settings.dataClass.SalaryComponent
+import com.stafo.app.screens.settings.dataClass.SalaryGeneratedRequest
+import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.getEmployeeComId
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -25,8 +34,20 @@ import java.util.Locale
 class GenerateSalaryActivity : AppCompatActivity() {
     private lateinit var binding:ActivityGenerateSalaryBinding
 
+    private val customLoader: CustomLoader by lazy { CustomLoader(this) }
+    private val settingsViewModel: SettingsViewModel by viewModels()
+
     private var mMonthOfSalary: String = ""
+    private var mEMpId: Int = 0
     private val calendar = Calendar.getInstance()
+
+    private lateinit var adapter: DynamicSalaryAdapter
+    private lateinit var deductionAdapter: DynamicDeductionAdapter
+    private val dynamicFields = mutableListOf<SalaryComponent>()
+    private val deductionDynamicFields = mutableListOf<SalaryComponent>()
+    private var mEmpList: List<GetEmployee>? = ArrayList()
+
+    private lateinit var employeeListDialog: SearchableDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -40,6 +61,7 @@ class GenerateSalaryActivity : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
         onClickListener()
+        observeViewModel()
 
     }
 
@@ -50,6 +72,15 @@ class GenerateSalaryActivity : AppCompatActivity() {
 
 
 
+            settingsViewModel.getAllEmployeeList(this@GenerateSalaryActivity)
+
+            tieEmployee.setOnClickListener {
+                if (mMonthOfSalary.isBlank()) {
+                    CustomToast(this@GenerateSalaryActivity,"Please select a month first")
+                } else {
+                    employeeListDialog.show()
+                }
+            }
 
             ivBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
@@ -61,9 +92,40 @@ class GenerateSalaryActivity : AppCompatActivity() {
             }
 
             btnSubmit.setOnClickListener {
-                if (isValidated()){
 
+                val basicSalary=tieSalary.text.toString().trim()
+                val grossSalary=tvGrossSalary.text.toString().trim()
+
+                val format = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+                val date = format.parse(mMonthOfSalary)
+
+                val monthFormat = SimpleDateFormat("MM", Locale.getDefault())
+                val month = monthFormat.format(date)
+
+
+
+                val allComponents = mutableListOf<SalaryComponent>()
+
+                if (dynamicFields.isNotEmpty()) {
+                    allComponents.addAll(dynamicFields)
                 }
+
+                if (deductionDynamicFields.isNotEmpty()) {
+                    allComponents.addAll(deductionDynamicFields)
+                }
+                getEmployeeComId()?.let {
+                    val request = SalaryRequest(
+                        company_id = it.toInt(),
+                        employee_id = mEMpId,
+                        month = month.toInt(),
+                        basic_salary = basicSalary.toInt(),
+                        gross_salary = grossSalary.toInt(),
+                        components = allComponents
+                    )
+
+                    settingsViewModel.saveSalary(this@GenerateSalaryActivity, request)
+                }
+
             }
 
 
@@ -92,10 +154,14 @@ class GenerateSalaryActivity : AppCompatActivity() {
                 val formattedDate = dateFormat.format(selectedDate.time)
                 mMonthOfSalary=formattedDate
 
-                val displayFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
+
+                val displayFormat = SimpleDateFormat("MMM yy", Locale.getDefault())
                 val formattedDisplayDate = displayFormat.format(selectedDate.time)
 
                 binding.tieMonth.setText("$formattedDisplayDate")
+
+
+
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
@@ -103,4 +169,165 @@ class GenerateSalaryActivity : AppCompatActivity() {
         )
         datePickerDialog.show()
     }
+
+
+
+
+
+    private fun observeViewModel() {
+
+
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
+        settingsViewModel.mSalaryGeneratedResponse.observe(this) {
+
+
+            if (it.success) {
+
+                if (!it.data.basic_salary.isNullOrBlank()) {
+                    val salary = it.data.basic_salary.replace(".00", "")
+                    binding.tieSalary.setText(salary)
+                }
+
+                binding.tvGrossSalary.text=it.data.gross_salary.toString()
+
+
+
+                if (it.data.earning.isNotEmpty()) {
+
+                    binding.llcEarning.visibility=View.VISIBLE
+
+                    dynamicFields.clear()
+                    dynamicFields.addAll(it.data.earning)
+
+                    adapter = DynamicSalaryAdapter(dynamicFields)
+
+                    val layoutManager: RecyclerView.LayoutManager =
+                        LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                    binding.recyclerView.setLayoutManager(layoutManager)
+
+                    binding.recyclerView.adapter = adapter
+                    adapter.notifyDataSetChanged()
+                }else{
+                    binding.llcEarning.visibility=View.GONE
+                }
+
+                if (it.data.deduction.isNotEmpty()){
+
+                    binding.llcDeduction.visibility=View.VISIBLE
+                    deductionDynamicFields.clear()
+                    deductionDynamicFields.addAll(it.data.deduction)
+
+                    deductionAdapter = DynamicDeductionAdapter(deductionDynamicFields)
+
+                    val layoutManager: RecyclerView.LayoutManager =
+                        LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                    binding.rvDeductionList.setLayoutManager(layoutManager)
+
+                    binding.rvDeductionList.adapter = deductionAdapter
+                    adapter.notifyDataSetChanged()
+                }else{
+                    binding.llcDeduction.visibility=View.GONE
+                }
+            }
+            else{
+                binding.llcDeduction.visibility=View.GONE
+                binding.llcEarning.visibility=View.GONE
+            }
+        }
+
+
+        settingsViewModel.mGetAllEmployeeResponse.observe(this) {
+
+            if (it.status) {
+
+
+                if (it.data.isNotEmpty()) {
+
+                    mEmpList = it.data
+                    binding.let { it1 ->
+                        setupSearchableDialog(
+                            mEmpList,
+                            "Employee List",
+                            it1.tieEmployee
+                        )
+                    }
+
+
+                }
+
+
+            }
+        }
+        settingsViewModel.mSaveSalaryResponse.observe(this) {
+
+            if (it.success) {
+                CustomToast(this,it.message)
+                onBackPressedDispatcher.onBackPressed()
+            } else  CustomToast(this,it.message)
+        }
+
+
+
+
+
+
+
+
+    }
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
+        }
+    }
+    private fun setupSearchableDialog(
+        dataList: List<Any>?,
+        title: String,
+        field: TextInputEditText
+    ) {
+        val items = dataList?.map {
+            val name = when (it) {
+                is GetEmployee -> it.name
+                else -> "Unknown"
+            }
+
+            val id = when (it) {
+                is GetEmployee -> it.id
+                else -> -1
+            }
+
+            SearchListItem(id, name)
+        } ?: emptyList()
+
+        val dialog = SearchableDialog(this, items as ArrayList<SearchListItem>, title)
+        dialog.setOnItemSelected(object : OnSearchItemSelected {
+            override fun onClick(position: Int, searchListItem: SearchListItem) {
+                field.setText(searchListItem.title)
+                if (title == "Employee List") {
+
+                    mEMpId=searchListItem.id
+
+                    getEmployeeComId()?.let {
+                        val request = SalaryGeneratedRequest(
+                            employee_id = mEMpId,
+                            company_id = it.toInt()
+                        )
+                        settingsViewModel.generateSalary(this@GenerateSalaryActivity, request)
+                    }
+
+                }
+
+                dialog.dismiss()
+            }
+        })
+
+        when (title) {
+            "Employee List" -> employeeListDialog = dialog
+        }
+    }
+
+
 }

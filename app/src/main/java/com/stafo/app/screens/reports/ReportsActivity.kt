@@ -5,8 +5,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.RelativeLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -14,6 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.stafo.app.R
 import com.stafo.app.base.adapter.AdapterDownloadReports
 import com.stafo.app.databinding.ActivityReportsBinding
+import com.stafo.app.screens.emp.EmployeeAttendanceRecordActivity
+import com.stafo.app.screens.payroll.CreateSalaryTypeActivity
+import com.stafo.app.screens.payroll.GenerateSalaryActivity
+import com.stafo.app.screens.payroll.SalaryTypeActivity
 import com.stafo.app.screens.settings.dataClass.OwnerInfo
 import com.stafo.app.screens.settings.dataClass.UpdateCompanyProfile
 
@@ -69,7 +75,40 @@ class ReportsActivity : AppCompatActivity() {
 
 
             rtlAttendanceReport.setOnClickListener {
-                startActivity(Intent(this@ReportsActivity,AttendanceReportActivity::class.java))
+              /*  startActivity(Intent(this@ReportsActivity,AttendanceReportActivity::class.java))
+                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)*/
+
+                val intent = Intent(this@ReportsActivity, AttendanceReportActivity::class.java).apply {
+                    putExtra("reports_type", "attendance_reports")
+                }
+                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                startActivity(intent)
+            }
+
+            rtlEmployeeReports.setOnClickListener {
+                val intent = Intent(this@ReportsActivity, AttendanceReportActivity::class.java).apply {
+                    putExtra("reports_type", "emp_reports")
+                }
+                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                startActivity(intent)
+            }
+
+            binding.expandablePayrollSetting.setOnClickListener {
+                binding.expandablePayrollSetting.toggleLayout()
+
+            }
+            val rtlSalaryType = binding.expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_salary_type)
+            val rtlGenerateSalary = binding.expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_generate_salary)
+            val rtlSalarySlip = binding.expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_salary_slip)
+
+            rtlSalaryType.setOnClickListener {
+
+                startActivity(Intent(this@ReportsActivity, SalaryTypeActivity::class.java))
+                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+            }
+            rtlGenerateSalary.setOnClickListener {
+
+                startActivity(Intent(this@ReportsActivity, GenerateSalaryActivity::class.java))
                 overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
             }
 

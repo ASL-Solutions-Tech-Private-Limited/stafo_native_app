@@ -41,12 +41,12 @@ import java.util.Locale
 
 class AddEmployeeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddEmployeeBinding
-    private val calendar = Calendar.getInstance()
+
    // private var mSteps = 1
     private var selectGender: String="male"
     private var selectJobTitle: String=""
 
-
+    private val calendar = Calendar.getInstance()
     private var mDateOfJoining: String = ""
 
 

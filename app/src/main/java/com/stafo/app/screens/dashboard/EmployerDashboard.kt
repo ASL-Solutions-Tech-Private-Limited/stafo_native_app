@@ -56,6 +56,7 @@ import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.screens.settings.SubMenuActivity
 
 class EmployerDashboard : AppCompatActivity() {
+
     private lateinit var binding: ActivityEmployerDashboardBinding
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
@@ -427,13 +428,16 @@ class EmployerDashboard : AppCompatActivity() {
 
             if (it.status) {
 
-                val bannerList = listOf(it.data)
-                binding.imageSlider.setSliderAdapter(
-                    SliderAdapter(
-                        this@EmployerDashboard,
-                        bannerList
+                if (it.data.banner.isNotEmpty()) {
+                    binding.imageSlider.setSliderAdapter(
+                        SliderAdapter(
+                            it.data.path,
+                            it.data.banner
+                        )
                     )
-                )
+                }
+
+
             }
         }
 
@@ -506,6 +510,10 @@ class EmployerDashboard : AppCompatActivity() {
 
 
 
+
+
+
+
         stopLocationService()
 
         settingsViewModel.getCompanyDetails(this@EmployerDashboard)
@@ -567,7 +575,7 @@ class EmployerDashboard : AppCompatActivity() {
                 val getTotalEmp = binding.tvAllEmp.text.toString().trim()
 
                 if (getTotalEmp >= maxEmployeeAdd) {
-                   showUpgradeDialog()
+                    showUpgradeDialog()
                 } else {
                     startActivity(Intent(this, AddEmployeeActivity::class.java))
                 }

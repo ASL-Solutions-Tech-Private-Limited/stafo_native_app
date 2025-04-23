@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <RelativeLayout android:id="@+id/rtl_salary_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@drawable/list_item_bg">
+
+        <ImageView
+            android:id="@+id/iv_payroll_report"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginVertical="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:padding="@dimen/_2sdp"
+            android:src="@drawable/payroll"
+            android:tint="@color/blue"
+            tools:ignore="UseAppTint" />
+
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_toRightOf="@+id/iv_payroll_report"
+            android:fontFamily="@font/gilroy_regular"
+            android:text="Salary Type"
+            android:textColor="#16171b"
+            android:textSize="@dimen/_12ssp" />
+
+
+
+    </RelativeLayout>
+    <RelativeLayout android:id="@+id/rtl_generate_salary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@drawable/list_item_bg">
+
+        <ImageView
+            android:id="@+id/iv_generate_salary"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginVertical="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:padding="@dimen/_2sdp"
+            android:src="@drawable/payroll"
+            android:tint="@color/blue"
+            tools:ignore="UseAppTint" />
+
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_toRightOf="@+id/iv_generate_salary"
+            android:fontFamily="@font/gilroy_regular"
+            android:text="Generate Salary"
+            android:textColor="#16171b"
+            android:textSize="@dimen/_12ssp" />
+
+
+
+    </RelativeLayout>
+    <RelativeLayout android:id="@+id/rtl_salary_slip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@drawable/list_item_bg">
+
+        <ImageView
+            android:id="@+id/iv_salary_slip"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginVertical="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:padding="@dimen/_2sdp"
+            android:src="@drawable/payroll"
+            android:tint="@color/blue"
+            tools:ignore="UseAppTint" />
+
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_toRightOf="@+id/iv_salary_slip"
+            android:fontFamily="@font/gilroy_regular"
+            android:text="Salary Slip"
+            android:textColor="#16171b"
+            android:textSize="@dimen/_12ssp" />
+
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

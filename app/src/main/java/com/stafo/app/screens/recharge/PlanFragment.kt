@@ -39,7 +39,7 @@ class PlanFragment : Fragment() {
         val data: List<RechargeInfo>? = arguments?.getParcelableArrayList(ARG_DATA)
 
         if (data != null) {
-            recyclerView.adapter = AdapterMobilePlan(data)
+            recyclerView.adapter = AdapterMobilePlan(requireActivity(),data)
         }
 
         return view

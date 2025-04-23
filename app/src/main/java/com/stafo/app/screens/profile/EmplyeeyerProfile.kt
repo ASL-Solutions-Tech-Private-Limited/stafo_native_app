@@ -226,13 +226,14 @@ class EmplyeeyerProfile : AppCompatActivity() {
             binding.expandableOtherManagement.toggleLayout()
         }
 
-      /*  val tvReportsSettings = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_reports_settings)
+     /*   val tvReportsSettings = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_reports_settings)
 
         tvReportsSettings?.setOnClickListener {
             startActivity(Intent(this, ReportsActivity::class.java))
             overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
-        }
-*/
+        }*/
+
+
         val qrCodeSettings = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_generate_qr_settings)
 
         qrCodeSettings?.setOnClickListener {

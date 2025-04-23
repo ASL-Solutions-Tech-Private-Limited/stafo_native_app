@@ -41,224 +41,193 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_registration_title">
 
-        <LinearLayout
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/_12sdp"
-            android:layout_marginTop="@dimen/_12sdp"
-            android:layout_marginEnd="@dimen/_12sdp"
-            android:orientation="vertical"
-            android:visibility="visible">
+            android:layout_height="match_parent">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_employee"
+
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_6sdp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                app:endIconDrawable="@drawable/ic_down"
-                app:endIconMode="custom">
+                android:layout_height="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/btn_submit">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_employee"
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text_background"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:fontFamily="@font/gilroy_medium"
-                    android:hint="Employee"
-                    android:inputType="textPersonName"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_12ssp" />
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/_12sdp"
+                    android:orientation="vertical"
+                    android:visibility="visible">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_month"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        app:endIconDrawable="@drawable/ic_calendar_month"
+                        app:endIconMode="custom">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_salary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                app:endIconMode="custom">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tie_month"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_background"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:hint="Select month"
+                            android:inputType="textPersonName"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_salary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text_background"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:fontFamily="@font/gilroy_medium"
-                    android:hint="Basic salary"
-                    android:inputType="textPersonName"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_12ssp" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_employee"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        app:endIconDrawable="@drawable/ic_down"
+                        app:endIconMode="custom">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_month"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                app:endIconDrawable="@drawable/ic_calendar_month"
-                app:endIconMode="custom">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tie_employee"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_background"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:hint="Employee"
+                            android:inputType="textPersonName"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_month"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text_background"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:fontFamily="@font/gilroy_medium"
-                    android:hint="Select month"
-                    android:inputType="textPersonName"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_12ssp" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_salary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        app:endIconMode="custom">
 
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tie_salary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_background"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:hint="Basic salary"
+                            android:inputType="textPersonName"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:fontFamily="@font/gilroy_medium"
-                android:paddingStart="@dimen/_3sdp"
-                android:text="HRA (10%)"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_hra"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_4sdp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_hra_amount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text_background"
-                    android:fontFamily="@font/gilroy_medium"
-                    android:hint="Enter amount"
-                    android:inputType="number"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_12ssp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:fontFamily="@font/gilroy_medium"
-                android:paddingStart="@dimen/_3sdp"
-                android:text="DA (10%)"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp" />
+                    <LinearLayout
+                        android:id="@+id/llc_earning"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_da"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_4sdp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:paddingStart="@dimen/_4sdp"
+                            android:text="Earning:"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_da_amount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text_background"
-                    android:fontFamily="@font/gilroy_medium"
-                    android:hint="Enter amount"
-                    android:inputType="number"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_12ssp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:nestedScrollingEnabled="false"
+                            tools:itemCount="1"
+                            tools:listitem="@layout/recy_dynamic_salary_item_layout" />
+                    </LinearLayout>
 
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:fontFamily="@font/gilroy_medium"
-                android:paddingStart="@dimen/_3sdp"
-                android:text="Festival Bonus"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp" />
+                    <LinearLayout
+                        android:id="@+id/llc_deduction"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_bonus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_4sdp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:paddingStart="@dimen/_4sdp"
+                            android:text="Deduction:"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_bonus_amount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text_background"
-                    android:fontFamily="@font/gilroy_medium"
-                    android:hint="Enter amount"
-                    android:inputType="number"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_12ssp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_deduction_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:nestedScrollingEnabled="false"
+                            tools:itemCount="1"
+                            tools:listitem="@layout/recy_dynamic_salary_item_layout" />
+                    </LinearLayout>
 
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_gross_salary1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginTop="@dimen/_12sdp"
-                    android:fontFamily="@font/gilroy_regular"
-                    android:paddingStart="@dimen/_3sdp"
-                    android:text="Gross Salary: "
-                    android:textColor="@color/gray_colour"
-                    android:textSize="@dimen/_12ssp" />
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_gross_salary1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:fontFamily="@font/gilroy_regular"
+                            android:paddingStart="@dimen/_3sdp"
+                            android:text="Gross Salary: "
+                            android:textColor="@color/gray_colour"
+                            android:textSize="@dimen/_12ssp" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_gross_salary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="@dimen/_12sdp"
-                    android:layout_toRightOf="@+id/tv_gross_salary1"
-                    android:fontFamily="@font/gilroy_semi_bold"
-                    android:paddingStart="@dimen/_3sdp"
-                    android:text="42000"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_12ssp" />
-            </RelativeLayout>
-
-
-        </LinearLayout>
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_gross_salary"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:layout_toRightOf="@+id/tv_gross_salary1"
+                            android:fontFamily="@font/gilroy_semi_bold"
+                            android:paddingStart="@dimen/_3sdp"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp" />
+                    </RelativeLayout>
 
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/layout_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:weightSum="1">
+                </LinearLayout>
 
+            </ScrollView>
 
             <Button
                 android:id="@+id/btn_submit"
@@ -272,8 +241,11 @@
                 android:text="Submit"
                 android:textAllCaps="false"
                 android:textColor="@color/colorButtonText"
-                android:textSize="@dimen/_12ssp" />
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

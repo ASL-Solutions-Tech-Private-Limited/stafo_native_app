@@ -25,6 +25,7 @@ import com.stafo.app.utils.setCompanyDetails
 import com.stafo.app.utils.setIsCOMPANYLogin
 import com.stafo.app.utils.setUserAccessToken
 import com.google.android.material.textfield.TextInputEditText
+import com.stafo.app.base.request.RegisterRequest
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
@@ -62,31 +63,81 @@ class SignUpActivity : AppCompatActivity() {
         binding.apply {
             btnNext.setOnClickListener {
                 if (validateBasicInfo()) {
-                    val companyInfo = CompanyInfo(
-                        company_name = tieCompanyName.text.toString().trim(),
-                        company_type = userSelectCTypeId,
-                        business_type = userSelectBTypeId,
-                        registration_number = "",
-                        gst_number = "",
-                        pan_number = "",
-                        mobile_no = tieCompanyMobile.text.toString().trim(),
-                        email = tieCompanyEmail.text.toString().trim(),
-                        password = "",
-                        password_confirmation = "",
-                        country = "",
-                        state = "",
-                        city = "",
-                        address = "",
-                        pin = ""
-                    )
-                    val ownerInfo = OwnerInfo(
-                        first_name = tieOwnerName.text.toString().trim(),
-                        last_name = "",
-                        email = "",
-                        mobile = tieCompanyMobile.text.toString().trim()
 
-                    )
-                    authViewModel.registerUser(this@SignUpActivity,companyInfo,ownerInfo)
+
+                    if (tieReferCode.text.isNullOrEmpty()){
+
+                        val companyInfo = CompanyInfo(
+                            company_name = tieCompanyName.text.toString().trim(),
+                            company_type = userSelectCTypeId,
+                            business_type = userSelectBTypeId,
+                            registration_number = "",
+                            gst_number = "",
+                            pan_number = "",
+                            mobile_no = tieCompanyMobile.text.toString().trim(),
+                            email = tieCompanyEmail.text.toString().trim(),
+                            password = "",
+                            password_confirmation = "",
+                            country = "",
+                            state = "",
+                            city = "",
+                            address = "",
+                            pin = ""
+                        )
+                        val ownerInfo = OwnerInfo(
+                            first_name = tieOwnerName.text.toString().trim(),
+                            last_name = "",
+                            email = "",
+                            mobile = tieCompanyMobile.text.toString().trim()
+
+                        )
+
+
+                        val request = RegisterRequest(company_info = companyInfo, owner_info = ownerInfo)
+
+
+                        authViewModel.registerUser(this@SignUpActivity,request)
+
+
+
+
+                    }else{
+                        val companyInfo = CompanyInfo(
+                            company_name = tieCompanyName.text.toString().trim(),
+                            company_type = userSelectCTypeId,
+                            business_type = userSelectBTypeId,
+                            registration_number = "",
+                            gst_number = "",
+                            pan_number = "",
+                            mobile_no = tieCompanyMobile.text.toString().trim(),
+                            email = tieCompanyEmail.text.toString().trim(),
+                            password = "",
+                            password_confirmation = "",
+                            country = "",
+                            state = "",
+                            city = "",
+                            address = "",
+                            pin = ""
+                        )
+                        val ownerInfo = OwnerInfo(
+                            first_name = tieOwnerName.text.toString().trim(),
+                            last_name = "",
+                            email = "",
+                            mobile = tieCompanyMobile.text.toString().trim()
+
+                        )
+
+
+                        val request = RegisterRequest(company_info = companyInfo, owner_info = ownerInfo, referralCode = tieReferCode.text.toString().trim())
+
+
+                        authViewModel.registerUser(this@SignUpActivity,request)
+                    }
+
+
+
+
+
                 }
             }
 

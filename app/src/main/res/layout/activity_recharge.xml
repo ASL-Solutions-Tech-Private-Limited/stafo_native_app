@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="#80D3D3D3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".screens.recharge.RechargeActivity">
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -35,30 +36,131 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:fontFamily="@font/gilroy_semi_bold"
-                android:text="Select Recharge Plan"
+                android:text="Mobile Recharge"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14ssp" />
         </RelativeLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llc_recharge_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_14sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appbar">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_prepaid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Prepaid"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
+
+            <View
+                android:id="@+id/pre_view"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="1dp"
+                android:visibility="visible"
+                android:layout_below="@+id/tv_prepaid"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:background="@color/pending_colour" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_postpaid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Postpaid"
+                android:textColor="@color/gray_colour"
+                android:textSize="@dimen/_12ssp" />
+
+            <View
+                android:id="@+id/post_view"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="1dp"
+                android:visibility="gone"
+                android:layout_below="@+id/tv_postpaid"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:background="@color/pending_colour" />
+        </RelativeLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appbar"
-        app:tabIndicatorColor="@color/blue"
-        android:background="@color/white"
-        app:tabMode="scrollable"
-        app:tabTextColor="@color/black" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        app:endIconDrawable="@drawable/ic_user"
+        app:endIconMode="custom"
+        app:endIconTint="@color/app_theme_colour"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+        app:layout_constraintTop_toBottomOf="@id/llc_recharge_type">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tie_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/recharge_edit_text_background"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:fontFamily="@font/gilroy_medium"
+            android:hint="Enter name or Mobile no"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <TextView
+        android:id="@+id/tv_top"
+        app:layout_constraintTop_toBottomOf="@+id/til_contact"
+        android:text="Recent Recharges"
+        android:textAllCaps="true"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:textSize="@dimen/_12ssp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_recent_list"
+        app:layout_constraintTop_toBottomOf="@+id/tv_top"
+        android:layout_marginTop="@dimen/_12sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

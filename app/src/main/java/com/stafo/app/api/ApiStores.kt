@@ -18,6 +18,8 @@ import com.stafo.app.screens.auth.dataClass.OtpResponse
 import com.stafo.app.screens.auth.dataClass.OtpVerifyResponse
 import com.stafo.app.screens.auth.dataClass.SelfieAttendanceResponse
 import com.stafo.app.screens.auth.dataClass.StatesListResponse
+import com.stafo.app.screens.payroll.dataClass.SalaryRequest
+import com.stafo.app.screens.payroll.dataClass.SalaryResponse
 import com.stafo.app.screens.settings.dataClass.AddEmpRequestBody
 import com.stafo.app.screens.settings.dataClass.AddEmpResponse
 import com.stafo.app.screens.settings.dataClass.ApproveLeaveRequest
@@ -87,6 +89,16 @@ import com.stafo.app.screens.settings.dataClass.QRAttendanceMarkRequest
 import com.stafo.app.screens.settings.dataClass.QRAttendanceMarkResponse
 import com.stafo.app.screens.settings.dataClass.RemoveSelfieRequest
 import com.stafo.app.screens.settings.dataClass.RemoveSelfieResponse
+import com.stafo.app.screens.settings.dataClass.ReportsEmployeeListRequest
+import com.stafo.app.screens.settings.dataClass.ReportsEmployeeListResponse
+import com.stafo.app.screens.settings.dataClass.SalaryGeneratedRequest
+import com.stafo.app.screens.settings.dataClass.SalaryGeneratedResponse
+import com.stafo.app.screens.settings.dataClass.SalaryTypeDeleteRequest
+import com.stafo.app.screens.settings.dataClass.SalaryTypeDeleteResponse
+import com.stafo.app.screens.settings.dataClass.SalaryTypeListRequest
+import com.stafo.app.screens.settings.dataClass.SalaryTypeListResponse
+import com.stafo.app.screens.settings.dataClass.SalaryTypeRequest
+import com.stafo.app.screens.settings.dataClass.SalaryTypeResponse
 import com.stafo.app.screens.settings.dataClass.SelfieUploadResponse
 import com.stafo.app.screens.settings.dataClass.SendFeedbackRequest
 import com.stafo.app.screens.settings.dataClass.SendFeedbackResponse
@@ -576,5 +588,55 @@ interface ApiStores {
         @Body request: AssignDepartmentRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<AssignDepartmentResponse>
+
+
+    @POST("api/report/export-employee")
+    suspend fun callReportsEmployeeList(
+        @Body request: ReportsEmployeeListRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ReportsEmployeeListResponse>
+
+    @POST("api/report/export-leave")
+    suspend fun callReportsLeave(
+        @Body request: ReportsEmployeeListRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ReportsEmployeeListResponse>
+
+    @POST("api/report/export-attendace")
+    suspend fun callReportsAttendance(
+        @Body request: ReportsEmployeeListRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ReportsEmployeeListResponse>
+
+    @POST("api/salarytype/store")
+    suspend fun callSalaryType(
+        @Body request: SalaryTypeRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<SalaryTypeResponse>
+
+
+    @POST("api/salarytype/list")
+    suspend fun callSalaryTypeList(
+        @Body request: SalaryTypeListRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<SalaryTypeListResponse>
+
+    @POST("api/salarytype/delete")
+    suspend fun callDeleteSalaryType(
+        @Body request: SalaryTypeDeleteRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<SalaryTypeDeleteResponse>
+
+    @POST("api/salary/preview")
+    suspend fun callSalaryGenerate(
+        @Body request: SalaryGeneratedRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<SalaryGeneratedResponse>
+
+    @POST("api/salary/save")
+    suspend fun callSaveSalary(
+        @Body request: SalaryRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<SalaryResponse>
 
 }

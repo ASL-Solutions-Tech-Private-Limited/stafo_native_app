@@ -43,6 +43,9 @@ class ASLEmpMng : MultiDexApplication() {
             ?.create(ApiStores::class.java)
     }
 
+
+
+
     private fun initMapMyIndia() {
         MapmyIndiaAccountManager.getInstance().setRestAPIKey("b99061448178b709d1b24054f7ea218d")
         MapmyIndiaAccountManager.getInstance().setMapSDKKey("b99061448178b709d1b24054f7ea218d")

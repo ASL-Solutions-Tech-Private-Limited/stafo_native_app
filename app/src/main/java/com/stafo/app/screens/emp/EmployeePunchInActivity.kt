@@ -149,44 +149,12 @@ class EmployeePunchInActivity : AppCompatActivity() {
         }
 
 
-        val punchType =
-            PunchInType.valueOf(intent.getStringExtra("Punch_TYPE") ?: PunchInType.SELFIE.name)
 
-        /*if (punchType == PunchInType.SELFIE) {
-            binding.clEmpAttendSelfie.visibility = View.VISIBLE
-        } else {
-            binding.clEmpAttendSelfie.visibility = View.GONE
-            if (!isLocationEnabled()) {
-                showLocationServicesDialog()
-            } else {
-                checkLocationPermissionAndFind()
-            }
-        }*/
 
         binding.imageBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
             finish()
         }
-
-
-
-        binding.rlSelfiePunchIn.visibility = View.GONE
-
-
-
-
-
-
-        binding?.apply {
-
-
-            tvTakeSelfie.setOnClickListener {
-                openPicker(1101)
-            }
-
-
-        }
-
 
 
 
