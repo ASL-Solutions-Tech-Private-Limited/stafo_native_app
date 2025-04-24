@@ -26,5 +26,6 @@
     <dimen name="edittext_height">@dimen/_37sdp</dimen>
     <dimen name="miniWidth">@dimen/_90sdp</dimen>
     <dimen name="maxWidth">@dimen/_180sdp</dimen>
+    <dimen name="dialog_margin">@dimen/_12sdp</dimen>
 
 </resources>

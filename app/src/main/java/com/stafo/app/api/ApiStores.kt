@@ -18,8 +18,11 @@ import com.stafo.app.screens.auth.dataClass.OtpResponse
 import com.stafo.app.screens.auth.dataClass.OtpVerifyResponse
 import com.stafo.app.screens.auth.dataClass.SelfieAttendanceResponse
 import com.stafo.app.screens.auth.dataClass.StatesListResponse
+import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
 import com.stafo.app.screens.payroll.dataClass.SalaryRequest
 import com.stafo.app.screens.payroll.dataClass.SalaryResponse
+import com.stafo.app.screens.payroll.dataClass.SalarySlipRequest
+import com.stafo.app.screens.payroll.dataClass.SalarySlipResponse
 import com.stafo.app.screens.settings.dataClass.AddEmpRequestBody
 import com.stafo.app.screens.settings.dataClass.AddEmpResponse
 import com.stafo.app.screens.settings.dataClass.ApproveLeaveRequest
@@ -638,5 +641,17 @@ interface ApiStores {
         @Body request: SalaryRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<SalaryResponse>
+
+
+    @POST("api/employee/salary-slip/download")
+    suspend fun callSalarySlip(
+        @Body request: SalarySlipRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<SalarySlipResponse>
+
+    @GET("api/attendace/reports/list")
+    suspend fun callViewReportsList(
+        @Query("company_id") companyId: Int
+    ): Response<AllReportsListResponse>
 
 }

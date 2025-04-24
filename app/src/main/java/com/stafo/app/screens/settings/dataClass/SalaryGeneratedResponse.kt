@@ -19,6 +19,8 @@ data class SalaryComponent(
     val label: String,
     val amount: Int,
     val amount_type: String,
-    val payment_type: String
+    val payment_type: String,
+    val percentage: Int?
+
 )
 

@@ -31,8 +31,8 @@ class DynamicSalaryAdapter(private val fields: MutableList<SalaryComponent>) :
 
 
 
-        holder.textView.text = if (field.amount_type == "Percentage") {
-            "${field.label} (${field.amount}%)"
+        holder.textView.text = if (field.amount_type == "Percentage" && field.percentage != null) {
+            "${field.label} (${field.percentage}%)"
         } else {
             field.label
         }

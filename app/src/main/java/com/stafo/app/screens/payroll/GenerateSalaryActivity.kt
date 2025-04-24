@@ -2,6 +2,7 @@ package com.stafo.app.screens.payroll
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -27,6 +28,7 @@ import com.stafo.app.screens.settings.dataClass.SalaryGeneratedRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
+import com.stafo.app.utils.showCustomMonthYearPicker
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -87,16 +89,24 @@ class GenerateSalaryActivity : AppCompatActivity() {
                 finish()
             }
 
-            tieMonth.setOnClickListener {
-                showDatePicker()
+
+
+
+           tieMonth.setOnClickListener {
+                showCustomMonthYearPicker(this@GenerateSalaryActivity) { formattedDate, displayDate ->
+                    mMonthOfSalary = formattedDate
+                    binding.tieMonth.setText(displayDate)
+                    Log.d("date","$mMonthOfSalary")
+                }
             }
+
 
             btnSubmit.setOnClickListener {
 
                 val basicSalary=tieSalary.text.toString().trim()
                 val grossSalary=tvGrossSalary.text.toString().trim()
 
-                val format = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+                val format = SimpleDateFormat("yyyy-MM", Locale.getDefault())
                 val date = format.parse(mMonthOfSalary)
 
                 val monthFormat = SimpleDateFormat("MM", Locale.getDefault())
@@ -145,30 +155,7 @@ class GenerateSalaryActivity : AppCompatActivity() {
         return true
     }
 
-    private fun showDatePicker() {
-        val datePickerDialog = DatePickerDialog(
-            this, { _, year: Int, monthOfYear: Int, dayOfMonth: Int ->
-                val selectedDate = Calendar.getInstance()
-                selectedDate.set(year, monthOfYear, dayOfMonth)
-                val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
-                val formattedDate = dateFormat.format(selectedDate.time)
-                mMonthOfSalary=formattedDate
 
-
-                val displayFormat = SimpleDateFormat("MMM yy", Locale.getDefault())
-                val formattedDisplayDate = displayFormat.format(selectedDate.time)
-
-                binding.tieMonth.setText("$formattedDisplayDate")
-
-
-
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
-        datePickerDialog.show()
-    }
 
 
 

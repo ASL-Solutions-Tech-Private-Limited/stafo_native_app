@@ -43,12 +43,15 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
 import android.widget.ImageView
+import android.widget.NumberPicker
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
@@ -1529,6 +1532,83 @@ fun showFullScreenImage(activity:Activity,imageUrl: String) {
         ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.MATCH_PARENT
     )
+    dialog.show()
+}
+
+fun reportsFormatToMonthYear(dateString: String?): String {
+    if (dateString.isNullOrEmpty()) return "N/A"
+
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
+        val date = inputFormat.parse(dateString)
+        if (date != null) outputFormat.format(date) else "N/A"
+    } catch (e: Exception) {
+        "N/A"
+    }
+}
+
+
+fun showCustomMonthYearPicker(
+    context: Context,
+    onSelected: (formattedDate: String, displayDate: String) -> Unit
+) {
+    val dialog = Dialog(context)
+    dialog.setContentView(R.layout.dialog_month_year_picker)
+    dialog.setTitle("Select Month and Year")
+    dialog.setCancelable(false)
+
+    val window = dialog.window
+    window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+    val layoutParams = WindowManager.LayoutParams()
+    layoutParams.copyFrom(window?.attributes)
+    layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+    layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+    // Set margins
+    val marginHorizontal = context.resources.getDimensionPixelSize(R.dimen.dialog_margin)
+    window?.decorView?.setPadding(marginHorizontal, 0, marginHorizontal, 0)
+
+    window?.attributes = layoutParams
+
+    val monthPicker = dialog.findViewById<NumberPicker>(R.id.month_picker)
+    val yearPicker = dialog.findViewById<NumberPicker>(R.id.year_picker)
+    val btnOk = dialog.findViewById<AppCompatTextView>(R.id.btn_ok)
+    val btnCancel = dialog.findViewById<AppCompatTextView>(R.id.btn_cancel)
+
+    val months = arrayOf(
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    )
+
+    monthPicker.minValue = 0
+    monthPicker.maxValue = months.size - 1
+    monthPicker.displayedValues = months
+
+    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+    yearPicker.minValue = 2000
+    yearPicker.maxValue = currentYear + 20
+    yearPicker.value = currentYear
+
+    btnOk.setOnClickListener {
+        val selectedMonth = monthPicker.value
+        val selectedYear = yearPicker.value
+
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.MONTH, selectedMonth)
+        calendar.set(Calendar.YEAR, selectedYear)
+
+        val postFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
+        val displayFormat = SimpleDateFormat("MMM yy", Locale.getDefault())
+
+        onSelected(postFormat.format(calendar.time), displayFormat.format(calendar.time))
+        dialog.dismiss()
+    }
+
+    btnCancel.setOnClickListener {
+        dialog.dismiss()
+    }
+
     dialog.show()
 }
 

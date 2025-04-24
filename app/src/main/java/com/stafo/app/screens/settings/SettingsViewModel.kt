@@ -94,8 +94,11 @@ import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getUserAccessToken
 import com.caverock.androidsvg.SVG
 import com.google.gson.Gson
+import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
 import com.stafo.app.screens.payroll.dataClass.SalaryRequest
 import com.stafo.app.screens.payroll.dataClass.SalaryResponse
+import com.stafo.app.screens.payroll.dataClass.SalarySlipRequest
+import com.stafo.app.screens.payroll.dataClass.SalarySlipResponse
 import com.stafo.app.screens.settings.dataClass.AssignBranchRequest
 import com.stafo.app.screens.settings.dataClass.AssignBranchResponse
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
@@ -472,7 +475,105 @@ class SettingsViewModel : BaseViewModel() {
 
     val mSaveSalaryResponse: LiveData<SalaryResponse> get() = mSaveSalary
 
+    private var mSalarySlip: MutableLiveData<SalarySlipResponse> = MutableLiveData()
 
+    val mSalarySlipResponse: LiveData<SalarySlipResponse> get() = mSalarySlip
+
+
+    private var mAllReportsList: MutableLiveData<AllReportsListResponse> = MutableLiveData()
+
+    val mAllReportsListResponse: LiveData<AllReportsListResponse> get() = mAllReportsList
+
+
+
+    fun viewAllReportsList(
+        mContext: Context,
+        id: String
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callViewReportsList(id.toInt())
+
+                Log.d("res","All reports list  $response")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAllReportsList.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun getSalarySlip(
+        mContext: Context,
+        request: SalarySlipRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callSalarySlip(request)
+
+                Log.d("res","save salary  $response")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mSalarySlip.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
     fun saveSalary(
         mContext: Context,
