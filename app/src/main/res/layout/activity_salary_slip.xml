@@ -112,20 +112,42 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <ScrollView
-        android:layout_marginHorizontal="@dimen/_12sdp"
-        android:layout_marginVertical="@dimen/_12sdp"
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginTop="@dimen/_14sdp"
+        android:layout_marginBottom="@dimen/_12sdp"
         app:layout_constraintTop_toBottomOf="@+id/llc_top"
         app:layout_constraintBottom_toTopOf="@+id/llc_bottom"
         android:layout_width="match_parent"
         android:layout_height="0dp">
-       <!-- <com.rajat.pdfviewer.PdfRendererView
+
+        <com.rajat.pdfviewer.PdfRendererView
             android:id="@+id/pdfView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:pdfView_showDivider="false" />-->
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    </ScrollView>
+
+
+
+<!--
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>-->
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/llc_bottom"

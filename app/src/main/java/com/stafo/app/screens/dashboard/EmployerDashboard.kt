@@ -50,6 +50,7 @@ import com.stafo.app.utils.setIsLock
 import com.stafo.app.utils.setIsLockUser
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
+import com.stafo.app.screens.chat.ChatWithCompanyActivity
 import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.recharge.RechargeActivity
 import com.stafo.app.screens.reports.ReportsActivity
@@ -512,6 +513,11 @@ class EmployerDashboard : AppCompatActivity() {
 
         binding.llcRecharge.setOnClickListener {
             startActivity(Intent(this, DashboardActivity::class.java))
+        }
+
+        binding.llcLoan.setOnClickListener {
+            startActivity(Intent(this, ChatWithCompanyActivity::class.java))
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
 
 

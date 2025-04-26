@@ -31,4 +31,5 @@
     <color name="xp_blue_lite">#0ECBF5</color>
     <color name="blue_800">#1E40AF</color>
     <color name="deep_green">#008060</color>
+    <color name="chat_other_bg_color">#b5b4b4</color>
 </resources>

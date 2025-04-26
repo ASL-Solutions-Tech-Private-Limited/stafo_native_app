@@ -1,25 +1,17 @@
 package com.stafo.app.screens.payroll
 
-import android.app.DatePickerDialog
-import android.app.Dialog
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.Button
-import android.widget.NumberPicker
+import android.webkit.WebViewClient
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -33,7 +25,6 @@ import com.ajithvgiri.searchdialog.SearchableDialog
 import com.google.android.material.textfield.TextInputEditText
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivitySalarySlipBinding
-import com.stafo.app.screens.payroll.dataClass.SalaryRequest
 import com.stafo.app.screens.payroll.dataClass.SalarySlipRequest
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.dataClass.GetEmployee
@@ -41,10 +32,13 @@ import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 import com.stafo.app.utils.showCustomMonthYearPicker
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.internal.cache.CacheStrategy
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -52,6 +46,7 @@ import java.util.Locale
 class SalarySlipActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySalarySlipBinding
+
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
@@ -218,11 +213,16 @@ class SalarySlipActivity : AppCompatActivity() {
             if (it.success) {
 
                 CustomToast(this, it.message)
+                slipUrl = it.data.download_url
 
-                if (it.data?.download_url != null) {
-                    slipUrl = it.data.download_url
-                    //loadPdfFromUrl(slipUrl)
-
+                if (slipUrl.isNotBlank()) {
+                    binding.pdfView.initWithUrl(
+                        url = slipUrl,
+                        lifecycleCoroutineScope = lifecycleScope,
+                        lifecycle = lifecycle,
+                    )
+                } else {
+                    Log.e("PDF", "Slip URL is null or empty")
                 }
 
             } else CustomToast(this, it.message)
@@ -254,6 +254,7 @@ class SalarySlipActivity : AppCompatActivity() {
         }
     }
 
+
     private fun handleLoader(status: String) {
         if (status.equals("load", ignoreCase = true)) {
             if (!customLoader.isShowing) customLoader.show()
@@ -261,12 +262,8 @@ class SalarySlipActivity : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
-    /*private fun loadPdfFromUrl(url: String) {
-        binding.pdfView.initWithUrl(
-            url = url,
-            lifecycleScope=lifecycleScope
-        )
-    }*/
+
+
     private fun getMimeType(url: String): String {
         return when {
             url.endsWith(".pdf", ignoreCase = true) -> "application/pdf"
