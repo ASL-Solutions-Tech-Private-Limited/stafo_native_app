@@ -586,7 +586,7 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/layout_bottom_bar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_56sdp"
+            android:layout_height="@dimen/_60sdp"
             android:background="@drawable/gradient_bottom"
             android:orientation="horizontal"
             android:weightSum="4"
@@ -687,7 +687,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/gilroy_medium"
                     android:gravity="center"
-                    android:text="Others"
+                    android:text="Bharat\nConnect"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp" />
 

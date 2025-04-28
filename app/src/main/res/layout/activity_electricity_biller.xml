@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".screens.billpayment.ElectricityBillerActivity">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_back_btn"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/_9sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:padding="4dp"
+        android:src="@drawable/ic_back"
+        android:tint="@color/gray_colour"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UseAppTint" />
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llc_search"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_37sdp"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:background="@drawable/recharge_edit_text_background"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_back_btn">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_weight="1.8"
+            android:paddingVertical="@dimen/_4sdp"
+            android:src="@drawable/ic_search" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edt_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_weight="0.2"
+            android:background="@android:color/transparent"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:fontFamily="@font/poppins_regular"
+            android:hint="Search by biller"
+            android:maxLength="10"
+            android:paddingStart="@dimen/_10sdp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_list_operator"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_12sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llc_search"
+        tools:listitem="@layout/item_operator_layout" />
+</androidx.constraintlayout.widget.ConstraintLayout>

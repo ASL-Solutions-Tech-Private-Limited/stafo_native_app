@@ -18,6 +18,9 @@ import com.stafo.app.screens.auth.dataClass.OtpResponse
 import com.stafo.app.screens.auth.dataClass.OtpVerifyResponse
 import com.stafo.app.screens.auth.dataClass.SelfieAttendanceResponse
 import com.stafo.app.screens.auth.dataClass.StatesListResponse
+import com.stafo.app.screens.billpayment.dataClass.CategoryMenuResponse
+import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorRequest
+import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
 import com.stafo.app.screens.payroll.dataClass.SalaryRequest
 import com.stafo.app.screens.payroll.dataClass.SalaryResponse
@@ -653,5 +656,14 @@ interface ApiStores {
     suspend fun callViewReportsList(
         @Query("company_id") companyId: Int
     ): Response<AllReportsListResponse>
+
+    @POST("api/bbps-operators/list")
+    suspend fun callElectricityOperator(
+       @Body request: ElectricityOperatorRequest
+    ): Response<ElectricityOperatorResponse>
+
+    @GET("api/bbps/categories")
+    suspend fun callCategoryMenu(
+    ): Response<CategoryMenuResponse>
 
 }
