@@ -709,8 +709,8 @@
                     android:layout_height="@dimen/_24sdp"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/_8sdp"
-                    android:padding="@dimen/_2sdp"
-                    android:src="@drawable/loan"
+                    android:padding="@dimen/_3sdp"
+                    android:src="@drawable/chat"
                     android:tint="@color/white"
                     tools:ignore="UseAppTint" />
 
@@ -720,7 +720,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/gilroy_medium"
                     android:gravity="center"
-                    android:text="Loan"
+                    android:text="Chat"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12ssp" />
 

@@ -87,11 +87,15 @@ import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 import javax.xml.parsers.DocumentBuilderFactory
@@ -1611,5 +1615,18 @@ fun showCustomMonthYearPicker(
 
     dialog.show()
 }
+fun formatUtcTo12HourLocalTimeLegacy(utcTime: String): String {
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())
+        inputFormat.timeZone = TimeZone.getTimeZone("UTC")
 
+        val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        outputFormat.timeZone = TimeZone.getDefault()
+
+        val date: Date = inputFormat.parse(utcTime)!!
+        outputFormat.format(date)
+    } catch (e: Exception) {
+        " "
+    }
+}
 

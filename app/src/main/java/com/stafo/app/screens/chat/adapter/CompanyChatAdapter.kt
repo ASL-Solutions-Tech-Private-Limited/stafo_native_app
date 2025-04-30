@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.databinding.ChatItemLayoutBinding
-import com.stafo.app.screens.chat.model.ChatResponse
+import com.stafo.app.screens.chat.dataClass.Chat
+import com.stafo.app.screens.chat.dataClass.ChatResponse
+import com.stafo.app.utils.formatUtcTo12HourLocalTimeLegacy
 
 
 class CompanyChatAdapter (
-    private var list: List<ChatResponse>,
+    private var list: List<Chat>,
     var context: Context
 ) : RecyclerView.Adapter<CompanyChatAdapter.ViewHolder>() {
     inner class ViewHolder(val binding: ChatItemLayoutBinding) :
@@ -30,14 +32,17 @@ class CompanyChatAdapter (
         with(holder) {
             with(list[position]) {
 
-                if (this.checkUser == 0) {
-                    binding.otherChatLayout.visibility=View.VISIBLE
-                    binding.selfChatLayout.visibility=View.GONE
-                    binding.txtOtherChat.text=this.message
-                } else {
+                if (this.message_by == "company") {
                     binding.otherChatLayout.visibility=View.GONE
                     binding.selfChatLayout.visibility=View.VISIBLE
                     binding.txtSelfChat.text=this.message
+
+                    binding.txtSelfChatTime.text=formatUtcTo12HourLocalTimeLegacy(this.created_at)
+                } else {
+                    binding.otherChatLayout.visibility=View.VISIBLE
+                    binding.selfChatLayout.visibility=View.GONE
+                    binding.txtOtherChat.text=this.message
+                    binding.txtOtherChatTime.text=formatUtcTo12HourLocalTimeLegacy(this.created_at)
                 }
 
 

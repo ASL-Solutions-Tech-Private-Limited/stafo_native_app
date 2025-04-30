@@ -52,11 +52,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewChat"
-        android:layout_marginVertical="@dimen/_12sdp"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_parent_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_marginVertical="@dimen/_12sdp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_parent_layout"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -93,11 +93,11 @@
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edt_chat"
-                android:layout_marginEnd="@dimen/_12sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/_12sdp"
                 android:layout_toRightOf="@+id/iv_start"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_regular"

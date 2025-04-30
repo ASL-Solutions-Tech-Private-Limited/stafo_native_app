@@ -21,11 +21,20 @@ import com.stafo.app.screens.auth.dataClass.StatesListResponse
 import com.stafo.app.screens.billpayment.dataClass.CategoryMenuResponse
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorRequest
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorResponse
+import com.stafo.app.screens.chat.dataClass.ChatRequest
+import com.stafo.app.screens.chat.dataClass.ChatResponse
+import com.stafo.app.screens.chat.dataClass.SendChatRequest
+import com.stafo.app.screens.chat.dataClass.SendChatResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
 import com.stafo.app.screens.payroll.dataClass.SalaryRequest
 import com.stafo.app.screens.payroll.dataClass.SalaryResponse
 import com.stafo.app.screens.payroll.dataClass.SalarySlipRequest
 import com.stafo.app.screens.payroll.dataClass.SalarySlipResponse
+import com.stafo.app.screens.performance.dataClass.AddPerformanceRequest
+import com.stafo.app.screens.performance.dataClass.AddPerformanceResponse
+import com.stafo.app.screens.performance.dataClass.DeletePerformanceRequest
+import com.stafo.app.screens.performance.dataClass.DeletePerformanceResponse
+import com.stafo.app.screens.performance.dataClass.PerformanceTypeResponse
 import com.stafo.app.screens.settings.dataClass.AddEmpRequestBody
 import com.stafo.app.screens.settings.dataClass.AddEmpResponse
 import com.stafo.app.screens.settings.dataClass.ApproveLeaveRequest
@@ -241,8 +250,7 @@ interface ApiStores {
 
     @POST("api/login")
     suspend fun userLogin(
-        @Query("email") email: String,
-        @Query("password") password: String
+        @Query("email") email: String, @Query("password") password: String
     ): Response<LoginResponse>
 
     @POST("api/holidays-create")
@@ -301,8 +309,7 @@ interface ApiStores {
 
     @GET("api/employee-details/{id}")
     suspend fun callFetchEmployeeDetails(
-        @Path("id") id: String,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+        @Path("id") id: String, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<FetchEmployeeDetails>
 
     @POST("api/employees-update/{id}")
@@ -451,23 +458,20 @@ interface ApiStores {
 
     @DELETE("api/branch/delete/{id}")
     suspend fun callDeleteBranch(
-        @Path("id") id: Int,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+        @Path("id") id: Int, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeleteResponse>
-
 
 
     @DELETE("api/shifts/{id}")
     suspend fun callDeleteShift(
-        @Path("id") id: Int,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+        @Path("id") id: Int, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeleteResponse>
 
     @DELETE("api/holidays-delete/{id}")
     suspend fun callDeleteHoliday(
-        @Path("id") id: Int,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+        @Path("id") id: Int, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeleteResponse>
+
     @POST("api/employee-documents/list")
     suspend fun callEmployeeViewDocument(
         @Body request: EmployeeViewDocumentRequest,
@@ -492,7 +496,6 @@ interface ApiStores {
         @Body request: CompanyViewRequestDevice,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<CompanyViewRequestDeviceResponse>
-
 
 
     @Multipart
@@ -537,7 +540,6 @@ interface ApiStores {
     suspend fun deleteAccount(
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeleteCompanyResponse>
-
 
 
     @POST("api/leave-policy")
@@ -659,11 +661,53 @@ interface ApiStores {
 
     @POST("api/bbps-operators/list")
     suspend fun callElectricityOperator(
-       @Body request: ElectricityOperatorRequest
+        @Body request: ElectricityOperatorRequest
     ): Response<ElectricityOperatorResponse>
 
     @GET("api/bbps/categories")
     suspend fun callCategoryMenu(
     ): Response<CategoryMenuResponse>
+
+
+    @POST("api/chat/get")
+    suspend fun callChatAdmin(
+        @Body request: ChatRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ChatResponse>
+
+    @POST("api/chat/send")
+    suspend fun callSendChat(
+        @Body request: SendChatRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<SendChatResponse>
+
+    @POST("api/performancetype/list")
+    suspend fun callPerformanceType(
+        @Body request: ChatRequest, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<PerformanceTypeResponse>
+
+
+    @POST("api/performancetype/add")
+    suspend fun callAddPerformance(
+        @Body request: AddPerformanceRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AddPerformanceResponse>
+
+
+
+
+
+    @DELETE("api/performancetype/delete/{id}")
+    suspend fun callDeletePerformance(
+        @Path("id") id: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeletePerformanceResponse>
+
+    @POST("api/performancetype/update/{id}")
+    suspend fun callUpdatePerformance(
+        @Path("id") id: Int,
+        @Body request: AddPerformanceRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeletePerformanceResponse>
 
 }

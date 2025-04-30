@@ -49,8 +49,16 @@
         tools:replace="android:label"
         tools:targetApi="31">
         <activity
-            android:name=".screens.billpayment.ElectricityBillerActivity"
+            android:name=".screens.performance.CreatePerformanceTypeActivity"
             android:exported="false" />
+        <activity
+            android:name=".screens.performance.PerformanceActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.billpayment.ElectricityBillerActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.chat.ChatWithCompanyActivity"
             android:exported="false"

@@ -14,6 +14,15 @@ import com.stafo.app.screens.auth.LoginActivity
 import com.stafo.app.screens.billpayment.dataClass.CategoryMenuResponse
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorRequest
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorResponse
+import com.stafo.app.screens.chat.dataClass.ChatRequest
+import com.stafo.app.screens.chat.dataClass.ChatResponse
+import com.stafo.app.screens.chat.dataClass.SendChatRequest
+import com.stafo.app.screens.chat.dataClass.SendChatResponse
+import com.stafo.app.screens.performance.dataClass.AddPerformanceRequest
+import com.stafo.app.screens.performance.dataClass.AddPerformanceResponse
+import com.stafo.app.screens.performance.dataClass.DeletePerformanceRequest
+import com.stafo.app.screens.performance.dataClass.DeletePerformanceResponse
+import com.stafo.app.screens.performance.dataClass.PerformanceTypeResponse
 import com.stafo.app.screens.settings.dataClass.EmployeePostLocationRequest
 import com.stafo.app.utils.CustomToast
 import kotlinx.coroutines.Dispatchers
@@ -22,13 +31,280 @@ import kotlinx.coroutines.withContext
 
 class BillPaymentsViewModel : BaseViewModel() {
 
-    private var mElectricityOperator: MutableLiveData<ElectricityOperatorResponse> = MutableLiveData()
+    private var mElectricityOperator: MutableLiveData<ElectricityOperatorResponse> =
+        MutableLiveData()
 
     val mElectricityOperatorResponse: LiveData<ElectricityOperatorResponse> get() = mElectricityOperator
 
     private var mCategoryMenu: MutableLiveData<CategoryMenuResponse> = MutableLiveData()
 
     val mCategoryMenuResponse: LiveData<CategoryMenuResponse> get() = mCategoryMenu
+
+
+    private var mChat: MutableLiveData<ChatResponse> = MutableLiveData()
+
+    val mChatResponse: LiveData<ChatResponse> get() = mChat
+
+
+    private var mPerformanceType: MutableLiveData<PerformanceTypeResponse> = MutableLiveData()
+
+    val mPerformanceTypeResponse: LiveData<PerformanceTypeResponse> get() = mPerformanceType
+
+    private var mAddPerformance: MutableLiveData<AddPerformanceResponse> = MutableLiveData()
+
+    val mAddPerformanceResponse: LiveData<AddPerformanceResponse> get() = mAddPerformance
+
+    private var mSendChat: MutableLiveData<SendChatResponse> = MutableLiveData()
+
+    val mSendChatResponse: LiveData<SendChatResponse> get() = mSendChat
+
+
+    private var mDeletePerformance: MutableLiveData<DeletePerformanceResponse> = MutableLiveData()
+
+    val mDeletePerformanceResponse: LiveData<DeletePerformanceResponse> get() = mDeletePerformance
+
+
+    private var mUpdatePerformance: MutableLiveData<DeletePerformanceResponse> = MutableLiveData()
+
+    val mUpdatePerformanceResponse: LiveData<DeletePerformanceResponse> get() = mUpdatePerformance
+
+
+    fun updatePerformanceType(mContext: Context, id:Int,request:AddPerformanceRequest) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val response = ASLEmpMng.instance.apiStores()?.callUpdatePerformance(id,request)
+                Log.d("res", "performance type update : ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mUpdatePerformance.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun deletePerformanceType(mContext: Context, id:Int) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val response = ASLEmpMng.instance.apiStores()?.callDeletePerformance(id)
+                Log.d("res", "performance type delete : ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mDeletePerformance.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun sendChatRequest(mContext: Context, request: SendChatRequest) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val response = ASLEmpMng.instance.apiStores()?.callSendChat(request)
+                Log.d("res", "send chat data : ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mSendChat.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun createPerformance(mContext: Context, request: AddPerformanceRequest) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val response = ASLEmpMng.instance.apiStores()?.callAddPerformance(request)
+                Log.d("res", "performance type create : ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAddPerformance.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun getPerformanceTypeList(mContext: Context, request: ChatRequest) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val response = ASLEmpMng.instance.apiStores()?.callPerformanceType(request)
+                Log.d("res", "performance type list : ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mPerformanceType.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun getChatList(mContext: Context, request: ChatRequest) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val response = ASLEmpMng.instance.apiStores()?.callChatAdmin(request)
+                Log.d("res", "chatAdmin : ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mChat.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
     fun getMenuList(mContext: Context) {
@@ -56,8 +332,7 @@ class BillPaymentsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -71,7 +346,7 @@ class BillPaymentsViewModel : BaseViewModel() {
         }
     }
 
-    fun getElectricityOperator(mContext: Context,request: ElectricityOperatorRequest) {
+    fun getElectricityOperator(mContext: Context, request: ElectricityOperatorRequest) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -96,8 +371,7 @@ class BillPaymentsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -110,49 +384,6 @@ class BillPaymentsViewModel : BaseViewModel() {
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

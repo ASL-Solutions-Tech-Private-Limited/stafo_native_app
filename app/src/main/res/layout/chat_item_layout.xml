@@ -106,16 +106,15 @@
                 <TextView
                     android:id="@+id/txt_self_chat"
                     android:layout_width="match_parent"
-                    android:text="jhf jxfg zjdhjz hdgz zhfgzhdsvc zshdg  zdcv sdg"
+                    android:text="jh"
                     android:layout_height="wrap_content"
-                    android:textAlignment="textEnd"
+                    android:textAlignment="textStart"
                     android:layout_marginTop="@dimen/_8sdp"
                     android:layout_marginHorizontal="@dimen/_6sdp"
-                    android:paddingEnd="@dimen/_6sdp"
                     android:fontFamily="@font/poppins_regular"
                     app:layout_constraintBottom_toTopOf="@+id/txt_self_chat_time"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/txt_self_chat_time"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12ssp"
@@ -126,13 +125,11 @@
                     android:id="@+id/txt_self_chat_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_6sdp"
-                    android:layout_marginEnd="@dimen/_6sdp"
                     android:paddingBottom="@dimen/_4sdp"
                     android:textSize="@dimen/_8ssp"
                     android:text="3.12am"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="@+id/txt_self_chat" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
