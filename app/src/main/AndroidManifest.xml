@@ -49,6 +49,12 @@
         tools:replace="android:label"
         tools:targetApi="31">
         <activity
+            android:name=".screens.rank.RankListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.performance.EmpPerformanceAddActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.performance.CreatePerformanceTypeActivity"
             android:exported="false" />
         <activity

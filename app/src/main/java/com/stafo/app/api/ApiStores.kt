@@ -34,7 +34,13 @@ import com.stafo.app.screens.performance.dataClass.AddPerformanceRequest
 import com.stafo.app.screens.performance.dataClass.AddPerformanceResponse
 import com.stafo.app.screens.performance.dataClass.DeletePerformanceRequest
 import com.stafo.app.screens.performance.dataClass.DeletePerformanceResponse
+import com.stafo.app.screens.performance.dataClass.PerformanceAddRequest
+import com.stafo.app.screens.performance.dataClass.PerformanceAddResponse
 import com.stafo.app.screens.performance.dataClass.PerformanceTypeResponse
+import com.stafo.app.screens.rank.dataClass.PointsRequest
+import com.stafo.app.screens.rank.dataClass.PointsResponse
+import com.stafo.app.screens.rank.dataClass.RankListRequest
+import com.stafo.app.screens.rank.dataClass.RankListResponse
 import com.stafo.app.screens.settings.dataClass.AddEmpRequestBody
 import com.stafo.app.screens.settings.dataClass.AddEmpResponse
 import com.stafo.app.screens.settings.dataClass.ApproveLeaveRequest
@@ -709,5 +715,25 @@ interface ApiStores {
         @Body request: AddPerformanceRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeletePerformanceResponse>
+
+    @POST("api/performance/save")
+    suspend fun callSaveEmpPerformance(
+        @Body request: PerformanceAddRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<PerformanceAddResponse>
+
+
+
+    @POST("api/performance/rank-list")
+    suspend fun callRankListEmp(
+        @Body request: RankListRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<RankListResponse>
+
+    @POST("api/performance/rank-details")
+    suspend fun callPointsDetail(
+        @Body request: PointsRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<PointsResponse>
 
 }

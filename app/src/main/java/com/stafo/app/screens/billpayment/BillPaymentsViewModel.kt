@@ -22,7 +22,13 @@ import com.stafo.app.screens.performance.dataClass.AddPerformanceRequest
 import com.stafo.app.screens.performance.dataClass.AddPerformanceResponse
 import com.stafo.app.screens.performance.dataClass.DeletePerformanceRequest
 import com.stafo.app.screens.performance.dataClass.DeletePerformanceResponse
+import com.stafo.app.screens.performance.dataClass.PerformanceAddRequest
+import com.stafo.app.screens.performance.dataClass.PerformanceAddResponse
 import com.stafo.app.screens.performance.dataClass.PerformanceTypeResponse
+import com.stafo.app.screens.rank.dataClass.PointsRequest
+import com.stafo.app.screens.rank.dataClass.PointsResponse
+import com.stafo.app.screens.rank.dataClass.RankListRequest
+import com.stafo.app.screens.rank.dataClass.RankListResponse
 import com.stafo.app.screens.settings.dataClass.EmployeePostLocationRequest
 import com.stafo.app.utils.CustomToast
 import kotlinx.coroutines.Dispatchers
@@ -67,6 +73,143 @@ class BillPaymentsViewModel : BaseViewModel() {
     private var mUpdatePerformance: MutableLiveData<DeletePerformanceResponse> = MutableLiveData()
 
     val mUpdatePerformanceResponse: LiveData<DeletePerformanceResponse> get() = mUpdatePerformance
+
+
+    private var mPerformanceAdd: MutableLiveData<PerformanceAddResponse> = MutableLiveData()
+
+    val mPerformanceAddResponse: LiveData<PerformanceAddResponse> get() = mPerformanceAdd
+
+
+    private var mRankList: MutableLiveData<RankListResponse> = MutableLiveData()
+
+
+    val mRankListResponse: LiveData<RankListResponse> get() = mRankList
+
+    private var mPoints: MutableLiveData<PointsResponse> = MutableLiveData()
+
+
+    val mPointsResponse: LiveData<PointsResponse> get() = mPoints
+
+
+    fun viewPointsDetails(mContext: Context,request: PointsRequest) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val response = ASLEmpMng.instance.apiStores()?.callPointsDetail(request)
+                Log.d("res", "point details list : ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mPoints.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+    fun viewRankList(mContext: Context,request: RankListRequest) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val response = ASLEmpMng.instance.apiStores()?.callRankListEmp(request)
+                Log.d("res", "rank list : ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mRankList.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun savePerformance(mContext: Context,request: PerformanceAddRequest) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val response = ASLEmpMng.instance.apiStores()?.callSaveEmpPerformance(request)
+                Log.d("res", "performance  save : ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mPerformanceAdd.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
     fun updatePerformanceType(mContext: Context, id:Int,request:AddPerformanceRequest) {

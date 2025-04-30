@@ -42,7 +42,9 @@ import com.stafo.app.utils.getIsCOMPANYLogin
 import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.gson.Gson
+import com.stafo.app.screens.performance.EmpPerformanceAddActivity
 import com.stafo.app.screens.performance.PerformanceActivity
+import com.stafo.app.screens.rank.RankListActivity
 import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.screens.settings.AssignBranchActivity
 import com.stafo.app.screens.settings.UploadSelfieAttendanceActivity
@@ -225,6 +227,13 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
         binding?.expandableOtherManagement?.setOnClickListener {
             binding.expandableOtherManagement.toggleLayout()
+        }
+
+        val tvRankList = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_rank_list)
+        tvRankList?.setOnClickListener {
+
+            startActivity(Intent(this, RankListActivity::class.java))
+            overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
         }
 
         val performanceType = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_performance_type)
