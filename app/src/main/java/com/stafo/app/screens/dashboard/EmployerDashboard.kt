@@ -511,14 +511,14 @@ class EmployerDashboard : AppCompatActivity() {
 
 
 
-        binding.llcRecharge.setOnClickListener {
+        /*binding.llcRecharge.setOnClickListener {
             startActivity(Intent(this, DashboardActivity::class.java))
         }
 
         binding.llcLoan.setOnClickListener {
             startActivity(Intent(this, ChatWithCompanyActivity::class.java))
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
-        }
+        }*/
 
 
 

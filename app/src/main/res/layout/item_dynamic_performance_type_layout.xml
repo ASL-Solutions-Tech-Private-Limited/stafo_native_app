@@ -25,6 +25,7 @@
         android:background="@drawable/edit_text_background"
         android:fontFamily="@font/gilroy_regular"
         android:inputType="number"
+        android:hint="Enter point"
         android:maxLength="3"
         android:paddingHorizontal="@dimen/_12sdp"
         android:textColor="@color/black"

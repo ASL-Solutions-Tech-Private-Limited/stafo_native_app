@@ -30,11 +30,11 @@ class DynamicPerformanceAdapter(
     override fun onBindViewHolder(holder: DynamicViewHolder, position: Int) {
         val item = inputList[position]
         holder.textView.text = item.performanceType.name
-        holder.editText.setText(item.amount)
+        holder.editText.setText(item.points)
 
         holder.editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                item.amount = s.toString()
+                item.points = s.toString()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -48,7 +48,7 @@ class DynamicPerformanceAdapter(
         return inputList.map {
             DynamicPerformanceList(
                 type_id = it.performanceType.id,
-                points = it.amount
+                points = it.points
             )
         }
     }
