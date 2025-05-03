@@ -1,5 +1,6 @@
 package com.stafo.app.base
 
+import android.content.Context
 import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
@@ -45,5 +46,9 @@ open abstract class BaseActivity <T : ViewDataBinding, V : BaseViewModel> : AppC
             setVariable(bindingVariable, mViewModel)
             executePendingBindings()
         }
+    }
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(FontScaleContextWrapper.wrap(base))
     }
 }

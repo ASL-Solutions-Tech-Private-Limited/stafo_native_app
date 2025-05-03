@@ -6,11 +6,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.stafo.app.ASLEmpMng
 import com.stafo.app.R
 import com.stafo.app.base.BaseViewModel
 import com.stafo.app.base.model.ErrorResponse
 import com.stafo.app.screens.auth.LoginActivity
+import com.stafo.app.screens.billpayment.dataClass.BbpsOperatorDetailsResponse
+import com.stafo.app.screens.billpayment.dataClass.BillerInputParamsRaw
 import com.stafo.app.screens.billpayment.dataClass.CategoryMenuResponse
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorRequest
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorResponse
@@ -89,6 +92,66 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     val mPointsResponse: LiveData<PointsResponse> get() = mPoints
+
+
+    private var mOperatorDetails: MutableLiveData<BbpsOperatorDetailsResponse> = MutableLiveData()
+
+
+    val mOperatorDetailsResponse: LiveData<BbpsOperatorDetailsResponse> get() = mOperatorDetails
+
+
+
+    fun getOperatorDetails(mContext: Context, operatorCode: String) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callOperatorDetails(operatorCode)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+
+                    if (response?.isSuccessful == true) {
+                        val jsonBody = response.body()?.string()
+                        val gson = Gson()
+                        val operatorDetails = gson.fromJson(jsonBody, BbpsOperatorDetailsResponse::class.java)
+
+                        try {
+                            val rawParams = operatorDetails.mdmRequestNew.biller.billerInputParams
+                            val inputFields = rawParams.toNormalized()
+
+                            if (inputFields.isNotEmpty()) {
+                                Log.d("paramInfo", inputFields.toString())
+                                mOperatorDetails.postValue(operatorDetails)
+                            } else {
+                                CustomToast(mContext, "No input fields found")
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            CustomToast(mContext, "Error parsing input fields: ${e.localizedMessage}")
+                        }
+
+                    } else {
+                        CustomToast(mContext, "Error: ${response?.code()}")
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, "Exception: ${e.localizedMessage}")
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
 
 
     fun viewPointsDetails(mContext: Context,request: PointsRequest) {

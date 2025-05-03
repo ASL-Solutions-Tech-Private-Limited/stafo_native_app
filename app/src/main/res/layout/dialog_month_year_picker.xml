@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/custom_item_card_bg">
+
         <LinearLayout
             android:id="@+id/llc_top"
             android:layout_width="match_parent"
@@ -76,7 +77,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:fontFamily="@font/poppins_medium"
-                android:text="OK"
+                android:paddingHorizontal="@dimen/_6sdp"
+                android:text="Ok"
                 android:textAllCaps="true"
                 android:textColor="@color/colorTextPrimary"
                 android:textSize="@dimen/_12ssp"
@@ -102,7 +104,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
 </FrameLayout>

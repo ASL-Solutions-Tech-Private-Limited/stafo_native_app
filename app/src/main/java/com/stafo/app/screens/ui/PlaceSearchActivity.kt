@@ -37,6 +37,13 @@ import com.stafo.app.screens.auth.dataClass.DataStates
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONObject
+import java.io.IOException
 
 class PlaceSearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlaceSearchBinding
@@ -186,6 +193,11 @@ class PlaceSearchActivity : AppCompatActivity() {
         }
 
     }
+
+
+
+
+
 
 
     private fun setUpMapClickListener() {

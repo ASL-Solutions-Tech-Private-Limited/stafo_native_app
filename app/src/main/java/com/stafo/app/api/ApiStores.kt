@@ -18,6 +18,7 @@ import com.stafo.app.screens.auth.dataClass.OtpResponse
 import com.stafo.app.screens.auth.dataClass.OtpVerifyResponse
 import com.stafo.app.screens.auth.dataClass.SelfieAttendanceResponse
 import com.stafo.app.screens.auth.dataClass.StatesListResponse
+import com.stafo.app.screens.billpayment.dataClass.BbpsOperatorDetailsResponse
 import com.stafo.app.screens.billpayment.dataClass.CategoryMenuResponse
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorRequest
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorResponse
@@ -735,5 +736,12 @@ interface ApiStores {
         @Body request: PointsRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<PointsResponse>
+
+
+    @GET("api/bbps-operators/details/{operator_code}")
+    suspend fun callOperatorDetails(
+        @Path("operator_code") id: String,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ResponseBody>
 
 }

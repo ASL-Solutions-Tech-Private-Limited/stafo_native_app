@@ -1,5 +1,6 @@
 package com.stafo.app.screens.billpayment
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,6 +8,7 @@ import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -46,6 +48,7 @@ class ElectricityBillerActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
         mCategory = intent.getStringExtra("type").toString()
 
@@ -72,7 +75,7 @@ class ElectricityBillerActivity : AppCompatActivity() {
         )
         billPaymentsViewModel.getElectricityOperator(this@ElectricityBillerActivity, request)
 
-        binding.imgBackBtn.setOnClickListener {
+        binding.imageBack.setOnClickListener {
             onBackPressed()
         }
 
@@ -102,6 +105,14 @@ class ElectricityBillerActivity : AppCompatActivity() {
                         object : AdapterElectricityItemList.onOperatorClick {
                             override fun onElOperatorClick(operatorCode: String) {
                                 Log.d("res", "get code $operatorCode")
+
+                                startActivity(
+                                    Intent(
+                                        this@ElectricityBillerActivity,
+                                        OperatorDetailsActivity::class.java
+                                    ).apply {
+                                        putExtra("operatorCode", operatorCode)
+                                    })
                             }
 
                         })
