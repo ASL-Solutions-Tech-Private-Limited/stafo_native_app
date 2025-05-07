@@ -45,6 +45,7 @@ import com.google.gson.Gson
 import com.stafo.app.screens.performance.EmpPerformanceAddActivity
 import com.stafo.app.screens.performance.PerformanceActivity
 import com.stafo.app.screens.rank.RankListActivity
+import com.stafo.app.screens.referral.ReferActivity
 import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.screens.settings.AssignBranchActivity
 import com.stafo.app.screens.settings.UploadSelfieAttendanceActivity
@@ -354,6 +355,11 @@ class EmplyeeyerProfile : AppCompatActivity() {
         binding.expandableOtherManagement.findViewById<AppCompatTextView>(R.id.tv_need_help_company)
             .setOnClickListener {
                 startActivity(Intent(this, HelpSupportActivity::class.java))
+            }
+
+        binding.expandableOtherManagement.findViewById<AppCompatTextView>(R.id.tv_refer_company)
+            .setOnClickListener {
+                startActivity(Intent(this, ReferActivity::class.java))
             }
 
 

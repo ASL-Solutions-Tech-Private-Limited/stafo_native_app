@@ -3,8 +3,8 @@
 
     <item
         android:drawable="@drawable/report_download"
-        android:width="@dimen/_16sdp"
-        android:height="@dimen/_16sdp"
+        android:width="@dimen/_15sdp"
+        android:height="@dimen/_14sdp"
         />
 
 </layer-list >

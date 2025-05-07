@@ -42,6 +42,7 @@ import com.stafo.app.screens.rank.dataClass.PointsRequest
 import com.stafo.app.screens.rank.dataClass.PointsResponse
 import com.stafo.app.screens.rank.dataClass.RankListRequest
 import com.stafo.app.screens.rank.dataClass.RankListResponse
+import com.stafo.app.screens.referral.dataClass.ReferralResponse
 import com.stafo.app.screens.settings.dataClass.AddEmpRequestBody
 import com.stafo.app.screens.settings.dataClass.AddEmpResponse
 import com.stafo.app.screens.settings.dataClass.ApproveLeaveRequest
@@ -743,5 +744,10 @@ interface ApiStores {
         @Path("operator_code") id: String,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<ResponseBody>
+
+    @POST("api/referral-list")
+    suspend fun callReferList(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ReferralResponse>
 
 }

@@ -32,6 +32,7 @@ import com.stafo.app.screens.rank.dataClass.PointsRequest
 import com.stafo.app.screens.rank.dataClass.PointsResponse
 import com.stafo.app.screens.rank.dataClass.RankListRequest
 import com.stafo.app.screens.rank.dataClass.RankListResponse
+import com.stafo.app.screens.referral.dataClass.ReferralResponse
 import com.stafo.app.screens.settings.dataClass.EmployeePostLocationRequest
 import com.stafo.app.utils.CustomToast
 import kotlinx.coroutines.Dispatchers
@@ -98,6 +99,55 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     val mOperatorDetailsResponse: LiveData<BbpsOperatorDetailsResponse> get() = mOperatorDetails
+
+
+
+
+    private var mReferral: MutableLiveData<ReferralResponse> = MutableLiveData()
+
+
+    val mReferralDetailsResponse: LiveData<ReferralResponse> get() = mReferral
+
+
+
+    fun getReferList(mContext: Context) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val response = ASLEmpMng.instance.apiStores()?.callReferList()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mReferral.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
 
