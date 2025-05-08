@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/rl_emp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:background="@drawable/custom_item_card_bg"
+        android:padding="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llc_edit_delete"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/_4sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/item_edit"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_alignParentEnd="true"
+                android:background="@color/tea_green"
+                android:src="@drawable/edit_pen"
+                android:tint="@color/app_theme_colour"
+                app:contentPadding="@dimen/_5sdp"
+                app:shapeAppearanceOverlay="@style/Circular" />
+            <View
+                android:layout_width="1dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="@dimen/_10sdp"/>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/item_delete"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_alignParentEnd="true"
+                android:background="@color/tea_green"
+                android:src="@drawable/delete"
+                android:tint="@color/pastel_red"
+                app:contentPadding="@dimen/_3sdp"
+                app:shapeAppearanceOverlay="@style/Circular" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+
+        <TextView
+            android:id="@+id/txt_branch_name1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:fontFamily="@font/gilroy_medium"
+            android:singleLine="true"
+            android:text="Name:"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_toLeftOf="@+id/llc_edit_delete"
+            android:layout_toRightOf="@+id/txt_branch_name1"
+            android:fontFamily="@font/gilroy_regular"
+            android:singleLine="true"
+            android:text="Text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/txt_branch_address1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_name"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:singleLine="true"
+            android:text="Description:"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_name"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:layout_toLeftOf="@+id/llc_edit_delete"
+            android:layout_toRightOf="@+id/txt_branch_address1"
+            android:fontFamily="@font/gilroy_regular"
+            android:maxLines="2"
+            android:text="Description"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+    </RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

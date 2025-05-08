@@ -374,9 +374,6 @@ class AttendanceReportActivity : AppCompatActivity() {
                     val fileName = fileUrl.substringAfterLast("/")
                     val mimeType = getMimeType(fileUrl)
 
-                    Log.d("res", "get reports $fileUrl mimeType: $mimeType")
-
-                    // Start download
                     downloadFile(this, fileUrl, fileName, mimeType)
                 } else {
                     CustomToast(this, "Download URL is missing.")

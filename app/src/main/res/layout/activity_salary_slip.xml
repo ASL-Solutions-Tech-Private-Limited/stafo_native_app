@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="#80D3D3D3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".screens.payroll.SalarySlipActivity">
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
@@ -40,359 +41,523 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:fontFamily="@font/gilroy_semi_bold"
-                android:text="Salary Slip"
+                android:text="Download Salary Slip"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_14ssp" />
 
-            <ImageView
-                android:id="@+id/image_settings"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/_9sdp"
-                android:scaleType="fitXY"
-                android:src="@drawable/ic_downloads"
-                android:tint="@color/white"
-                android:visibility="visible"
-                tools:ignore="UseAppTint" />
+
 
         </RelativeLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
-        android:id="@+id/rl_top"
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llc_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_10sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="@dimen/_12sdp"
+        android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_month"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:layout_weight="1"
-            android:fontFamily="@font/gilroy_semi_bold"
-            android:text="Reports"
-            android:textAlignment="center"
-            android:textColor="#565656"
-            android:textSize="@dimen/_12ssp"
-            app:drawableTint="@color/black" />
+            android:layout_marginTop="@dimen/_10sdp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            app:endIconDrawable="@drawable/ic_calendar_month"
+            app:endIconMode="custom">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tie_month"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_background"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:fontFamily="@font/gilroy_medium"
+                android:hint="Select month"
+                android:inputType="textPersonName"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_employee"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginVertical="@dimen/_4sdp"
-            android:id="@+id/ll_calendar"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/custom_round_card_bg"
-            android:orientation="horizontal">
+            android:layout_marginTop="@dimen/_12sdp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            app:endIconDrawable="@drawable/ic_down"
+            app:endIconMode="custom">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tie_employee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_background"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:fontFamily="@font/gilroy_medium"
+                android:hint="Employee"
+                android:inputType="textPersonName"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginTop="@dimen/_14sdp"
+        android:layout_marginBottom="@dimen/_12sdp"
+        app:layout_constraintTop_toBottomOf="@+id/llc_top"
+        app:layout_constraintBottom_toTopOf="@+id/llc_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <com.rajat.pdfviewer.PdfRendererView
+            android:id="@+id/pdfView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llc_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:weightSum="2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RelativeLayout
+            android:id="@+id/rtl_share"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_32sdp"
+            android:layout_below="@+id/txt_report_type"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_toLeftOf="@+id/llc_share"
+            android:layout_weight="1"
+            android:background="@drawable/custom_date_bg"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
             <ImageView
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_marginVertical="@dimen/_6sdp"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:src="@drawable/ic_calendar_month" />
+                android:id="@+id/iv_share"
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="end"
+                android:layout_marginStart="@dimen/_24sdp"
+                android:paddingVertical="@dimen/_10sdp"
+                android:src="@drawable/ic_whatsapp" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
+                android:id="@+id/tv_share"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
-                android:layout_weight="1"
-                android:id="@+id/txt_date"
-                android:fontFamily="@font/gilroy_semi_bold"
-                android:text="02-2025"
-                android:textColor="#565656"
-                android:textSize="@dimen/_12ssp"
-                app:drawableTint="@color/black" />
-        </LinearLayout>
+                android:layout_toRightOf="@+id/iv_share"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Share"
+                android:layout_centerVertical="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
 
+        </RelativeLayout>
 
-    </RelativeLayout>
-
-
-
-    <RelativeLayout
-        android:layout_marginTop="@dimen/_14sdp"
-        android:layout_marginHorizontal="@dimen/_12sdp"
-        app:layout_constraintTop_toBottomOf="@+id/rl_top"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/custom_item_card_bg"
-        android:paddingHorizontal="@dimen/_8sdp"
-        android:paddingVertical="@dimen/_10sdp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_emp_name1"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:text="Employee Name"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_regular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_emp_name"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:layout_alignParentTop="true"
-           android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/txt_emp_name1"
-            android:text="Hamid "
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-
-
-        <androidx.appcompat.widget.AppCompatTextView
-          android:layout_below="@+id/txt_emp_name"
-            android:layout_alignParentStart="true"
-            android:text="Employee Code"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_regular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_emp_code"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:layout_below="@+id/txt_emp_name"
-            android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/txt_emp_name1"
-            android:text="EM-0012"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_below="@+id/txt_emp_code"
-            android:layout_alignParentStart="true"
-            android:text="Location"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_regular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_emp_location"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:layout_below="@+id/txt_emp_code"
-            android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/txt_emp_name1"
-            android:text="Kolkata"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_below="@+id/txt_emp_location"
-            android:layout_alignParentStart="true"
-            android:text="Department"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_regular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_emp_department"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:layout_below="@+id/txt_emp_location"
-            android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/txt_emp_name1"
-            android:text="IT"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_below="@+id/txt_emp_department"
-            android:layout_alignParentStart="true"
-            android:text="Payable Days"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_regular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_payable_days"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:layout_below="@+id/txt_emp_department"
-            android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/txt_emp_name1"
-            android:text="20"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_below="@+id/txt_payable_days"
-            android:layout_alignParentStart="true"
-            android:text="Basic Salary"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_regular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_basic_salary"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:layout_below="@+id/txt_payable_days"
-            android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/txt_emp_name1"
-            android:text="\u20B9 2000"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_below="@+id/txt_basic_salary"
-            android:layout_alignParentStart="true"
-            android:text="Earnings"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_regular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_earning"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:layout_below="@+id/txt_basic_salary"
-            android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/txt_emp_name1"
-            android:text="\u20B9 200"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_below="@+id/txt_earning"
-            android:layout_alignParentStart="true"
-            android:text="Deductions"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_regular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_deductions"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:layout_below="@+id/txt_earning"
-            android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/txt_emp_name1"
-            android:text="\u20B9 100"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <View
-            android:id="@+id/view"
-            android:layout_below="@+id/txt_deductions"
-            android:layout_marginTop="@dimen/_8sdp"
+        <RelativeLayout
+            android:id="@+id/rtl_download"
             android:layout_width="match_parent"
-            android:background="@color/gray_colour"
-            android:layout_height="1dp"/>
+            android:layout_height="@dimen/_32sdp"
+            android:layout_below="@+id/txt_report_type"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_toLeftOf="@+id/llc_share"
+            android:layout_weight="1"
+            android:background="@drawable/custom_date_bg"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_below="@+id/view"
-            android:layout_alignParentStart="true"
-            android:text="Total Payable"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <ImageView
+                android:id="@+id/iv_download"
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="end"
+                android:layout_marginStart="@dimen/_24sdp"
+                android:tint="@color/deep_green"
+                android:paddingVertical="@dimen/_9sdp"
+                android:src="@drawable/ic_downloads"
+                tools:ignore="UseAppTint" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_total_payable"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:layout_below="@+id/view"
-            android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/txt_emp_name1"
-            android:text="\u20B9 2100"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:textAlignment="textEnd"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_semi_bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tv_download"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/iv_download"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Download"
+                android:layout_centerVertical="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
 
+        </RelativeLayout>
 
 
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <!--   <RelativeLayout
+           android:id="@+id/rl_top"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="@dimen/_10sdp"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toBottomOf="@id/app_bar_layout">
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_alignParentStart="true"
+               android:layout_centerVertical="true"
+               android:layout_marginStart="@dimen/_10sdp"
+               android:layout_weight="1"
+               android:fontFamily="@font/gilroy_semi_bold"
+               android:text="Reports"
+               android:textAlignment="center"
+               android:textColor="#565656"
+               android:textSize="@dimen/_12ssp"
+               app:drawableTint="@color/black" />
+
+           <LinearLayout
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_alignParentEnd="true"
+               android:layout_centerVertical="true"
+               android:layout_marginVertical="@dimen/_4sdp"
+               android:id="@+id/ll_calendar"
+               android:layout_marginEnd="@dimen/_10sdp"
+               android:background="@drawable/custom_round_card_bg"
+               android:orientation="horizontal">
+
+               <ImageView
+                   android:layout_width="@dimen/_20sdp"
+                   android:layout_height="@dimen/_20sdp"
+                   android:layout_marginVertical="@dimen/_6sdp"
+                   android:layout_marginStart="@dimen/_8sdp"
+                   android:src="@drawable/ic_calendar_month" />
+
+               <androidx.appcompat.widget.AppCompatTextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_alignParentStart="true"
+                   android:layout_gravity="center_vertical"
+                   android:layout_marginStart="@dimen/_10sdp"
+                   android:layout_marginEnd="@dimen/_8sdp"
+                   android:layout_weight="1"
+                   android:id="@+id/txt_date"
+                   android:fontFamily="@font/gilroy_semi_bold"
+                   android:text="02-2025"
+                   android:textColor="#565656"
+                   android:textSize="@dimen/_12ssp"
+                   app:drawableTint="@color/black" />
+           </LinearLayout>
+
+
+       </RelativeLayout>
 
 
 
-    </RelativeLayout>
+       <RelativeLayout
+           android:layout_marginTop="@dimen/_14sdp"
+           android:layout_marginHorizontal="@dimen/_12sdp"
+           app:layout_constraintTop_toBottomOf="@+id/rl_top"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           android:background="@drawable/custom_item_card_bg"
+           android:paddingHorizontal="@dimen/_8sdp"
+           android:paddingVertical="@dimen/_10sdp"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
 
+           <androidx.appcompat.widget.AppCompatTextView
+               android:id="@+id/txt_emp_name1"
+               android:layout_alignParentTop="true"
+               android:layout_alignParentStart="true"
+               android:text="Employee Name"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_regular"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:id="@+id/txt_emp_name"
+               android:layout_marginStart="@dimen/_6sdp"
+               android:layout_alignParentTop="true"
+              android:layout_alignParentEnd="true"
+               android:layout_toRightOf="@+id/txt_emp_name1"
+               android:text="Hamid "
+               android:textAlignment="textEnd"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_medium"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+
+
+           <androidx.appcompat.widget.AppCompatTextView
+             android:layout_below="@+id/txt_emp_name"
+               android:layout_alignParentStart="true"
+               android:text="Employee Code"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_regular"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:id="@+id/txt_emp_code"
+               android:layout_marginStart="@dimen/_6sdp"
+               android:layout_below="@+id/txt_emp_name"
+               android:layout_alignParentEnd="true"
+               android:layout_toRightOf="@+id/txt_emp_name1"
+               android:text="EM-0012"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textAlignment="textEnd"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_medium"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:layout_below="@+id/txt_emp_code"
+               android:layout_alignParentStart="true"
+               android:text="Location"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_regular"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:id="@+id/txt_emp_location"
+               android:layout_marginStart="@dimen/_6sdp"
+               android:layout_below="@+id/txt_emp_code"
+               android:layout_alignParentEnd="true"
+               android:layout_toRightOf="@+id/txt_emp_name1"
+               android:text="Kolkata"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textAlignment="textEnd"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_medium"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:layout_below="@+id/txt_emp_location"
+               android:layout_alignParentStart="true"
+               android:text="Department"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_regular"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:id="@+id/txt_emp_department"
+               android:layout_marginStart="@dimen/_6sdp"
+               android:layout_below="@+id/txt_emp_location"
+               android:layout_alignParentEnd="true"
+               android:layout_toRightOf="@+id/txt_emp_name1"
+               android:text="IT"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textAlignment="textEnd"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_medium"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:layout_below="@+id/txt_emp_department"
+               android:layout_alignParentStart="true"
+               android:text="Payable Days"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_regular"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:id="@+id/txt_payable_days"
+               android:layout_marginStart="@dimen/_6sdp"
+               android:layout_below="@+id/txt_emp_department"
+               android:layout_alignParentEnd="true"
+               android:layout_toRightOf="@+id/txt_emp_name1"
+               android:text="20"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textAlignment="textEnd"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_medium"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:layout_below="@+id/txt_payable_days"
+               android:layout_alignParentStart="true"
+               android:text="Basic Salary"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_regular"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:id="@+id/txt_basic_salary"
+               android:layout_marginStart="@dimen/_6sdp"
+               android:layout_below="@+id/txt_payable_days"
+               android:layout_alignParentEnd="true"
+               android:layout_toRightOf="@+id/txt_emp_name1"
+               android:text="\u20B9 2000"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textAlignment="textEnd"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_medium"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:layout_below="@+id/txt_basic_salary"
+               android:layout_alignParentStart="true"
+               android:text="Earnings"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_regular"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:id="@+id/txt_earning"
+               android:layout_marginStart="@dimen/_6sdp"
+               android:layout_below="@+id/txt_basic_salary"
+               android:layout_alignParentEnd="true"
+               android:layout_toRightOf="@+id/txt_emp_name1"
+               android:text="\u20B9 200"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textAlignment="textEnd"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_medium"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:layout_below="@+id/txt_earning"
+               android:layout_alignParentStart="true"
+               android:text="Deductions"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_regular"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:id="@+id/txt_deductions"
+               android:layout_marginStart="@dimen/_6sdp"
+               android:layout_below="@+id/txt_earning"
+               android:layout_alignParentEnd="true"
+               android:layout_toRightOf="@+id/txt_emp_name1"
+               android:text="\u20B9 100"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textAlignment="textEnd"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_medium"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <View
+               android:id="@+id/view"
+               android:layout_below="@+id/txt_deductions"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:layout_width="match_parent"
+               android:background="@color/gray_colour"
+               android:layout_height="1dp"/>
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:layout_below="@+id/view"
+               android:layout_alignParentStart="true"
+               android:text="Total Payable"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_medium"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+           <androidx.appcompat.widget.AppCompatTextView
+               android:id="@+id/txt_total_payable"
+               android:layout_marginStart="@dimen/_6sdp"
+               android:layout_below="@+id/view"
+               android:layout_alignParentEnd="true"
+               android:layout_toRightOf="@+id/txt_emp_name1"
+               android:text="\u20B9 2100"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:textAlignment="textEnd"
+               android:textColor="@color/black"
+               android:textSize="@dimen/_12ssp"
+               android:fontFamily="@font/gilroy_semi_bold"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+
+
+
+
+
+       </RelativeLayout>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

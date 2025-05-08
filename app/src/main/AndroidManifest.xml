@@ -49,44 +49,85 @@
         tools:replace="android:label"
         tools:targetApi="31">
         <activity
-            android:name=".screens.recharge.CircleActivity"
+            android:name=".screens.referral.ReferActivity"
             android:exported="false" />
+        <activity
+            android:name=".screens.billpayment.OperatorDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.rank.RankListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.performance.EmpPerformanceAddActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.performance.CreatePerformanceTypeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.performance.PerformanceActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.billpayment.ElectricityBillerActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.chat.ChatWithCompanyActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".screens.recharge.CircleActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.recharge.OperatorActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.recharge.PayRechargeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.recharge.ContactsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.recharge.PlanActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.payroll.SalaryTypeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.payroll.CreateSalaryTypeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.ticket.CreateTicketActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.settings.AssignBranchActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.payroll.SalarySlipActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.subscription.SubscriptionActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.notification.NotificationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.settings.SubMenuActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.payroll.GenerateSalaryActivity"
             android:exported="false"
@@ -94,25 +135,32 @@
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".screens.payroll.PayRollHistoryActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.recharge.RechargeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.reports.AttendanceReportActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.reports.ReportsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.settings.UploadSelfieAttendanceActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.settings.FeedbackActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.settings.GenerateQRActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.emp.QRCodeAttendanceEmpActivity"
             android:exported="false"

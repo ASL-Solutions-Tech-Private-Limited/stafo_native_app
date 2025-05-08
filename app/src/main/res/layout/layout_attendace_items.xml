@@ -12,7 +12,7 @@
         android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginEnd="@dimen/_12sdp"
         android:background="@drawable/sub_button_normal_bg"
-        android:drawableLeft="@drawable/ic_leaves"
+        android:drawableLeft="@drawable/resize_timing"
         android:drawablePadding="@dimen/_12sdp"
         android:drawableTint="@color/white"
         android:fontFamily="@font/gilroy_bold"
@@ -30,7 +30,7 @@
         android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginEnd="@dimen/_12sdp"
         android:background="@drawable/sub_button_normal_bg"
-        android:drawableLeft="@drawable/ic_policy"
+        android:drawableLeft="@drawable/resize_attendance"
         android:drawablePadding="@dimen/_12sdp"
         android:drawableTint="@color/white"
         android:fontFamily="@font/gilroy_bold"
@@ -48,7 +48,7 @@
         android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginEnd="@dimen/_12sdp"
         android:background="@drawable/sub_button_normal_bg"
-        android:drawableLeft="@drawable/ic_policy"
+        android:drawableLeft="@drawable/resize_assign"
         android:drawablePadding="@dimen/_12sdp"
         android:drawableTint="@color/white"
         android:fontFamily="@font/gilroy_bold"
@@ -66,7 +66,7 @@
         android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginEnd="@dimen/_12sdp"
         android:background="@drawable/sub_button_normal_bg"
-        android:drawableLeft="@drawable/ic_policy"
+        android:drawableLeft="@drawable/resize_assign"
         android:drawablePadding="@dimen/_12sdp"
         android:drawableTint="@color/white"
         android:fontFamily="@font/gilroy_bold"
@@ -75,5 +75,4 @@
         android:text="Assign department"
         android:textColor="@color/white"
         android:textSize="@dimen/_12sdp" />
-
 </LinearLayout>

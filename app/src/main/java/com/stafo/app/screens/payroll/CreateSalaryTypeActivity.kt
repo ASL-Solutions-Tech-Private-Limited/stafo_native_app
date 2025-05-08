@@ -24,7 +24,7 @@ import com.stafo.app.utils.getEmployeeDetails
 
 class CreateSalaryTypeActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivityCreateSalaryTypeBinding
+    private lateinit var binding: ActivityCreateSalaryTypeBinding
     private var mPaymentType: String = "Earning"
     private var mAmountType: String = "Flat"
 
@@ -34,7 +34,7 @@ class CreateSalaryTypeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding=ActivityCreateSalaryTypeBinding.inflate(layoutInflater)
+        binding = ActivityCreateSalaryTypeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -66,24 +66,27 @@ class CreateSalaryTypeActivity : AppCompatActivity() {
 
 
             btnSubmit.setOnClickListener {
-                if (isValidated()){
+                if (isValidated()) {
 
-                    if (tieDescription.text.isNullOrEmpty()){
+                    if (tieDescription.text.isNullOrEmpty()) {
                         getEmployeeComId()?.let { it1 ->
                             val request = SalaryTypeRequest(
-                               company_id = it1.toInt(),
-                               payment_type = mPaymentType,
-                               salary_type = tieSalary.text.toString().trim(),
-                               salary_type_description = "",
-                               amount = tieAmount.text.toString().trim(),
-                               amount_type = mAmountType
+                                company_id = it1.toInt(),
+                                payment_type = mPaymentType,
+                                salary_type = tieSalary.text.toString().trim(),
+                                salary_type_description = "",
+                                amount = tieAmount.text.toString().trim(),
+                                amount_type = mAmountType
 
-                           )
-                            settingsViewModel.createSalaryType(this@CreateSalaryTypeActivity,request)
+                            )
+                            settingsViewModel.createSalaryType(
+                                this@CreateSalaryTypeActivity,
+                                request
+                            )
 
-                       }
+                        }
 
-                    }else{
+                    } else {
                         getEmployeeComId()?.let { it1 ->
                             val request = SalaryTypeRequest(
                                 company_id = it1.toInt(),
@@ -94,7 +97,10 @@ class CreateSalaryTypeActivity : AppCompatActivity() {
                                 amount_type = mAmountType
 
                             )
-                            settingsViewModel.createSalaryType(this@CreateSalaryTypeActivity,request)
+                            settingsViewModel.createSalaryType(
+                                this@CreateSalaryTypeActivity,
+                                request
+                            )
                         }
                     }
 
@@ -113,6 +119,8 @@ class CreateSalaryTypeActivity : AppCompatActivity() {
             if (it.success) {
 
                 CustomToast(this, it.message)
+                onBackPressedDispatcher.onBackPressed()
+                finish()
 
 
             } else {
@@ -120,9 +128,6 @@ class CreateSalaryTypeActivity : AppCompatActivity() {
             }
 
         }
-
-
-
 
 
     }
@@ -138,10 +143,10 @@ class CreateSalaryTypeActivity : AppCompatActivity() {
     private fun isValidated(): Boolean {
         binding.apply {
             if (tieSalary.text.isNullOrEmpty()) {
-                CustomToast(this@CreateSalaryTypeActivity,"Please enter salary type")
+                CustomToast(this@CreateSalaryTypeActivity, "Please enter salary type")
                 return false
-            }  else if (tieAmount.text.isNullOrEmpty()) {
-                CustomToast(this@CreateSalaryTypeActivity,"Please enter amount")
+            } else if (tieAmount.text.isNullOrEmpty()) {
+                CustomToast(this@CreateSalaryTypeActivity, "Please enter amount")
                 return false
             }
         }

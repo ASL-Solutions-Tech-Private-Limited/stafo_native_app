@@ -661,11 +661,11 @@ class CompanyProfileActivity : AppCompatActivity() {
     private fun validateBasicInfo(): Boolean {
         return listOf(
             binding.tieCompanyName to "Please enter company name",
-            binding.tieCompanyType to "Please enter company type",
-            binding.tieBusinessType to "Please enter company type",
-            binding.tieSelectCountry to "Please enter company type",
-            binding.tieSelectState to "Please enter company type",
-            binding.tieSelectCity to "Please enter company type",
+            binding.tieCompanyType to "Please select company type",
+            binding.tieBusinessType to "Please select business type",
+            binding.tieSelectCountry to "Please select country",
+            binding.tieSelectState to "Please select state",
+            binding.tieSelectCity to "Please select city",
             binding.tieCompanyPanNo to "Please enter pan number",
             binding.tieCompanyAddress to "Please enter address"
         ).all { validateField(it.first, it.second) }

@@ -42,6 +42,10 @@ import com.stafo.app.utils.getIsCOMPANYLogin
 import com.bumptech.glide.Glide
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.gson.Gson
+import com.stafo.app.screens.performance.EmpPerformanceAddActivity
+import com.stafo.app.screens.performance.PerformanceActivity
+import com.stafo.app.screens.rank.RankListActivity
+import com.stafo.app.screens.referral.ReferActivity
 import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.screens.settings.AssignBranchActivity
 import com.stafo.app.screens.settings.UploadSelfieAttendanceActivity
@@ -226,12 +230,26 @@ class EmplyeeyerProfile : AppCompatActivity() {
             binding.expandableOtherManagement.toggleLayout()
         }
 
-     /*   val tvReportsSettings = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_reports_settings)
+        val tvRankList = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_rank_list)
+        tvRankList?.setOnClickListener {
+
+            startActivity(Intent(this, RankListActivity::class.java))
+            overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+        }
+
+        val performanceType = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_performance_type)
+        performanceType?.setOnClickListener {
+            startActivity(Intent(this, PerformanceActivity::class.java))
+            overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+        }
+
+
+        val tvReportsSettings = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_reports_settings)
 
         tvReportsSettings?.setOnClickListener {
             startActivity(Intent(this, ReportsActivity::class.java))
             overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
-        }*/
+        }
 
 
         val qrCodeSettings = binding?.expandableAccountSetting?.findViewById<AppCompatTextView>(R.id.tv_generate_qr_settings)
@@ -337,6 +355,11 @@ class EmplyeeyerProfile : AppCompatActivity() {
         binding.expandableOtherManagement.findViewById<AppCompatTextView>(R.id.tv_need_help_company)
             .setOnClickListener {
                 startActivity(Intent(this, HelpSupportActivity::class.java))
+            }
+
+        binding.expandableOtherManagement.findViewById<AppCompatTextView>(R.id.tv_refer_company)
+            .setOnClickListener {
+                startActivity(Intent(this, ReferActivity::class.java))
             }
 
 

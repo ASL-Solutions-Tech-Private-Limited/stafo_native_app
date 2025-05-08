@@ -27,6 +27,7 @@ import com.stafo.app.utils.getIsCOMPANYLogin
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.stafo.app.utils.showCustomMonthYearPicker
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -234,8 +235,27 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
             fetchAttendanceData()
 
-            llCalendar.setOnClickListener {
+           /* llCalendar.setOnClickListener {
                 showDatePicker()
+            }*/
+
+            llCalendar.setOnClickListener {
+                showCustomMonthYearPicker(this@EmployeeAttendanceRecordActivity) { formattedDate, displayDate ->
+                    mSelectedDate = formattedDate
+                    binding.txtDate.text = displayDate
+                    if (getIsCOMPANYLogin(this@EmployeeAttendanceRecordActivity) == true) {
+                        settingsViewModel.getMonthlyAttendance(
+                            this@EmployeeAttendanceRecordActivity,
+                            mSelectedDate,
+                            mEMPID
+                        )
+                    } else {
+                        settingsViewModel.getMonthlyAttendance(
+                            this@EmployeeAttendanceRecordActivity,
+                            mSelectedDate, getEmployeeDetails()?.id.toString(),
+                        )
+                    }
+                }
             }
 
             imageBack.setOnClickListener {

@@ -241,11 +241,23 @@ class AddBranchActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == PLACE_SEARCH_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val lat = data?.getDoubleExtra("latitude", 0.0)
-            val lng = data?.getDoubleExtra("longitude", 0.0)
-            latitude = lat ?: 0.0
-            longitude = lng ?: 0.0
-            getAddressFromLocation(latitude!!, longitude!!)
+
+            when (data?.getStringExtra("type")) {
+                "map" -> {
+                    val lat = data.getDoubleExtra("latitude", 0.0)
+                    val lng = data.getDoubleExtra("longitude", 0.0)
+                    latitude = lat ?: 0.0
+                    longitude = lng ?: 0.0
+                    getAddressFromLocation(latitude!!, longitude!!)
+                }
+                "custom" -> {
+                    val fullAddress = data.getStringExtra("fullAddress")
+                    binding.tieBranchAddress.setText(fullAddress)
+                }
+            }
+
+
+
         }
     }
 

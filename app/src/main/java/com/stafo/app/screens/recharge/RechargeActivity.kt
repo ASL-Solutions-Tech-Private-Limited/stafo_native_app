@@ -27,6 +27,8 @@ class RechargeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRechargeBinding
     private val CONTACT_PERMISSION_REQUEST = 1
 
+    private var mCategory = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,6 +41,7 @@ class RechargeActivity : AppCompatActivity() {
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
+        mCategory = intent.getStringExtra("type").toString()
 
         onClickListener()
 
