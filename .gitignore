@@ -1,0 +1,47 @@
+# Built application files
+*.apk
+*.ap_
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+
+# Gradle files
+.gradle/
+build/
+*/build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# IDE settings
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Keystore files (security!)
+*.jks
+
+# Mac OS
+.DS_Store
+
+# Log files
+*.log
+
+# Android Studio Navigation JSONs
+.navigation/
+
+# Crashlytics
+fabric.properties
+
+# Google Services (keep this out of version control if using secrets)
+google-services.json
