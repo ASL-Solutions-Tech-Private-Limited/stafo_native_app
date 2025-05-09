@@ -33,11 +33,14 @@ import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 
 class ReportsActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityReportsBinding
     private lateinit var rvAdapter: AdapterDownloadReports
-
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

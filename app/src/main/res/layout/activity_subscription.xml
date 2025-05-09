@@ -5,170 +5,288 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e3ebfc"
+    android:background="@color/white"
     tools:context=".screens.subscription.SubscriptionActivity">
 
-    <ImageView
-        android:id="@+id/image_back"
-        android:layout_width="@dimen/_20sdp"
-        android:layout_height="@dimen/_20sdp"
-        android:layout_marginStart="@dimen/_12sdp"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:scaleType="fitXY"
-        android:src="@drawable/baseline_close_24"
-        android:tint="#0d368c"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="UseAppTint" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_go"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_60sdp"
-        android:fontFamily="@font/gilroy_bold"
-        android:text="Go Premium"
-        android:textColor="#0d368c"
-        android:textSize="@dimen/_14ssp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_back" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_desc"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_12sdp"
-        android:layout_marginTop="@dimen/_14sdp"
-        android:fontFamily="@font/gilroy_regular"
-        android:text="Unlock all the feature of STAFO and enjoy digital exprience like never before!"
-        android:textAlignment="center"
-        android:textColor="#0d368c"
-        android:textSize="@dimen/_12ssp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_go" />
-
-    <ImageView
-        android:id="@+id/iv_offer"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_80sdp"
-        android:layout_marginTop="@dimen/_32sdp"
-        android:src="@drawable/premium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_desc" />
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/layout_plan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="@dimen/_24sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_offer">
+        android:layout_height="60dp"
+        android:background="@color/colorTextPrimary"
+        app:elevation="0dp"
+        app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_height="60dp"
+            tools:ignore="UseCompoundDrawables">
+
+
+            <ImageView
+                android:id="@+id/image_back"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_back"
+                android:tint="@color/white"
+                tools:ignore="UseAppTint" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="Package &amp; Pricing"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14ssp" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_tab"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:background="@drawable/custom_tab_select_bg"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_monthly"
+            android:layout_weight="1"
+            android:text="Monthly"
             android:background="@drawable/card_rtl_bg_offer"
-            android:paddingHorizontal="@dimen/_8sdp"
-            android:paddingVertical="@dimen/_14sdp">
-
-            <TextView
-                android:id="@+id/tv_annual"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Annual"
-                android:textSize="@dimen/_12ssp"
-                android:fontFamily="@font/gilroy_semi_bold"
-                android:textColor="#0d368c" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingVertical="@dimen/_4sdp"
-                android:paddingHorizontal="@dimen/_10sdp"
-                android:text="Best value"
-                android:background="@drawable/best_value_bg"
-                android:layout_alignParentEnd="true"
-                android:textSize="@dimen/_12ssp"
-                android:fontFamily="@font/gilroy_regular"
-                android:textColor="@color/white" />
-            <TextView
-                android:layout_below="@+id/tv_annual"
-                android:textSize="@dimen/_12ssp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:fontFamily="@font/gilroy_regular"
-                android:textColor="#0d368c"
-                android:text="First 30 days free - then \u20B9 9999/year"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        </RelativeLayout>
-
-
-        <RelativeLayout
+            android:textColor="@color/white"
+            android:textSize="@dimen/_11ssp"
+            android:fontFamily="@font/gilroy_regular"
+            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:layout_marginHorizontal="@dimen/_12sdp"
-            android:background="@drawable/unselect_card_rtl_bg_offer"
-            android:paddingHorizontal="@dimen/_8sdp"
-            android:paddingVertical="@dimen/_14sdp">
+            android:layout_height="match_parent"/>
 
-            <TextView
-                android:id="@+id/tv_monthly"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Monthly"
-                android:textSize="@dimen/_12ssp"
-                android:fontFamily="@font/gilroy_semi_bold"
-                android:textColor="#0d368c" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_quarterly"
+            android:layout_weight="1"
+            android:text="Quarterly"
+            android:background="@null"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_11ssp"
+            android:fontFamily="@font/gilroy_regular"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_hlf_yearly"
+            android:layout_weight="1"
+            android:text="Half-Yearly"
+            android:background="@null"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_11ssp"
+            android:fontFamily="@font/gilroy_regular"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_yearly"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="Yearly"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_11ssp"
+            android:fontFamily="@font/gilroy_regular"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
 
-            <TextView
-                android:layout_below="@+id/tv_monthly"
-                android:textSize="@dimen/_12ssp"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:fontFamily="@font/gilroy_regular"
-                android:textColor="#0d368c"
-                android:text="First 7 days free - then \u20B9 999/month"
+      <!--  <RadioGroup
+            android:id="@+id/rdgp_profile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/include_01"
+            android:orientation="horizontal">
+
+
+            <RadioButton
+                android:id="@+id/radio_basic"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_weight="1"
+                android:background="@drawable/tab_btnselector"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:text="Basic"
+                android:textColor="@color/white" />
 
-        </RelativeLayout>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+            <RadioButton
+                android:id="@+id/radio_owner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_weight="1"
+                android:background="@drawable/tab_btnselector"
+                android:button="@null"
+                android:gravity="center"
+                android:text="Monthly"
+                android:textColor="@color/white" />
 
-    <Button
-        android:id="@+id/btn_subscription"
-        android:layout_marginTop="@dimen/_24sdp"
-        android:layout_marginHorizontal="@dimen/_12sdp"
-        android:background="@drawable/button_normal_bg"
-        app:layout_constraintEnd_toEndOf="parent"
+            <RadioButton
+                android:id="@+id/radio_document"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_weight="1"
+                android:background="@drawable/tab_btnselector"
+                android:button="@null"
+                android:gravity="center"
+                android:text="Yearly"
+                android:textColor="@color/white" />
+
+        </RadioGroup>-->
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rtl_monthly"
+        android:elevation="@dimen/_3sdp"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="Start 30-days free trail"
-        app:layout_constraintTop_toBottomOf="@+id/layout_plan"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="@dimen/_12sdp"
+        android:visibility="visible"
+        android:paddingHorizontal="@dimen/_10sdp"
+        app:layout_constraintTop_toBottomOf="@+id/ll_tab"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:background="@drawable/custom_card_bg2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
 
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/txt_term_condition"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_12sdp"
-        android:layout_marginTop="@dimen/_14sdp"
-        android:fontFamily="@font/gilroy_regular"
-        android:justificationMode="inter_word"
-        android:text="@string/terms_condition_text"
-        android:textAlignment="center"
-        android:textColor="#0d368c"
-        android:textSize="@dimen/_10ssp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_subscription" />
+        <LinearLayout
+            android:id="@+id/llc_price"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:text="Price: "
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14ssp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tv_price"
+                android:text="999/Month"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14ssp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llc_duration"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_below="@+id/llc_price"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:text="Duration: "
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp"
+                android:fontFamily="@font/gilroy_regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tv_duration"
+                android:text="999/Month"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp"
+                android:fontFamily="@font/gilroy_regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_below="@+id/llc_price"
+            android:id="@+id/rv_feature_list"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            tools:listitem="@layout/custom_spinner_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_buy_now"
+            android:layout_below="@+id/rv_feature_list"
+            android:text="Buy Now"
+            android:fontFamily="@font/gilroy_medium"
+            android:outlineProvider="none"
+            android:textColor="@color/white"
+            android:paddingHorizontal="@dimen/_12sdp"
+            android:background="@drawable/card_rtl_bg_offer"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_32sdp"/>
+
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/siv_view"
+            android:layout_marginTop="@dimen/_10sdp"
+            app:shapeAppearanceOverlay="@style/Circular"
+            android:layout_below="@+id/btn_buy_now"
+            android:background="@color/black"
+            android:layout_marginStart="@dimen/_24sdp"
+            android:layout_alignParentStart="true"
+            android:layout_width="@dimen/_8sdp"
+            android:layout_height="@dimen/_8sdp"/>
+
+        <TextView
+            android:layout_marginTop="@dimen/_9sdp"
+            android:layout_marginEnd="@dimen/_24sdp"
+            android:justificationMode="inter_word"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:layout_below="@+id/btn_buy_now"
+            android:layout_toRightOf="@+id/siv_view"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10ssp"
+            android:fontFamily="@font/gilroy_light"
+            android:text="By subscribing, you agree to Stafo's Terms &amp; Privacy Policy."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+    </RelativeLayout>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,4 +32,14 @@
     <color name="blue_800">#1E40AF</color>
     <color name="deep_green">#008060</color>
     <color name="chat_other_bg_color">#b5b4b4</color>
+    <color name="plan_color_light1">#00c0ed</color>
+    <color name="plan_color_light3">#f29bbb</color>
+    <color name="plan_color_light2">#fcbf12</color>
+    <color name="plan_color_light4">#60d8bf</color>
+    <color name="plan_color1">#0253c3</color>
+    <color name="plan_color2">#fc6d00</color>
+    <color name="plan_color4">#2ea1a4</color>
+    <color name="plan_color3">#eb5056</color>
+    <color name="basic_light">#f41b94</color>
+    <color name="basic_deep">#93399c</color>
 </resources>

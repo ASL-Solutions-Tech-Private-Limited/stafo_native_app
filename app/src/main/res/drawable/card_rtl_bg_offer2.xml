@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background shape with gradient and rounded corners -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/_24sdp" />
+            <gradient
+                android:type="linear"
+                android:angle="45"
+                android:startColor="@color/plan_color_light2"
+                android:endColor="@color/plan_color2" />
+        </shape>
+    </item>
+
+    <!-- Triangle overlay on the right -->
+<!--    <item
+        android:drawable="@drawable/triangle_right"
+        android:left="@dimen/_24sdp"
+        android:gravity="start" />-->
+</layer-list>
+
+<!--
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/white" />
+            <corners android:radius="@dimen/_6sdp" />
+
+            <gradient
+                android:type="linear"
+                android:angle="120"
+                android:startColor="@color/plan_color_light2"
+                android:endColor="@color/plan_color2"/>
+        </shape>
+    </item>
+    <item
+
+        android:drawable="@drawable/triangle_right"/>
+</layer-list>-->

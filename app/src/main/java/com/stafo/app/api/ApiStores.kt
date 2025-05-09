@@ -139,6 +139,7 @@ import com.stafo.app.screens.settings.dataClass.UpgradePackageResponse
 import com.stafo.app.screens.settings.dataClass.VerifyGSTNumberResponse
 import com.stafo.app.screens.settings.dataClass.VerifyRegisterNumberResponse
 import com.stafo.app.screens.settings.dataClass.ViewBranchResponse
+import com.stafo.app.screens.subscription.dataClass.PackageResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -749,5 +750,10 @@ interface ApiStores {
     suspend fun callReferList(
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<ReferralResponse>
+
+    @GET("api/package")
+    suspend fun callPackage(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<PackageResponse>
 
 }

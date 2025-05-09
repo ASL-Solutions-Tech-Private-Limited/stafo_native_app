@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_12sdp"
         android:layout_marginTop="@dimen/_12sdp"
-        android:background="@drawable/list_item_bg">
+        android:background="@drawable/button_normal_bg">
 
         <ImageView
             android:id="@+id/iv_payroll_report"
@@ -23,7 +23,7 @@
             android:layout_marginStart="@dimen/_10sdp"
             android:padding="@dimen/_2sdp"
             android:src="@drawable/payroll"
-            android:tint="@color/blue"
+            android:tint="@color/white"
             tools:ignore="UseAppTint" />
 
         <TextView
@@ -35,7 +35,7 @@
             android:layout_toRightOf="@+id/iv_payroll_report"
             android:fontFamily="@font/gilroy_regular"
             android:text="Payroll"
-            android:textColor="#16171b"
+            android:textColor="@color/white"
             android:textSize="@dimen/_12ssp" />
 
         <ImageView
@@ -44,7 +44,9 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/_10sdp"
-            android:src="@drawable/ic_right_arrow_icon" />
+            android:src="@drawable/ic_right_arrow_icon"
+            android:tint="@color/white"
+            tools:ignore="UseAppTint" />
 
 
     </RelativeLayout>

@@ -243,6 +243,9 @@ dependencies {
     //pdfview
     implementation("io.github.afreakyelf:Pdf-Viewer:2.1.1")
 
+    // payu sdk
+    implementation 'in.payu:payu-checkout-pro:2.7.1'
+
 
 
 

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_12sdp"
         android:layout_marginTop="@dimen/_12sdp"
-        android:background="@drawable/list_item_bg">
+        android:background="@drawable/sub_button_normal_bg">
 
         <ImageView
             android:id="@+id/iv_payroll_report"
@@ -22,7 +22,7 @@
             android:layout_marginStart="@dimen/_10sdp"
             android:padding="@dimen/_2sdp"
             android:src="@drawable/payroll"
-            android:tint="@color/blue"
+            android:tint="@color/white"
             tools:ignore="UseAppTint" />
 
         <TextView
@@ -34,7 +34,7 @@
             android:layout_toRightOf="@+id/iv_payroll_report"
             android:fontFamily="@font/gilroy_regular"
             android:text="Salary Type"
-            android:textColor="#16171b"
+            android:textColor="@color/white"
             android:textSize="@dimen/_12ssp" />
 
 
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_12sdp"
         android:layout_marginTop="@dimen/_12sdp"
-        android:background="@drawable/list_item_bg">
+        android:background="@drawable/sub_button_normal_bg">
 
         <ImageView
             android:id="@+id/iv_generate_salary"
@@ -57,7 +57,7 @@
             android:layout_marginStart="@dimen/_10sdp"
             android:padding="@dimen/_2sdp"
             android:src="@drawable/payroll"
-            android:tint="@color/blue"
+            android:tint="@color/white"
             tools:ignore="UseAppTint" />
 
         <TextView
@@ -69,7 +69,7 @@
             android:layout_toRightOf="@+id/iv_generate_salary"
             android:fontFamily="@font/gilroy_regular"
             android:text="Generate Salary"
-            android:textColor="#16171b"
+            android:textColor="@color/white"
             android:textSize="@dimen/_12ssp" />
 
 
@@ -80,7 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_12sdp"
         android:layout_marginTop="@dimen/_12sdp"
-        android:background="@drawable/list_item_bg">
+        android:background="@drawable/sub_button_normal_bg">
 
         <ImageView
             android:id="@+id/iv_salary_slip"
@@ -92,7 +92,7 @@
             android:layout_marginStart="@dimen/_10sdp"
             android:padding="@dimen/_2sdp"
             android:src="@drawable/payroll"
-            android:tint="@color/blue"
+            android:tint="@color/white"
             tools:ignore="UseAppTint" />
 
         <TextView
@@ -104,7 +104,7 @@
             android:layout_toRightOf="@+id/iv_salary_slip"
             android:fontFamily="@font/gilroy_regular"
             android:text="Salary Slip"
-            android:textColor="#16171b"
+            android:textColor="@color/white"
             android:textSize="@dimen/_12ssp" />
 
 

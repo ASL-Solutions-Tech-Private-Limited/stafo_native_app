@@ -55,6 +55,7 @@ import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.recharge.RechargeActivity
 import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.screens.settings.SubMenuActivity
+import com.stafo.app.screens.subscription.SubscriptionActivity
 
 class EmployerDashboard : AppCompatActivity() {
 
@@ -511,14 +512,14 @@ class EmployerDashboard : AppCompatActivity() {
 
 
 
-       /* binding.llcRecharge.setOnClickListener {
+        binding.llcRecharge.setOnClickListener {
             startActivity(Intent(this, DashboardActivity::class.java))
         }
 
         binding.llcLoan.setOnClickListener {
-            startActivity(Intent(this, ChatWithCompanyActivity::class.java))
+            startActivity(Intent(this, SubscriptionActivity::class.java))
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
-        }*/
+        }
 
 
 

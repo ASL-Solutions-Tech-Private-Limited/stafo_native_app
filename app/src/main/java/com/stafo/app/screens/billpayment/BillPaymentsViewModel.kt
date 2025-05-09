@@ -34,6 +34,7 @@ import com.stafo.app.screens.rank.dataClass.RankListRequest
 import com.stafo.app.screens.rank.dataClass.RankListResponse
 import com.stafo.app.screens.referral.dataClass.ReferralResponse
 import com.stafo.app.screens.settings.dataClass.EmployeePostLocationRequest
+import com.stafo.app.screens.subscription.dataClass.PackageResponse
 import com.stafo.app.utils.CustomToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -107,6 +108,51 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     val mReferralDetailsResponse: LiveData<ReferralResponse> get() = mReferral
+
+
+    private var mPackage: MutableLiveData<PackageResponse> = MutableLiveData()
+
+
+    val mPackageResponse: LiveData<PackageResponse> get() = mPackage
+
+    fun getPackagePlanList(mContext: Context) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val response = ASLEmpMng.instance.apiStores()?.callPackage()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mPackage.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
 

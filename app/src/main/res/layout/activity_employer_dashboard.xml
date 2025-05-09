@@ -17,7 +17,7 @@
             android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/layout_bottom_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -416,11 +416,11 @@
                         <com.smarteist.autoimageslider.SliderView
                             android:id="@+id/imageSlider"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_130sdp"
-                            app:sliderAnimationDuration="600"
+                            android:layout_height="@dimen/_140sdp"
+                            app:sliderAnimationDuration="900"
                             app:sliderAutoCycleDirection="back_and_forth"
                             app:sliderAutoCycleEnabled="true"
-                            app:sliderIndicatorAnimationDuration="600"
+                            app:sliderIndicatorAnimationDuration="900"
                             app:sliderIndicatorGravity="center_horizontal|bottom"
                             app:sliderIndicatorMargin="15dp"
                             app:sliderIndicatorOrientation="horizontal"
@@ -580,10 +580,10 @@
             android:backgroundTint="@color/colorTextPrimary"
             android:src="@drawable/ic_user"
             android:text="Add Employee"
-            app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintBottom_toTopOf="@+id/layout_bottom_bar"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!--<androidx.appcompat.widget.LinearLayoutCompat
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/layout_bottom_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_60sdp"
@@ -726,7 +726,7 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-        </androidx.appcompat.widget.LinearLayoutCompat>-->
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
