@@ -27,6 +27,7 @@ import com.mmi.layers.MapEventsReceiver
 import com.mmi.layers.Marker
 import com.mmi.layers.UserLocationOverlay
 import com.mmi.layers.location.GpsLocationProvider
+import com.mmi.services.api.PlaceResponse
 import com.mmi.util.GeoPoint
 import com.stafo.app.screens.auth.AuthViewModel
 import com.stafo.app.screens.auth.dataClass.DataBusinessType
@@ -39,6 +40,7 @@ import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -403,6 +405,14 @@ class PlaceSearchActivity : AppCompatActivity() {
             true
         }
     }
+
+
+
+
+
+
+
+
 
 
 }

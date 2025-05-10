@@ -14,24 +14,24 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
 import com.payu.base.models.ErrorResponse
-import com.payu.base.models.PayUBillingCycle
 import com.payu.base.models.PayUPaymentParams
-import com.payu.base.models.PayUSIParams
-import com.payu.base.models.PayuBillingLimit
-import com.payu.base.models.PayuBillingRule
 import com.payu.checkoutpro.PayUCheckoutPro
+import com.payu.checkoutpro.utils.PayUCheckoutProConstants
 import com.payu.checkoutpro.utils.PayUCheckoutProConstants.CP_HASH_NAME
 import com.payu.checkoutpro.utils.PayUCheckoutProConstants.CP_HASH_STRING
 import com.payu.ui.model.listeners.PayUCheckoutProListener
 import com.payu.ui.model.listeners.PayUHashGenerationListener
+
 
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivitySubscriptionBinding
 import com.stafo.app.screens.billpayment.BillPaymentsViewModel
 import com.stafo.app.screens.subscription.dataClass.PackageData
 import com.stafo.app.utils.CustomLoader
+import com.stafo.app.utils.CustomToast
+import java.math.BigInteger
+import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 
 
@@ -47,6 +47,10 @@ class SubscriptionActivity : AppCompatActivity() {
 
 
     private lateinit var list: List<PackageData>
+
+
+    private val merchantKey = "1AJhSD"
+    private val merchantSalt = "tBjCq35cgf3f12ya0usuhEtH9IJ7pSyq"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,10 +98,8 @@ class SubscriptionActivity : AppCompatActivity() {
 
 
             btnBuyNow.setOnClickListener {
-                callPayuSdk()
+                startPayment()
             }
-
-
 
 
         }
@@ -120,7 +122,7 @@ class SubscriptionActivity : AppCompatActivity() {
         val price = selectedPackage.discount_price
         if (!price.isNullOrBlank()) {
             binding.tvPrice.text = "₹" + price.removeSuffix(".00")
-            binding.tvDuration.text="${selectedPackage.days} days"
+            binding.tvDuration.text = "${selectedPackage.days} days"
         }
 
 
@@ -135,13 +137,6 @@ class SubscriptionActivity : AppCompatActivity() {
     }
 
 
-
-
-
-
-
-
-
     private fun observeViewModel() {
 
 
@@ -154,9 +149,7 @@ class SubscriptionActivity : AppCompatActivity() {
 
                 if (it.data.isNotEmpty()) {
 
-                    list=it.data
-
-
+                    list = it.data
 
 
                     val packageItem = list.firstOrNull()
@@ -165,7 +158,7 @@ class SubscriptionActivity : AppCompatActivity() {
 
                         if (!it.discount_price.isNullOrBlank()) {
                             binding.tvPrice.text = "₹" + it.discount_price.removeSuffix(".00")
-                            binding.tvDuration.text="${list[0].days} days"
+                            binding.tvDuration.text = "${list[0].days} days"
                         }
 
 
@@ -175,12 +168,12 @@ class SubscriptionActivity : AppCompatActivity() {
                     binding.tvDuration.text = "${it.data[0].days} days"*/
 
 
-
                     val features = list[0].features?.filter { it.pivot.feature_value != "No" }
 
                     if (!features.isNullOrEmpty()) {
                         rvAdapter = AdapterPlanList(features, this, 0)
-                        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                        val layoutManager =
+                            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                         binding.rvFeatureList.layoutManager = layoutManager
                         binding.rvFeatureList.adapter = rvAdapter
                         rvAdapter.notifyDataSetChanged()
@@ -204,76 +197,31 @@ class SubscriptionActivity : AppCompatActivity() {
         }
     }
 
+    private fun startPayment() {
 
+        val key = "1AJhSD"
+        val salt = "tBjCq35cgf3f12ya0usuhEtH9IJ7pSyq"
+        val txnId = System.currentTimeMillis().toString()
 
-   /* private fun callPayuSdk(){
-
-        val payUPaymentParams = PayUPaymentParams.Builder()
-            .setAmount("10.00")
-            .setTransactionId("txn_${System.currentTimeMillis()}")
-            .setPhone("9999999999")
-            .setProductInfo("Test Product")
-            .setFirstName("John")
-            .setEmail("john@example.com")
-            .setSurl("https://yourdomain.com/success")
-            .setFurl("https://yourdomain.com/failure")
-            .setKey("your_merchant_key")
-            .setUserCredential("")
-            .setIsProduction(false)
-            .build()
-
-
-        PayUCheckoutPro.open(
-            this,
-            payUPaymentParams,
-            object :PayUCheckoutProListener {
-                override fun generateHash(
-                    map: HashMap<String, String?>,
-                    hashGenerationListener: PayUHashGenerationListener
-                ) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onError(errorResponse: ErrorResponse) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onPaymentCancel(isTxnInitiated: Boolean) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onPaymentFailure(response: Any) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onPaymentSuccess(response: Any) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun setWebViewProperties(webView: WebView?, bank: Any?) {
-                    TODO("Not yet implemented")
-                }
-
-            }
+        val additionalParams: HashMap<String, Any?> = hashMapOf(
+            "udf1" to "1",
+            "udf2" to "30",
+            "udf3" to "1"
         )
 
-
-
-    }*/
-
-    private fun callPayuSdk() {
         val payUPaymentParams = PayUPaymentParams.Builder()
-            .setAmount("10.00")
-            .setTransactionId("txn_${System.currentTimeMillis()}")
+            .setKey(key)
+            .setTransactionId(txnId)
+            .setAmount("10.0")
+            .setProductInfo("Macbook Pro")
+            .setFirstName("John")
+            .setEmail("john@yopmail.com")
             .setPhone("9999999999")
-            .setProductInfo("id234")
-            .setFirstName("Firstname")
-            .setEmail("test@payu.in")
             .setSurl("https://stafo.in/success")
             .setFurl("https://stafo.in/failure")
-            .setKey("1AJhSD")
-            .setUserCredential("fdf ")
-            .setIsProduction(false)
+            .setIsProduction(true)
+            .setUserCredential("$key:john@yopmail.com")
+            .setAdditionalParams(additionalParams)
             .build()
 
         PayUCheckoutPro.open(
@@ -284,48 +232,59 @@ class SubscriptionActivity : AppCompatActivity() {
                     map: HashMap<String, String?>,
                     hashGenerationListener: PayUHashGenerationListener
                 ) {
-                    Log.e("TAG", "generateHash: ${Gson().toJson(map)}", )
-                    if (map.containsKey(CP_HASH_STRING) && map[CP_HASH_STRING] != null
-                        && map.containsKey(CP_HASH_NAME) && map[CP_HASH_NAME] != null) {
+                    val hashName = map["hashName"]
+                    val hashData = map["hashString"]
 
-                        val hashData = map[CP_HASH_STRING]
-                        val hashName = map[CP_HASH_NAME]
-                        val hash: String? = hashData
-                        if (!TextUtils.isEmpty(hash)) {
-                            val hashMap: HashMap<String, String?> = HashMap()
-                            hashMap[hashName!!] = hash!!
-                            hashGenerationListener.onHashGenerated(hashMap)
-                        }
+                    Log.d("PayU_HASH", "hashName: $hashName")
+                    Log.d("PayU_HASH", "hashString: $hashData")
+
+                    if (!hashName.isNullOrEmpty() && !hashData.isNullOrEmpty()) {
+                        val hash = sha512("$hashData|$salt")
+                        val hashMap = HashMap<String, String?>()
+                        hashMap[hashName] = hash
+                        Log.d("PayU_HASH", "Generated hash: $hash")
+                        hashGenerationListener.onHashGenerated(hashMap)
                     }
                 }
 
-                override fun onError(errorResponse: ErrorResponse) {
-                    Log.e("PayU Error", Gson().toJson(errorResponse))
-                    Toast.makeText(applicationContext, "Payment Error: ${errorResponse.errorCode}", Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onPaymentCancel(isTxnInitiated: Boolean) {
-                    Toast.makeText(applicationContext, "Payment Cancelled", Toast.LENGTH_SHORT).show()
+                override fun onPaymentSuccess(response: Any) {
+                    Log.d("PayU", "Payment Success: $response")
                 }
 
                 override fun onPaymentFailure(response: Any) {
-                    Log.e("PayU Failure", response.toString())
-                    Toast.makeText(applicationContext, "Payment Failed", Toast.LENGTH_SHORT).show()
+                    Log.d("PayU", "Payment Failure: $response")
                 }
 
-                override fun onPaymentSuccess(response: Any) {
-                    Log.d("PayU Success", response.toString())
-                    Toast.makeText(applicationContext, "Payment Successful", Toast.LENGTH_SHORT).show()
+                override fun onPaymentCancel(isTxnInitiated: Boolean) {
+                    Log.d("PayU", "Payment Cancelled, txn initiated: $isTxnInitiated")
+                }
+
+                override fun onError(errorResponse: ErrorResponse) {
+                    Log.e("PayU", "Error: ${errorResponse.errorMessage} ${errorResponse.errorCode}")
+
+                    Log.e("PayU", "Response Error: ${errorResponse}")
                 }
 
                 override fun setWebViewProperties(webView: WebView?, bank: Any?) {
-                    webView?.settings?.javaScriptEnabled = true
-                    webView?.setBackgroundColor(Color.TRANSPARENT)
+                    // Optional: Customize WebView if needed
                 }
             }
         )
     }
 
+    private fun sha512(input: String): String {
+        return try {
+            val md = MessageDigest.getInstance("SHA-512")
+            val hashBytes = md.digest(input.toByteArray(StandardCharsets.UTF_8))
+            val sb = StringBuilder()
+            for (b in hashBytes) {
+                sb.append(String.format("%02x", b))
+            }
+            sb.toString().lowercase()
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
 
 
 }
