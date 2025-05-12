@@ -1,7 +1,9 @@
 package com.stafo.app.screens.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
@@ -180,11 +182,9 @@ class PlaceSearchActivity : AppCompatActivity() {
                             "$address,$selectedCity,$selectedState,$pin,$selectedCountry"
 
                         if (isValidation()) {
-                            val returnIntent = Intent()
-                            returnIntent.putExtra("type", "custom")
-                            returnIntent.putExtra("fullAddress", fullAddress)
-                            setResult(Activity.RESULT_OK, returnIntent)
-                            finish()
+
+                           getLatLngFromAddress(this@PlaceSearchActivity,fullAddress)
+
                         }
 
 
@@ -233,6 +233,42 @@ class PlaceSearchActivity : AppCompatActivity() {
         mapView.setCenter(location)
         mapView.setZoom(13)
     }
+
+    private fun getLatLngFromAddress(context: Context, mAddress: String) {
+        val coder = Geocoder(context)
+        try {
+            val addressList: List<Address>? = coder.getFromLocationName(mAddress, 5)
+            if (addressList.isNullOrEmpty()) {
+                Log.d("res", "Fail to find Lat,Lng")
+                return
+            }
+
+            val location = addressList[0]
+            getLati = location.latitude
+            getLongi = location.longitude
+
+            val returnIntent = Intent().apply {
+                putExtra("type", "custom")
+                putExtra("fullAddress", mAddress)
+                putExtra("latitude", getLati)
+                putExtra("longitude", getLongi)
+            }
+
+            setResult(Activity.RESULT_OK, returnIntent)
+            finish()
+
+            Log.d("res", "Latitude: $getLati, Longitude: $getLongi")
+
+        } catch (e: Exception) {
+            Log.d("res", "Fail to find Lat,Lng: ${e.localizedMessage}")
+        }
+    }
+
+
+
+
+
+
 
 
     private fun getAddressFromLocation(latitude: Double, longitude: Double) {

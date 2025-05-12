@@ -224,6 +224,12 @@ class SubscriptionActivity : AppCompatActivity() {
             .setAdditionalParams(additionalParams)
             .build()
 
+
+
+
+
+
+
         PayUCheckoutPro.open(
             this,
             payUPaymentParams,

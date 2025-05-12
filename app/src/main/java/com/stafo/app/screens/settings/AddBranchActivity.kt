@@ -253,6 +253,11 @@ class AddBranchActivity : AppCompatActivity() {
                 "custom" -> {
                     val fullAddress = data.getStringExtra("fullAddress")
                     binding.tieBranchAddress.setText(fullAddress)
+                    val lat = data.getDoubleExtra("latitude", 0.0)
+                    val lng = data.getDoubleExtra("longitude", 0.0)
+                    latitude = lat ?: 0.0
+                    longitude = lng ?: 0.0
+                   // getAddressFromLocation(latitude!!, longitude!!)
                 }
             }
 
