@@ -1,12 +1,12 @@
 package com.stafo.app.screens.subscription
 
-import android.graphics.Color
+
 import android.os.Bundle
-import android.text.TextUtils
+import android.util.Base64
+import android.util.Base64.NO_WRAP
 import android.util.Log
 import android.webkit.WebView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -17,22 +17,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.payu.base.models.ErrorResponse
 import com.payu.base.models.PayUPaymentParams
 import com.payu.checkoutpro.PayUCheckoutPro
-import com.payu.checkoutpro.utils.PayUCheckoutProConstants
 import com.payu.checkoutpro.utils.PayUCheckoutProConstants.CP_HASH_NAME
-import com.payu.checkoutpro.utils.PayUCheckoutProConstants.CP_HASH_STRING
 import com.payu.ui.model.listeners.PayUCheckoutProListener
 import com.payu.ui.model.listeners.PayUHashGenerationListener
-
-
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivitySubscriptionBinding
 import com.stafo.app.screens.billpayment.BillPaymentsViewModel
 import com.stafo.app.screens.subscription.dataClass.PackageData
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
-import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 
 class SubscriptionActivity : AppCompatActivity() {
@@ -201,28 +198,24 @@ class SubscriptionActivity : AppCompatActivity() {
 
         val key = "1AJhSD"
         val salt = "tBjCq35cgf3f12ya0usuhEtH9IJ7pSyq"
+
         val txnId = System.currentTimeMillis().toString()
 
-        val additionalParams: HashMap<String, Any?> = hashMapOf(
-            "udf1" to "1",
-            "udf2" to "30",
-            "udf3" to "1"
-        )
+
 
         val payUPaymentParams = PayUPaymentParams.Builder()
-            .setKey(key)
-            .setTransactionId(txnId)
-            .setAmount("10.0")
-            .setProductInfo("Macbook Pro")
-            .setFirstName("John")
-            .setEmail("john@yopmail.com")
-            .setPhone("9999999999")
-            .setSurl("https://stafo.in/success")
-            .setFurl("https://stafo.in/failure")
-            .setIsProduction(true)
-            .setUserCredential("$key:john@yopmail.com")
-            .setAdditionalParams(additionalParams)
-            .build()
+                .setKey(key)
+                .setTransactionId(txnId)
+                .setAmount("1.0")
+                .setProductInfo("Macbook Pro")
+                .setFirstName("John")
+                .setEmail("john@yopmail.com")
+                .setPhone("9999999999")
+                .setSurl("https://stafo.in/success")
+                .setFurl("https://stafo.in/failure")
+                .setIsProduction(true)
+                .setUserCredential("$key:john@yopmail.com")
+                .build()
 
 
 
@@ -231,24 +224,37 @@ class SubscriptionActivity : AppCompatActivity() {
 
 
         PayUCheckoutPro.open(
-            this,
-            payUPaymentParams,
-            object : PayUCheckoutProListener {
+            this, payUPaymentParams, object : PayUCheckoutProListener {
+              /*  override fun generateHash(
+                    map: HashMap<String, String?>,
+                    hashGenerationListener: PayUHashGenerationListener
+                ) {
+
+
+                    val testHash = "a10ca139aec4c382371acc7b53bba567e905ce2b6a5e2bc949669778e681a27f5b2f16953a4d3f12293e9580ba8014d14fe4e26983b70b59d5eba8542c296e45"
+
+                    val hashMap = HashMap<String, String?>()
+                    hashMap["payment-hash"] = testHash
+                    hashGenerationListener.onHashGenerated(hashMap)
+                }*/
+
                 override fun generateHash(
                     map: HashMap<String, String?>,
                     hashGenerationListener: PayUHashGenerationListener
                 ) {
+
                     val hashName = map["hashName"]
                     val hashData = map["hashString"]
 
-                    Log.d("PayU_HASH", "hashName: $hashName")
-                    Log.d("PayU_HASH", "hashString: $hashData")
+                    Log.d("PayU", "hashName: $hashName")
+                    Log.d("PayU", "hashString: $hashData")
 
                     if (!hashName.isNullOrEmpty() && !hashData.isNullOrEmpty()) {
-                        val hash = sha512("$hashData|$salt")
+                        val hashDataWithSalt = "$hashData$salt"
+                        val hash = calculateHash(hashDataWithSalt.trim())
                         val hashMap = HashMap<String, String?>()
                         hashMap[hashName] = hash
-                        Log.d("PayU_HASH", "Generated hash: $hash")
+                        Log.d("PayU", "Generated hash: $hash")
                         hashGenerationListener.onHashGenerated(hashMap)
                     }
                 }
@@ -269,28 +275,20 @@ class SubscriptionActivity : AppCompatActivity() {
                     Log.e("PayU", "Error: ${errorResponse.errorMessage} ${errorResponse.errorCode}")
 
                     Log.e("PayU", "Response Error: ${errorResponse}")
+
+                    CustomToast(this@SubscriptionActivity,"${errorResponse.errorMessage}")
                 }
 
                 override fun setWebViewProperties(webView: WebView?, bank: Any?) {
                     // Optional: Customize WebView if needed
                 }
-            }
-        )
+            })
     }
 
-    private fun sha512(input: String): String {
-        return try {
-            val md = MessageDigest.getInstance("SHA-512")
-            val hashBytes = md.digest(input.toByteArray(StandardCharsets.UTF_8))
-            val sb = StringBuilder()
-            for (b in hashBytes) {
-                sb.append(String.format("%02x", b))
-            }
-            sb.toString().lowercase()
-        } catch (e: Exception) {
-            throw RuntimeException(e)
-        }
+    fun calculateHash(data: String): String {
+        val messageDigest = MessageDigest.getInstance("SHA-512")
+        messageDigest.update(data.toByteArray())
+        val hashBytes = messageDigest.digest()
+        return hashBytes.joinToString("") { "%02x".format(it) }
     }
-
-
 }
