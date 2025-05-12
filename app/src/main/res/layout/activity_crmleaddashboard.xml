@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_header"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_12sdp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_4sdp"
+                android:src="@drawable/ic_back" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:padding="@dimen/_6sdp"
+                android:text="CRM Dashboard"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:background="@drawable/top_rounded_bg"
+            android:fillViewport="true"
+            android:padding="@dimen/_12sdp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Dashboard Cards: Total Leads & Today’s Follow-ups -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <!-- Total Leads Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_100sdp"
+                        android:layout_margin="@dimen/_4sdp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="@dimen/_8ssp"
+                        app:cardElevation="@dimen/_4sdp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:contentDescription="Leads"
+                                android:src="@drawable/leads" />
+
+                            <TextView
+                                android:id="@+id/tvTotalLeads"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:fontFamily="@font/gilroy_semi_bold"
+                                android:text="23"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_14ssp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:text="Total Leads"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_12ssp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Follow-ups Today Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_100sdp"
+                        android:layout_margin="@dimen/_4sdp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="@dimen/_8ssp"
+                        app:cardElevation="@dimen/_4sdp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:contentDescription="Follow-ups"
+                                android:src="@drawable/follow" />
+
+                            <TextView
+                                android:id="@+id/tvTodayFollowUps"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="5"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_14ssp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:text="Follow-ups Today"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_12ssp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- Quick Actions -->
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnAddLead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:background="@drawable/button_normal_bg"
+                    android:fontFamily="@font/gilroy_bold"
+                    android:icon="@drawable/ic_add"
+                    android:text="Add New Lead"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_10ssp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnViewlead"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_56sdp"
+                        android:layout_margin="@dimen/_2sdp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_corner_white"
+                        android:icon="@drawable/ic_calendar_month"
+                        android:text="View All Leads"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnViewFollowups"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_56sdp"
+                        android:layout_margin="@dimen/_2sdp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_corner_white"
+                        android:icon="@drawable/ic_calendar_month"
+                        android:text="View All Follow-ups"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="@dimen/_10ssp" />
+                </LinearLayout>
+
+                <!-- Today’s Follow-ups Section -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_12ssp"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:text="Today's Follow-ups"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14ssp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerTodayFollowUps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    tools:itemCount="1"
+                    tools:listitem="@layout/item_follow_up_list" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+</layout>

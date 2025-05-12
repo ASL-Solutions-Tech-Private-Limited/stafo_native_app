@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:elevation="4dp"
+        android:radius="@dimen/_12sdp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Existing TextViews -->
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="John Doe"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
+
+            <TextView
+                android:id="@+id/tvCompany"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Company: XYZ Ltd."
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+            <TextView
+                android:id="@+id/tvPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Phone: +91 9876543210"
+                android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Status: New"
+                android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+
+            <TextView
+                android:id="@+id/tvlastFollowup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Last Followup date: 12-02-2025"
+                android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+
+            <!-- New Buttons Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/btnFollowUp"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_margin="@dimen/_4sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_corner_white"
+                    android:backgroundTint="@color/app_theme_colour"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:gravity="center"
+                    android:text="Follow Up"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_12ssp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/btnEdit"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_margin="@dimen/_4sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_corner_white"
+                    android:backgroundTint="@color/app_theme_colour"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:gravity="center"
+                    android:text="Edit"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_12ssp" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

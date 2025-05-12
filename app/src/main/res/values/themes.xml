@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.Sims" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimary">@color/colorTextPrimary</item>
 
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->

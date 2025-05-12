@@ -49,6 +49,18 @@
         tools:replace="android:label"
         tools:targetApi="31">
         <activity
+            android:name=".screens.crm.TakeFollowUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.crm.LeadListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.crm.AddLeadsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.crm.CRMLeadDashboard"
+            android:exported="false" />
+        <activity
             android:name=".screens.referral.ReferActivity"
             android:exported="false" />
         <activity

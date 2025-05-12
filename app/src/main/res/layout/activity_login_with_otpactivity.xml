@@ -81,7 +81,7 @@
                     android:layout_height="@dimen/_44sdp"
                     android:layout_margin="@dimen/_14sdp"
                     android:hint="Mobile Number"
-                    app:boxBackgroundColor="@color/tea_green_light"
+                    app:boxBackgroundColor="@color/light_pastel_blue"
                     app:startIconDrawable="@drawable/ic_mobile">
 
                     <com.google.android.material.textfield.TextInputEditText

@@ -8,6 +8,7 @@
     <color name="colorButtonText">#ffffff</color>
     <color name="colorPlaceholder">#505050</color>
     <color name="colorTextPrimary">#0E68FF</color>
+    <color name="light_pastel_blue">#E4EEFF</color>
     <color name="primaryColor">#00E75B</color>
     <color name="primaryColorDark">#00BA0B</color>
     <color name="colorEditText">#14000000</color>
