@@ -124,6 +124,8 @@ import com.stafo.app.screens.settings.dataClass.SalaryTypeRequest
 import com.stafo.app.screens.settings.dataClass.SalaryTypeResponse
 import com.stafo.app.screens.settings.dataClass.SelfieUploadResponse
 import com.stafo.app.screens.settings.dataClass.UpgradePackageResponse
+import com.stafo.app.screens.subscription.dataClass.HashGenerateRequest
+import com.stafo.app.screens.subscription.dataClass.HashGenerateResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -483,6 +485,13 @@ class SettingsViewModel : BaseViewModel() {
     private var mAllReportsList: MutableLiveData<AllReportsListResponse> = MutableLiveData()
 
     val mAllReportsListResponse: LiveData<AllReportsListResponse> get() = mAllReportsList
+
+
+
+
+
+
+
 
 
 

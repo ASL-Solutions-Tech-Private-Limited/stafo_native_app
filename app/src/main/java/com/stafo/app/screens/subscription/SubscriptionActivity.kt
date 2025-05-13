@@ -1,6 +1,7 @@
 package com.stafo.app.screens.subscription
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Base64
 import android.util.Base64.NO_WRAP
@@ -17,15 +18,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.payu.base.models.ErrorResponse
 import com.payu.base.models.PayUPaymentParams
 import com.payu.checkoutpro.PayUCheckoutPro
+import com.payu.checkoutpro.utils.PayUCheckoutProConstants
 import com.payu.checkoutpro.utils.PayUCheckoutProConstants.CP_HASH_NAME
 import com.payu.ui.model.listeners.PayUCheckoutProListener
 import com.payu.ui.model.listeners.PayUHashGenerationListener
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivitySubscriptionBinding
 import com.stafo.app.screens.billpayment.BillPaymentsViewModel
+import com.stafo.app.screens.subscription.dataClass.HashGenerateRequest
+import com.stafo.app.screens.subscription.dataClass.HashParam
 import com.stafo.app.screens.subscription.dataClass.PackageData
+import com.stafo.app.screens.subscription.dataClass.PaymentResponse
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.getEmployeeComId
+import org.json.JSONObject
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import javax.crypto.Mac
@@ -45,6 +52,7 @@ class SubscriptionActivity : AppCompatActivity() {
 
     private lateinit var list: List<PackageData>
 
+    private var selectPlanId:String="0"
 
     private val merchantKey = "1AJhSD"
     private val merchantSalt = "tBjCq35cgf3f12ya0usuhEtH9IJ7pSyq"
@@ -95,7 +103,39 @@ class SubscriptionActivity : AppCompatActivity() {
 
 
             btnBuyNow.setOnClickListener {
-                startPayment()
+
+
+
+                if (selectPlanId.isNotBlank()){
+
+                    getEmployeeComId()?.let { it1 ->
+                        val request=  HashGenerateRequest(
+                            company_id = it1,
+                            package_id = selectPlanId
+                        )
+
+                        billPaymentsViewModel.getHashPayu(
+                            this@SubscriptionActivity,request
+                        )
+                    }
+                }
+
+               // startPayment()
+
+              /*  getEmployeeComId()?.let { it1 ->
+                    val request=  HashGenerateRequest(
+                        company_id = it1,
+                        package_id = ""
+                    )
+
+                    billPaymentsViewModel.getHashPayu(
+                        this@SubscriptionActivity,request
+                    )
+                }*/
+
+
+
+
             }
 
 
@@ -103,6 +143,7 @@ class SubscriptionActivity : AppCompatActivity() {
     }
 
     private fun selectPlan(index: Int, selectedView: TextView) {
+
         if (!::list.isInitialized || list.size <= index) return
 
         for ((view, bgRes) in planViews) {
@@ -115,6 +156,9 @@ class SubscriptionActivity : AppCompatActivity() {
         }
 
         val selectedPackage = list[index]
+
+
+        selectPlanId=selectedPackage.id.toString()
 
         val price = selectedPackage.discount_price
         if (!price.isNullOrBlank()) {
@@ -151,9 +195,11 @@ class SubscriptionActivity : AppCompatActivity() {
 
                     val packageItem = list.firstOrNull()
 
+
                     packageItem?.let {
 
                         if (!it.discount_price.isNullOrBlank()) {
+                            selectPlanId=it.id.toString()
                             binding.tvPrice.text = "₹" + it.discount_price.removeSuffix(".00")
                             binding.tvDuration.text = "${list[0].days} days"
                         }
@@ -166,6 +212,8 @@ class SubscriptionActivity : AppCompatActivity() {
 
 
                     val features = list[0].features?.filter { it.pivot.feature_value != "No" }
+
+
 
                     if (!features.isNullOrEmpty()) {
                         rvAdapter = AdapterPlanList(features, this, 0)
@@ -183,6 +231,16 @@ class SubscriptionActivity : AppCompatActivity() {
             }
         }
 
+        billPaymentsViewModel.mHashGenerateResponse.observe(this) {
+
+            if (it.status) {
+
+                Log.d("PayU","get generated hash & params ${it.hashParam}")
+
+                it.hashParam?.let { it1 -> startPayment(it1, it.hash!!) }
+            }
+        }
+
 
     }
 
@@ -194,27 +252,31 @@ class SubscriptionActivity : AppCompatActivity() {
         }
     }
 
-    private fun startPayment() {
+    private fun startPayment(dataModel: HashParam,getHash:String) {
 
-        val key = "1AJhSD"
-        val salt = "tBjCq35cgf3f12ya0usuhEtH9IJ7pSyq"
 
-        val txnId = System.currentTimeMillis().toString()
+
+        val additionalParamsMap: HashMap<String, Any?> = HashMap()
+        additionalParamsMap["udf1"] = dataModel.user_id
+        additionalParamsMap["udf2"] = dataModel.duration
+        additionalParamsMap["udf3"] = dataModel.package_id
+
 
 
 
         val payUPaymentParams = PayUPaymentParams.Builder()
-                .setKey(key)
-                .setTransactionId(txnId)
-                .setAmount("1.0")
-                .setProductInfo("Macbook Pro")
-                .setFirstName("John")
-                .setEmail("john@yopmail.com")
-                .setPhone("9999999999")
-                .setSurl("https://stafo.in/success")
-                .setFurl("https://stafo.in/failure")
+                .setKey(dataModel.merchantKey)
+                .setTransactionId(dataModel.txnid)
+                .setAmount(dataModel.amount)
+                .setProductInfo(dataModel.productinfo)
+                .setFirstName(dataModel.firstname)
+                .setEmail(dataModel.email)
+                .setPhone(dataModel.phone.toString())
+                .setSurl("https://stafo.in/api/success")
+                .setFurl("https://stafo.in/api/failure")
                 .setIsProduction(true)
-                .setUserCredential("$key:john@yopmail.com")
+                .setUserCredential("${dataModel.merchantKey}:${dataModel.email}")
+                .setAdditionalParams(additionalParamsMap)
                 .build()
 
 
@@ -225,32 +287,27 @@ class SubscriptionActivity : AppCompatActivity() {
 
         PayUCheckoutPro.open(
             this, payUPaymentParams, object : PayUCheckoutProListener {
-              /*  override fun generateHash(
-                    map: HashMap<String, String?>,
-                    hashGenerationListener: PayUHashGenerationListener
-                ) {
-
-
-                    val testHash = "a10ca139aec4c382371acc7b53bba567e905ce2b6a5e2bc949669778e681a27f5b2f16953a4d3f12293e9580ba8014d14fe4e26983b70b59d5eba8542c296e45"
-
-                    val hashMap = HashMap<String, String?>()
-                    hashMap["payment-hash"] = testHash
-                    hashGenerationListener.onHashGenerated(hashMap)
-                }*/
-
                 override fun generateHash(
                     map: HashMap<String, String?>,
                     hashGenerationListener: PayUHashGenerationListener
                 ) {
 
-                    val hashName = map["hashName"]
+
+                    /*val hashName = map["hashName"]
+                    if (!hashName.isNullOrEmpty()) {
+                        val hashMap = HashMap<String, String?>()
+                        hashMap[hashName] = getHash
+                        hashGenerationListener.onHashGenerated(hashMap)
+                    }*/
+
+                   val hashName = map["hashName"]
                     val hashData = map["hashString"]
 
-                    Log.d("PayU", "hashName: $hashName")
+                  Log.d("PayU", "hashName: $hashName")
                     Log.d("PayU", "hashString: $hashData")
 
                     if (!hashName.isNullOrEmpty() && !hashData.isNullOrEmpty()) {
-                        val hashDataWithSalt = "$hashData$salt"
+                        val hashDataWithSalt = "$hashData${dataModel.salt}"
                         val hash = calculateHash(hashDataWithSalt.trim())
                         val hashMap = HashMap<String, String?>()
                         hashMap[hashName] = hash
@@ -259,24 +316,25 @@ class SubscriptionActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onPaymentSuccess(response: Any) {
-                    Log.d("PayU", "Payment Success: $response")
-                }
+
+
+                 override fun onPaymentSuccess(response: Any) {
+                     Log.d("PayU", "Payment  Success: $response")
+                     paymentStatus("success",dataModel.productinfo!!,dataModel.txnid!!,dataModel.amount!!)
+                 }
 
                 override fun onPaymentFailure(response: Any) {
-                    Log.d("PayU", "Payment Failure: $response")
+                    paymentStatus("failed",dataModel.productinfo!!,dataModel.txnid!!,dataModel.amount!!)
                 }
 
                 override fun onPaymentCancel(isTxnInitiated: Boolean) {
-                    Log.d("PayU", "Payment Cancelled, txn initiated: $isTxnInitiated")
+
+                    CustomToast(this@SubscriptionActivity,"Payment Cancelled")
+
                 }
 
                 override fun onError(errorResponse: ErrorResponse) {
                     Log.e("PayU", "Error: ${errorResponse.errorMessage} ${errorResponse.errorCode}")
-
-                    Log.e("PayU", "Response Error: ${errorResponse}")
-
-                    CustomToast(this@SubscriptionActivity,"${errorResponse.errorMessage}")
                 }
 
                 override fun setWebViewProperties(webView: WebView?, bank: Any?) {
@@ -290,5 +348,34 @@ class SubscriptionActivity : AppCompatActivity() {
         messageDigest.update(data.toByteArray())
         val hashBytes = messageDigest.digest()
         return hashBytes.joinToString("") { "%02x".format(it) }
+    }
+
+    private fun paymentStatus(type:String,pName:String,txnId:String,amount:String){
+
+        val intent = Intent(this, PaymentActivity::class.java).apply {
+            putExtra("type", type)
+            putExtra("pName", pName)
+            putExtra("txnId", txnId)
+            putExtra("amount", amount)
+        }
+        startActivity(intent)
+
+
+    }
+
+
+    private fun parseMerchantResponse(jsonString: String?): PaymentResponse? {
+        return try {
+            if (jsonString == null) return null
+            val jsonObject = JSONObject(jsonString)
+            PaymentResponse(
+                status = jsonObject.optBoolean("status"),
+                expire_date = jsonObject.optString("expire_date"),
+                message = jsonObject.optString("message")
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 }

@@ -53,6 +53,7 @@ import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentResponse
 import com.stafo.app.screens.settings.dataClass.AssignShiftRequest
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
+import com.stafo.app.screens.settings.dataClass.AutosuggestResponse
 import com.stafo.app.screens.settings.dataClass.BannerResponse
 import com.stafo.app.screens.settings.dataClass.BranchListResponse
 import com.stafo.app.screens.settings.dataClass.ChangeDeviceRequest
@@ -139,6 +140,8 @@ import com.stafo.app.screens.settings.dataClass.UpgradePackageResponse
 import com.stafo.app.screens.settings.dataClass.VerifyGSTNumberResponse
 import com.stafo.app.screens.settings.dataClass.VerifyRegisterNumberResponse
 import com.stafo.app.screens.settings.dataClass.ViewBranchResponse
+import com.stafo.app.screens.subscription.dataClass.HashGenerateRequest
+import com.stafo.app.screens.subscription.dataClass.HashGenerateResponse
 import com.stafo.app.screens.subscription.dataClass.PackageResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -150,6 +153,7 @@ import retrofit2.http.Field
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.HeaderMap
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -751,9 +755,17 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<ReferralResponse>
 
+
     @GET("api/package")
     suspend fun callPackage(
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<PackageResponse>
+
+    @POST("api/hasgenerate")
+    suspend fun callHashGenerate(
+        @Body request: HashGenerateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<HashGenerateResponse>
+
 
 }

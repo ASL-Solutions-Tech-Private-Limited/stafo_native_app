@@ -34,6 +34,8 @@ import com.stafo.app.screens.rank.dataClass.RankListRequest
 import com.stafo.app.screens.rank.dataClass.RankListResponse
 import com.stafo.app.screens.referral.dataClass.ReferralResponse
 import com.stafo.app.screens.settings.dataClass.EmployeePostLocationRequest
+import com.stafo.app.screens.subscription.dataClass.HashGenerateRequest
+import com.stafo.app.screens.subscription.dataClass.HashGenerateResponse
 import com.stafo.app.screens.subscription.dataClass.PackageResponse
 import com.stafo.app.utils.CustomToast
 import kotlinx.coroutines.Dispatchers
@@ -114,6 +116,63 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     val mPackageResponse: LiveData<PackageResponse> get() = mPackage
+
+    private var mHashGenerate: MutableLiveData<HashGenerateResponse> = MutableLiveData()
+
+    val mHashGenerateResponse: LiveData<HashGenerateResponse> get() = mHashGenerate
+
+
+    fun getHashPayu(
+        mContext: Context,
+        request: HashGenerateRequest
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callHashGenerate(request)
+
+                Log.d("res","HAsh payu  $response")
+
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mHashGenerate.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
 
     fun getPackagePlanList(mContext: Context) {
         getLoaderLiveData().value = "load"

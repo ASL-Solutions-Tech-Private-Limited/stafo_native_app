@@ -489,6 +489,7 @@ class PlaceSearchActivity : AppCompatActivity() {
             val addressList: List<Address>? = coder.getFromLocationName(mAddress, 5)
             if (addressList.isNullOrEmpty()) {
                 Log.d("res", "Fail to find Lat,Lng")
+                Log.d("MapTap", "Fail to find Lat,Lng")
                 return
             }
 
@@ -505,8 +506,7 @@ class PlaceSearchActivity : AppCompatActivity() {
 
             setResult(Activity.RESULT_OK, returnIntent)
             finish()
-
-            Log.d("res", "Latitude: $getLati, Longitude: $getLongi")
+            Log.d("MapTap", "Custom Location: Lat=${getLati}, Lng=${getLongi}")
 
         } catch (e: Exception) {
             Log.d("res", "Fail to find Lat,Lng: ${e.localizedMessage}")

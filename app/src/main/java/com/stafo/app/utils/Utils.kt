@@ -1615,6 +1615,76 @@ fun showCustomMonthYearPicker(
 
     dialog.show()
 }
+
+
+
+/*fun showPaymentDialog(
+    context: Activity,
+    successType:String
+
+) {
+    val dialog = Dialog(context)
+    dialog.setContentView(R.layout.dialog_month_year_picker)
+    dialog.setTitle("Select Month and Year")
+    dialog.setCancelable(false)
+
+    val window = dialog.window
+    window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+    val layoutParams = WindowManager.LayoutParams()
+    layoutParams.copyFrom(window?.attributes)
+    layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+    layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+    // Set margins
+    val marginHorizontal = context.resources.getDimensionPixelSize(R.dimen.dialog_margin)
+    window?.decorView?.setPadding(marginHorizontal, 0, marginHorizontal, 0)
+
+    window?.attributes = layoutParams
+
+    val monthPicker = dialog.findViewById<NumberPicker>(R.id.month_picker)
+    val yearPicker = dialog.findViewById<NumberPicker>(R.id.year_picker)
+    val btnOk = dialog.findViewById<AppCompatTextView>(R.id.btn_ok)
+    val btnCancel = dialog.findViewById<AppCompatTextView>(R.id.btn_cancel)
+
+    val months = arrayOf(
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    )
+
+    monthPicker.minValue = 0
+    monthPicker.maxValue = months.size - 1
+    monthPicker.displayedValues = months
+
+    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+    yearPicker.minValue = 2000
+    yearPicker.maxValue = currentYear + 20
+    yearPicker.value = currentYear
+
+    btnOk.setOnClickListener {
+        val selectedMonth = monthPicker.value
+        val selectedYear = yearPicker.value
+
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.MONTH, selectedMonth)
+        calendar.set(Calendar.YEAR, selectedYear)
+
+        val postFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
+        val displayFormat = SimpleDateFormat("MMM yy", Locale.getDefault())
+
+        onSelected(postFormat.format(calendar.time), displayFormat.format(calendar.time))
+        dialog.dismiss()
+    }
+
+    btnCancel.setOnClickListener {
+        dialog.dismiss()
+    }
+
+    dialog.show()
+}*/
+
+
+
+
 fun formatUtcTo12HourLocalTimeLegacy(utcTime: String): String {
     return try {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())

@@ -249,6 +249,8 @@ class AddBranchActivity : AppCompatActivity() {
                     latitude = lat ?: 0.0
                     longitude = lng ?: 0.0
                     getAddressFromLocation(latitude!!, longitude!!)
+
+                    Log.d("MapTap", "main Location: Lat=${latitude}, Lng=${longitude}")
                 }
                 "custom" -> {
                     val fullAddress = data.getStringExtra("fullAddress")
@@ -257,6 +259,8 @@ class AddBranchActivity : AppCompatActivity() {
                     val lng = data.getDoubleExtra("longitude", 0.0)
                     latitude = lat ?: 0.0
                     longitude = lng ?: 0.0
+
+                    Log.d("MapTap", "Custom Location: Lat=${latitude}, Lng=${longitude}")
                    // getAddressFromLocation(latitude!!, longitude!!)
                 }
             }
