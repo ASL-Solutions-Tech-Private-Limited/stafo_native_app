@@ -68,7 +68,7 @@ class EmployerDashboard : AppCompatActivity() {
     private val mActionList = ArrayList<ActionModel>()
 
     private var companyStatus: Boolean = false
-    private var maxEmployeeAdd: String = ""
+    private var maxEmployeeAdd: Int=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -304,7 +304,18 @@ class EmployerDashboard : AppCompatActivity() {
             if (it.status) {
                 setEmployeeComId(it.companyId.toString())
 
-                maxEmployeeAdd = it.maxEmployeeAdd
+
+
+               // maxEmployeeAdd = it.maxEmployeeAdd.toInt()
+
+                val maxEmpStr = it.maxEmployeeAdd
+
+                maxEmployeeAdd = if (!maxEmpStr.isNullOrBlank()) {
+                    maxEmpStr.toIntOrNull() ?: 0
+                } else {
+                    0
+                }
+
 
 
 
@@ -517,7 +528,7 @@ class EmployerDashboard : AppCompatActivity() {
         }
 
         binding.llcLoan.setOnClickListener {
-            startActivity(Intent(this, SubscriptionActivity::class.java))
+            startActivity(Intent(this, ChatWithCompanyActivity::class.java))
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
 
@@ -581,9 +592,9 @@ class EmployerDashboard : AppCompatActivity() {
             if (companyStatus) {
 
 
-                val getTotalEmp = binding.tvAllEmp.text.toString().trim()
+                val getTotalEmp = binding.tvAllEmp.text.toString().trim().toIntOrNull()
 
-                if (getTotalEmp >= maxEmployeeAdd) {
+                if (getTotalEmp != null && getTotalEmp >= maxEmployeeAdd) {
 
                     showUpgradeDialog()
 

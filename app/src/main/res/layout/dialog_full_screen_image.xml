@@ -16,11 +16,11 @@
     <!-- Close Button -->
     <ImageView
         android:id="@+id/closeButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/_28sdp"
+        android:layout_height="@dimen/_28sdp"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:src="@drawable/ic_cancel"
-        android:tint="@android:color/white"
+        android:tint="@android:color/black"
         tools:ignore="UseAppTint" />
 </RelativeLayout>

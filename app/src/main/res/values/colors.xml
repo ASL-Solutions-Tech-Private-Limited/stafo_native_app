@@ -42,4 +42,5 @@
     <color name="plan_color3">#eb5056</color>
     <color name="basic_light">#f41b94</color>
     <color name="basic_deep">#93399c</color>
+    <color name="semiTransparentBlue">#330099cc</color>
 </resources>

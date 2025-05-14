@@ -49,6 +49,7 @@ import com.stafo.app.screens.referral.ReferActivity
 import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.screens.settings.AssignBranchActivity
 import com.stafo.app.screens.settings.UploadSelfieAttendanceActivity
+import com.stafo.app.screens.subscription.SubscriptionActivity
 import java.io.File
 
 class EmplyeeyerProfile : AppCompatActivity() {
@@ -362,6 +363,13 @@ class EmplyeeyerProfile : AppCompatActivity() {
         binding.expandableOtherManagement.findViewById<AppCompatTextView>(R.id.tv_refer_company)
             .setOnClickListener {
                 startActivity(Intent(this, ReferActivity::class.java))
+            }
+
+
+        binding.expandableOtherManagement.findViewById<AppCompatTextView>(R.id.tv_subscription_company)
+            .setOnClickListener {
+                startActivity(Intent(this, SubscriptionActivity::class.java))
+                overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
             }
 
 

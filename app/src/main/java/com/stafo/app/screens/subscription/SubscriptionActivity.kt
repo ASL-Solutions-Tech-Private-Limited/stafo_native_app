@@ -285,6 +285,10 @@ class SubscriptionActivity : AppCompatActivity() {
 
 
 
+
+
+
+
         PayUCheckoutPro.open(
             this, payUPaymentParams, object : PayUCheckoutProListener {
                 override fun generateHash(
@@ -292,13 +296,6 @@ class SubscriptionActivity : AppCompatActivity() {
                     hashGenerationListener: PayUHashGenerationListener
                 ) {
 
-
-                    /*val hashName = map["hashName"]
-                    if (!hashName.isNullOrEmpty()) {
-                        val hashMap = HashMap<String, String?>()
-                        hashMap[hashName] = getHash
-                        hashGenerationListener.onHashGenerated(hashMap)
-                    }*/
 
                    val hashName = map["hashName"]
                     val hashData = map["hashString"]
@@ -316,12 +313,73 @@ class SubscriptionActivity : AppCompatActivity() {
                     }
                 }
 
+                override fun onPaymentSuccess(response: Any) {
+                    response as HashMap<*, *>
+                   // val payUResponse = response[PayUCheckoutProConstants.CP_PAYU_RESPONSE]
 
 
-                 override fun onPaymentSuccess(response: Any) {
+                    /*val payUResponseStr = response[PayUCheckoutProConstants.CP_PAYU_RESPONSE] as? String
+                    val payUJson = JSONObject(payUResponseStr ?: "{}")
+
+                    val resultJson = payUJson.optJSONObject("result") ?: JSONObject()
+
+                    // Now extract fields from "result"
+                    val txnId = resultJson.optString("txnid")
+                    val status = resultJson.optString("status")
+                    val amount = resultJson.optString("amount")
+                    val paymentMode = resultJson.optString("mode")
+                    val mihpayid = resultJson.optString("mihpayid")
+                    val productInfo = resultJson.optString("productinfo")
+                    val name = resultJson.optString("firstname")
+                    val email = resultJson.optString("email")
+                    val phone = resultJson.optString("phone")
+                    val bankRefNum = resultJson.optString("bank_ref_num")
+
+                    Log.d("PayU", "TxnId: $txnId")
+                    Log.d("PayU", "Status: $status")
+                    Log.d("PayU", "Amount: $amount")
+                    Log.d("PayU", "Mode: $paymentMode")
+                    Log.d("PayU", "PayU ID: $mihpayid")
+                    Log.d("PayU", "Product: $productInfo")
+                    Log.d("PayU", "Customer: $name, $email, $phone")
+                    Log.d("PayU", "Bank Ref No: $bankRefNum")*/
+
+
+                    val payUResponseStr = response[PayUCheckoutProConstants.CP_PAYU_RESPONSE] as? String
+                    val payUJson = JSONObject(payUResponseStr ?: "{}")
+
+                    val resultJson = if (payUJson.has("result") && payUJson.opt("result") is JSONObject) {
+                        payUJson.optJSONObject("result") ?: JSONObject()
+                    } else {
+                        payUJson
+                    }
+
+                    val txnId = resultJson.optString("txnid")
+                    val status = resultJson.optString("status")
+                    val amount = resultJson.optString("amount")
+                    val paymentMode = resultJson.optString("mode")
+                    val mihpayid = resultJson.optString("mihpayid")
+                    val productInfo = resultJson.optString("productinfo")
+                    val name = resultJson.optString("firstname")
+                    val email = resultJson.optString("email")
+                    val phone = resultJson.optString("phone")
+                    val bankRefNum = resultJson.optString("bank_ref_num")
+
+                    Log.d("PayU", "TxnId: $txnId")
+                    Log.d("PayU", "Status: $status")
+                    Log.d("PayU", "Amount: $amount")
+                    Log.d("PayU", "Mode: $paymentMode")
+                    Log.d("PayU", "PayU ID: $mihpayid")
+                    Log.d("PayU", "Product: $productInfo")
+                    Log.d("PayU", "Customer: $name, $email, $phone")
+                    Log.d("PayU", "Bank Ref No: $bankRefNum")
+
+                }
+
+                /* override fun onPaymentSuccess(response: Any) {
                      Log.d("PayU", "Payment  Success: $response")
                      paymentStatus("success",dataModel.productinfo!!,dataModel.txnid!!,dataModel.amount!!)
-                 }
+                 }*/
 
                 override fun onPaymentFailure(response: Any) {
                     paymentStatus("failed",dataModel.productinfo!!,dataModel.txnid!!,dataModel.amount!!)
