@@ -760,6 +760,9 @@ class EmployeeDashboard : AppCompatActivity() {
                             it.data.banner
                         )
                     )
+
+                    binding.imageSlider.setScrollTimeInSec(5)
+                    binding.imageSlider.startAutoCycle()
                 }
             }
         }

@@ -265,7 +265,7 @@
                     <com.smarteist.autoimageslider.SliderView
                         android:id="@+id/imageSlider"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_130sdp"
+                        android:layout_height="@dimen/_160sdp"
                         app:sliderAnimationDuration="600"
                         app:sliderAutoCycleDirection="back_and_forth"
                         app:sliderAutoCycleEnabled="true"
@@ -277,7 +277,7 @@
                         app:sliderIndicatorRadius="2dp"
                         app:sliderIndicatorSelectedColor="#5A5A5A"
                         app:sliderIndicatorUnselectedColor="#FFF"
-                        app:sliderScrollTimeInSec="1"
+                        app:sliderScrollTimeInSec="5"
                         app:sliderStartAutoCycle="true" />
 
                 </androidx.cardview.widget.CardView>
