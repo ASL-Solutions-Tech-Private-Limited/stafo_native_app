@@ -94,7 +94,14 @@ class OtpVerifyActivity : AppCompatActivity() {
                 }
             })
             btnOtpVerify.setOnClickListener {
-                authViewModel.verifyOTP(this@OtpVerifyActivity, mobile, otp,deviceID)
+
+                if (!llOtp.text.toString().isNullOrEmpty()){
+
+                    val getOtp=llOtp.text.toString()
+                    authViewModel.verifyOTP(this@OtpVerifyActivity, mobile, getOtp,deviceID)
+
+                }else CustomToast(this@OtpVerifyActivity,"Please enter your OTP!")
+
             }
 
             ivBack.setOnClickListener { _ ->
