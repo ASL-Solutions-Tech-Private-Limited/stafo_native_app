@@ -143,6 +143,8 @@ import com.stafo.app.screens.settings.dataClass.ViewBranchResponse
 import com.stafo.app.screens.subscription.dataClass.HashGenerateRequest
 import com.stafo.app.screens.subscription.dataClass.HashGenerateResponse
 import com.stafo.app.screens.subscription.dataClass.PackageResponse
+import com.stafo.app.screens.subscription.dataClass.PaymentUpdateRequest
+import com.stafo.app.screens.subscription.dataClass.PaymentUpdateResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -766,6 +768,12 @@ interface ApiStores {
         @Body request: HashGenerateRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<HashGenerateResponse>
+
+    @POST("api/paymentUpdate")
+    suspend fun callUpdatePayment(
+        @Body request: PaymentUpdateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<PaymentUpdateResponse>
 
 
 }

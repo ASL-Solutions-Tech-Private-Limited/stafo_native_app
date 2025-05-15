@@ -18,6 +18,9 @@ import com.stafo.app.screens.emp.EmpBranchDetailsActivity
 import com.stafo.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.stafo.app.screens.emp.EmployeeLeaveHistoryActivity
 import com.stafo.app.screens.emp.ViewEmpLocationTrackActivity
+import com.stafo.app.screens.performance.PerformanceActivity
+import com.stafo.app.screens.rank.RankListActivity
+import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getIsCOMPANYLogin
 
@@ -80,7 +83,18 @@ class SubMenuActivity : AppCompatActivity() {
                                     )
 
                                 }
-
+                                "Reports" -> {
+                                    startActivity(Intent(this@SubMenuActivity, ReportsActivity::class.java))
+                                    overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                                }
+                                "Performance"-> {
+                                    startActivity(Intent(this@SubMenuActivity, PerformanceActivity::class.java))
+                                    overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                                }
+                                "Rank List"-> {
+                                    startActivity(Intent(this@SubMenuActivity, RankListActivity::class.java))
+                                    overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                                }
                                 "Leaves" -> {
                                     startActivity(
                                         Intent(
@@ -235,10 +249,13 @@ class SubMenuActivity : AppCompatActivity() {
 
     private fun actionList(): List<ActionModel> {
         mActionList.add(ActionModel("Employee", R.drawable.ic_user))
+        mActionList.add(ActionModel("Location\nTrack", R.drawable.ic_location_pin))
+        mActionList.add(ActionModel("Reports", R.drawable.report_download))
+        mActionList.add(ActionModel("Performance", R.drawable.resize_performance))
+        mActionList.add(ActionModel("Rank List", R.drawable.trophy))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_calendar_month))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
-        mActionList.add(ActionModel("Location\nTrack", R.drawable.ic_location_pin))
         mActionList.add(ActionModel("Request\nDevice", R.drawable.resized_device))
         return mActionList
     }

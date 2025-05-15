@@ -110,10 +110,18 @@ class ReportsActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
+            /*rtlCrm.setOnClickListener {
+            CustomToast(this@ReportsActivity,"Working It!")
+            }*/
+
+
+
             binding.expandablePayrollSetting.setOnClickListener {
                 binding.expandablePayrollSetting.toggleLayout()
 
             }
+
+
             val rtlSalaryType = binding.expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_salary_type)
             val rtlGenerateSalary = binding.expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_generate_salary)
             val rtlSalarySlip = binding.expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_salary_slip)

@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -20,7 +21,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityEmpSelfieAttendanceBinding
 import com.stafo.app.screens.settings.SettingsViewModel
@@ -143,9 +148,17 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                         getCurrentLocation { userLat, userLong ->
 
 
+                            Log.d("res","punch distance: $userLat $userLong")
+                            Log.d("res","branch distance: $branchLat $branchLong")
+
+
                             val distance = getDistance(userLat, userLong, branchLat, branchLong)
 
-                            if (distance <= radar) {
+                            Log.d("res"," distance: $distance $radar")
+
+                            val tolerance = 1.0f
+
+                            if (distance <= radar + tolerance) {
 
                                 val employeeId = getEmployeeDetails()?.id
 
@@ -237,17 +250,30 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
 
     }
+
     @SuppressLint("MissingPermission")
     fun getCurrentLocation(callback: (Double, Double) -> Unit) {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                callback(location.latitude, location.longitude)
-            } else {
-                CustomToast(this, "Unable to fetch location. Ensure GPS is enabled.")
-            }
+
+        val locationRequest = LocationRequest.create().apply {
+            priority = Priority.PRIORITY_HIGH_ACCURACY
+            interval = 1000
+            numUpdates = 1
         }
+
+        fusedLocationClient.requestLocationUpdates(locationRequest, object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                val location = locationResult.lastLocation
+                if (location != null) {
+                    callback(location.latitude, location.longitude)
+                } else {
+                    CustomToast(this@EmpSelfieAttendanceActivity, "Unable to fetch accurate location.")
+                }
+                fusedLocationClient.removeLocationUpdates(this)
+            }
+        }, Looper.getMainLooper())
     }
+
 
     fun getDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float {
         val results = FloatArray(1)

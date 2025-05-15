@@ -189,6 +189,10 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
         val mapmyIndiaMapView = findViewById<MapmyIndiaMapView>(R.id.idMapView)
         val mapView = mapmyIndiaMapView.mapView
 
+
+
+
+
         if (points.isEmpty()) return
 
         val geoPointsArrayList = ArrayList(points)

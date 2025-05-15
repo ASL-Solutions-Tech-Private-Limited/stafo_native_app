@@ -52,6 +52,8 @@ import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.stafo.app.screens.chat.ChatWithCompanyActivity
 import com.stafo.app.screens.notification.NotificationActivity
+import com.stafo.app.screens.performance.PerformanceActivity
+import com.stafo.app.screens.rank.RankListActivity
 import com.stafo.app.screens.recharge.RechargeActivity
 import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.screens.settings.SubMenuActivity
@@ -184,6 +186,20 @@ class EmployerDashboard : AppCompatActivity() {
                                 }
 
                             }
+
+                            "Reports" -> {
+                                startActivity(Intent(this@EmployerDashboard, ReportsActivity::class.java))
+                                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                            }
+                            "Performance"-> {
+                                startActivity(Intent(this@EmployerDashboard, PerformanceActivity::class.java))
+                                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                            }
+                            "Rank List"-> {
+                                startActivity(Intent(this@EmployerDashboard, RankListActivity::class.java))
+                                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                            }
+
 
                             "Leaves" -> {
 
@@ -427,14 +443,14 @@ class EmployerDashboard : AppCompatActivity() {
 
 
 
-        settingsViewModel.mUpgradePackageResponse.observe(this) {
+      /*  settingsViewModel.mUpgradePackageResponse.observe(this) {
 
             if (it.status) {
                 CustomToast(this, it.message)
             } else {
                 CustomToast(this, it.message)
             }
-        }
+        }*/
 
 
         settingsViewModel.mBannerResponse.observe(this) {
@@ -448,6 +464,8 @@ class EmployerDashboard : AppCompatActivity() {
                             it.data.banner
                         )
                     )
+                    binding.imageSlider.setScrollTimeInSec(5)
+                    binding.imageSlider.startAutoCycle()
                 }
 
 
@@ -462,7 +480,15 @@ class EmployerDashboard : AppCompatActivity() {
         builder.setTitle(R.string.app_name)
         builder.setMessage("You have reached the maximum limit of employees.Upgrade your plan to continue adding employees.")
         builder.setPositiveButton("Upgrade Now") { _, _ ->
-            settingsViewModel.upgradePackage(this@EmployerDashboard)
+
+
+            startActivity(Intent(this,SubscriptionActivity::class.java))
+
+
+
+           // settingsViewModel.upgradePackage(this@EmployerDashboard)
+
+
         }
 
         builder.setNegativeButton("Cancel") { dialog, _ ->
@@ -523,7 +549,7 @@ class EmployerDashboard : AppCompatActivity() {
 
 
 
-        binding.llcRecharge.setOnClickListener {
+   /*     binding.llcRecharge.setOnClickListener {
             startActivity(Intent(this, DashboardActivity::class.java))
         }
 
@@ -531,7 +557,7 @@ class EmployerDashboard : AppCompatActivity() {
             startActivity(Intent(this, ChatWithCompanyActivity::class.java))
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
-
+*/
 
 
         stopLocationService()
@@ -659,11 +685,14 @@ class EmployerDashboard : AppCompatActivity() {
 
     private fun actionList(): List<ActionModel> {
         mActionList.add(ActionModel("Employee", R.drawable.ic_user))
+        mActionList.add(ActionModel("Location Track", R.drawable.ic_location_pin))
+        mActionList.add(ActionModel("Reports", R.drawable.report_download))
+        mActionList.add(ActionModel("Performance Type", R.drawable.diagram))
+        mActionList.add(ActionModel("Rank List", R.drawable.trophy))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_calendar_month))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
-        mActionList.add(ActionModel("Location Track", R.drawable.ic_location_pin))
-        mActionList.add(ActionModel("Request Device", R.drawable.resized_device))
+        mActionList.add(ActionModel("Request Device", R.drawable.mobile))
         return mActionList
     }
 

@@ -29,6 +29,7 @@ import com.stafo.app.screens.subscription.dataClass.HashGenerateRequest
 import com.stafo.app.screens.subscription.dataClass.HashParam
 import com.stafo.app.screens.subscription.dataClass.PackageData
 import com.stafo.app.screens.subscription.dataClass.PaymentResponse
+import com.stafo.app.screens.subscription.dataClass.PaymentUpdateRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
@@ -52,10 +53,13 @@ class SubscriptionActivity : AppCompatActivity() {
 
     private lateinit var list: List<PackageData>
 
-    private var selectPlanId:String="0"
+    private var selectPlanId: String = "0"
+    private var txnId: String = ""
+    private var status: String = ""
+    private var amount: String = ""
+    private var paymentMode: String = ""
+    private var productInfo: String = ""
 
-    private val merchantKey = "1AJhSD"
-    private val merchantSalt = "tBjCq35cgf3f12ya0usuhEtH9IJ7pSyq"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,35 +109,31 @@ class SubscriptionActivity : AppCompatActivity() {
             btnBuyNow.setOnClickListener {
 
 
-
-                if (selectPlanId.isNotBlank()){
+                if (selectPlanId.isNotBlank()) {
 
                     getEmployeeComId()?.let { it1 ->
-                        val request=  HashGenerateRequest(
-                            company_id = it1,
-                            package_id = selectPlanId
+                        val request = HashGenerateRequest(
+                            company_id = it1, package_id = selectPlanId
                         )
 
                         billPaymentsViewModel.getHashPayu(
-                            this@SubscriptionActivity,request
+                            this@SubscriptionActivity, request
                         )
                     }
                 }
 
-               // startPayment()
+                // startPayment()
 
-              /*  getEmployeeComId()?.let { it1 ->
-                    val request=  HashGenerateRequest(
-                        company_id = it1,
-                        package_id = ""
-                    )
+                /*  getEmployeeComId()?.let { it1 ->
+                      val request=  HashGenerateRequest(
+                          company_id = it1,
+                          package_id = ""
+                      )
 
-                    billPaymentsViewModel.getHashPayu(
-                        this@SubscriptionActivity,request
-                    )
-                }*/
-
-
+                      billPaymentsViewModel.getHashPayu(
+                          this@SubscriptionActivity,request
+                      )
+                  }*/
 
 
             }
@@ -158,7 +158,7 @@ class SubscriptionActivity : AppCompatActivity() {
         val selectedPackage = list[index]
 
 
-        selectPlanId=selectedPackage.id.toString()
+        selectPlanId = selectedPackage.id.toString()
 
         val price = selectedPackage.discount_price
         if (!price.isNullOrBlank()) {
@@ -199,7 +199,7 @@ class SubscriptionActivity : AppCompatActivity() {
                     packageItem?.let {
 
                         if (!it.discount_price.isNullOrBlank()) {
-                            selectPlanId=it.id.toString()
+                            selectPlanId = it.id.toString()
                             binding.tvPrice.text = "₹" + it.discount_price.removeSuffix(".00")
                             binding.tvDuration.text = "${list[0].days} days"
                         }
@@ -235,9 +235,20 @@ class SubscriptionActivity : AppCompatActivity() {
 
             if (it.status) {
 
-                Log.d("PayU","get generated hash & params ${it.hashParam}")
+                Log.d("PayU", "get generated hash & params ${it.hashParam}")
 
                 it.hashParam?.let { it1 -> startPayment(it1, it.hash!!) }
+            }
+        }
+
+
+        billPaymentsViewModel.mPaymentUpdateResponse.observe(this) {
+
+            if (it.status) {
+                paymentStatus(status, productInfo, txnId, amount)
+
+            } else {
+                CustomToast(this, it.message)
             }
         }
 
@@ -252,8 +263,14 @@ class SubscriptionActivity : AppCompatActivity() {
         }
     }
 
-    private fun startPayment(dataModel: HashParam,getHash:String) {
+    private fun startPayment(dataModel: HashParam, getHash: String) {
 
+
+        txnId = dataModel.txnid.toString()
+        status = ""
+        amount = dataModel.amount.toString()
+        paymentMode = ""
+        productInfo =dataModel.productinfo.toString()
 
 
         val additionalParamsMap: HashMap<String, Any?> = HashMap()
@@ -262,22 +279,13 @@ class SubscriptionActivity : AppCompatActivity() {
         additionalParamsMap["udf3"] = dataModel.package_id
 
 
-
-
-        val payUPaymentParams = PayUPaymentParams.Builder()
-                .setKey(dataModel.merchantKey)
-                .setTransactionId(dataModel.txnid)
-                .setAmount(dataModel.amount)
-                .setProductInfo(dataModel.productinfo)
-                .setFirstName(dataModel.firstname)
-                .setEmail(dataModel.email)
-                .setPhone(dataModel.phone.toString())
-                .setSurl("https://stafo.in/api/success")
-                .setFurl("https://stafo.in/api/failure")
-                .setIsProduction(true)
-                .setUserCredential("${dataModel.merchantKey}:${dataModel.email}")
-                .setAdditionalParams(additionalParamsMap)
-                .build()
+        val payUPaymentParams = PayUPaymentParams.Builder().setKey(dataModel.merchantKey)
+            .setTransactionId(dataModel.txnid).setAmount(dataModel.amount)
+            .setProductInfo(dataModel.productinfo).setFirstName(dataModel.firstname)
+            .setEmail(dataModel.email).setPhone(dataModel.phone.toString())
+            .setSurl("https://stafo.in/api/success").setFurl("https://stafo.in/api/failure")
+            .setIsProduction(true).setUserCredential("${dataModel.merchantKey}:${dataModel.email}")
+            .setAdditionalParams(additionalParamsMap).build()
 
 
 
@@ -297,10 +305,10 @@ class SubscriptionActivity : AppCompatActivity() {
                 ) {
 
 
-                   val hashName = map["hashName"]
+                    val hashName = map["hashName"]
                     val hashData = map["hashString"]
 
-                  Log.d("PayU", "hashName: $hashName")
+                    Log.d("PayU", "hashName: $hashName")
                     Log.d("PayU", "hashString: $hashData")
 
                     if (!hashName.isNullOrEmpty() && !hashData.isNullOrEmpty()) {
@@ -315,79 +323,88 @@ class SubscriptionActivity : AppCompatActivity() {
 
                 override fun onPaymentSuccess(response: Any) {
                     response as HashMap<*, *>
-                   // val payUResponse = response[PayUCheckoutProConstants.CP_PAYU_RESPONSE]
 
-
-                    /*val payUResponseStr = response[PayUCheckoutProConstants.CP_PAYU_RESPONSE] as? String
+                    val payUResponseStr =
+                        response[PayUCheckoutProConstants.CP_PAYU_RESPONSE] as? String
                     val payUJson = JSONObject(payUResponseStr ?: "{}")
 
-                    val resultJson = payUJson.optJSONObject("result") ?: JSONObject()
 
-                    // Now extract fields from "result"
-                    val txnId = resultJson.optString("txnid")
-                    val status = resultJson.optString("status")
-                    val amount = resultJson.optString("amount")
-                    val paymentMode = resultJson.optString("mode")
-                    val mihpayid = resultJson.optString("mihpayid")
-                    val productInfo = resultJson.optString("productinfo")
-                    val name = resultJson.optString("firstname")
-                    val email = resultJson.optString("email")
-                    val phone = resultJson.optString("phone")
-                    val bankRefNum = resultJson.optString("bank_ref_num")
+                    val resultJson =
+                        if (payUJson.has("result") && payUJson.opt("result") is JSONObject) {
+                            payUJson.optJSONObject("result") ?: JSONObject()
+                        } else {
+                            payUJson
+                        }
 
-                    Log.d("PayU", "TxnId: $txnId")
-                    Log.d("PayU", "Status: $status")
-                    Log.d("PayU", "Amount: $amount")
-                    Log.d("PayU", "Mode: $paymentMode")
-                    Log.d("PayU", "PayU ID: $mihpayid")
-                    Log.d("PayU", "Product: $productInfo")
-                    Log.d("PayU", "Customer: $name, $email, $phone")
-                    Log.d("PayU", "Bank Ref No: $bankRefNum")*/
+                    txnId = resultJson.optString("txnid")
+                    status = resultJson.optString("status")
+                    amount = resultJson.optString("amount")
+                    paymentMode = resultJson.optString("mode")
+                    productInfo = resultJson.optString("productinfo")
 
+                    getEmployeeComId()?.let { it1 ->
+                        val request = PaymentUpdateRequest(
+                            company_id = it1,
+                            duration = dataModel.duration.toString(),
+                            packageId = selectPlanId,
+                            amount = amount,
+                            txnid = txnId,
+                            status = "success",
+                            payment_Message = "success",
+                            payment_info = payUJson.toMap()
+                        )
 
-                    val payUResponseStr = response[PayUCheckoutProConstants.CP_PAYU_RESPONSE] as? String
-                    val payUJson = JSONObject(payUResponseStr ?: "{}")
-
-                    val resultJson = if (payUJson.has("result") && payUJson.opt("result") is JSONObject) {
-                        payUJson.optJSONObject("result") ?: JSONObject()
-                    } else {
-                        payUJson
+                        billPaymentsViewModel.updateSubscriptionPayment(
+                            this@SubscriptionActivity, request
+                        )
                     }
 
-                    val txnId = resultJson.optString("txnid")
-                    val status = resultJson.optString("status")
-                    val amount = resultJson.optString("amount")
-                    val paymentMode = resultJson.optString("mode")
-                    val mihpayid = resultJson.optString("mihpayid")
-                    val productInfo = resultJson.optString("productinfo")
-                    val name = resultJson.optString("firstname")
-                    val email = resultJson.optString("email")
-                    val phone = resultJson.optString("phone")
-                    val bankRefNum = resultJson.optString("bank_ref_num")
 
                     Log.d("PayU", "TxnId: $txnId")
                     Log.d("PayU", "Status: $status")
                     Log.d("PayU", "Amount: $amount")
                     Log.d("PayU", "Mode: $paymentMode")
-                    Log.d("PayU", "PayU ID: $mihpayid")
                     Log.d("PayU", "Product: $productInfo")
-                    Log.d("PayU", "Customer: $name, $email, $phone")
-                    Log.d("PayU", "Bank Ref No: $bankRefNum")
+
 
                 }
 
-                /* override fun onPaymentSuccess(response: Any) {
-                     Log.d("PayU", "Payment  Success: $response")
-                     paymentStatus("success",dataModel.productinfo!!,dataModel.txnid!!,dataModel.amount!!)
-                 }*/
 
                 override fun onPaymentFailure(response: Any) {
-                    paymentStatus("failed",dataModel.productinfo!!,dataModel.txnid!!,dataModel.amount!!)
+                    response as HashMap<*, *>
+
+                    val payUResponseStr =
+                        response[PayUCheckoutProConstants.CP_PAYU_RESPONSE] as? String
+                    val payUJson = JSONObject(payUResponseStr ?: "{}")
+
+
+
+
+
+
+                    getEmployeeComId()?.let { it1 ->
+                        val request = PaymentUpdateRequest(
+                            company_id = it1,
+                            duration = dataModel.duration.toString(),
+                            packageId = selectPlanId,
+                            amount = dataModel.amount.toString(),
+                            txnid = dataModel.txnid.toString(),
+                            status = "failed",
+                            payment_Message = "failed",
+                            payment_info = payUJson.toMap()
+                        )
+
+                        billPaymentsViewModel.updateSubscriptionPayment(
+                            this@SubscriptionActivity, request
+                        )
+                    }
+
+
                 }
 
                 override fun onPaymentCancel(isTxnInitiated: Boolean) {
 
-                    CustomToast(this@SubscriptionActivity,"Payment Cancelled")
+                    CustomToast(this@SubscriptionActivity, "Payment Cancelled")
 
                 }
 
@@ -408,7 +425,22 @@ class SubscriptionActivity : AppCompatActivity() {
         return hashBytes.joinToString("") { "%02x".format(it) }
     }
 
-    private fun paymentStatus(type:String,pName:String,txnId:String,amount:String){
+    fun JSONObject.toMap(): Map<String, Any> {
+        val map = mutableMapOf<String, Any>()
+        val keys = keys()
+        while (keys.hasNext()) {
+            val key = keys.next()
+            val value = this.get(key)
+            map[key] = when (value) {
+                is JSONObject -> value.toMap()
+                else -> value
+            }
+        }
+        return map
+    }
+
+
+    private fun paymentStatus(type: String, pName: String, txnId: String, amount: String) {
 
         val intent = Intent(this, PaymentActivity::class.java).apply {
             putExtra("type", type)

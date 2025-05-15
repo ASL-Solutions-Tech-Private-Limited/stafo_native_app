@@ -124,7 +124,7 @@
         <RelativeLayout
             android:id="@+id/rtl_attendance_report"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/_40sdp"
             android:layout_below="@id/include_01"
             android:layout_marginHorizontal="@dimen/_12sdp"
             android:layout_marginTop="@dimen/_12sdp"
@@ -188,7 +188,7 @@
         <RelativeLayout
             android:id="@+id/rtl_employee_reports"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/_40sdp"
             android:layout_below="@id/include_01"
             android:layout_marginHorizontal="@dimen/_12sdp"
             android:layout_marginTop="@dimen/_12sdp"
@@ -231,9 +231,10 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <!--<RelativeLayout
+            android:id="@+id/rtl_crm"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/_40sdp"
             android:layout_below="@id/include_01"
             android:layout_marginHorizontal="@dimen/_12sdp"
             android:layout_marginTop="@dimen/_12sdp"
@@ -274,7 +275,7 @@
                 tools:ignore="UseAppTint" />
 
 
-        </RelativeLayout>
+        </RelativeLayout>-->
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

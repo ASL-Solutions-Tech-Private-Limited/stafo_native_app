@@ -195,7 +195,6 @@
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/tv_price"
-                android:text="999/Month"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14ssp"
                 android:fontFamily="@font/gilroy_semi_bold"
@@ -221,7 +220,7 @@
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/tv_duration"
-                android:text="999/Month"
+
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11ssp"
                 android:fontFamily="@font/gilroy_regular"

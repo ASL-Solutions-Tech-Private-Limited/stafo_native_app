@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/rtl_payroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_40sdp"
         android:layout_marginHorizontal="@dimen/_12sdp"
         android:layout_marginTop="@dimen/_12sdp"
         android:background="@drawable/button_normal_bg">

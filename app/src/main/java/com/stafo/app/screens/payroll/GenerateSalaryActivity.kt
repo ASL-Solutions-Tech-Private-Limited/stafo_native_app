@@ -47,9 +47,11 @@ class GenerateSalaryActivity : AppCompatActivity() {
     private lateinit var deductionAdapter: DynamicDeductionAdapter
     private val dynamicFields = mutableListOf<SalaryComponent>()
     private val deductionDynamicFields = mutableListOf<SalaryComponent>()
+
     private var mEmpList: List<GetEmployee>? = ArrayList()
 
     private lateinit var employeeListDialog: SearchableDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -65,7 +67,96 @@ class GenerateSalaryActivity : AppCompatActivity() {
         onClickListener()
         observeViewModel()
 
+
     }
+
+    private fun observeViewModel() {
+
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
+        settingsViewModel.mSalaryGeneratedResponse.observe(this) {
+
+            if (it.success) {
+
+                if (!it.data.basic_salary.isNullOrBlank()) {
+                    val salary = it.data.basic_salary.replace(".00", "")
+                    binding.tieSalary.setText(salary)
+                }
+
+                binding.tvGrossSalary.text = it.data.gross_salary.toString()
+
+                if (it.data.earning.isNotEmpty()) {
+                    binding.llcEarning.visibility = View.VISIBLE
+
+                    dynamicFields.clear()
+                    dynamicFields.addAll(it.data.earning)
+
+                    adapter = DynamicSalaryAdapter(dynamicFields) {
+                        calculateGrossSalary()
+                    }
+
+                    binding.recyclerView.layoutManager =
+                        LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                    binding.recyclerView.adapter = adapter
+
+                } else {
+                    binding.llcEarning.visibility = View.GONE
+                }
+
+                if (it.data.deduction.isNotEmpty()) {
+                    binding.llcDeduction.visibility = View.VISIBLE
+
+                    deductionDynamicFields.clear()
+                    deductionDynamicFields.addAll(it.data.deduction)
+
+                    deductionAdapter = DynamicDeductionAdapter(deductionDynamicFields) {
+                        calculateGrossSalary()
+                    }
+
+                    binding.rvDeductionList.layoutManager =
+                        LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                    binding.rvDeductionList.adapter = deductionAdapter
+
+                } else {
+                    binding.llcDeduction.visibility = View.GONE
+                }
+            } else {
+                binding.llcDeduction.visibility = View.GONE
+                binding.llcEarning.visibility = View.GONE
+            }
+        }
+
+        settingsViewModel.mGetAllEmployeeResponse.observe(this) {
+            if (it.status && it.data.isNotEmpty()) {
+                mEmpList = it.data
+                setupSearchableDialog(mEmpList ?: emptyList(), "Employee List", binding.tieEmployee)
+            }
+        }
+
+        settingsViewModel.mSaveSalaryResponse.observe(this) {
+            CustomToast(this, it.message)
+            if (it.success) {
+                onBackPressedDispatcher.onBackPressed()
+            }
+        }
+    }
+
+    private fun calculateGrossSalary() {
+        val totalEarning = dynamicFields.sumOf { it.amount?.toString()?.toDoubleOrNull() ?: 0.0 }
+        val totalDeduction = deductionDynamicFields.sumOf { it.amount?.toString()?.toDoubleOrNull() ?: 0.0 }
+        val grossSalary = totalEarning - totalDeduction
+
+        val formattedGross = if (grossSalary % 1 == 0.0)
+            grossSalary.toInt().toString()
+        else
+            String.format("%.2f", grossSalary)
+
+        binding.tvGrossSalary.text = formattedGross
+    }
+
+
+
+
 
     private fun onClickListener() {
 
@@ -99,9 +190,58 @@ class GenerateSalaryActivity : AppCompatActivity() {
                     Log.d("date","$mMonthOfSalary")
                 }
             }
-
-
             btnSubmit.setOnClickListener {
+                val basicSalaryStr = binding.tieSalary.text.toString().trim()
+                val grossSalaryStr = binding.tvGrossSalary.text.toString().trim()
+
+                val basicSalary = basicSalaryStr.toDoubleOrNull()
+                val grossSalary = grossSalaryStr.toDoubleOrNull()
+
+                if (basicSalary == null || grossSalary == null) {
+                    CustomToast(this@GenerateSalaryActivity, "Invalid salary values. Please check the inputs.")
+                    return@setOnClickListener
+                }
+
+                val format = SimpleDateFormat("yyyy-MM", Locale.getDefault())
+                val date = format.parse(mMonthOfSalary)
+
+                val monthFormat = SimpleDateFormat("MM", Locale.getDefault())
+                val month = monthFormat.format(date).toIntOrNull()
+
+                if (month == null) {
+                    CustomToast(this@GenerateSalaryActivity, "Invalid month format.")
+                    return@setOnClickListener
+                }
+
+                val allComponents = mutableListOf<SalaryComponent>().apply {
+                    addAll(dynamicFields)
+                    addAll(deductionDynamicFields)
+                }
+
+                getEmployeeComId()?.let { companyIdStr ->
+                    val companyId = companyIdStr.toIntOrNull()
+                    if (companyId == null) {
+                        CustomToast(this@GenerateSalaryActivity, "Invalid company ID.")
+                        return@setOnClickListener
+                    }
+
+                    val request = SalaryRequest(
+                        company_id = companyId,
+                        employee_id = mEMpId,
+                        month = month,
+                        basic_salary = basicSalary,
+                        gross_salary = grossSalary,
+                        components = allComponents
+                    )
+
+                    settingsViewModel.saveSalary(this@GenerateSalaryActivity, request)
+                } ?: run {
+                    CustomToast(this@GenerateSalaryActivity, "Company ID is missing.")
+                }
+            }
+
+
+          /*  btnSubmit.setOnClickListener {
 
                 val basicSalary=tieSalary.text.toString().trim()
                 val grossSalary=tvGrossSalary.text.toString().trim()
@@ -136,7 +276,7 @@ class GenerateSalaryActivity : AppCompatActivity() {
                     settingsViewModel.saveSalary(this@GenerateSalaryActivity, request)
                 }
 
-            }
+            }*/
 
 
         }
@@ -156,112 +296,6 @@ class GenerateSalaryActivity : AppCompatActivity() {
     }
 
 
-
-
-
-
-
-    private fun observeViewModel() {
-
-
-        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-
-        settingsViewModel.mSalaryGeneratedResponse.observe(this) {
-
-
-            if (it.success) {
-
-                if (!it.data.basic_salary.isNullOrBlank()) {
-                    val salary = it.data.basic_salary.replace(".00", "")
-                    binding.tieSalary.setText(salary)
-                }
-
-                binding.tvGrossSalary.text=it.data.gross_salary.toString()
-
-
-
-                if (it.data.earning.isNotEmpty()) {
-
-                    binding.llcEarning.visibility=View.VISIBLE
-
-                    dynamicFields.clear()
-                    dynamicFields.addAll(it.data.earning)
-
-                    adapter = DynamicSalaryAdapter(dynamicFields)
-
-                    val layoutManager: RecyclerView.LayoutManager =
-                        LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-                    binding.recyclerView.setLayoutManager(layoutManager)
-
-                    binding.recyclerView.adapter = adapter
-                    adapter.notifyDataSetChanged()
-                }else{
-                    binding.llcEarning.visibility=View.GONE
-                }
-
-                if (it.data.deduction.isNotEmpty()){
-
-                    binding.llcDeduction.visibility=View.VISIBLE
-                    deductionDynamicFields.clear()
-                    deductionDynamicFields.addAll(it.data.deduction)
-
-                    deductionAdapter = DynamicDeductionAdapter(deductionDynamicFields)
-
-                    val layoutManager: RecyclerView.LayoutManager =
-                        LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-                    binding.rvDeductionList.setLayoutManager(layoutManager)
-
-                    binding.rvDeductionList.adapter = deductionAdapter
-                    adapter.notifyDataSetChanged()
-                }else{
-                    binding.llcDeduction.visibility=View.GONE
-                }
-            }
-            else{
-                binding.llcDeduction.visibility=View.GONE
-                binding.llcEarning.visibility=View.GONE
-            }
-        }
-
-
-        settingsViewModel.mGetAllEmployeeResponse.observe(this) {
-
-            if (it.status) {
-
-
-                if (it.data.isNotEmpty()) {
-
-                    mEmpList = it.data
-                    binding.let { it1 ->
-                        setupSearchableDialog(
-                            mEmpList,
-                            "Employee List",
-                            it1.tieEmployee
-                        )
-                    }
-
-
-                }
-
-
-            }
-        }
-        settingsViewModel.mSaveSalaryResponse.observe(this) {
-
-            if (it.success) {
-                CustomToast(this,it.message)
-                onBackPressedDispatcher.onBackPressed()
-            } else  CustomToast(this,it.message)
-        }
-
-
-
-
-
-
-
-
-    }
 
     private fun handleLoader(status: String) {
         if (status.equals("load", ignoreCase = true)) {
