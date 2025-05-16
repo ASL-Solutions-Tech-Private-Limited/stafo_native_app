@@ -51,6 +51,7 @@ import com.stafo.app.utils.setIsLockUser
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.stafo.app.screens.chat.ChatWithCompanyActivity
+import com.stafo.app.screens.crm.CRMLeadDashboard
 import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.recharge.RechargeActivity
 import com.stafo.app.screens.reports.ReportsActivity
@@ -182,6 +183,15 @@ class EmployerDashboard : AppCompatActivity() {
                                     showCompanyVerificationDialog()
                                 }
 
+                            }
+
+                            "CRM" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        CRMLeadDashboard::class.java
+                                    )
+                                )
                             }
 
                             "Leaves" -> {
@@ -645,6 +655,7 @@ class EmployerDashboard : AppCompatActivity() {
 
     private fun actionList(): List<ActionModel> {
         mActionList.add(ActionModel("Employee", R.drawable.ic_user))
+        mActionList.add(ActionModel("CRM", R.drawable.crm_c))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_calendar_month))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))

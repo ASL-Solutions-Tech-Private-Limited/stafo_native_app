@@ -5,17 +5,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.databinding.ItemFollowUpListBinding
-import com.stafo.app.screens.crm.dataClass.LeadData
+import com.stafo.app.screens.crm.dataClass.FollowUpItem
 import com.stafo.app.screens.crm.dataClass.TotalFollowupsToday
 import com.stafo.app.utils.generateGradientDrawables
 import com.stafo.app.utils.getFormatDate
 
-
-class FollowUpAdapter(
-    private var followUpList: List<TotalFollowupsToday>,
-
-
-    ) : RecyclerView.Adapter<FollowUpAdapter.FollowUpViewHolder>() {
+class FollowUpListAdapter (
+    private var followUpList: List<FollowUpItem>,
+    ) : RecyclerView.Adapter<FollowUpListAdapter.FollowUpViewHolder>() {
 
     // Pre-generated gradient list (one per item)
     private val gradientBackgrounds = generateGradientDrawables(4)
@@ -27,13 +24,13 @@ class FollowUpAdapter(
     }
 
     override fun onBindViewHolder(holder: FollowUpViewHolder, position: Int) {
-           val item = followUpList[position]
+        val item = followUpList[position]
         val binding = holder.binding
 
-        binding.tvLeadName.text=item.name
+        binding.tvLeadName.text=item.employee.name
         binding.tvLeadCompany.text=item.company?.company_name
-        binding.tvFollowUpNote.text=item.notes
-        binding.tvFollowUpDate.text= getFormatDate(item.next_date.toString())
+        binding.tvFollowUpNote.text=item.remarks
+        binding.tvFollowUpDate.text= getFormatDate(item.next_date)
 
 
 

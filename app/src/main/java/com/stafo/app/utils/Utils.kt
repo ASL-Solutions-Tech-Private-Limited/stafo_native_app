@@ -1365,13 +1365,19 @@ fun getTodayDate(): String {
 }
 
 
- fun getFormatDate(inputDate: String): String {
-    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    val outputFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
+fun getFormatDate(inputDate: String?): String {
+    if (inputDate.isNullOrBlank() || inputDate == "null") return "--"
 
-    val date = inputFormat.parse(inputDate)
-    return outputFormat.format(date!!)
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
+        val date = inputFormat.parse(inputDate)
+        if (date != null) outputFormat.format(date) else "--"
+    } catch (e: Exception) {
+        "--"
+    }
 }
+
 
 
 fun doLogout(mContext: Context) {

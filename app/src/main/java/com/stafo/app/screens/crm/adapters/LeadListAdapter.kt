@@ -4,22 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.databinding.ItemLeadsListBinding
+import com.stafo.app.screens.crm.dataClass.LeadData
+import com.stafo.app.screens.settings.dataClass.GetEmployee
+import com.stafo.app.utils.getFormatDate
 
 // Lead Adapter to display the list of leads
 class LeadAdapter(
-    private var listener: (String) -> Unit
+    private var leadList: List<LeadData>,
+    private var listener: (LeadData) -> Unit
 ) : RecyclerView.Adapter<LeadAdapter.LeadViewHolder>() {
 
-    // ViewHolder class to bind the item views
     inner class LeadViewHolder(val binding: ItemLeadsListBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind() {
-            itemView.setOnClickListener {
-                listener.invoke("clicked")
-            }
-
-        }
-    }
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LeadViewHolder {
         val binding =
@@ -28,14 +24,24 @@ class LeadAdapter(
     }
 
     override fun onBindViewHolder(holder: LeadViewHolder, position: Int) {
-        // val lead = leadList[position]
-        holder.bind()
+        val lead = leadList[position]
+
+        holder.binding.tvName.text = lead.name
+        holder.binding.tvCompany.text = lead.company?.company_name
+        holder.binding.tvPhone.text = lead.phone.toString()
+        holder.binding.tvStatus.text = lead.status
+        holder.binding.tvlastFollowup.text = lead.next_date?.let { getFormatDate(it) }
+
+        holder.binding.btnFollowUp.setOnClickListener {
+            listener.invoke(lead) // Send full lead data
+        }
     }
 
-    override fun getItemCount(): Int = 5
+    override fun getItemCount(): Int = leadList.size
+}
 
-    // Update the list dynamically
-    /*fun updateList(newList: List<Lead>) {
+// Update the list dynamically
+/*fun updateList(newList: List<Lead>) {
         leadList = newList
         notifyDataSetChanged()
     }
@@ -51,5 +57,3 @@ class LeadAdapter(
         leadList = filteredList
         notifyDataSetChanged()
     }*/
-}
-

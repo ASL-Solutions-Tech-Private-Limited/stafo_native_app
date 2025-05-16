@@ -1,24 +1,48 @@
 package com.stafo.app.screens.crm
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ajithvgiri.searchdialog.OnSearchItemSelected
 import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
 import com.stafo.app.R
+import com.stafo.app.base.adapter.EmpListAdapter
+import com.stafo.app.base.adapter.RadioShiftAdapter
 import com.stafo.app.databinding.ActivityAddLeadsBinding
+import com.stafo.app.screens.crm.adapters.LeadAdapter
+import com.stafo.app.screens.crm.dataClass.LeadCreateRequest
+import com.stafo.app.screens.settings.SettingsViewModel
+import com.stafo.app.utils.CustomLoader
+import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.getEmployeeComId
+import com.stafo.app.utils.getEmployeeDetails
+import com.stafo.app.utils.getIsCOMPANYLogin
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 class AddLeadsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddLeadsBinding
+
+    private val customLoader: CustomLoader by lazy { CustomLoader(this) }
+    private val crmViewModel: CRMViewModel by viewModels()
+    private val settingsViewModel: SettingsViewModel by viewModels()
+
+
+    private var postFollowUpDate: String = ""
+    private var selectedEmpId: String = ""
 
     private val leadSources = arrayListOf(
         SearchListItem(1, "Facebook"),
@@ -33,7 +57,8 @@ class AddLeadsActivity : AppCompatActivity() {
         SearchListItem(2, "Contacted"),
         SearchListItem(3, "Qualified"),
         SearchListItem(4, "Lost"),
-        SearchListItem(5, "Customer")
+        SearchListItem(5, "Customer"),
+        SearchListItem(6, "OnBoard")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,50 +74,99 @@ class AddLeadsActivity : AppCompatActivity() {
             insets
         }
 
+        if (getIsCOMPANYLogin(this)){
+            binding.etEmployee.visibility=View.VISIBLE
+            settingsViewModel.getAllEmployeeList(this)
+            observeViewModel2()
+        }else  binding.etEmployee.visibility=View.GONE
+
+
         initView()
+        observeViewModel()
     }
 
     private fun initView() {
-        binding.imgBack.setOnClickListener {
-            finish()
-        }
+      binding.apply {
+          binding.imgBack.setOnClickListener {
+              finish()
+          }
 
-        // Set up searchable dialog for Lead Source
-        binding.etfrom.setOnClickListener {
+          // Set up searchable dialog for Lead Source
+          binding.etfrom.setOnClickListener {
 
-            val dialog = SearchableDialog(this, leadSources, "Lead Source")
-            dialog.setOnItemSelected(object : OnSearchItemSelected {
-                override fun onClick(position: Int, searchListItem: SearchListItem) {
-                    binding.etfrom.setText(searchListItem.title)
-                    dialog.dismiss()
-                }
-            })
-            dialog.show()
-        }
+              val dialog = SearchableDialog(this@AddLeadsActivity, leadSources, "Lead Source")
+              dialog.setOnItemSelected(object : OnSearchItemSelected {
+                  override fun onClick(position: Int, searchListItem: SearchListItem) {
+                      binding.etfrom.setText(searchListItem.title)
+                      dialog.dismiss()
+                  }
+              })
+              dialog.show()
+          }
 
-        // Set up searchable dialog for Lead Status
-        binding.etStatus.setOnClickListener {
-            val dialog = SearchableDialog(this, leadStatuses, "Lead Status")
-            dialog.setOnItemSelected(object : OnSearchItemSelected {
-                override fun onClick(position: Int, searchListItem: SearchListItem) {
-                    binding.etStatus.setText(searchListItem.title)
-                    dialog.dismiss()
-                }
-            })
-            dialog.show()
-        }
+          // Set up searchable dialog for Lead Status
+          binding.etStatus.setOnClickListener {
+              val dialog = SearchableDialog(this@AddLeadsActivity, leadStatuses, "Lead Status")
+              dialog.setOnItemSelected(object : OnSearchItemSelected {
+                  override fun onClick(position: Int, searchListItem: SearchListItem) {
+                      binding.etStatus.setText(searchListItem.title)
+                      dialog.dismiss()
+                  }
+              })
+              dialog.show()
+          }
 
-        binding.etnextfollowup.setOnClickListener {
-            showCalendarAndSetDate()
-        }
+          binding.etnextfollowup.setOnClickListener {
+              showCalendarAndSetDate()
+          }
 
-        // Save button click
-        binding.btnSaveLead.setOnClickListener {
-            if (validateInputs()) {
-                // Handle data saving
-                Toast.makeText(this, "Lead saved successfully!", Toast.LENGTH_SHORT).show()
-            }
-        }
+          // Save button click
+          binding.btnSaveLead.setOnClickListener {
+              if (validateInputs()) {
+                  // Handle data saving
+
+
+                  if (getIsCOMPANYLogin(this@AddLeadsActivity)){
+                      val request = LeadCreateRequest(
+                          companyId = getEmployeeComId().toString(),
+                          employeeId = selectedEmpId,
+                          name =etName.text.toString() ,
+                          company_name =etCompany.text.toString() ,
+                          email = etEmail.text.toString().trim(),
+                          phone = etPhone.text.toString().trim(),
+                          notes = etNotes.text.toString().trim(),
+                          status = etStatus.text.toString().trim(),
+                          leadFrom = etfrom.text.toString().trim(),
+                          nextDate = postFollowUpDate
+                      )
+
+                      crmViewModel.createNewLead(this@AddLeadsActivity,request)
+
+                  }else{
+                      val request = LeadCreateRequest(
+                          companyId = getEmployeeComId().toString(),
+                          employeeId = getEmployeeDetails()?.id.toString(),
+                          name =etName.text.toString() ,
+                          company_name =etCompany.text.toString() ,
+                          email = etEmail.text.toString().trim(),
+                          phone = etPhone.text.toString().trim(),
+                          notes = etNotes.text.toString().trim(),
+                          status = etStatus.text.toString().trim(),
+                          leadFrom = etfrom.text.toString().trim(),
+                          nextDate = postFollowUpDate
+                      )
+
+                      crmViewModel.createNewLead(this@AddLeadsActivity,request)
+
+                  }
+
+
+
+
+
+              }
+          }
+      }
     }
 
     private fun validateInputs(): Boolean {
@@ -150,6 +224,9 @@ class AddLeadsActivity : AppCompatActivity() {
     }
 
     private fun showCalendarAndSetDate() {
+        val postFormat = "yyyy-MM-dd"
+        val displayFormat = "dd MMM yy"
+
         val calendar = Calendar.getInstance()
 
         val datePickerDialog = DatePickerDialog(
@@ -157,10 +234,14 @@ class AddLeadsActivity : AppCompatActivity() {
             { _, year, month, dayOfMonth ->
                 calendar.set(year, month, dayOfMonth)
 
-                val displayFormat = SimpleDateFormat("dd MMM yy", Locale.US)
-                val formattedDate = displayFormat.format(calendar.time)
+                val postDateFormatter = SimpleDateFormat(postFormat, Locale.US)
+                val displayDateFormatter = SimpleDateFormat(displayFormat, Locale.US)
 
-                binding.etnextfollowup.setText(formattedDate)
+                postFollowUpDate = postDateFormatter.format(calendar.time)
+                Log.d("crm", "date $postFollowUpDate")
+
+                val formattedDisplayDate = displayDateFormatter.format(calendar.time)
+                binding.etnextfollowup.setText(formattedDisplayDate)
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
@@ -168,6 +249,77 @@ class AddLeadsActivity : AppCompatActivity() {
         )
 
         datePickerDialog.show()
+    }
+
+    private fun observeViewModel2() {
+
+
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
+        settingsViewModel.mGetAllEmployeeResponse.observe(this) { response ->
+            if (response.status) {
+                if (!response.data.isNullOrEmpty()) {
+
+
+
+                    val empList = ArrayList<SearchListItem>().apply {
+                        response.data.forEach { employee ->
+                            add(
+                                SearchListItem(
+                                    id = employee.id ?: 0,
+                                    title = employee.name ?: "No Name"
+                                )
+                            )
+                        }
+                    }
+
+
+
+
+                    binding.etEmployee.setOnClickListener {
+                        val dialog = SearchableDialog(this@AddLeadsActivity, empList, "Employee List")
+                        dialog.setOnItemSelected(object : OnSearchItemSelected {
+                            override fun onClick(position: Int, searchListItem: SearchListItem) {
+                                selectedEmpId=position.toString()
+                                Log.d("crm","employee id: $selectedEmpId")
+                                binding.etEmployee.setText(searchListItem.title)
+                                dialog.dismiss()
+                            }
+                        })
+                        dialog.show()
+                    }
+
+
+                }
+            }
+        }
+
+
+
+
+    }
+
+    private fun observeViewModel() {
+        crmViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+        crmViewModel.mLeadCreateResponse.observe(this) {
+            if (it.success){
+                CustomToast(this,"New lead add successful")
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            } else  it.message?.let { it1 -> CustomToast(this, it1) }
+
+
+        }
+
+
+    }
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
+        }
     }
 
 }

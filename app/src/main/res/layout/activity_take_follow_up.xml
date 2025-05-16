@@ -43,7 +43,7 @@
                 android:elevation="4dp"
                 app:cardCornerRadius="@dimen/_12sdp">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -58,6 +58,47 @@
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
                     <TextView
+                        android:id="@+id/tvCompany1"
+                        android:layout_below="@+id/tvLeadName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:text="Company:"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+                    <TextView
+                        android:id="@+id/tvCompany"
+                        android:layout_below="@+id/tvLeadName"
+                        android:layout_toRightOf="@+id/tvCompany1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:paddingStart="@dimen/_6sdp"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+
+
+                    <TextView
+                        android:id="@+id/tvPhone1"
+                        android:layout_below="@+id/tvCompany"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:text="Phone:"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+                    <TextView
+                        android:id="@+id/tvPhone"
+                        android:layout_below="@+id/tvCompany"
+                        android:layout_toRightOf="@+id/tvPhone1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:paddingStart="@dimen/_6sdp"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                    <!--<TextView
                         android:id="@+id/tvLeadCompany"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -71,8 +112,8 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/gilroy_medium"
                         android:text="Phone: +91 9876543210"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
-                </LinearLayout>
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />-->
+                </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout

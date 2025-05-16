@@ -142,24 +142,14 @@
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
 
-                <!-- Quick Actions -->
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnAddLead"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12sdp"
-                    android:background="@drawable/button_normal_bg"
-                    android:fontFamily="@font/gilroy_bold"
-                    android:icon="@drawable/ic_add"
-                    android:text="Add New Lead"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_10ssp" />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_12sdp"
                     android:gravity="center"
+                    android:elevation="@dimen/_2sdp"
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatButton
@@ -175,14 +165,14 @@
                         android:textSize="@dimen/_10ssp" />
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/btnViewFollowups"
+                        android:id="@+id/btnAddLead"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_56sdp"
                         android:layout_margin="@dimen/_2sdp"
                         android:layout_weight="1"
                         android:background="@drawable/rounded_corner_white"
                         android:icon="@drawable/ic_calendar_month"
-                        android:text="View All Follow-ups"
+                        android:text="Add new lead"
                         android:textColor="@color/colorTextPrimary"
                         android:textSize="@dimen/_10ssp" />
                 </LinearLayout>
@@ -205,6 +195,21 @@
                     android:layout_marginTop="@dimen/_6sdp"
                     tools:itemCount="1"
                     tools:listitem="@layout/item_follow_up_list" />
+
+
+
+
+                <TextView
+                    android:id="@+id/tvMsg"
+                    android:text="No follow-up tasks found"
+                    android:textSize="@dimen/_12ssp"
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/_50sdp"
+                    android:fontFamily="@font/gilroy_regular"
+                    android:textColor="@color/black"
+                    android:textAlignment="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
