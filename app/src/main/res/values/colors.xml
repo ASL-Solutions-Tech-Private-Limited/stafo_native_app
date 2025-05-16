@@ -8,10 +8,10 @@
     <color name="colorButtonText">#ffffff</color>
     <color name="colorPlaceholder">#505050</color>
     <color name="colorTextPrimary">#0E68FF</color>
-    <color name="primaryColor">#00E75B</color>
-    <color name="primaryColorDark">#00BA0B</color>
+    <color name="primaryColor">#0E68FF</color>
+    <color name="primaryColorDark">#0A47B3</color>
     <color name="colorEditText">#14000000</color>
-    <color name="green_400">#E8F5E9</color>
+    <color name="green_400">#E3F2FD</color>
     <color name="tea_green">#E0E0E0</color>
     <color name="tea_green_light">#e4ffed</color>
     <color name="reject">#d14249</color>

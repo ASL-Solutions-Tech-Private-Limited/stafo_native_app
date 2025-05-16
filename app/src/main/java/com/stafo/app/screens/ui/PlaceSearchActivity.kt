@@ -5,10 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
-import android.location.Location
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -18,14 +15,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.ajithvgiri.searchdialog.OnSearchItemSelected
 import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
 import com.google.android.material.textfield.TextInputEditText
-import com.stafo.app.R
-import com.stafo.app.databinding.ActivityPlaceSearchBinding
-import java.util.Locale
 import com.mmi.MapView
 import com.mmi.MapmyIndiaMapView
 import com.mmi.layers.MapEventsOverlay
@@ -34,23 +27,16 @@ import com.mmi.layers.Marker
 import com.mmi.layers.UserLocationOverlay
 import com.mmi.layers.location.GpsLocationProvider
 import com.mmi.util.GeoPoint
+import com.stafo.app.R
+import com.stafo.app.databinding.ActivityPlaceSearchBinding
 import com.stafo.app.screens.auth.AuthViewModel
 import com.stafo.app.screens.auth.dataClass.DataCity
 import com.stafo.app.screens.auth.dataClass.DataCountry
 import com.stafo.app.screens.auth.dataClass.DataStates
 import com.stafo.app.screens.settings.SettingsViewModel
-import com.stafo.app.screens.settings.dataClass.Place
-import com.stafo.app.screens.settings.dataClass.PlacesAdapter
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import org.json.JSONObject
-import java.io.IOException
+import java.util.Locale
 
 
 class PlaceSearchActivity : AppCompatActivity() {

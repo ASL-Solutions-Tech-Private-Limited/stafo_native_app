@@ -8,13 +8,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/_100sdp"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/_2sdp">
+        android:layout_height="wrap_content">
 
 
         <ImageView
             android:id="@+id/iv_action"
-            android:src="@drawable/diagram"
+            android:src="@drawable/ic_location"
             android:layout_width="@dimen/_32sdp"
             android:layout_height="@dimen/_32sdp"
             android:scaleType="fitXY"

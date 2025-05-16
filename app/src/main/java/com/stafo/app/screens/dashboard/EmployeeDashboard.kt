@@ -716,9 +716,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
         settingsViewModel.mSendGeoLocationResponse.observe(this) {
             if (it.status) {
-
                 settingsViewModel.getEmployeDashboard(this)
-
             } else {
                 CustomToast(this, it.message)
             }
@@ -1105,9 +1103,9 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
     private fun actionList(): List<ActionModel> {
-        mActionList.add(ActionModel("Attendance", R.drawable.ic_user))
+        mActionList.add(ActionModel("Attendance", R.drawable.ic_attendace))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
-        mActionList.add(ActionModel("Branches", R.drawable.ic_calendar_month))
+        mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
         return mActionList
     }
