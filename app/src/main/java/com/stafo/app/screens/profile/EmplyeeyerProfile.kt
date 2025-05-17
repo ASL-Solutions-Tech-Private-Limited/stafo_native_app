@@ -43,6 +43,7 @@ import com.stafo.app.screens.settings.PolicyActivity
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.ViewAllEmployeeActivity
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
+import com.stafo.app.screens.subscription.PackageDetailsActivity
 import com.stafo.app.screens.subscription.SubscriptionActivity
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
@@ -655,7 +656,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
                 }
 
                 "Subscription" -> {
-                    val intent = Intent(this, SubscriptionActivity::class.java)
+                    val intent = Intent(this, PackageDetailsActivity::class.java)
                     startActivity(intent)
                 }
 
