@@ -1,10 +1,14 @@
 package com.stafo.app.screens.crm.dataClass
 
+import com.google.gson.annotations.SerializedName
+import java.io.Serializable
+
 data class LeadListResponse(
     val data: List<LeadData>?,
     val message: String?,
     val success: Boolean
 )
+
 data class LeadData(
     val company: LeadCompany?,
     val company_id: Int?,
@@ -21,7 +25,7 @@ data class LeadData(
     val start_date: Any?,
     val status: String?,
     val updated_at: String?
-)
+) : Serializable
 
 data class LeadCompany(
     val company_code: String?,
@@ -29,7 +33,7 @@ data class LeadCompany(
     val email: String?,
     val id: Int?,
     val mobile_no: String?
-)
+) : Serializable
 
 data class LeadEmployee(
     val email: String?,
@@ -37,4 +41,4 @@ data class LeadEmployee(
     val id: Int?,
     val name: String?,
     val phone: String?
-)
+) : Serializable

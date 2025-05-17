@@ -86,6 +86,26 @@ class TakeFollowUpActivity : AppCompatActivity() {
 
         binding.apply {
 
+            if (getIsCOMPANYLogin(this@TakeFollowUpActivity)) {
+                binding.edtType.isEnabled = false
+                binding.edtNextFollowUpDate.isEnabled = false
+                binding.edtStatus.isEnabled = false
+                binding.edtRemark.isEnabled = false
+                binding.btnTakeFollowUp.isEnabled = false
+                binding.btnTakeFollowUp.alpha = 0.5f
+
+            } else {
+                binding.edtType.isEnabled = true
+                binding.edtNextFollowUpDate.isEnabled = true
+                binding.edtStatus.isEnabled = true
+                binding.edtRemark.isEnabled = true
+                binding.btnTakeFollowUp.isEnabled = true
+                binding.btnTakeFollowUp.alpha = 1f
+            }
+
+
+
+
             imgBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
                 finish()
@@ -157,7 +177,9 @@ class TakeFollowUpActivity : AppCompatActivity() {
         crmViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
         crmViewModel.mCreateFollowUpResponse.observe(this) {
            if (it.success){
-               CustomToast(this,"Take Follow-Up Done")
+               CustomToast(this,"Follow-up taken successfully.")
+               onBackPressedDispatcher.onBackPressed()
+               finish()
            }else CustomToast(this,it.message)
 
         }

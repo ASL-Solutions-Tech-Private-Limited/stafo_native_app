@@ -11,7 +11,8 @@ import com.stafo.app.utils.getFormatDate
 // Lead Adapter to display the list of leads
 class LeadAdapter(
     private var leadList: List<LeadData>,
-    private var listener: (LeadData) -> Unit
+    private var onFollowUpClick: (LeadData) -> Unit,
+    private var onEditClick: (LeadData) -> Unit
 ) : RecyclerView.Adapter<LeadAdapter.LeadViewHolder>() {
 
     inner class LeadViewHolder(val binding: ItemLeadsListBinding) :
@@ -33,7 +34,11 @@ class LeadAdapter(
         holder.binding.tvlastFollowup.text = lead.next_date?.let { getFormatDate(it) }
 
         holder.binding.btnFollowUp.setOnClickListener {
-            listener.invoke(lead) // Send full lead data
+            onFollowUpClick.invoke(lead)
+        }
+
+        holder.binding.btnEdit.setOnClickListener {
+            onEditClick.invoke(lead)
         }
     }
 

@@ -35,6 +35,7 @@ import com.stafo.app.screens.crm.dataClass.LeadCreateResponse
 import com.stafo.app.screens.crm.dataClass.LeadDashboardRequest
 import com.stafo.app.screens.crm.dataClass.LeadListRequest
 import com.stafo.app.screens.crm.dataClass.LeadListResponse
+import com.stafo.app.screens.crm.dataClass.UpdateLeadResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
 import com.stafo.app.screens.payroll.dataClass.SalaryRequest
 import com.stafo.app.screens.payroll.dataClass.SalaryResponse
@@ -768,7 +769,8 @@ interface ApiStores {
 
     @GET("api/lead/list")
     suspend fun callLeadList(
-        @Query("employee_id") employeeId: Int,
+        @Query("employee_id") employeeId: String?,
+        @Query("company_id") companyId: String?,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<LeadListResponse>
 
@@ -790,5 +792,13 @@ interface ApiStores {
         @Query("lead_id") employeeId: String,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<FollowUpListResponse>
+
+
+    @POST("api/lead/update/{id}")
+    suspend fun callUpdateLead(
+        @Path("id") id: Int,
+        @Body request: LeadCreateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateLeadResponse>
 
 }

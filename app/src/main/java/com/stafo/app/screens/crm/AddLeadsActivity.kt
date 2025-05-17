@@ -23,11 +23,13 @@ import com.stafo.app.base.adapter.RadioShiftAdapter
 import com.stafo.app.databinding.ActivityAddLeadsBinding
 import com.stafo.app.screens.crm.adapters.LeadAdapter
 import com.stafo.app.screens.crm.dataClass.LeadCreateRequest
+import com.stafo.app.screens.crm.dataClass.LeadData
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 import com.stafo.app.utils.getEmployeeDetails
+import com.stafo.app.utils.getFormatDate
 import com.stafo.app.utils.getIsCOMPANYLogin
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -43,6 +45,7 @@ class AddLeadsActivity : AppCompatActivity() {
 
     private var postFollowUpDate: String = ""
     private var selectedEmpId: String = ""
+    private var editLeadId: String = ""
 
     private val leadSources = arrayListOf(
         SearchListItem(1, "Facebook"),
@@ -91,7 +94,28 @@ class AddLeadsActivity : AppCompatActivity() {
               finish()
           }
 
-          // Set up searchable dialog for Lead Source
+          val lead = intent.getSerializableExtra("lead_data") as? LeadData
+          val isEdit = intent.getBooleanExtra("is_edit", false)
+
+          editLeadId= lead?.id.toString()
+
+          if (isEdit){
+              tvPageTitle.text="Edit Lead"
+          }else tvPageTitle.text="Add Lead"
+
+
+          lead?.let {
+              binding.etName.setText(it.name)
+              binding.etPhone.setText(it.phone.toString())
+              binding.etEmail.setText(it.email.toString())
+              binding.etCompany.setText(it.company?.company_name)
+              binding.etNotes.setText(it.notes.toString())
+              binding.etnextfollowup.setText(getFormatDate(it.next_date.toString()))
+
+          }
+
+
+
           binding.etfrom.setOnClickListener {
 
               val dialog = SearchableDialog(this@AddLeadsActivity, leadSources, "Lead Source")
@@ -123,42 +147,88 @@ class AddLeadsActivity : AppCompatActivity() {
           // Save button click
           binding.btnSaveLead.setOnClickListener {
               if (validateInputs()) {
-                  // Handle data saving
 
 
-                  if (getIsCOMPANYLogin(this@AddLeadsActivity)){
-                      val request = LeadCreateRequest(
-                          companyId = getEmployeeComId().toString(),
-                          employeeId = selectedEmpId,
-                          name =etName.text.toString() ,
-                          company_name =etCompany.text.toString() ,
-                          email = etEmail.text.toString().trim(),
-                          phone = etPhone.text.toString().trim(),
-                          notes = etNotes.text.toString().trim(),
-                          status = etStatus.text.toString().trim(),
-                          leadFrom = etfrom.text.toString().trim(),
-                          nextDate = postFollowUpDate
-                      )
+                  if (isEdit){
 
-                      crmViewModel.createNewLead(this@AddLeadsActivity,request)
+                      if (getIsCOMPANYLogin(this@AddLeadsActivity)){
+
+                          val request = LeadCreateRequest(
+                              companyId = getEmployeeComId().toString(),
+                              employeeId = selectedEmpId,
+                              name =etName.text.toString() ,
+                              company_name =etCompany.text.toString() ,
+                              email = etEmail.text.toString().trim(),
+                              phone = etPhone.text.toString().trim(),
+                              notes = etNotes.text.toString().trim(),
+                              status = etStatus.text.toString().trim(),
+                              leadFrom = etfrom.text.toString().trim(),
+                              nextDate = postFollowUpDate
+                          )
+
+                          crmViewModel.updateLead(this@AddLeadsActivity,editLeadId.toInt(),request)
+
+                      }else{
+                          val request = LeadCreateRequest(
+                              companyId = getEmployeeComId().toString(),
+                              employeeId = getEmployeeDetails()?.id.toString(),
+                              name =etName.text.toString() ,
+                              company_name =etCompany.text.toString() ,
+                              email = etEmail.text.toString().trim(),
+                              phone = etPhone.text.toString().trim(),
+                              notes = etNotes.text.toString().trim(),
+                              status = etStatus.text.toString().trim(),
+                              leadFrom = etfrom.text.toString().trim(),
+                              nextDate = postFollowUpDate
+                          )
+
+                          crmViewModel.updateLead(this@AddLeadsActivity,editLeadId.toInt(),request)
+
+                      }
+
+
 
                   }else{
-                      val request = LeadCreateRequest(
-                          companyId = getEmployeeComId().toString(),
-                          employeeId = getEmployeeDetails()?.id.toString(),
-                          name =etName.text.toString() ,
-                          company_name =etCompany.text.toString() ,
-                          email = etEmail.text.toString().trim(),
-                          phone = etPhone.text.toString().trim(),
-                          notes = etNotes.text.toString().trim(),
-                          status = etStatus.text.toString().trim(),
-                          leadFrom = etfrom.text.toString().trim(),
-                          nextDate = postFollowUpDate
-                      )
 
-                      crmViewModel.createNewLead(this@AddLeadsActivity,request)
+                      if (getIsCOMPANYLogin(this@AddLeadsActivity)){
+
+                          val request = LeadCreateRequest(
+                              companyId = getEmployeeComId().toString(),
+                              employeeId = selectedEmpId,
+                              name =etName.text.toString() ,
+                              company_name =etCompany.text.toString() ,
+                              email = etEmail.text.toString().trim(),
+                              phone = etPhone.text.toString().trim(),
+                              notes = etNotes.text.toString().trim(),
+                              status = etStatus.text.toString().trim(),
+                              leadFrom = etfrom.text.toString().trim(),
+                              nextDate = postFollowUpDate
+                          )
+
+                          crmViewModel.createNewLead(this@AddLeadsActivity,request)
+
+                      }else{
+                          val request = LeadCreateRequest(
+                              companyId = getEmployeeComId().toString(),
+                              employeeId = getEmployeeDetails()?.id.toString(),
+                              name =etName.text.toString() ,
+                              company_name =etCompany.text.toString() ,
+                              email = etEmail.text.toString().trim(),
+                              phone = etPhone.text.toString().trim(),
+                              notes = etNotes.text.toString().trim(),
+                              status = etStatus.text.toString().trim(),
+                              leadFrom = etfrom.text.toString().trim(),
+                              nextDate = postFollowUpDate
+                          )
+
+                          crmViewModel.createNewLead(this@AddLeadsActivity,request)
+
+                      }
 
                   }
+
+
+
 
 
 
@@ -303,7 +373,16 @@ class AddLeadsActivity : AppCompatActivity() {
         crmViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
         crmViewModel.mLeadCreateResponse.observe(this) {
             if (it.success){
-                CustomToast(this,"New lead add successful")
+                CustomToast(this,"New lead add successfully")
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            } else  it.message?.let { it1 -> CustomToast(this, it1) }
+
+
+        }
+        crmViewModel.mUpdateLeadResponse.observe(this) {
+            if (it.success){
+                CustomToast(this,"Lead information updated successfully.")
                 onBackPressedDispatcher.onBackPressed()
                 finish()
             } else  it.message?.let { it1 -> CustomToast(this, it1) }

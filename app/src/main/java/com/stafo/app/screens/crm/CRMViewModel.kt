@@ -20,6 +20,7 @@ import com.stafo.app.screens.crm.dataClass.LeadCreateResponse
 import com.stafo.app.screens.crm.dataClass.LeadDashboardRequest
 import com.stafo.app.screens.crm.dataClass.LeadListRequest
 import com.stafo.app.screens.crm.dataClass.LeadListResponse
+import com.stafo.app.screens.crm.dataClass.UpdateLeadResponse
 import com.stafo.app.utils.CustomToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,6 +51,54 @@ class CRMViewModel: BaseViewModel() {
     private var mFollowUpList: MutableLiveData<FollowUpListResponse> = MutableLiveData()
 
     val mFollowUpListResponse: LiveData<FollowUpListResponse> get() = mFollowUpList
+
+
+    private var mUpdateLead: MutableLiveData<UpdateLeadResponse> = MutableLiveData()
+
+
+
+    val mUpdateLeadResponse: LiveData<UpdateLeadResponse> get() = mUpdateLead
+
+    fun updateLead(mContext: Context, id: Int,request:LeadCreateRequest) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callUpdateLead(id,request)
+                Log.d("crm", "lead update: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mUpdateLead.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
 
@@ -179,13 +228,15 @@ class CRMViewModel: BaseViewModel() {
     }
 
 
-    fun getAllLeadList(mContext: Context, employeeId: Int) {
+    fun getAllLeadList(mContext: Context, isCompanyLogin:Boolean,id:String) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
-
-                val response = ASLEmpMng.instance.apiStores()?.callLeadList(employeeId)
+                val response = ASLEmpMng.instance.apiStores()?.callLeadList(
+                    employeeId = if (isCompanyLogin) null else id,
+                    companyId = if (isCompanyLogin) id else null
+                )
                 Log.d("crm", "lead list: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
