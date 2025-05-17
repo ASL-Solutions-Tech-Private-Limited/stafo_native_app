@@ -144,8 +144,6 @@
                 android:visibility="visible">
 
 
-
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_staff_name"
                     android:layout_width="match_parent"
@@ -394,21 +392,22 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_address"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_126sdp"
-                    android:layout_marginTop="@dimen/_12sdp">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:hint="Address"
+                    app:boxStrokeColor="#0A47B3">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/tie_address"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_126sdp"
+                        android:layout_height="@dimen/_100sdp"
+                        android:gravity="start|top"
+                        android:inputType="textMultiLine"
                         android:background="@drawable/edit_text_background"
                         android:fontFamily="@font/gilroy_medium"
-                        android:gravity="start|top"
-                        android:hint="Address"
-                        android:inputType="textImeMultiLine"
                         android:textAlignment="viewStart" />
-
                 </com.google.android.material.textfield.TextInputLayout>
+
 
             </LinearLayout>
             <!--End Of Basic Information-->
@@ -857,138 +856,6 @@
                 android:visibility="gone">
 
 
-               <!-- <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_school_collage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tie_school_collage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/edit_text_background"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:hint="Name of School,Collage,University"
-                        android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_degree"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12sdp"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    app:endIconDrawable="@drawable/ic_down"
-                    app:endIconMode="custom">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tie_degree"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/edit_text_background"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:hint="Degree or Certificate"
-                        android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_training"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12sdp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tie_training"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/edit_text_background"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:hint="Special Courses or Training"
-                        android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>-->
-
-
-           <!--     <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_current_employment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12sdp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tie_current_employment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/edit_text_background"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:hint="Current Employment"
-                        android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>-->
-
-               <!-- <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12sdp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/edit_text_background"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:hint="Branches"
-                        android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12sdp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/edit_text_background"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:hint="Department"
-                        android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>-->
-
-               <!-- <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12sdp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/edit_text_background"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:hint="Employee Type"
-                        android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>-->
-
-                <!--<com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12sdp"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    app:endIconDrawable="@drawable/ic_calendar_month"
-                    app:endIconMode="custom">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/edit_text_background"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:hint="Date of Joining"
-                        android:inputType="textPersonName" />
-                </com.google.android.material.textfield.TextInputLayout>-->
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -1044,7 +911,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_text_background"
                         android:fontFamily="@font/gilroy_medium"
-                        android:hint="Officail Email ID"
+                        android:hint="Official Email ID"
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 

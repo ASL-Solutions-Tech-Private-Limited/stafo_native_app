@@ -38,4 +38,22 @@
     </style>
 
 
+    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">#0A47B3</item>
+        <item name="boxStrokeWidth">2dp</item> <!-- Optional: make border slightly thicker -->
+        <item name="boxCornerRadiusTopStart">6dp</item>
+        <item name="boxCornerRadiusTopEnd">6dp</item>
+        <item name="boxCornerRadiusBottomStart">6dp</item>
+        <item name="boxCornerRadiusBottomEnd">6dp</item>
+        <item name="android:fontFamily">@font/gilroy_medium</item>
+        <item name="hintTextAppearance">@style/CustomHintText</item>
+    </style>
+
+    <!-- Optional hint text style -->
+    <style name="CustomHintText" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:fontFamily">@font/gilroy_medium</item>
+        <item name="android:textColor">#0A47B3</item>
+    </style>
+
+
 </resources>

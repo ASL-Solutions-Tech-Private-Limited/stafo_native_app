@@ -53,7 +53,6 @@ import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentResponse
 import com.stafo.app.screens.settings.dataClass.AssignShiftRequest
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
-import com.stafo.app.screens.settings.dataClass.AutosuggestResponse
 import com.stafo.app.screens.settings.dataClass.BannerResponse
 import com.stafo.app.screens.settings.dataClass.BranchListResponse
 import com.stafo.app.screens.settings.dataClass.ChangeDeviceRequest
