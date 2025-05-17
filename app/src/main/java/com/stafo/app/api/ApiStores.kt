@@ -142,6 +142,7 @@ import com.stafo.app.screens.settings.dataClass.VerifyRegisterNumberResponse
 import com.stafo.app.screens.settings.dataClass.ViewBranchResponse
 import com.stafo.app.screens.subscription.dataClass.HashGenerateRequest
 import com.stafo.app.screens.subscription.dataClass.HashGenerateResponse
+import com.stafo.app.screens.subscription.dataClass.MySubscriptionResponse
 import com.stafo.app.screens.subscription.dataClass.PackageResponse
 import com.stafo.app.screens.subscription.dataClass.PaymentUpdateRequest
 import com.stafo.app.screens.subscription.dataClass.PaymentUpdateResponse
@@ -774,6 +775,11 @@ interface ApiStores {
         @Body request: PaymentUpdateRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<PaymentUpdateResponse>
+
+    @GET("api/subscription-info")
+    suspend fun callSubscriptionInfo(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<MySubscriptionResponse>
 
 
 }
