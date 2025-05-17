@@ -221,6 +221,9 @@ class EmplyeeyerProfile : AppCompatActivity() {
         binding?.ivChangePicture?.setOnClickListener {
             openPicker(1101)
         }
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
 
 
         /*  binding?.ivChangePicture?.setOnClickListener {

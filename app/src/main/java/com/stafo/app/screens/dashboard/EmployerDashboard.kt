@@ -15,8 +15,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.google.gson.Gson
 import com.stafo.app.R
 import com.stafo.app.base.adapter.ActionsListAdapter
 import com.stafo.app.base.adapter.AdapterOnLeave
@@ -29,18 +27,15 @@ import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmployerDashboardBinding
 import com.stafo.app.screens.emp.EmplyeeAttendaceListActivity
 import com.stafo.app.screens.emp.ViewEmpLocationTrackActivity
-import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.performance.PerformanceActivity
 import com.stafo.app.screens.profile.CompanyProfileActivity
 import com.stafo.app.screens.rank.RankListActivity
-import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.screens.settings.AddEmployeeActivity
 import com.stafo.app.screens.settings.BranchActivity
 import com.stafo.app.screens.settings.LeaveManagementActivity
 import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
 import com.stafo.app.screens.settings.PolicyActivity
 import com.stafo.app.screens.settings.SettingsViewModel
-import com.stafo.app.screens.settings.SubMenuActivity
 import com.stafo.app.screens.settings.VerifyCompanyDetailsActivity
 import com.stafo.app.screens.settings.ViewAllEmployeeActivity
 import com.stafo.app.screens.settings.ViewDeviceRequestEmpActivity
@@ -76,7 +71,7 @@ class EmployerDashboard : AppCompatActivity() {
     private val mActionList = ArrayList<ActionModel>()
 
     private var companyStatus: Boolean = false
-    private var maxEmployeeAdd: String = ""
+    private var maxEmployeeAdd: String = "0"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -206,7 +201,7 @@ class EmployerDashboard : AppCompatActivity() {
                                 startActivity(Intent(this@EmployerDashboard, ReportsActivity::class.java))
                                 overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
                             }
-                            "Performance"-> {
+                            "Performance Type"-> {
                                 startActivity(Intent(this@EmployerDashboard, PerformanceActivity::class.java))
                                 overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
                             }
@@ -624,7 +619,7 @@ class EmployerDashboard : AppCompatActivity() {
 
                 val getTotalEmp = binding.tvAllEmp.text.toString().trim().toIntOrNull()
 
-                if (getTotalEmp != null && getTotalEmp >= maxEmployeeAdd) {
+                if (getTotalEmp != null && getTotalEmp >= (maxEmployeeAdd.toIntOrNull() ?: 0)) {
 
                     showUpgradeDialog()
 
@@ -688,17 +683,16 @@ class EmployerDashboard : AppCompatActivity() {
     }
 
     private fun actionList(): List<ActionModel> {
-        mActionList.add(ActionModel("Employee", R.drawable.ic_user))
-        mActionList.add(ActionModel("CRM", R.drawable.crm_c))
+        mActionList.add(ActionModel("Employee", R.drawable.ic_employee))
+        mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Location Track", R.drawable.ic_location))
         mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
+        mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Performance Type", R.drawable.ic_performace))
         mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
-        mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
-        mActionList.add(ActionModel("Branches", R.drawable.ic_calendar_month))
+        mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
-        mActionList.add(ActionModel("Location Track", R.drawable.ic_location_pin))
-        mActionList.add(ActionModel("Request Device", R.drawable.resized_device))
+        mActionList.add(ActionModel("Request Device", R.drawable.ic_device_request))
         return mActionList
     }
 

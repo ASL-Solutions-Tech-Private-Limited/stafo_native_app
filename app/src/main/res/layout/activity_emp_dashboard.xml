@@ -148,7 +148,7 @@
                             android:fontFamily="@font/gilroy_bold"
                             android:padding="@dimen/_6sdp"
                             android:text="View Profile"
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:textSize="@dimen/_12ssp" />
 
                         <androidx.appcompat.widget.AppCompatTextView
