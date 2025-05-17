@@ -36,6 +36,7 @@ import com.stafo.app.screens.referral.dataClass.ReferralResponse
 import com.stafo.app.screens.settings.dataClass.EmployeePostLocationRequest
 import com.stafo.app.screens.subscription.dataClass.HashGenerateRequest
 import com.stafo.app.screens.subscription.dataClass.HashGenerateResponse
+import com.stafo.app.screens.subscription.dataClass.MySubscriptionResponse
 import com.stafo.app.screens.subscription.dataClass.PackageResponse
 import com.stafo.app.screens.subscription.dataClass.PaymentUpdateRequest
 import com.stafo.app.screens.subscription.dataClass.PaymentUpdateResponse
@@ -127,6 +128,55 @@ class BillPaymentsViewModel : BaseViewModel() {
     private var mPaymentUpdate: MutableLiveData<PaymentUpdateResponse> = MutableLiveData()
 
     val mPaymentUpdateResponse: LiveData<PaymentUpdateResponse> get() = mPaymentUpdate
+
+    private var mMySubscription: MutableLiveData<MySubscriptionResponse> = MutableLiveData()
+
+    val mMySubscriptionResponse: LiveData<MySubscriptionResponse> get() = mMySubscription
+
+    fun getSubscriptionInfo(
+        mContext: Context
+    ) {
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callSubscriptionInfo()
+
+                Log.d("res","my subscription info  $response")
+
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mMySubscription.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
 
     fun updateSubscriptionPayment(
         mContext: Context,

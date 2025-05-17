@@ -10,8 +10,4 @@
                 android:endColor="@color/plan_color1" />
         </shape>
     </item>
-  <!--  <item
-        android:drawable="@drawable/triangle_right2"
-        android:left="@dimen/_24sdp"
-        android:gravity="start" />-->
 </layer-list>
