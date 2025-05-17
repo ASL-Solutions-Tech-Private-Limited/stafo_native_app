@@ -56,6 +56,14 @@ import com.stafo.app.utils.getTodayDate
 import com.stafo.app.utils.setEmployeeComId
 import com.stafo.app.utils.setIsLock
 import com.stafo.app.utils.setIsLockUser
+import com.bumptech.glide.Glide
+import com.google.gson.Gson
+import com.stafo.app.screens.chat.ChatWithCompanyActivity
+import com.stafo.app.screens.crm.CRMLeadDashboard
+import com.stafo.app.screens.notification.NotificationActivity
+import com.stafo.app.screens.recharge.RechargeActivity
+import com.stafo.app.screens.reports.ReportsActivity
+import com.stafo.app.screens.settings.SubMenuActivity
 
 class EmployerDashboard : AppCompatActivity() {
 
@@ -68,7 +76,7 @@ class EmployerDashboard : AppCompatActivity() {
     private val mActionList = ArrayList<ActionModel>()
 
     private var companyStatus: Boolean = false
-    private var maxEmployeeAdd: Int=0
+    private var maxEmployeeAdd: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -183,6 +191,15 @@ class EmployerDashboard : AppCompatActivity() {
                                     showCompanyVerificationDialog()
                                 }
 
+                            }
+
+                            "CRM" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        CRMLeadDashboard::class.java
+                                    )
+                                )
                             }
 
                             "Reports" -> {
@@ -318,18 +335,7 @@ class EmployerDashboard : AppCompatActivity() {
             if (it.status) {
                 setEmployeeComId(it.companyId.toString())
 
-
-
-               // maxEmployeeAdd = it.maxEmployeeAdd.toInt()
-
-                val maxEmpStr = it.maxEmployeeAdd
-
-                maxEmployeeAdd = if (!maxEmpStr.isNullOrBlank()) {
-                    maxEmpStr.toIntOrNull() ?: 0
-                } else {
-                    0
-                }
-
+                maxEmployeeAdd = it.maxEmployeeAdd
 
 
 
@@ -441,14 +447,14 @@ class EmployerDashboard : AppCompatActivity() {
 
 
 
-      /*  settingsViewModel.mUpgradePackageResponse.observe(this) {
+        settingsViewModel.mUpgradePackageResponse.observe(this) {
 
             if (it.status) {
                 CustomToast(this, it.message)
             } else {
                 CustomToast(this, it.message)
             }
-        }*/
+        }
 
 
         settingsViewModel.mBannerResponse.observe(this) {
@@ -547,15 +553,15 @@ class EmployerDashboard : AppCompatActivity() {
 
 
 
-   /*     binding.llcRecharge.setOnClickListener {
+       /* binding.llcRecharge.setOnClickListener {
             startActivity(Intent(this, DashboardActivity::class.java))
         }
 
         binding.llcLoan.setOnClickListener {
             startActivity(Intent(this, ChatWithCompanyActivity::class.java))
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
-        }
-*/
+        }*/
+
 
 
         stopLocationService()
@@ -682,15 +688,17 @@ class EmployerDashboard : AppCompatActivity() {
     }
 
     private fun actionList(): List<ActionModel> {
-        mActionList.add(ActionModel("Employee", R.drawable.ic_employee))
+        mActionList.add(ActionModel("Employee", R.drawable.ic_user))
+        mActionList.add(ActionModel("CRM", R.drawable.crm_c))
         mActionList.add(ActionModel("Location Track", R.drawable.ic_location))
         mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
         mActionList.add(ActionModel("Performance Type", R.drawable.ic_performace))
         mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
-        mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
+        mActionList.add(ActionModel("Branches", R.drawable.ic_calendar_month))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
-        mActionList.add(ActionModel("Request Device", R.drawable.ic_device_request))
+        mActionList.add(ActionModel("Location Track", R.drawable.ic_location_pin))
+        mActionList.add(ActionModel("Request Device", R.drawable.resized_device))
         return mActionList
     }
 

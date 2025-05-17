@@ -45,6 +45,7 @@ import com.stafo.app.base.model.FullScreenDialog
 import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmpDashboardBinding
 import com.stafo.app.databinding.CustomBottomSheetAttendanceLayoutBinding
+import com.stafo.app.screens.crm.CRMLeadDashboard
 import com.stafo.app.screens.emp.EmpBranchDetailsActivity
 import com.stafo.app.screens.emp.EmpSelfieAttendanceActivity
 import com.stafo.app.screens.emp.EmployeeAttendanceRecordActivity
@@ -216,6 +217,15 @@ class EmployeeDashboard : AppCompatActivity() {
                             overridePendingTransition(
                                 R.anim.slide_from_right,
                                 R.anim.slide_to_left
+                            )
+                        }
+
+                        "CRM" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard,
+                                    CRMLeadDashboard::class.java
+                                )
                             )
                         }
                     }
@@ -742,8 +752,6 @@ class EmployeeDashboard : AppCompatActivity() {
                 binding.ivHeaderProfilePic.visibility = View.GONE
                 CustomToast(this, it.message)
             }
-
-
         }
 
 
@@ -1103,7 +1111,8 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
     private fun actionList(): List<ActionModel> {
-        mActionList.add(ActionModel("Attendance", R.drawable.ic_attendace))
+        mActionList.add(ActionModel("Attendance", R.drawable.ic_user))
+        mActionList.add(ActionModel("CRM", R.drawable.crm_c))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))

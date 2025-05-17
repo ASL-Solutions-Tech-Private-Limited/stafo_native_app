@@ -21,6 +21,7 @@ import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -1364,13 +1365,19 @@ fun getTodayDate(): String {
 }
 
 
- fun getFormatDate(inputDate: String): String {
-    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    val outputFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
+fun getFormatDate(inputDate: String?): String {
+    if (inputDate.isNullOrBlank() || inputDate == "null") return "--"
 
-    val date = inputFormat.parse(inputDate)
-    return outputFormat.format(date!!)
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
+        val date = inputFormat.parse(inputDate)
+        if (date != null) outputFormat.format(date) else "--"
+    } catch (e: Exception) {
+        "--"
+    }
 }
+
 
 
 fun doLogout(mContext: Context) {
@@ -1699,4 +1706,36 @@ fun formatUtcTo12HourLocalTimeLegacy(utcTime: String): String {
         " "
     }
 }
+fun generateGradientDrawables(count: Int): List<GradientDrawable> {
+    val gradientList = mutableListOf<GradientDrawable>()
 
+    // Safe color combinations that work well with white text
+    val gradientColorPairs = listOf(
+        intArrayOf(Color.parseColor("#FF5F6D"), Color.parseColor("#FFC371")),  // red-orange
+        intArrayOf(Color.parseColor("#36D1DC"), Color.parseColor("#5B86E5")),  // cyan-blue
+        intArrayOf(Color.parseColor("#FFB75E"), Color.parseColor("#ED8F03")),  // orange
+        intArrayOf(Color.parseColor("#11998e"), Color.parseColor("#38ef7d")),  // green-teal
+        intArrayOf(Color.parseColor("#7F00FF"), Color.parseColor("#E100FF")),  // purple
+        intArrayOf(Color.parseColor("#FC466B"), Color.parseColor("#3F5EFB")),  // red-blue
+        intArrayOf(Color.parseColor("#f7971e"), Color.parseColor("#ffd200"))   // amber-yellow
+    )
+
+    val orientations = listOf(
+        GradientDrawable.Orientation.LEFT_RIGHT,
+        GradientDrawable.Orientation.TOP_BOTTOM,
+        GradientDrawable.Orientation.BL_TR
+    )
+
+    repeat(count) {
+        val colors = gradientColorPairs.random()
+        val orientation = orientations.random()
+
+        val gradient = GradientDrawable(orientation, colors).apply {
+            cornerRadius = 32f
+        }
+
+        gradientList.add(gradient)
+    }
+
+    return gradientList
+}
