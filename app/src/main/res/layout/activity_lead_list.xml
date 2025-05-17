@@ -37,34 +37,96 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <LinearLayout
             android:layout_margin="@dimen/_12sdp"
-            android:background="@drawable/down_gr_top_corner">
+            android:background="@drawable/down_gr_top_corner"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/llSearchHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="4"
+                android:layout_marginVertical="@dimen/_10sdp"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:orientation="horizontal"
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerLeads"
+                >
+
+              <FrameLayout
+                  android:layout_weight="0.7"
+                  android:layout_marginEnd="@dimen/_4sdp"
+                  android:background="@drawable/edit_text_background"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+                  <EditText
+                      android:id="@+id/etDirSearch"
+                      android:layout_weight="1"
+                      android:layout_width="match_parent"
+                      android:layout_height="50dp"
+                      android:background="@android:color/transparent"
+                      android:drawableStart="@drawable/ic_search_grey"
+                      android:drawablePadding="@dimen/_5sdp"
+                      android:fontFamily="@font/gilroy_regular"
+                      android:hint="Search lead by name,phone,status"
+                      android:imeOptions="actionSearch"
+                      android:paddingStart="5dp"
+                      android:paddingLeft="5dp"
+                      android:singleLine="true"
+                      android:textColor="@color/black"
+                      android:textSize="@dimen/_12ssp" />
+              </FrameLayout>
+
+
+
+
+                <ImageView
+                    android:id="@+id/iv_filter"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:background="@drawable/custom_card_bg2"
+                    android:src="@drawable/filter"
+                    android:padding="@dimen/_7sdp"
+                    android:layout_weight="3.3"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"/>
+
+
+
+
+            </LinearLayout>
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:padding="8dp"
-                android:visibility="visible"
-                tools:itemCount="4"
-                tools:listitem="@layout/item_leads_list" />
+                >
 
-            <TextView
-                android:id="@+id/tvMsg"
-                android:text="No leads found"
-                android:textSize="@dimen/_12ssp"
-                android:visibility="gone"
-                android:fontFamily="@font/gilroy_regular"
-                android:textColor="@color/black"
-                android:layout_gravity="center"
-                android:textAlignment="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </FrameLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerLeads"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:padding="8dp"
+                    android:visibility="visible"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/item_leads_list" />
+
+                <TextView
+                    android:id="@+id/tvMsg"
+                    android:text="No leads found"
+                    android:textSize="@dimen/_12ssp"
+                    android:visibility="gone"
+                    android:fontFamily="@font/gilroy_regular"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </FrameLayout>
+        </LinearLayout>
+
+
+
 
 
         <!--  <LinearLayout
