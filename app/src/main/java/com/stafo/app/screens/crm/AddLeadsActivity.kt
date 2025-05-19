@@ -108,8 +108,12 @@ class AddLeadsActivity : AppCompatActivity() {
               binding.etName.setText(it.name)
               binding.etPhone.setText(it.phone.toString())
               binding.etEmail.setText(it.email.toString())
-              binding.etCompany.setText(it.company?.company_name)
+              binding.etCompany.setText(it.company_name)
+              binding.etAddress.setText(it.company_address)
+              binding.etfrom.setText(it.lead_from)
+              binding.etStatus.setText(it.status)
               binding.etNotes.setText(it.notes.toString())
+              binding.etEmployee.setText(it.employee?.name)
               binding.etnextfollowup.setText(getFormatDate(it.next_date.toString()))
 
           }
@@ -158,6 +162,7 @@ class AddLeadsActivity : AppCompatActivity() {
                               employeeId = selectedEmpId,
                               name =etName.text.toString() ,
                               company_name =etCompany.text.toString() ,
+                              company_address =etAddress.text.toString() ,
                               email = etEmail.text.toString().trim(),
                               phone = etPhone.text.toString().trim(),
                               notes = etNotes.text.toString().trim(),
@@ -174,6 +179,7 @@ class AddLeadsActivity : AppCompatActivity() {
                               employeeId = getEmployeeDetails()?.id.toString(),
                               name =etName.text.toString() ,
                               company_name =etCompany.text.toString() ,
+                              company_address =etAddress.text.toString() ,
                               email = etEmail.text.toString().trim(),
                               phone = etPhone.text.toString().trim(),
                               notes = etNotes.text.toString().trim(),
@@ -197,6 +203,7 @@ class AddLeadsActivity : AppCompatActivity() {
                               employeeId = selectedEmpId,
                               name =etName.text.toString() ,
                               company_name =etCompany.text.toString() ,
+                              company_address =etAddress.text.toString() ,
                               email = etEmail.text.toString().trim(),
                               phone = etPhone.text.toString().trim(),
                               notes = etNotes.text.toString().trim(),
@@ -213,6 +220,7 @@ class AddLeadsActivity : AppCompatActivity() {
                               employeeId = getEmployeeDetails()?.id.toString(),
                               name =etName.text.toString() ,
                               company_name =etCompany.text.toString() ,
+                              company_address =etAddress.text.toString() ,
                               email = etEmail.text.toString().trim(),
                               phone = etPhone.text.toString().trim(),
                               notes = etNotes.text.toString().trim(),
@@ -244,6 +252,7 @@ class AddLeadsActivity : AppCompatActivity() {
         val phone = binding.etPhone.text.toString().trim()
         val email = binding.etEmail.text.toString().trim()
         val company = binding.etCompany.text.toString().trim()
+        val address = binding.etAddress.text.toString().trim()
         val from = binding.etfrom.text.toString().trim()
         val status = binding.etStatus.text.toString().trim()
         val notes = binding.etNotes.text.toString().trim()
@@ -276,6 +285,12 @@ class AddLeadsActivity : AppCompatActivity() {
 
             company.isEmpty() -> {
                 binding.etCompany.error = "Company name is required"
+                false
+            }
+
+
+            address.isEmpty() -> {
+                binding.etAddress.error = "Company address is required"
                 false
             }
 

@@ -15,6 +15,8 @@ data class LeadData(
     val created_at: String?,
     val email: String?,
     val employee: LeadEmployee?,
+    val company_name: String?,
+    val company_address: String?,
     val employee_id: Int?,
     val id: Int?,
     val lead_from: String?,

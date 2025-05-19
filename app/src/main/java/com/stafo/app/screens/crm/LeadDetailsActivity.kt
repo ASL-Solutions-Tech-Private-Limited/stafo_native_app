@@ -55,7 +55,8 @@ class LeadDetailsActivity : AppCompatActivity() {
 
             lead?.let {
                 binding.tvLeadName.text = lead.name
-                binding.tvCompany.text = lead.company?.company_name
+                binding.tvCompany.text = lead.company_name
+                binding.tvAddress.text = lead.company_address
                 binding.tvPhone.text = lead.phone.toString()
             }
             swipeRefresh.setOnRefreshListener {

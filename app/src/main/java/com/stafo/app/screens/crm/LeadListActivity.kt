@@ -162,7 +162,7 @@ class LeadListActivity : AppCompatActivity() {
                         onFollowUpClick = { selectedLead ->
                             val intent = Intent(this@LeadListActivity, TakeFollowUpActivity::class.java)
                             intent.putExtra("lead_id", selectedLead.id.toString())
-                            intent.putExtra("company_name", selectedLead.company?.company_name ?: "")
+                            intent.putExtra("company_name", selectedLead.company_name ?: "")
                             intent.putExtra("lead_employee", selectedLead.name ?: "")
                             intent.putExtra("phone", selectedLead.phone.toString())
                             intent.putExtra("empId", selectedLead.employee_id.toString())

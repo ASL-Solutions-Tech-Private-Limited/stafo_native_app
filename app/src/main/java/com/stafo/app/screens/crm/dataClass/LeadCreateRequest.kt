@@ -9,6 +9,7 @@ data class LeadCreateRequest(
     val employeeId: String,
     val name: String,
     val company_name: String,
+    val company_address: String,
     val email: String,
     val phone: String,
     val notes: String,
