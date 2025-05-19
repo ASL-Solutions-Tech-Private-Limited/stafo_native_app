@@ -35,7 +35,7 @@ class LeadAdapter(
         val lead = leadList[position]
 
         holder.binding.tvName.text = lead.name
-        holder.binding.tvCompany.text = lead.company?.company_name
+        holder.binding.tvCompany.text = lead.company_name
         holder.binding.tvPhone.text = lead.phone.toString()
         holder.binding.tvStatus.text = lead.status
         holder.binding.tvAssign.text = lead.employee?.name?:"--"

@@ -63,6 +63,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etName"
+                            android:fontFamily="@font/gilroy_regular"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textPersonName" />
@@ -78,6 +79,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etPhone"
+                            android:fontFamily="@font/gilroy_regular"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="phone"
@@ -94,6 +96,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etEmail"
+                            android:fontFamily="@font/gilroy_regular"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textEmailAddress" />
@@ -109,10 +112,31 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etCompany"
+                            android:fontFamily="@font/gilroy_regular"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text" />
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- company address -->
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:hint="Address">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etAddress"
+                            android:fontFamily="@font/gilroy_regular"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textMultiLine"
+                            android:maxLines="5"
+                            android:minLines="2" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -123,6 +147,7 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etfrom"
+                            android:fontFamily="@font/gilroy_regular"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:focusableInTouchMode="false"
@@ -142,6 +167,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:focusable="false"
+                            android:fontFamily="@font/gilroy_regular"
                             android:focusableInTouchMode="false"
                             android:inputType="text" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -159,6 +185,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="textMultiLine"
+                            android:fontFamily="@font/gilroy_regular"
                             android:maxLines="5"
                             android:minLines="2" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -176,6 +203,7 @@
                             android:layout_height="wrap_content"
                             android:inputType="textMultiLine"
                             android:maxLines="5"
+                            android:fontFamily="@font/gilroy_regular"
                             android:focusableInTouchMode="false"
                             android:focusable="false"
                             android:minLines="2" />
