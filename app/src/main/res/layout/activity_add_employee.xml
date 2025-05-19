@@ -356,7 +356,7 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
-                            android:hint="Basic Salary"
+                            android:hint="Salary (CTC)"
                             android:textSize="@dimen/_12ssp"
                             android:importantForAutofill="no"
                             android:autofillHints=""
