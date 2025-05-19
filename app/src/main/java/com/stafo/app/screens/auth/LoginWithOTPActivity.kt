@@ -49,11 +49,21 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
 
 
             btnSignIn.setOnClickListener {
-                if (arePermissionsGranted()) {
-                    viewModel?.sendOTP(this@LoginWithOTPActivity, tieMobileNo.text.toString().trim())
-                } else {
-                    requestPermissions()
-                }
+
+                val mobileNumber = viewDataBinding?.tieMobileNo?.text?.toString()?.trim()
+
+                if (!mobileNumber.isNullOrEmpty()) {
+                    if (arePermissionsGranted()) {
+                        viewModel?.sendOTP(
+                            this@LoginWithOTPActivity,
+                            tieMobileNo.text.toString().trim()
+                        )
+                    } else {
+                        requestPermissions()
+                    }
+
+                } else CustomToast(this@LoginWithOTPActivity, "Please enter your mobile number!")
+
             }
 
             tvRegisterNow.setOnClickListener {
@@ -95,17 +105,18 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
                 intent.putExtra("mobile", mobile)
                 intent.putExtra("otp", otp)
                 startActivity(intent)
-            }else{
-                val msg=it.message
-                if (msg=="User not found."){
+            } else {
+                val msg = it.message
+                if (msg == "User not found.") {
                     showDialog()
-                }else{
-                    CustomToast(this,it.message)
+                } else {
+                    CustomToast(this, it.message)
                 }
 
             }
         }
     }
+
     private fun showDialog() {
         val builder = AlertDialog.Builder(this@LoginWithOTPActivity)
         builder.setTitle(R.string.app_name)
@@ -128,6 +139,7 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
         val dialog = builder.create()
         dialog.show()
     }
+
     private fun arePermissionsGranted(): Boolean {
         val locationGranted = ContextCompat.checkSelfPermission(
             this, Manifest.permission.ACCESS_FINE_LOCATION
@@ -216,7 +228,23 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
             isEnabled = true
             alpha = 1f
             setOnClickListener {
-                viewModel?.sendOTP(this@LoginWithOTPActivity, viewDataBinding?.tieMobileNo?.text.toString().trim())
+                val mobileNumber = viewDataBinding?.tieMobileNo?.text?.toString()?.trim()
+
+                if (!mobileNumber.isNullOrEmpty()) {
+                    if (arePermissionsGranted()) {
+
+                        viewModel?.sendOTP(
+                            this@LoginWithOTPActivity,
+                            viewDataBinding?.tieMobileNo?.text.toString().trim()
+                        )
+
+                    } else {
+                        requestPermissions()
+                    }
+
+                } else CustomToast(this@LoginWithOTPActivity, "Please enter your mobile number!")
+
+
             }
         }
     }

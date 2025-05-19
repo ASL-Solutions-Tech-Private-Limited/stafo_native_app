@@ -58,7 +58,8 @@ class OtpVerifyActivity : AppCompatActivity() {
 
         deviceID = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
 
-      //  binding.llOtp.setText(otp)
+
+
         onClickListener()
         observeViewModel()
         binding.llOtp.requestFocus()
@@ -66,8 +67,16 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun onClickListener() {
         startTimer()
-        binding?.apply {
+        binding.apply {
+
+            binding.btnOtpVerify.isEnabled = false
+            binding.btnOtpVerify.alpha = 0.3f
+
+
             tvOtpMobileNo.text = "+91${mobile}"
+
+
+
             llOtp.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence?,
@@ -92,6 +101,9 @@ class OtpVerifyActivity : AppCompatActivity() {
 
                 }
             })
+
+
+
             btnOtpVerify.setOnClickListener {
 
                 if (!llOtp.text.toString().isNullOrEmpty()){

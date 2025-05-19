@@ -3,233 +3,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginVertical="@dimen/_4sdp"
     android:id="@+id/cl_layout"
     android:background="@color/white"
     xmlns:tools="http://schemas.android.com/tools">
-
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/llc_attend"
+        android:layout_marginVertical="@dimen/_4sdp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/llc_attend"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_60sdp"
-            android:orientation="horizontal"
-            android:visibility="visible"
-            android:weightSum="4">
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="@dimen/_32sdp"
-                    android:layout_height="@dimen/_34sdp"
-                    android:background="@drawable/custom_date_bg"
-                    android:orientation="vertical">
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tv_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/ng_header"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:paddingTop="@dimen/_4sdp"
-                        android:text="01"
-                        android:textAlignment="center"
-                        android:textColor="#565656"
-                        android:textSize="@dimen/_10ssp"
-                        app:drawableTint="@color/black" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tv_day"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/custom_day_bg"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:paddingHorizontal="@dimen/_6sdp"
-                        android:paddingTop="@dimen/_1sdp"
-                        android:paddingBottom="@dimen/_4sdp"
-                        android:text="wed"
-                        android:textAlignment="center"
-                        android:textColor="#565656"
-                        android:textSize="@dimen/_10ssp"
-                        app:drawableTint="@color/black" />
-                </LinearLayout>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
+        <RelativeLayout
+            android:id="@+id/rtl_date"
+            android:layout_width="@dimen/_32sdp"
+            android:layout_height="@dimen/_34sdp"
+            android:background="@drawable/custom_date_bg"
+            android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_check_in"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ng_header"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
                 android:fontFamily="@font/gilroy_medium"
-                android:gravity="center"
-                android:maxLines="3"
+                android:text="01"
+                android:layout_centerInParent="true"
                 android:textColor="#565656"
                 android:textSize="@dimen/_10ssp"
                 app:drawableTint="@color/black" />
 
-
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_check_out"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ng_header"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:fontFamily="@font/gilroy_medium"
-                android:gravity="center"
-                android:textColor="#565656"
-                android:textSize="@dimen/_10ssp"
-                app:drawableTint="@color/black" />
-
-
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_working_hrs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ng_header"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:fontFamily="@font/gilroy_medium"
-                android:gravity="center"
-                android:textColor="#565656"
-                android:textSize="@dimen/_10ssp"
-                app:drawableTint="@color/black" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/llc_week_off"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_60sdp">
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:background="#fcf2f1"
-                android:orientation="horizontal"
-                android:visibility="visible"
-                android:weightSum="4">
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/custom_week_off_bg"
-                        android:orientation="vertical">
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_week_off_date"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/ng_header"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:paddingTop="@dimen/_4sdp"
-                            android:text="01"
-                            android:textAlignment="center"
-                            android:textColor="#565656"
-                            android:textSize="@dimen/_12ssp"
-                            app:drawableTint="@color/black" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_week_off_day"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/custom_week_day_bg"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:paddingHorizontal="@dimen/_6sdp"
-                            android:paddingTop="@dimen/_1sdp"
-                            android:paddingBottom="@dimen/_4sdp"
-                            android:text="wed"
-                            android:textAlignment="center"
-                            android:textColor="#565656"
-                            android:textSize="@dimen/_12ssp"
-                            app:drawableTint="@color/black" />
-                    </LinearLayout>
-
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/ng_header"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/gilroy_medium"
-                    android:gravity="center"
-                    android:maxLines="3"
-                    android:text="Absent"
-                    android:textColor="#565656"
-                    android:textSize="@dimen/_12ssp"
-                    app:drawableTint="@color/black" />
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/ng_header"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/gilroy_medium"
-                    android:gravity="center"
-                    android:textColor="#565656"
-                    android:textSize="@dimen/_12ssp"
-                    app:drawableTint="@color/black" />
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/ng_header"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/gilroy_medium"
-                    android:gravity="center"
-                    android:textColor="#565656"
-                    android:textSize="@dimen/_12ssp"
-                    app:drawableTint="@color/black" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/tea_green" />
-
+            <!-- <androidx.appcompat.widget.AppCompatTextView
+                 android:id="@+id/tv_day"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:background="@drawable/custom_date_half_bg"
+                 android:fontFamily="@font/gilroy_medium"
+                 android:paddingHorizontal="@dimen/_6sdp"
+                 android:backgroundTint="#CD1C18"
+                 android:paddingTop="@dimen/_1sdp"
+                 android:paddingBottom="@dimen/_4sdp"
+                 android:layout_alignParentBottom="true"
+                 android:textSize="@dimen/_10ssp" />-->
+        </RelativeLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -47,6 +47,7 @@ class EmpDayAttendanceRecordActivity : AppCompatActivity() {
         mSelectedDate = curren
 
         mEMPID = intent.getStringExtra("EMP_ID") ?: ""
+        mSelectedDate = intent.getStringExtra("select_date") ?: ""
         onClickListener()
         observeViewModel()
     }
@@ -54,8 +55,18 @@ class EmpDayAttendanceRecordActivity : AppCompatActivity() {
     private fun onClickListener() {
         binding?.apply {
 
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
+
+            val date = inputFormat.parse(mSelectedDate)
+            val formattedDate = outputFormat.format(date)
+
+            binding.txtDate.setText(formattedDate)
+
+
+/*
             val currentDate = SimpleDateFormat("dd MMM yy", Locale.getDefault()).format(calendar.time)
-            binding.txtDate.setText(currentDate)
+            binding.txtDate.setText(currentDate)*/
 
             fetchAttendanceData(mSelectedDate)
 

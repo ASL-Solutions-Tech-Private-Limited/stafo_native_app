@@ -21,11 +21,15 @@
     <color name="switch_bg">#f4f9ff</color>
     <color name="pending_colour">#F29339</color>
     <color name="pastel_red">#FF746C</color>
+    <color name="pastel_red_light">#FF9E99</color>
+    <color name="pastel_red_light2">#FFF2F1</color>
     <color name="light_blue">#90D6FF</color>
     <color name="blue">#0000FF</color>
     <color name="app_theme_colour">#3363AB</color>
+    <color name="date_bg_light">#332A9DF4</color>
 
     <color name="green_light_400">#80E8F5E9</color>
+    <color name="mint_green">#80EF80</color>
 
     <color name="xp_blue">#0089D2</color>
     <color name="xp_blue_lite">#0ECBF5</color>
@@ -43,4 +47,6 @@
     <color name="basic_light">#f41b94</color>
     <color name="basic_deep">#93399c</color>
     <color name="semiTransparentBlue">#330099cc</color>
+    <color name="steel_blue">#90D5FF</color>
+    <color name="emerald_green">#0AAA40</color>
 </resources>

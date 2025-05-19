@@ -26,6 +26,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.os.CountDownTimer
 import android.os.Environment
 import android.os.Handler
@@ -52,6 +53,7 @@ import android.widget.NumberPicker
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -1421,6 +1423,24 @@ fun extractDayNameDateAndMonth(inputDate: String): Triple<String, Int, Int> {
     return Triple(dayName, day, month)
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun extractDayNameDateAndMonth2(dateStr: String?): Pair<String, String> {
+    if (dateStr.isNullOrBlank()) {
+        return Pair("N/A", "--")
+    }
+
+    return try {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val date = LocalDate.parse(dateStr, formatter)
+        val dayName = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+        val dayOfMonth = date.dayOfMonth.toString()
+        Pair(dayName, dayOfMonth)
+    } catch (e: Exception) {
+        Pair("Invalid", "--")
+    }
+}
+
+
 fun calculateHours(inTime: String, outTime: String): String {
     val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
     val inDate = timeFormat.parse(inTime)
@@ -1558,9 +1578,81 @@ fun reportsFormatToMonthYear(dateString: String?): String {
         "N/A"
     }
 }
-
-
 fun showCustomMonthYearPicker(
+    context: Context,
+    onSelected: (formattedDate: String, displayDate: String) -> Unit
+) {
+    val dialog = Dialog(context)
+    dialog.setContentView(R.layout.dialog_month_year_picker)
+    dialog.setTitle("Select Month and Year")
+    dialog.setCancelable(false)
+
+    val window = dialog.window
+    window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+    val layoutParams = WindowManager.LayoutParams()
+    layoutParams.copyFrom(window?.attributes)
+    layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+    layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+
+    // Set dialog margins
+    val marginHorizontal = context.resources.getDimensionPixelSize(R.dimen.dialog_margin)
+    window?.decorView?.setPadding(marginHorizontal, 0, marginHorizontal, 0)
+    window?.attributes = layoutParams
+
+    val monthPicker = dialog.findViewById<NumberPicker>(R.id.month_picker)
+    val yearPicker = dialog.findViewById<NumberPicker>(R.id.year_picker)
+    val btnOk = dialog.findViewById<AppCompatTextView>(R.id.btn_ok)
+    val btnCancel = dialog.findViewById<AppCompatTextView>(R.id.btn_cancel)
+
+    // Month values
+    val months = arrayOf(
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    )
+
+    monthPicker.minValue = 0
+    monthPicker.maxValue = months.size - 1
+    monthPicker.displayedValues = months
+
+    // Get current month and year
+    val calendar = Calendar.getInstance()
+    val currentYear = calendar.get(Calendar.YEAR)
+    val currentMonth = calendar.get(Calendar.MONTH)
+
+    // Set pickers to current values
+    monthPicker.value = currentMonth
+    yearPicker.minValue = 2000
+    yearPicker.maxValue = currentYear + 20
+    yearPicker.value = currentYear
+
+    btnOk.setOnClickListener {
+        val selectedMonth = monthPicker.value
+        val selectedYear = yearPicker.value
+
+        val selectedCalendar = Calendar.getInstance()
+        selectedCalendar.set(Calendar.MONTH, selectedMonth)
+        selectedCalendar.set(Calendar.YEAR, selectedYear)
+
+        val postFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault()) // e.g. 2025-05
+        val displayFormat = SimpleDateFormat("MMM yy", Locale.getDefault()) // e.g. May 25
+
+        val formattedDate = postFormat.format(selectedCalendar.time)
+        val displayDate = displayFormat.format(selectedCalendar.time)
+
+        onSelected(formattedDate, displayDate)
+        dialog.dismiss()
+    }
+
+    btnCancel.setOnClickListener {
+        dialog.dismiss()
+    }
+
+    dialog.show()
+}
+
+
+/*fun showCustomMonthYearPicker(
     context: Context,
     onSelected: (formattedDate: String, displayDate: String) -> Unit
 ) {
@@ -1621,7 +1713,7 @@ fun showCustomMonthYearPicker(
     }
 
     dialog.show()
-}
+}*/
 
 
 
@@ -1738,4 +1830,36 @@ fun generateGradientDrawables(count: Int): List<GradientDrawable> {
     }
 
     return gradientList
+}
+
+
+fun convertTo12HourFormat2(dateTime: String?): String {
+    if (dateTime.isNullOrEmpty()) return "--"
+
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+    return try {
+        val date = inputFormat.parse(dateTime)
+        outputFormat.format(date!!)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        "--"
+    }
+}
+
+
+fun convertTo12HourFormat3(dateTime: String?): String {
+    if (dateTime.isNullOrEmpty()) return "--"
+
+    val inputFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+    return try {
+        val date = inputFormat.parse(dateTime)
+        outputFormat.format(date!!)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        "--"
+    }
 }

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.databinding.RecyDayAttendanceRecordBinding
 import com.stafo.app.screens.settings.dataClass.PunchData
+import com.stafo.app.utils.convertTo12HourFormat2
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -30,8 +31,8 @@ class AdapterEmpDayAttendance (
         with(holder) {
             with(list[position]) {
 
-                binding.txtAttendanceInTime.text=convertTo12HourFormat(this.punch_in)
-                binding.txtAttendanceOutTime.text=convertTo12HourFormat(this.punch_out)
+                binding.txtAttendanceInTime.text=convertTo12HourFormat2(this.punch_in)
+                binding.txtAttendanceOutTime.text=convertTo12HourFormat2(this.punch_out)
 
 
 
@@ -47,20 +48,7 @@ class AdapterEmpDayAttendance (
         notifyDataSetChanged()
     }
 
-    fun convertTo12HourFormat(dateTime: String?): String {
-        if (dateTime.isNullOrEmpty()) return "--"
 
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-
-        return try {
-            val date = inputFormat.parse(dateTime)
-            outputFormat.format(date!!)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            "--"
-        }
-    }
 
 
 
