@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/rl_emp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_4sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/siv_view"
+            android:layout_marginEnd="@dimen/_10sdp"
+            app:shapeAppearanceOverlay="@style/Circular"
+            android:background="@color/basic_deep"
+            app:contentPadding="@dimen/_3sdp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_width="@dimen/_10sdp"
+            android:layout_height="@dimen/_10sdp"/>
+
+
+
+        <TextView
+            android:id="@+id/tv_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/siv_view"
+            android:layout_alignParentEnd="true"
+            android:textAlignment="textStart"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:fontFamily="@font/gilroy_regular"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

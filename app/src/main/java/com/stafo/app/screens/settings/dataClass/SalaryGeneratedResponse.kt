@@ -17,7 +17,7 @@ data class SalaryData(
 data class SalaryComponent(
     val id: Int,
     val label: String,
-    val amount: Int,
+    var amount: Int,
     val amount_type: String,
     val payment_type: String,
     val percentage: Int?

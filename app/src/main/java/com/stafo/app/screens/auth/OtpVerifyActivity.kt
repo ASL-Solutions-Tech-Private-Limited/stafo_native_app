@@ -28,7 +28,6 @@ import com.stafo.app.utils.setCompanyDetails
 import com.stafo.app.utils.setEmployeeDetails
 import com.stafo.app.utils.setIsCOMPANYLogin
 import com.stafo.app.utils.setIsEMPLogin
-import com.stafo.app.utils.setIsLoggedIn
 import com.stafo.app.utils.setUserAccessToken
 
 class OtpVerifyActivity : AppCompatActivity() {
@@ -94,7 +93,14 @@ class OtpVerifyActivity : AppCompatActivity() {
                 }
             })
             btnOtpVerify.setOnClickListener {
-                authViewModel.verifyOTP(this@OtpVerifyActivity, mobile, otp,deviceID)
+
+                if (!llOtp.text.toString().isNullOrEmpty()){
+
+                    val getOtp=llOtp.text.toString()
+                    authViewModel.verifyOTP(this@OtpVerifyActivity, mobile, getOtp,deviceID)
+
+                }else CustomToast(this@OtpVerifyActivity,"Please enter your OTP!")
+
             }
 
             ivBack.setOnClickListener { _ ->
@@ -196,13 +202,17 @@ class OtpVerifyActivity : AppCompatActivity() {
         }
     }
 
-
     private fun startTimer() {
         object : CountDownTimer(120000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 binding.llTimer.visibility = View.VISIBLE
                 binding.llResendCode.visibility = View.GONE
-                binding.tvTimerTime.text = "" + millisUntilFinished / 1000
+
+                val secondsRemaining = millisUntilFinished / 1000
+                val minutes = secondsRemaining / 60
+                val seconds = secondsRemaining % 60
+
+                binding.tvTimerTime.text = String.format("%02d:%02d", minutes, seconds)
             }
 
             override fun onFinish() {
@@ -211,6 +221,7 @@ class OtpVerifyActivity : AppCompatActivity() {
             }
         }.start()
     }
+
 
     private fun saveToken(context: Context, key: String, value: String) {
         val sharedPref = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)

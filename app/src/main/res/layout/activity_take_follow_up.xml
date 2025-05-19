@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main"
+        android:background="@drawable/gradient_header"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imgBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_12sdp"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_back" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:padding="@dimen/_6sdp"
+                android:text="Leads"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+            <!-- Header: Lead Details -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_12sdp"
+                android:elevation="4dp"
+                app:cardCornerRadius="@dimen/_12sdp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_14sdp">
+
+                    <TextView
+                        android:id="@+id/tvLeadName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gilroy_semi_bold"
+                        android:text="John Doe"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
+
+                    <TextView
+                        android:id="@+id/tvCompany1"
+                        android:layout_below="@+id/tvLeadName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:text="Company:"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+                    <TextView
+                        android:id="@+id/tvCompany"
+                        android:layout_below="@+id/tvLeadName"
+                        android:layout_toRightOf="@+id/tvCompany1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:paddingStart="@dimen/_6sdp"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+
+
+                    <TextView
+                        android:id="@+id/tvPhone1"
+                        android:layout_below="@+id/tvCompany"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:text="Phone:"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+                    <TextView
+                        android:id="@+id/tvPhone"
+                        android:layout_below="@+id/tvCompany"
+                        android:layout_toRightOf="@+id/tvPhone1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:paddingStart="@dimen/_6sdp"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                    <!--<TextView
+                        android:id="@+id/tvLeadCompany"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:text="Company: XYZ Ltd."
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+                    <TextView
+                        android:id="@+id/tvLeadPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:text="Phone: +91 9876543210"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />-->
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/down_gr_top_corner"
+                android:orientation="vertical"
+                android:padding="@dimen/_14sdp">
+                <!-- Take Follow-up Form -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:text="Take New Follow-up"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:hint="Type">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:hint="Next Follow-up">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtNextFollowUpDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:hint="Status">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:hint="Remark">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtRemark"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_100sdp"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:gravity="top|start"
+                        android:inputType="textPostalAddress"
+                        android:maxLines="4" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Save Button -->
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnTakeFollowUp"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="@dimen/_12sdp"
+                    android:background="@drawable/button_background"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:text="Take Follow-up"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_12ssp" />
+
+                <TextView
+                    android:id="@+id/tvLastFollowUp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:gravity="center"
+                    android:text="Clicked to check last follow-up"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    android:textColor="@color/app_theme_colour"
+                    android:textSize="@dimen/_14ssp" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

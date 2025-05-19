@@ -1,7 +1,9 @@
 package com.stafo.app.screens.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
@@ -17,9 +19,6 @@ import com.ajithvgiri.searchdialog.OnSearchItemSelected
 import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
 import com.google.android.material.textfield.TextInputEditText
-import com.stafo.app.R
-import com.stafo.app.databinding.ActivityPlaceSearchBinding
-import java.util.Locale
 import com.mmi.MapView
 import com.mmi.MapmyIndiaMapView
 import com.mmi.layers.MapEventsOverlay
@@ -28,27 +27,22 @@ import com.mmi.layers.Marker
 import com.mmi.layers.UserLocationOverlay
 import com.mmi.layers.location.GpsLocationProvider
 import com.mmi.util.GeoPoint
+import com.stafo.app.R
+import com.stafo.app.databinding.ActivityPlaceSearchBinding
 import com.stafo.app.screens.auth.AuthViewModel
-import com.stafo.app.screens.auth.dataClass.DataBusinessType
 import com.stafo.app.screens.auth.dataClass.DataCity
-import com.stafo.app.screens.auth.dataClass.DataCompanyType
 import com.stafo.app.screens.auth.dataClass.DataCountry
 import com.stafo.app.screens.auth.dataClass.DataStates
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import org.json.JSONObject
-import java.io.IOException
+import java.util.Locale
+
 
 class PlaceSearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlaceSearchBinding
-    private var getLati: Double? = null
-    private var getLongi: Double? = null
+    private var getLati: Double = 0.0
+    private var getLongi: Double = 0.0
 
     private lateinit var userLocationOverlay: UserLocationOverlay
     private lateinit var mapView: MapView
@@ -75,7 +69,13 @@ class PlaceSearchActivity : AppCompatActivity() {
     private var selectedCity: String = ""
 
     private var addressType: String = "map"
+   // private var accessToken: String = ""
 
+   // val placesList = mutableListOf<Place>()
+
+   // private lateinit var adapter:PlacesAdapter
+
+   // val adapter = PlacesAdapter(placesList,getLati!!,getLongi!!)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,12 +94,43 @@ class PlaceSearchActivity : AppCompatActivity() {
         observeAuthViewModel()
 
 
+
+
     }
 
 
     private fun onClickListener() {
 
         binding.apply {
+
+         /*   etDirSearch.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if (!s.isNullOrEmpty()) {
+                        if (s.length >= 5) {
+
+                            callMapMyIndiaPlaceSearch(s.toString(), accessToken)
+                        }
+                    } else {
+
+                        placesList.clear()
+                        adapter=PlacesAdapter(placesList,getLati,getLongi)
+                        binding.recyclerView.layoutManager = LinearLayoutManager(this@PlaceSearchActivity)
+                        binding.recyclerView.adapter = adapter
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+
+                override fun afterTextChanged(s: Editable?) {}
+            })*/
+
+
+
+
+
+
+
 
 
             val mapmyIndiaMapView = findViewById<MapmyIndiaMapView>(R.id.idMapView)
@@ -178,11 +209,9 @@ class PlaceSearchActivity : AppCompatActivity() {
                             "$address,$selectedCity,$selectedState,$pin,$selectedCountry"
 
                         if (isValidation()) {
-                            val returnIntent = Intent()
-                            returnIntent.putExtra("type", "custom")
-                            returnIntent.putExtra("fullAddress", fullAddress)
-                            setResult(Activity.RESULT_OK, returnIntent)
-                            finish()
+
+                            getLatLngFromAddress(this@PlaceSearchActivity, fullAddress)
+
                         }
 
 
@@ -193,8 +222,6 @@ class PlaceSearchActivity : AppCompatActivity() {
         }
 
     }
-
-
 
 
 
@@ -231,6 +258,8 @@ class PlaceSearchActivity : AppCompatActivity() {
         mapView.setCenter(location)
         mapView.setZoom(13)
     }
+
+
 
 
     private fun getAddressFromLocation(latitude: Double, longitude: Double) {
@@ -285,6 +314,188 @@ class PlaceSearchActivity : AppCompatActivity() {
                     )
                 }
             }
+        }
+    }
+
+
+   /* fun getMapMyIndiaAccessToken() {
+        val clientId="96dHZVzsAuveHJyb4fsrVuXD0YNPrFaochM2cB-f7hG7DijsK6wuIGwWgAo7ksFFxTVpPm2mORP_XLz9OkWc1Q=="
+        val clientSecret="lrFxI-iSEg9UFw9ZECaYSUPOvunPyH3qtIQyBP0lo-8yMBn9fNnEUP8xU44RbKPf-yq4d7x-H1T6fo1qyZRdt7x6r4gib2ys"
+
+
+        val client = OkHttpClient()
+
+        val requestBody = FormBody.Builder()
+            .add("grant_type", "client_credentials")
+            .add("client_id", clientId)
+            .add("client_secret", clientSecret)
+            .build()
+
+        val request = Request.Builder()
+            .url("https://outpost.mapmyindia.com/api/security/oauth/token")
+            .post(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!it.isSuccessful) {
+                        println("Failed: ${it.code} ${it.message}")
+                        return
+                    }
+
+                    val responseBody = it.body?.string()
+                    if (responseBody != null) {
+                        val json = JSONObject(responseBody)
+                        accessToken = json.optString("access_token")
+
+                        Log.d("res","Access Token: $accessToken")
+
+                    }
+                }
+            }
+        })
+    }
+
+
+
+
+
+    fun callMapMyIndiaPlaceSearch(query: String, accessToken: String) {
+
+
+        val client = OkHttpClient()
+
+        val url = "https://atlas.mapmyindia.com/api/places/search/json?query=$query"
+
+        val request = Request.Builder()
+            .url(url)
+            .addHeader("Authorization", "Bearer $accessToken")
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!it.isSuccessful) {
+                        println("Request failed: ${it.code}")
+                        Log.d("res","Request failed: ${it.code}")
+                        return
+                    }
+
+                    val responseBody = it.body?.string()
+                    if (responseBody != null) {
+                        val json = JSONObject(responseBody)
+                        val suggestions = json.optJSONArray("suggestedLocations")
+
+                        placesList.clear()
+
+                        for (i in 0 until suggestions.length()) {
+                            val place = suggestions.getJSONObject(i)
+                            val placeName = place.optString("placeName")
+                            val placeAddress = place.optString("placeAddress")
+
+                            var lat: Double? = null
+                            var lng: Double? = null
+
+                            try {
+                                val geocoder = Geocoder(this@PlaceSearchActivity, Locale.getDefault())
+                                val addressList = geocoder.getFromLocationName(placeAddress, 1)
+                                if (!addressList.isNullOrEmpty()) {
+                                    lat = addressList[0].latitude
+                                    lng = addressList[0].longitude
+                                }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+
+                            placesList.add(Place(placeName, placeAddress, lat, lng))
+
+                        }
+
+                        runOnUiThread {
+                            adapter=PlacesAdapter(placesList,getLati,getLongi)
+                            binding.recyclerView.layoutManager = LinearLayoutManager(this@PlaceSearchActivity)
+                            binding.recyclerView.adapter = adapter
+                            adapter.notifyDataSetChanged()
+                        }
+                    }
+                }
+            }
+
+
+            *//*override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!it.isSuccessful) {
+                        println("Request failed: ${it.code}")
+                        return
+                    }
+
+                    val responseBody = it.body?.string()
+                    if (responseBody != null) {
+
+                        if (responseBody != null) {
+                            val json = JSONObject(responseBody)
+                            val suggestions = json.optJSONArray("suggestedLocations")
+
+                            placesList.clear()
+
+                            for (i in 0 until suggestions.length()) {
+                                val place = suggestions.getJSONObject(i)
+                                val placeName = place.optString("placeName")
+                                val placeAddress = place.optString("placeAddress")
+
+                                placesList.add(Place(placeName, placeAddress))
+                            }
+
+
+                            runOnUiThread {
+                                adapter.notifyDataSetChanged()
+                            }
+                        }
+                    }
+                }
+            }*//*
+        })
+    }*/
+
+
+
+    private fun getLatLngFromAddress(context: Context, mAddress: String) {
+        val coder = Geocoder(context)
+        try {
+            val addressList: List<Address>? = coder.getFromLocationName(mAddress, 5)
+            if (addressList.isNullOrEmpty()) {
+                Log.d("res", "Fail to find Lat,Lng")
+                Log.d("MapTap", "Fail to find Lat,Lng")
+                return
+            }
+
+            val location = addressList[0]
+            getLati = location.latitude
+            getLongi = location.longitude
+
+            val returnIntent = Intent().apply {
+                putExtra("type", "custom")
+                putExtra("fullAddress", mAddress)
+                putExtra("latitude", getLati)
+                putExtra("longitude", getLongi)
+            }
+
+            setResult(Activity.RESULT_OK, returnIntent)
+            finish()
+            Log.d("MapTap", "Custom Location: Lat=${getLati}, Lng=${getLongi}")
+
+        } catch (e: Exception) {
+            Log.d("res", "Fail to find Lat,Lng: ${e.localizedMessage}")
         }
     }
 

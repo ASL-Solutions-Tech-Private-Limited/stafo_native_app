@@ -8,9 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.stafo.app.R
-import com.stafo.app.base.adapter.ActionsListAdapter
 import com.stafo.app.base.adapter.SubMneuActionsListAdapter
 import com.stafo.app.base.model.ActionModel
 import com.stafo.app.databinding.ActivitySubMenuBinding
@@ -18,6 +16,9 @@ import com.stafo.app.screens.emp.EmpBranchDetailsActivity
 import com.stafo.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.stafo.app.screens.emp.EmployeeLeaveHistoryActivity
 import com.stafo.app.screens.emp.ViewEmpLocationTrackActivity
+import com.stafo.app.screens.performance.PerformanceActivity
+import com.stafo.app.screens.rank.RankListActivity
+import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getIsCOMPANYLogin
 
@@ -53,7 +54,7 @@ class SubMenuActivity : AppCompatActivity() {
 
 
 
-            imageBack.setOnClickListener {
+            ivBack.setOnClickListener {
                 onBackPressed()
             }
             if (getIsCOMPANYLogin(this@SubMenuActivity)==true){
@@ -80,7 +81,18 @@ class SubMenuActivity : AppCompatActivity() {
                                     )
 
                                 }
-
+                                "Reports" -> {
+                                    startActivity(Intent(this@SubMenuActivity, ReportsActivity::class.java))
+                                    overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                                }
+                                "Performance"-> {
+                                    startActivity(Intent(this@SubMenuActivity, PerformanceActivity::class.java))
+                                    overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                                }
+                                "Rank List"-> {
+                                    startActivity(Intent(this@SubMenuActivity, RankListActivity::class.java))
+                                    overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                                }
                                 "Leaves" -> {
                                     startActivity(
                                         Intent(
@@ -234,19 +246,22 @@ class SubMenuActivity : AppCompatActivity() {
 
 
     private fun actionList(): List<ActionModel> {
-        mActionList.add(ActionModel("Employee", R.drawable.ic_user))
+        mActionList.add(ActionModel("Employee", R.drawable.ic_employee))
+        mActionList.add(ActionModel("Location\nTrack", R.drawable.ic_location))
+        mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
+        mActionList.add(ActionModel("Performance", R.drawable.ic_performace))
+        mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
-        mActionList.add(ActionModel("Branches", R.drawable.ic_calendar_month))
+        mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
-        mActionList.add(ActionModel("Location\nTrack", R.drawable.ic_location_pin))
-        mActionList.add(ActionModel("Request\nDevice", R.drawable.resized_device))
+        mActionList.add(ActionModel("Request\nDevice", R.drawable.ic_device_request))
         return mActionList
     }
 
     private fun empActionList(): List<ActionModel> {
-        mActionList.add(ActionModel("Attendance", R.drawable.ic_user))
+        mActionList.add(ActionModel("Attendance", R.drawable.ic_attendace))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
-        mActionList.add(ActionModel("Branches", R.drawable.ic_calendar_month))
+        mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
         return mActionList
     }

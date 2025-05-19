@@ -67,11 +67,6 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_chat_with_company.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_circle.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
@@ -92,11 +87,6 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_create_performance_type.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_create_salary_type.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
@@ -108,11 +98,6 @@
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_dashboard.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_electricity_biller.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
@@ -135,11 +120,6 @@
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_emp_leave.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_emp_performance_add.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_emp_profile.xml">
@@ -277,14 +257,14 @@
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_operator_details.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_otp_verify.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_package_details.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_pay_recharge.xml">
@@ -293,11 +273,6 @@
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_pay_roll_history.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_performance.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
@@ -318,11 +293,6 @@
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_qrcode_attendance_emp.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_rank_list.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
@@ -427,11 +397,6 @@
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/chat_item_layout.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/content_main.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
@@ -462,27 +427,12 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/custom_menu_layout.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/custom_spinner_item.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/dashboard_menu_item_bill_payment_layout.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_full_screen_image.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_month_year_picker.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
@@ -532,16 +482,6 @@
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_dynamic_operator_layout.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_dynamic_performance_type_layout.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_emp_attendace_layout.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
@@ -557,22 +497,12 @@
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_performance_type_layout.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_points_layout.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_rank_list_layout.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_referral_layout.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_subscription_child_layout.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
@@ -648,11 +578,6 @@
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/payroll_history_item_layout.xml">
-        <config>
-          <theme>@style/Theme.Sims.NoActionBar</theme>
-        </config>
-      </layout>
-      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/points_details_bottom_sheet_layout.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
@@ -757,6 +682,11 @@
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/recy_plan_view_child_layout.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/recy_policy_item_layout.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
@@ -813,7 +743,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eeb3fca-a4a9-48ce-a4f9-f3fda60e9524" name="Changes" comment="Added Intro Image and TestK">
+    <list default="true" id="1eeb3fca-a4a9-48ce-a4f9-f3fda60e9524" name="Changes" comment="Feat: Payu integration">
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/checksums/md5-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/checksums/sha1-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" afterDir="false" />
@@ -823,17 +756,10 @@
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/production/release/STAFO-02-05-1st.apk" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/production/release/output-metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/production/release/output-metadata.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/api/ApiStores.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/api/ApiStores.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/billpayment/BillPaymentsViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/billpayment/BillPaymentsViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/profile/EmplyeeyerProfile.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/profile/EmplyeeyerProfile.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/resize_reports.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/resize_reports.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_emplyeeyer_profile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_emplyeeyer_profile.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/layout_account_setting_items.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/layout_account_setting_items.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/layout_attendace_items.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/layout_attendace_items.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/layout_others_items.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/layout_others_items.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/subscription/SubscriptionActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/subscription/SubscriptionActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/ui/PlaceSearchActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/ui/PlaceSearchActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_place_search.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_place_search.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/xml/network_security_config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/xml/network_security_config.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -897,8 +823,8 @@
         <option value="Kotlin Enum" />
         <option value="valueResourceFile" />
         <option value="Kotlin Data Class" />
-        <option value="layoutResourceFile" />
         <option value="Kotlin Class" />
+        <option value="layoutResourceFile" />
         <option value="resourceFile" />
       </list>
     </option>
@@ -912,7 +838,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feature/settings_bill_payment_api_integration" />
+        <entry key="$PROJECT_DIR$" value="Dev" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -933,51 +859,52 @@
     <option name="showLibraryContents" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Android App.Asl_EMP__1.0.app.executor": "Run",
-    "Android App.app.executor": "Run",
-    "ApkExportedModule": "Asl_EMP__1.0.app",
-    "BundleExportedModule": "Softmint_UPI_1.0.app",
-    "DEBUGGABLE_DEVICE": "vivo-v2153-13911499310008M",
-    "DEBUGGABLE_PROCESS": "com.asl_emp_mng.app",
-    "DEBUGGER_ID": "Auto",
-    "ExportApk.ApkPathForAsl_EMP__1.0.app": "D:\\asl_hr_app_and\\app",
-    "ExportApk.ApkPathForSoftmint_KYC.app": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app",
-    "ExportApk.ApkPathForSoftmint_UPI_1.0.app": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app",
-    "ExportBundle.BundlePathForSoftmint_KYC.app": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app",
-    "ExportBundle.BundlePathForSoftmint_UPI_1.0.app": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "SHOW_ALL_PROCESSES": "false",
-    "ScreenshotViewer.SavePath": "/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC",
-    "android-custom-view/Users/injamamul/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_SELECTED": "RecyclerView",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "com.android.tools.idea.devicemanager.tab": "Physical",
-    "com.codeium.enabled": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "full.screen.before.presentation.mode": "false",
-    "git-widget-placeholder": "feature/settings__referral__api__integration",
-    "kotlin-language-version-configured": "true",
-    "last_directory_selection": "/Users/injamamul/Desktop/Android Projects/Freelance/ASL Projects/ASLHRManagement/app/src/main/res/drawable",
-    "last_opened_file_path": "D:/asl_hr_app_and/app/src/main/res/drawable",
-    "project.structure.last.edited": "Dependencies",
-    "project.structure.proportion": "0.17",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "show.migrate.to.gradle.popup": "false"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Android App.Asl_EMP__1.0.app.executor&quot;: &quot;Run&quot;,
+    &quot;Android App.app.executor&quot;: &quot;Run&quot;,
+    &quot;ApkExportedModule&quot;: &quot;Asl_EMP__1.0.app&quot;,
+    &quot;BundleExportedModule&quot;: &quot;Softmint_UPI_1.0.app&quot;,
+    &quot;DEBUGGABLE_DEVICE&quot;: &quot;vivo-v2153-13911499310008M&quot;,
+    &quot;DEBUGGABLE_PROCESS&quot;: &quot;com.stafo.app&quot;,
+    &quot;DEBUGGER_ID&quot;: &quot;Auto&quot;,
+    &quot;ExportApk.ApkPathForAsl_EMP__1.0.app&quot;: &quot;D:\\asl_hr_app_and\\app&quot;,
+    &quot;ExportApk.ApkPathForSoftmint_KYC.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app&quot;,
+    &quot;ExportApk.ApkPathForSoftmint_UPI_1.0.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app&quot;,
+    &quot;ExportBundle.BundlePathForSoftmint_KYC.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app&quot;,
+    &quot;ExportBundle.BundlePathForSoftmint_UPI_1.0.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;SHOW_ALL_PROCESSES&quot;: &quot;false&quot;,
+    &quot;ScreenshotViewer.SavePath&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC&quot;,
+    &quot;android-custom-view/Users/injamamul/.gradle/caches/modules-2/files-2.1/androidx.recyclerview/recyclerview/1.1.0/f2bdf79e1977939817f54a9d3e2f6bc52b63bdd0/recyclerview-1.1.0-sources.jar!/androidx/recyclerview/widget/RecyclerView.java_SELECTED&quot;: &quot;RecyclerView&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.android.tools.idea.devicemanager.tab&quot;: &quot;Physical&quot;,
+    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/Mobile__recharge&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_directory_selection&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/ASL Projects/ASLHRManagement/app/src/main/res/drawable&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/asl_hr_app_and/app/src/main/res/drawable&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Dependencies&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   },
-  "keyToStringList": {
-    "ExportApk.BuildVariants": [
-      "productionRelease"
+  &quot;keyToStringList&quot;: {
+    &quot;ExportApk.BuildVariants&quot;: [
+      &quot;productionRelease&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="PsdUISettings">
     <option name="LAST_EDITED_BUILD_TYPE" value="release" />
   </component>
@@ -1098,6 +1025,9 @@
       <recent name="com.stafo.app.screens.notification" />
       <recent name="com.stafo.app.screens.settings" />
     </key>
+    <key name="android.template.1341740782">
+      <recent name="com.stafo.app.screens.subscription" />
+    </key>
     <key name="android.template.2137441732">
       <recent name="com.stafo.app.screens.payroll" />
     </key>
@@ -1157,11 +1087,11 @@
       <recent name="com.stafo.app.screens.recharge" />
     </key>
     <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="com.stafo.app.screens.subscription" />
       <recent name="com.stafo.app.utils" />
       <recent name="com.asl_emp_mng.app.base.adapter" />
       <recent name="com.asl_emp_mng.app.utils" />
       <recent name="com.softmint_upi.app.screens.account" />
-      <recent name="com.softmint_upi.app.screens.account.staff" />
     </key>
     <key name="android.template.648208985">
       <recent name="com.softmint_upi.app.screens.account.bank.staff" />
@@ -1633,7 +1563,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742967246454</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Fix: Resolve conflict">
+      <option name="closed" value="true" />
+      <created>1746716165379</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1746716165379</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -1696,7 +1634,8 @@
     <MESSAGE value="Fixed Issue" />
     <MESSAGE value="Update Add Staff API" />
     <MESSAGE value="Added Intro Image and TestK" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Intro Image and TestK" />
+    <MESSAGE value="Fix: Resolve conflict" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix: Resolve conflict" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1905,12 +1844,12 @@
         </entry>
         <entry key="com.stafo.app">
           <value>
-            <CheckInfo lastCheckTimestamp="1746634929329" />
+            <CheckInfo lastCheckTimestamp="1746898112308" />
           </value>
         </entry>
         <entry key="com.stafo.app.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1746634929329" />
+            <CheckInfo lastCheckTimestamp="1746898112288" />
           </value>
         </entry>
       </map>

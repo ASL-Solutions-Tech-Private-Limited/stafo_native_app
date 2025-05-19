@@ -26,6 +26,16 @@ import com.stafo.app.screens.chat.dataClass.ChatRequest
 import com.stafo.app.screens.chat.dataClass.ChatResponse
 import com.stafo.app.screens.chat.dataClass.SendChatRequest
 import com.stafo.app.screens.chat.dataClass.SendChatResponse
+import com.stafo.app.screens.crm.dataClass.CRMDashboardResponse
+import com.stafo.app.screens.crm.dataClass.CreateFollowUpRequest
+import com.stafo.app.screens.crm.dataClass.CreateFollowUpResponse
+import com.stafo.app.screens.crm.dataClass.FollowUpListResponse
+import com.stafo.app.screens.crm.dataClass.LeadCreateRequest
+import com.stafo.app.screens.crm.dataClass.LeadCreateResponse
+import com.stafo.app.screens.crm.dataClass.LeadDashboardRequest
+import com.stafo.app.screens.crm.dataClass.LeadListRequest
+import com.stafo.app.screens.crm.dataClass.LeadListResponse
+import com.stafo.app.screens.crm.dataClass.UpdateLeadResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
 import com.stafo.app.screens.payroll.dataClass.SalaryRequest
 import com.stafo.app.screens.payroll.dataClass.SalaryResponse
@@ -139,6 +149,12 @@ import com.stafo.app.screens.settings.dataClass.UpgradePackageResponse
 import com.stafo.app.screens.settings.dataClass.VerifyGSTNumberResponse
 import com.stafo.app.screens.settings.dataClass.VerifyRegisterNumberResponse
 import com.stafo.app.screens.settings.dataClass.ViewBranchResponse
+import com.stafo.app.screens.subscription.dataClass.HashGenerateRequest
+import com.stafo.app.screens.subscription.dataClass.HashGenerateResponse
+import com.stafo.app.screens.subscription.dataClass.MySubscriptionResponse
+import com.stafo.app.screens.subscription.dataClass.PackageResponse
+import com.stafo.app.screens.subscription.dataClass.PaymentUpdateRequest
+import com.stafo.app.screens.subscription.dataClass.PaymentUpdateResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -149,6 +165,7 @@ import retrofit2.http.Field
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.HeaderMap
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -749,5 +766,70 @@ interface ApiStores {
     suspend fun callReferList(
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<ReferralResponse>
+
+    @GET("api/lead/dashboard")
+    suspend fun callCRMDashboard(
+        @Query("employee_id") employeeId: String?,
+        @Query("company_id") companyId: String?,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<CRMDashboardResponse>
+
+    @GET("api/lead/list")
+    suspend fun callLeadList(
+        @Query("employee_id") employeeId: String?,
+        @Query("company_id") companyId: String?,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<LeadListResponse>
+
+    @POST("api/lead/create")
+    suspend fun callCreateLead(
+        @Body request: LeadCreateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<LeadCreateResponse>
+
+    @POST("api/lead/followup-create")
+    suspend fun callCreateFollowUp(
+        @Body request: CreateFollowUpRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<CreateFollowUpResponse>
+
+
+    @GET("api/lead/followup-list")
+    suspend fun callFollowUpList(
+        @Query("lead_id") employeeId: String,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<FollowUpListResponse>
+
+
+    @POST("api/lead/update/{id}")
+    suspend fun callUpdateLead(
+        @Path("id") id: Int,
+        @Body request: LeadCreateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateLeadResponse>
+
+
+    @GET("api/package")
+    suspend fun callPackage(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<PackageResponse>
+
+    @POST("api/hasgenerate")
+    suspend fun callHashGenerate(
+        @Body request: HashGenerateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<HashGenerateResponse>
+
+    @POST("api/paymentUpdate")
+    suspend fun callUpdatePayment(
+        @Body request: PaymentUpdateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<PaymentUpdateResponse>
+
+    @GET("api/subscription-info")
+    suspend fun callSubscriptionInfo(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<MySubscriptionResponse>
+
 
 }

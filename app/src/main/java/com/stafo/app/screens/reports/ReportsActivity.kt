@@ -33,11 +33,14 @@ import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 
 class ReportsActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityReportsBinding
     private lateinit var rvAdapter: AdapterDownloadReports
-
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -107,10 +110,18 @@ class ReportsActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
+            /*rtlCrm.setOnClickListener {
+            CustomToast(this@ReportsActivity,"Working It!")
+            }*/
+
+
+
             binding.expandablePayrollSetting.setOnClickListener {
                 binding.expandablePayrollSetting.toggleLayout()
 
             }
+
+
             val rtlSalaryType = binding.expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_salary_type)
             val rtlGenerateSalary = binding.expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_generate_salary)
             val rtlSalarySlip = binding.expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_salary_slip)

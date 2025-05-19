@@ -21,6 +21,7 @@ import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -1364,13 +1365,19 @@ fun getTodayDate(): String {
 }
 
 
- fun getFormatDate(inputDate: String): String {
-    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    val outputFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
+fun getFormatDate(inputDate: String?): String {
+    if (inputDate.isNullOrBlank() || inputDate == "null") return "--"
 
-    val date = inputFormat.parse(inputDate)
-    return outputFormat.format(date!!)
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
+        val date = inputFormat.parse(inputDate)
+        if (date != null) outputFormat.format(date) else "--"
+    } catch (e: Exception) {
+        "--"
+    }
 }
+
 
 
 fun doLogout(mContext: Context) {
@@ -1615,6 +1622,76 @@ fun showCustomMonthYearPicker(
 
     dialog.show()
 }
+
+
+
+/*fun showPaymentDialog(
+    context: Activity,
+    successType:String
+
+) {
+    val dialog = Dialog(context)
+    dialog.setContentView(R.layout.dialog_month_year_picker)
+    dialog.setTitle("Select Month and Year")
+    dialog.setCancelable(false)
+
+    val window = dialog.window
+    window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+    val layoutParams = WindowManager.LayoutParams()
+    layoutParams.copyFrom(window?.attributes)
+    layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+    layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+    // Set margins
+    val marginHorizontal = context.resources.getDimensionPixelSize(R.dimen.dialog_margin)
+    window?.decorView?.setPadding(marginHorizontal, 0, marginHorizontal, 0)
+
+    window?.attributes = layoutParams
+
+    val monthPicker = dialog.findViewById<NumberPicker>(R.id.month_picker)
+    val yearPicker = dialog.findViewById<NumberPicker>(R.id.year_picker)
+    val btnOk = dialog.findViewById<AppCompatTextView>(R.id.btn_ok)
+    val btnCancel = dialog.findViewById<AppCompatTextView>(R.id.btn_cancel)
+
+    val months = arrayOf(
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    )
+
+    monthPicker.minValue = 0
+    monthPicker.maxValue = months.size - 1
+    monthPicker.displayedValues = months
+
+    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+    yearPicker.minValue = 2000
+    yearPicker.maxValue = currentYear + 20
+    yearPicker.value = currentYear
+
+    btnOk.setOnClickListener {
+        val selectedMonth = monthPicker.value
+        val selectedYear = yearPicker.value
+
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.MONTH, selectedMonth)
+        calendar.set(Calendar.YEAR, selectedYear)
+
+        val postFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
+        val displayFormat = SimpleDateFormat("MMM yy", Locale.getDefault())
+
+        onSelected(postFormat.format(calendar.time), displayFormat.format(calendar.time))
+        dialog.dismiss()
+    }
+
+    btnCancel.setOnClickListener {
+        dialog.dismiss()
+    }
+
+    dialog.show()
+}*/
+
+
+
+
 fun formatUtcTo12HourLocalTimeLegacy(utcTime: String): String {
     return try {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())
@@ -1629,4 +1706,36 @@ fun formatUtcTo12HourLocalTimeLegacy(utcTime: String): String {
         " "
     }
 }
+fun generateGradientDrawables(count: Int): List<GradientDrawable> {
+    val gradientList = mutableListOf<GradientDrawable>()
 
+    // Safe color combinations that work well with white text
+    val gradientColorPairs = listOf(
+        intArrayOf(Color.parseColor("#FF5F6D"), Color.parseColor("#FFC371")),  // red-orange
+        intArrayOf(Color.parseColor("#36D1DC"), Color.parseColor("#5B86E5")),  // cyan-blue
+        intArrayOf(Color.parseColor("#FFB75E"), Color.parseColor("#ED8F03")),  // orange
+        intArrayOf(Color.parseColor("#11998e"), Color.parseColor("#38ef7d")),  // green-teal
+        intArrayOf(Color.parseColor("#7F00FF"), Color.parseColor("#E100FF")),  // purple
+        intArrayOf(Color.parseColor("#FC466B"), Color.parseColor("#3F5EFB")),  // red-blue
+        intArrayOf(Color.parseColor("#f7971e"), Color.parseColor("#ffd200"))   // amber-yellow
+    )
+
+    val orientations = listOf(
+        GradientDrawable.Orientation.LEFT_RIGHT,
+        GradientDrawable.Orientation.TOP_BOTTOM,
+        GradientDrawable.Orientation.BL_TR
+    )
+
+    repeat(count) {
+        val colors = gradientColorPairs.random()
+        val orientation = orientations.random()
+
+        val gradient = GradientDrawable(orientation, colors).apply {
+            cornerRadius = 32f
+        }
+
+        gradientList.add(gradient)
+    }
+
+    return gradientList
+}

@@ -180,7 +180,7 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
                 avgWork = calculateAverageHours(mTotalWorkingHour / 60.0, mPresentCount)
                 avgWork?.let {
-                    val progress = ((it / 8.0) * 100).toFloat()
+                    val progress = ((it / 9.0) * 100).toFloat()
                     binding.cpb.updateProgress(progress.coerceIn(0f, 100f))
                 }
 

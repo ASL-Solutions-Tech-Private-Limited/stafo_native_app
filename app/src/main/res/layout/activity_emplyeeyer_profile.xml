@@ -1,334 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_header">
 
-    <data>
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_12sdp"
+        android:background="@drawable/ic_back"
+        android:padding="@dimen/_4sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </data>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:fontFamily="@font/gilroy_bold"
+        android:text="Profile"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_back" />
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".screens.profile.EmplyeeyerProfile">
-
-
-        <LinearLayout
-            android:id="@+id/ll_header_top"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_220sdp"
-            android:background="@drawable/gradient_header"
-            android:gravity="center"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <com.google.android.material.imageview.ShapeableImageView
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:id="@+id/iv_header_profile_pic"
-                    app:shapeAppearanceOverlay="@style/Circular"
-                    android:scaleType="fitXY"
-                    android:background="@color/white"
-                    android:layout_width="@dimen/_100sdp"
-                    android:layout_height="@dimen/_100sdp"
-                    android:padding="@dimen/_4sdp" />
-
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:id="@+id/iv_change_picture"
-                    android:layout_width="@dimen/_30sdp"
-                    android:layout_height="@dimen/_30sdp"
-                    app:shapeAppearanceOverlay="@style/Circular"
-                    android:background="@color/blue"
-                    android:src="@drawable/ic_change_camera"
-                    android:tint="@color/white"
-                    app:contentPadding="@dimen/_4sdp" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_header_emp_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/gilroy_bold"
-                android:layout_marginTop="@dimen/_2sdp"
-                android:padding="@dimen/_4sdp"
-                tools:text="Md Injamamul Hoque"
-                android:textSize="@dimen/_16sdp" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_header_emp_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/gilroy_bold"
-                android:text="1oHdL@example.com"
-                android:textSize="@dimen/_12sdp" />
-        </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_title">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="-30dp"
-            android:background="@drawable/top_rounded_bg"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ll_header_top">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <ScrollView
+            <!-- Hero Profile Section -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/_16sdp">
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_12sdp"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="@dimen/_4sdp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <!--Company Profile-->
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:id="@+id/llHeader_user_profile"
+                    android:padding="16dp">
+
+                    <RelativeLayout
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/ivHeaderProfilePic"
+                            android:layout_width="@dimen/_70sdp"
+                            android:layout_height="@dimen/_70sdp"
+                            android:padding="4dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/demo_avatar"
+                            app:civ_border_color="@color/app_theme_colour"
+                            app:civ_border_width="@dimen/_1sdp" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:id="@+id/ivChangePicture"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentBottom="true"
+                            android:src="@drawable/ic_edit_circle" />
+                    </RelativeLayout>
+
                     <LinearLayout
-                        android:id="@+id/ll_companyProfile"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:visibility="visible">
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-
-                        <com.skydoves.expandablelayout.ExpandableLayout
-                            android:id="@+id/expandable_account_setting"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/tvHeaderEmpName"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:expandable_duration="300"
-                            app:expandable_isExpanded="false"
-                            app:expandable_parentLayout="@layout/layout_account_settings"
-                            app:expandable_secondLayout="@layout/layout_account_setting_items"
-                            app:expandable_showSpinner="true"
-                            app:expandable_spinner="@drawable/ic_arrow_down"
-                            app:expandable_spinner_animate="true"
-                            app:expandable_spinner_gravity="end"
-                            app:expandable_spinner_margin="@dimen/_20sdp"
-                            app:expandable_spinner_size="@dimen/_34sdp" />
-
-                        <com.skydoves.expandablelayout.ExpandableLayout
-                            android:id="@+id/expandable_attandancen_management"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:expandable_duration="300"
-                            app:expandable_isExpanded="false"
-                            app:expandable_parentLayout="@layout/layout_attendace_settings"
-                            app:expandable_secondLayout="@layout/layout_attendace_items"
-                            app:expandable_showSpinner="true"
-                            app:expandable_spinner="@drawable/ic_arrow_down"
-                            app:expandable_spinner_animate="true"
-                            app:expandable_spinner_gravity="end"
-                            app:expandable_spinner_margin="@dimen/_20sdp"
-                            app:expandable_spinner_size="@dimen/_34sdp" />
-
-                        <com.skydoves.expandablelayout.ExpandableLayout
-                            android:id="@+id/expandable_leave_management"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:expandable_duration="300"
-                            app:expandable_isExpanded="false"
-                            app:expandable_parentLayout="@layout/layout_leave_settings"
-                            app:expandable_secondLayout="@layout/layout_leave_items"
-                            app:expandable_showSpinner="true"
-                            app:expandable_spinner="@drawable/ic_arrow_down"
-                            app:expandable_spinner_animate="true"
-                            app:expandable_spinner_gravity="end"
-                            app:expandable_spinner_margin="@dimen/_20sdp"
-                            app:expandable_spinner_size="@dimen/_34sdp" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_company_feedback"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_44sdp"
-                            android:layout_marginStart="@dimen/_12sdp"
-                            android:layout_marginTop="@dimen/_12sdp"
-                            android:layout_marginEnd="@dimen/_12sdp"
-                            android:background="@drawable/button_normal_bg"
-                            android:drawableLeft="@drawable/resized_feedback"
-                            android:drawablePadding="@dimen/_12sdp"
-                            android:drawableTint="@color/white"
                             android:fontFamily="@font/gilroy_bold"
-                            android:gravity="center_vertical"
-                            android:padding="@dimen/_12sdp"
-                            android:text="Feedback"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_12sdp" />
+                            android:text="John Doe"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_14ssp"
+                            android:textStyle="bold" />
 
-                        <com.skydoves.expandablelayout.ExpandableLayout
-                            android:id="@+id/expandable_other_management"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/tvHeaderEmpEmail"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:expandable_duration="300"
-                            app:expandable_isExpanded="false"
-                            app:expandable_parentLayout="@layout/layout_others"
-                            app:expandable_secondLayout="@layout/layout_others_items"
-                            app:expandable_showSpinner="true"
-                            app:expandable_spinner="@drawable/ic_arrow_down"
-                            app:expandable_spinner_animate="true"
-                            app:expandable_spinner_gravity="end"
-                            app:expandable_spinner_margin="@dimen/_20sdp"
-                            app:expandable_spinner_size="@dimen/_34sdp" />
+                            android:fontFamily="@font/gilroy_medium"
+                            android:text="john@example.com"
+                            android:textColor="#666"
+                            android:textSize="@dimen/_12ssp" />
 
-
+                        <TextView
+                            android:id="@+id/userPhone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:text="+91 9876543210"
+                            android:textColor="#666"
+                            android:textSize="@dimen/_12ssp" />
                     </LinearLayout>
-                    <!--End Company Profile-->
 
-                    <!--Employer Profile-->
-                    <LinearLayout
-                        android:id="@+id/ll_employerProfile"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <com.skydoves.expandablelayout.ExpandableLayout
-                            android:id="@+id/expandable_profile"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:expandable_duration="300"
-                            app:expandable_isExpanded="false"
-                            app:expandable_parentLayout="@layout/layout_profile"
-                            app:expandable_secondLayout="@layout/layout_profile_items"
-                            app:expandable_showSpinner="true"
-                            app:expandable_spinner="@drawable/ic_arrow_down"
-                            app:expandable_spinner_animate="true"
-                            app:expandable_spinner_gravity="end"
-                            app:expandable_spinner_margin="@dimen/_20sdp"
-                            app:expandable_spinner_size="@dimen/_34sdp" />
-
-
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_attendance"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_44sdp"
-                            android:layout_marginStart="@dimen/_12sdp"
-                            android:layout_marginTop="@dimen/_12sdp"
-                            android:layout_marginEnd="@dimen/_12sdp"
-                            android:background="@drawable/button_normal_bg"
-                            android:drawableLeft="@drawable/ic_policy"
-                            android:drawablePadding="@dimen/_12sdp"
-                            android:drawableTint="@color/white"
-                            android:fontFamily="@font/gilroy_bold"
-                            android:gravity="center_vertical"
-                            android:padding="@dimen/_12sdp"
-                            android:text="Attendance"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_12sdp" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_leave"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_44sdp"
-                            android:layout_marginStart="@dimen/_12sdp"
-                            android:layout_marginTop="@dimen/_12sdp"
-                            android:layout_marginEnd="@dimen/_12sdp"
-                            android:background="@drawable/button_normal_bg"
-                            android:drawableLeft="@drawable/ic_leaves"
-                            android:drawablePadding="@dimen/_12sdp"
-                            android:drawableTint="@color/white"
-                            android:fontFamily="@font/gilroy_bold"
-                            android:gravity="center_vertical"
-                            android:padding="@dimen/_12sdp"
-                            android:text="Leaves"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_12sdp" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_policy"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_44sdp"
-                            android:layout_marginStart="@dimen/_12sdp"
-                            android:layout_marginTop="@dimen/_12sdp"
-                            android:layout_marginEnd="@dimen/_12sdp"
-                            android:background="@drawable/button_normal_bg"
-                            android:drawableLeft="@drawable/ic_policy"
-                            android:drawablePadding="@dimen/_12sdp"
-                            android:drawableTint="@color/white"
-                            android:fontFamily="@font/gilroy_bold"
-                            android:gravity="center_vertical"
-                            android:padding="@dimen/_12sdp"
-                            android:text="@string/policy_"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_12sdp" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_help_support"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_44sdp"
-                            android:layout_marginStart="@dimen/_12sdp"
-                            android:layout_marginTop="@dimen/_12sdp"
-                            android:layout_marginEnd="@dimen/_12sdp"
-                            android:background="@drawable/button_normal_bg"
-                            android:drawableLeft="@drawable/resize_help"
-                            android:drawablePadding="@dimen/_12sdp"
-                            android:drawableTint="@color/white"
-                            android:fontFamily="@font/gilroy_bold"
-                            android:gravity="center_vertical"
-                            android:padding="@dimen/_12sdp"
-                            android:text="Help &amp; Support"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_12sdp" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_emp_feedback"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_44sdp"
-                            android:layout_marginStart="@dimen/_12sdp"
-                            android:layout_marginTop="@dimen/_12sdp"
-                            android:layout_marginEnd="@dimen/_12sdp"
-                            android:background="@drawable/button_normal_bg"
-                            android:drawableLeft="@drawable/resized_feedback"
-                            android:drawablePadding="@dimen/_12sdp"
-                            android:drawableTint="@color/white"
-                            android:fontFamily="@font/gilroy_bold"
-                            android:gravity="center_vertical"
-                            android:padding="@dimen/_12sdp"
-                            android:text="Feedback"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_12sdp" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_emp_logout"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_44sdp"
-                            android:layout_marginStart="@dimen/_12sdp"
-                            android:layout_marginTop="@dimen/_12sdp"
-                            android:layout_marginEnd="@dimen/_12sdp"
-                            android:background="@drawable/button_normal_bg"
-                            android:drawableLeft="@drawable/resize_logout"
-                            android:drawablePadding="@dimen/_12sdp"
-                            android:drawableTint="@color/white"
-                            android:fontFamily="@font/gilroy_bold"
-                            android:gravity="center_vertical"
-                            android:padding="@dimen/_12sdp"
-                            android:text="Logout"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_12sdp" />
-                    </LinearLayout>
-                    <!--End Employer Profile-->
+                    <ImageView
+                        android:id="@+id/ivHeaderView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_right_arrow" />
                 </LinearLayout>
-            </ScrollView>
+            </androidx.cardview.widget.CardView>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/top_rounded_bg">
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/settingsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_6sdp"
+                    android:layout_marginBottom="16dp"
+                    android:nestedScrollingEnabled="false"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/item_section_header" />
+
+            </LinearLayout>
         </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-</layout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

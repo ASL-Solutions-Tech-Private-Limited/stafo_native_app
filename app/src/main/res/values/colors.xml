@@ -8,10 +8,10 @@
     <color name="colorButtonText">#ffffff</color>
     <color name="colorPlaceholder">#505050</color>
     <color name="colorTextPrimary">#0E68FF</color>
-    <color name="primaryColor">#00E75B</color>
-    <color name="primaryColorDark">#00BA0B</color>
+    <color name="primaryColor">#0E68FF</color>
+    <color name="primaryColorDark">#0A47B3</color>
     <color name="colorEditText">#14000000</color>
-    <color name="green_400">#E8F5E9</color>
+    <color name="green_400">#E3F2FD</color>
     <color name="tea_green">#E0E0E0</color>
     <color name="tea_green_light">#e4ffed</color>
     <color name="reject">#d14249</color>
@@ -32,4 +32,15 @@
     <color name="blue_800">#1E40AF</color>
     <color name="deep_green">#008060</color>
     <color name="chat_other_bg_color">#b5b4b4</color>
+    <color name="plan_color_light1">#00c0ed</color>
+    <color name="plan_color_light3">#f29bbb</color>
+    <color name="plan_color_light2">#fcbf12</color>
+    <color name="plan_color_light4">#60d8bf</color>
+    <color name="plan_color1">#0253c3</color>
+    <color name="plan_color2">#fc6d00</color>
+    <color name="plan_color4">#2ea1a4</color>
+    <color name="plan_color3">#eb5056</color>
+    <color name="basic_light">#f41b94</color>
+    <color name="basic_deep">#93399c</color>
+    <color name="semiTransparentBlue">#330099cc</color>
 </resources>

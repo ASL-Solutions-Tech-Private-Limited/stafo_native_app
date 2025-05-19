@@ -59,6 +59,25 @@
 
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_subscription_company"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_44sdp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:background="@drawable/sub_button_normal_bg"
+        android:drawableLeft="@drawable/resize_subscription_icon"
+        android:drawablePadding="@dimen/_12sdp"
+        android:drawableTint="@color/white"
+        android:fontFamily="@font/gilroy_bold"
+        android:gravity="center_vertical"
+        android:padding="@dimen/_12sdp"
+        android:text="Subscription"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12sdp" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_refer_company"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_44sdp"

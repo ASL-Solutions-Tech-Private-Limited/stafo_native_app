@@ -18,7 +18,7 @@
         android:fontFamily="@font/gilroy_bold"
         android:gravity="center_vertical"
         android:padding="@dimen/_12sdp"
-        android:text="Attendace Settings"
+        android:text="Attendance Settings"
         android:textColor="@color/white"
         android:textSize="@dimen/_12sdp" />
 </LinearLayout>

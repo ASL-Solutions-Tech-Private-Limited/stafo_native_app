@@ -62,11 +62,17 @@ private fun getPrefs(context: Context): SharedPreferences {
     return context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
 }
 
+private fun getOnBoardingPrefs(context: Context): SharedPreferences {
+    return context.getSharedPreferences("OnBoardingPrefs", Context.MODE_PRIVATE)
+}
+
+
+
 fun setIsOnBoardingScreenShown(context: Context, isShown: Boolean) {
-    getPrefs(context).edit().putBoolean(isOnBoardingShown, isShown).apply()
+    getOnBoardingPrefs(context).edit().putBoolean(isOnBoardingShown, isShown).apply()
 }
 fun isOnBoardingScreenShown(context: Context): Boolean {
-    return getPrefs(context).getBoolean(isOnBoardingShown, false)
+    return getOnBoardingPrefs(context).getBoolean(isOnBoardingShown, false)
 }
 fun setIsEMPLogin(context: Context, isLogin: Boolean) {
     getPrefs(context).edit().putBoolean(isEMPLogin, isLogin).apply()

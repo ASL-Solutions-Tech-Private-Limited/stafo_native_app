@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80D3D3D3"
+    tools:context=".screens.subscription.PaymentActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorTextPrimary"
+        app:elevation="0dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            tools:ignore="UseCompoundDrawables">
+
+
+            <ImageView
+                android:id="@+id/image_back"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_back"
+                android:tint="@color/white"
+                tools:ignore="UseAppTint" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="Payment Details"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14ssp" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_emp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:background="@drawable/custom_item_card_bg"
+        android:padding="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llc_animation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:orientation="vertical">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animation_success"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
+                android:layout_gravity="center_horizontal"
+                android:visibility="visible"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/success" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animation_failed"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/failed" />
+
+            <TextView
+                android:id="@+id/tv_payment_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/llc_animation"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:fontFamily="@font/gilroy_bold"
+                android:singleLine="true"
+                android:text="Successful"
+                android:textAlignment="center"
+                android:textColor="@color/primaryColorDark"
+                android:textSize="@dimen/_14ssp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <TextView
+            android:id="@+id/txt_leave_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llc_animation"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:paddingVertical="@dimen/_3sdp"
+            android:singleLine="true"
+            android:text="Details"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13ssp" />
+
+
+        <TextView
+            android:id="@+id/txt_leave_date1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_leave_type"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:fontFamily="@font/gilroy_regular"
+            android:singleLine="true"
+            android:text="Transaction ID"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/tv_txn_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_leave_type"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_toRightOf="@+id/txt_leave_date1"
+            android:fontFamily="@font/gilroy_medium"
+            android:singleLine="true"
+            android:text="02/11/2024-03/11/2024"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+        <TextView
+            android:id="@+id/txt_duration1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_txn_id"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="@font/gilroy_regular"
+            android:singleLine="true"
+            android:text="Date"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_txn_id"
+            android:layout_alignStart="@+id/tv_txn_id"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:singleLine="true"
+            android:text="2 days"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+        <TextView
+            android:id="@+id/tv_package_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_date"
+            android:layout_alignStart="@+id/tv_txn_id"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:singleLine="true"
+            android:text="2 jan,2024"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/txt_start_date1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_date"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="@font/gilroy_regular"
+            android:singleLine="true"
+            android:text="Package Name"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/tv_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_package_name"
+            android:layout_alignStart="@+id/tv_package_name"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginBottom="@dimen/_12sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:singleLine="true"
+            android:text="2 jan,2024"
+            android:textAlignment="textEnd"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/txt_end_date1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_package_name"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="@font/gilroy_regular"
+            android:singleLine="true"
+            android:text="Total Amount"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/btn_done"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:layout_weight="1"
+        android:background="@drawable/button_background"
+        android:backgroundTint="@color/colorTextPrimary"
+        android:fontFamily="@font/gilroy_semi_bold"
+        android:text="Done"
+        android:textAllCaps="false"
+        android:textColor="@color/colorButtonText"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintTop_toBottomOf="@+id/rl_emp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

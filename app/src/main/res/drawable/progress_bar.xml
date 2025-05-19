@@ -16,7 +16,7 @@
         <gradient
             android:centerColor="@color/primaryColor"
             android:centerY="0.50"
-            android:endColor="@color/tea_green_light"
+            android:endColor="@color/green_400"
             android:type="sweep"
             android:useLevel="false" />
     </shape>

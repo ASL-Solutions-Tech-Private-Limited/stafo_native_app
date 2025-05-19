@@ -27,7 +27,9 @@ import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmployerDashboardBinding
 import com.stafo.app.screens.emp.EmplyeeAttendaceListActivity
 import com.stafo.app.screens.emp.ViewEmpLocationTrackActivity
+import com.stafo.app.screens.performance.PerformanceActivity
 import com.stafo.app.screens.profile.CompanyProfileActivity
+import com.stafo.app.screens.rank.RankListActivity
 import com.stafo.app.screens.settings.AddEmployeeActivity
 import com.stafo.app.screens.settings.BranchActivity
 import com.stafo.app.screens.settings.LeaveManagementActivity
@@ -37,6 +39,7 @@ import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.VerifyCompanyDetailsActivity
 import com.stafo.app.screens.settings.ViewAllEmployeeActivity
 import com.stafo.app.screens.settings.ViewDeviceRequestEmpActivity
+import com.stafo.app.screens.subscription.SubscriptionActivity
 import com.stafo.app.screens.ui.EmplyeeyerProfile
 import com.stafo.app.screens.ui.WishListActivity
 import com.stafo.app.utils.CustomLoader
@@ -51,6 +54,7 @@ import com.stafo.app.utils.setIsLockUser
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.stafo.app.screens.chat.ChatWithCompanyActivity
+import com.stafo.app.screens.crm.CRMLeadDashboard
 import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.recharge.RechargeActivity
 import com.stafo.app.screens.reports.ReportsActivity
@@ -67,7 +71,7 @@ class EmployerDashboard : AppCompatActivity() {
     private val mActionList = ArrayList<ActionModel>()
 
     private var companyStatus: Boolean = false
-    private var maxEmployeeAdd: String = ""
+    private var maxEmployeeAdd: String = "0"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -183,6 +187,29 @@ class EmployerDashboard : AppCompatActivity() {
                                 }
 
                             }
+
+                            "CRM" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        CRMLeadDashboard::class.java
+                                    )
+                                )
+                            }
+
+                            "Reports" -> {
+                                startActivity(Intent(this@EmployerDashboard, ReportsActivity::class.java))
+                                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                            }
+                            "Performance Type"-> {
+                                startActivity(Intent(this@EmployerDashboard, PerformanceActivity::class.java))
+                                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                            }
+                            "Rank List"-> {
+                                startActivity(Intent(this@EmployerDashboard, RankListActivity::class.java))
+                                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                            }
+
 
                             "Leaves" -> {
 
@@ -436,6 +463,8 @@ class EmployerDashboard : AppCompatActivity() {
                             it.data.banner
                         )
                     )
+                    binding.imageSlider.setScrollTimeInSec(5)
+                    binding.imageSlider.startAutoCycle()
                 }
 
 
@@ -450,7 +479,15 @@ class EmployerDashboard : AppCompatActivity() {
         builder.setTitle(R.string.app_name)
         builder.setMessage("You have reached the maximum limit of employees.Upgrade your plan to continue adding employees.")
         builder.setPositiveButton("Upgrade Now") { _, _ ->
-            settingsViewModel.upgradePackage(this@EmployerDashboard)
+
+
+            startActivity(Intent(this,SubscriptionActivity::class.java))
+
+
+
+           // settingsViewModel.upgradePackage(this@EmployerDashboard)
+
+
         }
 
         builder.setNegativeButton("Cancel") { dialog, _ ->
@@ -580,10 +617,12 @@ class EmployerDashboard : AppCompatActivity() {
             if (companyStatus) {
 
 
-                val getTotalEmp = binding.tvAllEmp.text.toString().trim()
+                val getTotalEmp = binding.tvAllEmp.text.toString().trim().toIntOrNull()
 
-                if (getTotalEmp >= maxEmployeeAdd) {
+                if (getTotalEmp != null && getTotalEmp >= (maxEmployeeAdd.toIntOrNull() ?: 0)) {
+
                     showUpgradeDialog()
+
                 } else {
                     startActivity(Intent(this, AddEmployeeActivity::class.java))
                 }
@@ -644,12 +683,16 @@ class EmployerDashboard : AppCompatActivity() {
     }
 
     private fun actionList(): List<ActionModel> {
-        mActionList.add(ActionModel("Employee", R.drawable.ic_user))
+        mActionList.add(ActionModel("Employee", R.drawable.ic_employee))
+        mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
+        mActionList.add(ActionModel("Location Track", R.drawable.ic_location))
+        mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
-        mActionList.add(ActionModel("Branches", R.drawable.ic_calendar_month))
+        mActionList.add(ActionModel("Performance Type", R.drawable.ic_performace))
+        mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
+        mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
-        mActionList.add(ActionModel("Location Track", R.drawable.ic_location_pin))
-        mActionList.add(ActionModel("Request Device", R.drawable.resized_device))
+        mActionList.add(ActionModel("Request Device", R.drawable.ic_device_request))
         return mActionList
     }
 

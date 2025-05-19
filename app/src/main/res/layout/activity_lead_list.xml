@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_header"
+    android:orientation="vertical">
+
+    <!-- Toolbar -->
+
+    <ImageView
+        android:id="@+id/imgBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_12sdp"
+        android:padding="@dimen/_2sdp"
+        android:src="@drawable/ic_back" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:fontFamily="@font/gilroy_semi_bold"
+        android:padding="@dimen/_6sdp"
+        android:text="Leads"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12ssp" />
+    <!-- Main content -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_12sdp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+        <LinearLayout
+            android:layout_margin="@dimen/_12sdp"
+            android:background="@drawable/down_gr_top_corner"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/llSearchHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="4"
+                android:layout_marginVertical="@dimen/_10sdp"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:orientation="horizontal"
+
+                >
+
+              <FrameLayout
+                  android:layout_weight="0.7"
+                  android:layout_marginEnd="@dimen/_4sdp"
+                  android:background="@drawable/edit_text_background"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+                  <EditText
+                      android:id="@+id/etDirSearch"
+                      android:layout_weight="1"
+                      android:layout_width="match_parent"
+                      android:layout_height="50dp"
+                      android:background="@android:color/transparent"
+                      android:drawableStart="@drawable/ic_search_grey"
+                      android:drawablePadding="@dimen/_5sdp"
+                      android:fontFamily="@font/gilroy_regular"
+                      android:hint="Search lead by name,phone,status"
+                      android:imeOptions="actionSearch"
+                      android:paddingStart="5dp"
+                      android:paddingLeft="5dp"
+                      android:singleLine="true"
+                      android:textColor="@color/black"
+                      android:textSize="@dimen/_12ssp" />
+              </FrameLayout>
+
+
+
+
+                <ImageView
+                    android:id="@+id/iv_filter"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:background="@drawable/custom_card_bg2"
+                    android:src="@drawable/filter"
+                    android:padding="@dimen/_7sdp"
+                    android:layout_weight="3.3"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"/>
+
+
+
+
+            </LinearLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerLeads"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:padding="8dp"
+                    android:visibility="visible"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/item_leads_list" />
+
+                <TextView
+                    android:id="@+id/tvMsg"
+                    android:text="No leads found"
+                    android:textSize="@dimen/_12ssp"
+                    android:visibility="gone"
+                    android:fontFamily="@font/gilroy_regular"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </FrameLayout>
+        </LinearLayout>
+
+
+
+
+
+        <!--  <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_margin="@dimen/_12sdp"
+              android:background="@drawable/down_gr_top_corner"
+              android:orientation="vertical">
+
+
+              &lt;!&ndash; RecyclerView &ndash;&gt;
+              <androidx.recyclerview.widget.RecyclerView
+                  android:id="@+id/recyclerLeads"
+                  android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="1"
+                  android:visibility="gone"
+                  android:clipToPadding="false"
+                  android:padding="8dp"
+                  tools:itemCount="4"
+                  tools:listitem="@layout/item_leads_list" />
+
+
+              <TextView
+                  android:id="@+id/tvMsg"
+                  android:text="No leads found"
+                  android:textSize="@dimen/_12ssp"
+                  android:visibility="visible"
+                  android:layout_marginTop="@dimen/_50sdp"
+                  android:fontFamily="@font/gilroy_regular"
+                  android:textColor="@color/black"
+                  android:textAlignment="center"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"/>
+          </LinearLayout>-->
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>

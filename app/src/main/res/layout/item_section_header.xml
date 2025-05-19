@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sectionTitle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fontFamily="@font/gilroy_semi_bold"
+    android:padding="@dimen/_6sdp"
+    android:text="Section Title"
+    android:textColor="@color/black"
+    android:textSize="@dimen/_14ssp"
+    android:textStyle="bold" />

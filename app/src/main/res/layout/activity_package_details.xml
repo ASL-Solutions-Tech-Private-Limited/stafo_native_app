@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screens.subscription.PackageDetailsActivity">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/colorTextPrimary"
+        app:elevation="0dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            tools:ignore="UseCompoundDrawables">
+
+
+            <ImageView
+                android:id="@+id/image_back"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_back"
+                android:tint="@color/white"
+                tools:ignore="UseAppTint" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="My Subscription"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14ssp" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/rtl_subscription_info"
+        android:elevation="@dimen/_1sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"
+        android:padding="@dimen/_12sdp"
+        android:visibility="visible"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:background="@drawable/custom_subscription_card_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_package_name1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:fontFamily="@font/gilroy_regular"
+            android:text="Package Name:"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+        <TextView
+            android:id="@+id/tv_package_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_toRightOf="@+id/tv_package_name1"
+            android:fontFamily="@font/gilroy_bold"
+            android:text=""
+            android:textAlignment="textEnd"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/tv_price1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_package_name"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:fontFamily="@font/gilroy_regular"
+            android:text="Price:"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_package_name"
+            android:layout_alignStart="@+id/tv_package_name"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:text=""
+            android:textAlignment="textEnd"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+        <TextView
+            android:id="@+id/tv_subscription_start1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_price"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:fontFamily="@font/gilroy_regular"
+            android:text="Subscription Start:"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/tv_subscription_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_price"
+          android:layout_toRightOf="@+id/tv_subscription_start1"
+            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:text=""
+            android:textAlignment="textEnd"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+        <TextView
+            android:id="@+id/tv_subscription_end1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_subscription_start"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:fontFamily="@font/gilroy_regular"
+            android:text="Subscription End:"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/tv_subscription_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_subscription_start"
+            android:layout_toRightOf="@+id/tv_subscription_end1"
+            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:text=""
+            android:textAlignment="textEnd"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+        <TextView
+            android:id="@+id/tv_description1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_subscription_end"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:fontFamily="@font/gilroy_bold"
+            android:text="Description:"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_subscription_end"
+            android:layout_toRightOf="@+id/tv_description1"
+            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:text=""
+            android:textAlignment="textEnd"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_invoice"
+            android:text="Invoice"
+            android:layout_below="@+id/tv_description"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/_18sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:outlineProvider="none"
+            android:textColor="@color/plan_color_light1"
+            android:textAllCaps="false"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:drawableEnd="@drawable/ic_downloads"
+            android:drawableTint="@color/plan_color_light1"
+            android:drawablePadding="@dimen/_8sdp"
+            android:paddingHorizontal="@dimen/_12sdp"
+            android:background="@drawable/invoice_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_24sdp"/>
+
+
+    </RelativeLayout>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_upgrade"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rtl_subscription_info"
+        android:text="Upgrade Now"
+        android:layout_marginTop="@dimen/_18sdp"
+        android:fontFamily="@font/gilroy_medium"
+        android:outlineProvider="none"
+        android:textColor="@color/white"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:background="@drawable/card_rtl_bg_offer"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_38sdp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

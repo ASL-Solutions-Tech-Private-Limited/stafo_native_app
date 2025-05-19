@@ -48,6 +48,10 @@ class NewDeviceRegisterActivity : AppCompatActivity() {
         settingsViewModel.mChangeDeviceResponse.observe(this) {
 
             if (it.success){
+                binding?.btnRequestRegister?.isEnabled = false
+                binding?.btnRequestRegister?.alpha = .5f
+                binding?.btnRequestRegister?.text = "Pending"
+                binding?.txtAdmin?.text = "Your request is pending"
                 CustomToast(this,it.message)
             }else{
                 CustomToast(this,it.message)

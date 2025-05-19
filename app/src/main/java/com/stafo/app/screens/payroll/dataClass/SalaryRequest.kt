@@ -6,8 +6,8 @@ data class SalaryRequest(
     val company_id: Int,
     val employee_id: Int,
     val month: Int,
-    val basic_salary: Int,
-    val gross_salary: Int,
+    val basic_salary: Double,
+    val gross_salary: Double,
     val components: MutableList<SalaryComponent>
 )
 
