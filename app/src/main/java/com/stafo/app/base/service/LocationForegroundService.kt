@@ -177,10 +177,14 @@ class LocationForegroundService : Service() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
                 for (location in locationResult.locations) {
-                    lat = location.latitude
-                    longi = location.longitude
+                    if (location.latitude != 0.0 && location.longitude != 0.0) {
+                        lat = location.latitude
+                        longi = location.longitude
+                        Log.d(TAG, "Live location: $lat, $longi")
+                    } else {
+                        Log.w(TAG, "Ignored 0.0 location")
+                    }
                 }
             }
         }

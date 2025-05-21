@@ -7,7 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 
-open abstract class BaseActivity <T : ViewDataBinding, V : BaseViewModel> : AppCompatActivity() {
+
+open abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel> : AppCompatActivity() {
 
     var viewDataBinding: T? = null
         private set
@@ -36,6 +37,8 @@ open abstract class BaseActivity <T : ViewDataBinding, V : BaseViewModel> : AppC
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         performDataBinding()
+
+
     }
 
     private fun performDataBinding() {
@@ -51,4 +54,6 @@ open abstract class BaseActivity <T : ViewDataBinding, V : BaseViewModel> : AppC
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(FontScaleContextWrapper.wrap(base))
     }
+
+
 }

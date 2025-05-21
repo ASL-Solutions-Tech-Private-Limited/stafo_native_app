@@ -59,6 +59,7 @@ import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.recharge.RechargeActivity
 import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.screens.settings.SubMenuActivity
+import com.tanodxyz.gdownload.isNetworkAvailable
 
 class EmployerDashboard : AppCompatActivity() {
 
@@ -330,7 +331,7 @@ class EmployerDashboard : AppCompatActivity() {
             if (it.status) {
                 setEmployeeComId(it.companyId.toString())
 
-                maxEmployeeAdd = it.maxEmployeeAdd
+                maxEmployeeAdd = it.companyInfo?.maxEmployeeAdd.toString()
 
 
 
@@ -507,6 +508,7 @@ class EmployerDashboard : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
         settingsViewModel.getCompanyDashboard(this@EmployerDashboard)
         settingsViewModel.getCompanyDetails(this@EmployerDashboard)
     }
@@ -564,6 +566,8 @@ class EmployerDashboard : AppCompatActivity() {
         settingsViewModel.getCompanyDetails(this@EmployerDashboard)
 
         settingsViewModel.getBannerImage(this@EmployerDashboard)
+
+
 
         binding.tvHeaderSetting.setOnClickListener {
 

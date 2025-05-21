@@ -83,6 +83,7 @@ import com.stafo.app.screens.settings.dataClass.DeleteResponse
 import com.stafo.app.screens.settings.dataClass.DepartmentCreateRequest
 import com.stafo.app.screens.settings.dataClass.DepartmentCreateResponse
 import com.stafo.app.screens.settings.dataClass.DepartmentResponse
+import com.stafo.app.screens.settings.dataClass.EditBranchResponse
 import com.stafo.app.screens.settings.dataClass.EmployeeDocumentUploadResponse
 import com.stafo.app.screens.settings.dataClass.EmployeeLeaveRequestBody
 import com.stafo.app.screens.settings.dataClass.EmployeeLeaveResponse
@@ -220,6 +221,7 @@ interface ApiStores {
 
     @POST("api/employees-create")
     suspend fun callAddEmp(
+        @FieldMap shiftIds: Map<String, String>,
         @Body addEmpRequest: AddEmpRequestBody,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<AddEmpResponse>
@@ -807,6 +809,13 @@ interface ApiStores {
         @Body request: LeadCreateRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<UpdateLeadResponse>
+
+    @POST("api/branch/update/{id}")
+    suspend fun callEditBranch(
+        @Path("id") id: Int,
+        @Body addBranchRequest: AddBranchRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EditBranchResponse>
 
 
     @GET("api/package")

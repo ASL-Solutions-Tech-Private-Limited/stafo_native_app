@@ -9,6 +9,8 @@ import com.stafo.app.api.ApiClient
 import com.stafo.app.api.ApiStores
 import com.mmi.services.account.MapmyIndiaAccountManager
 import com.orhanobut.hawk.Hawk
+import com.stafo.app.base.NetworkConnectivityHandler
+import com.stafo.app.base.NetworkMonitor
 
 class ASLEmpMng : MultiDexApplication() {
     init {
@@ -33,6 +35,8 @@ class ASLEmpMng : MultiDexApplication() {
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
       //  FirebaseApp.initializeApp(this)
+
+        registerActivityLifecycleCallbacks(NetworkConnectivityHandler(this))
 
         initMapMyIndia()
 

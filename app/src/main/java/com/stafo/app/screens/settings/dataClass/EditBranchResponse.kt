@@ -1,24 +1,19 @@
 package com.stafo.app.screens.settings.dataClass
 
-import java.io.Serializable
-
-data class ViewBranchResponse(
+data class EditBranchResponse(
     val message: String,
-    val data: List<BranchItem>
+    val data: EditBranchData
 )
 
-data class BranchItem(
+data class EditBranchData(
     val id: Int,
-    val company_id: Int,
+    val company_id: String,
     val branch_name: String,
     val branch_address: String,
-    val latitude: Double?,
-    val longitude: Double?,
-    val radar: Int,
+    val latitude: String,
+    val longitude: String,
+    val radar: String,
     val status: Int,
     val created_at: String,
     val updated_at: String
-):Serializable
-
-
-
+)

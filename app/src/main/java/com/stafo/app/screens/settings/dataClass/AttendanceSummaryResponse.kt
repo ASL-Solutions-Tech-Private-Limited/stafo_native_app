@@ -39,5 +39,6 @@ data class VerifyCompanyInfo(
     val id: Int?,
     @SerializedName("company_name") val companyName: String?,
     @SerializedName("company_code") val companyCode: String?,
-    @SerializedName("is_verified") val isVerified: String?
+    @SerializedName("is_verified") val isVerified: String?,
+    @SerializedName("max_employee_add") val maxEmployeeAdd:Int,
 )

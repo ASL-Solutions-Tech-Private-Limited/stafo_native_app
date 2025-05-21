@@ -66,27 +66,171 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout1" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edt_shift_start_time"
+
+
+        <LinearLayout
+            android:id="@+id/llc_shift_time"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_38sdp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            app:layout_constraintTop_toBottomOf="@+id/edt_shift_name"
+            android:orientation="horizontal"
+            android:weightSum="2"
+
+            >
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edt_shift_start_time"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_38sdp"
+                android:layout_marginTop="@dimen/_14sdp"
+                android:background="@drawable/edit_text_background"
+                android:fontFamily="@font/gilroy_regular"
+                android:hint="Shift Start Time"
+                android:paddingStart="@dimen/_12sdp"
+                android:paddingEnd="@dimen/_12sdp"
+                android:focusable="false"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:focusableInTouchMode="false"
+                android:drawableEnd="@drawable/ic_time"
+                android:drawableTint="@color/black"
+                android:singleLine="true"
+                android:textSize="@dimen/_12ssp" />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edt_shift_end_time"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_38sdp"
+                android:layout_marginTop="@dimen/_14sdp"
+                android:layout_weight="1"
+                android:background="@drawable/edit_text_background"
+                android:fontFamily="@font/gilroy_regular"
+                android:hint="Shift End Time"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:paddingStart="@dimen/_12sdp"
+                android:paddingEnd="@dimen/_12sdp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:drawableEnd="@drawable/ic_time"
+                android:singleLine="true"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edt_shift_start_time" />
+        </LinearLayout>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_work_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginTop="@dimen/_14sdp"
             android:layout_marginEnd="@dimen/_12sdp"
-            android:background="@drawable/edit_text_background"
-            android:fontFamily="@font/gilroy_regular"
-            android:hint="Shift Start Time"
-            android:paddingStart="@dimen/_16sdp"
-            android:paddingEnd="@dimen/_16sdp"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:drawableEnd="@drawable/ic_time"
-            android:drawableTint="@color/black"
-            android:singleLine="true"
+            android:fontFamily="@font/gilroy_medium"
+            android:text="Select Working Days:"
+            android:textColor="@color/black"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edt_shift_name" />
+            app:layout_constraintTop_toBottomOf="@+id/llc_shift_time" />
+
+
+
+
+        <LinearLayout
+            android:id="@+id/llc_working_days"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_work_title">
+
+            <CheckBox
+                android:id="@+id/cb_sunday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sunday"
+                style="@style/CustomCheckboxBrand"
+                android:paddingVertical="4dp" />
+
+            <CheckBox
+                android:id="@+id/cb_monday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Monday"
+                style="@style/CustomCheckboxBrand"
+                android:paddingVertical="4dp" />
+
+            <CheckBox
+                android:id="@+id/cb_tuesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tuesday"
+                style="@style/CustomCheckboxBrand"
+                android:paddingVertical="4dp" />
+
+            <CheckBox
+                android:id="@+id/cb_wednesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wednesday"
+                style="@style/CustomCheckboxBrand"
+                android:paddingVertical="4dp" />
+
+            <CheckBox
+                android:id="@+id/cb_thursday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thursday"
+                style="@style/CustomCheckboxBrand"
+                android:paddingVertical="4dp" />
+
+            <CheckBox
+                android:id="@+id/cb_friday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Friday"
+                style="@style/CustomCheckboxBrand"
+                android:paddingVertical="4dp" />
+
+            <CheckBox
+                android:id="@+id/cb_saturday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Saturday"
+                style="@style/CustomCheckboxBrand"
+                android:paddingVertical="4dp" />
+        </LinearLayout>
+
+
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_add_shift"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_38sdp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:layout_marginBottom="@dimen/_32sdp"
+            android:background="@drawable/button_background"
+            android:elevation="10dp"
+            android:fontFamily="@font/gilroy_medium"
+            android:gravity="center"
+            android:text="Add Shift"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/llc_working_days" />
 
        <!-- <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/txt_can_punch"
@@ -148,26 +292,7 @@
         </RadioGroup>-->
 
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edt_shift_end_time"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_38sdp"
-            android:layout_marginStart="@dimen/_12sdp"
-            android:layout_marginTop="@dimen/_14sdp"
-            android:layout_marginEnd="@dimen/_12sdp"
-            android:background="@drawable/edit_text_background"
-            android:fontFamily="@font/gilroy_regular"
-            android:hint="Shift End Time"
-            android:paddingStart="@dimen/_16sdp"
-            android:paddingEnd="@dimen/_16sdp"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:drawableEnd="@drawable/ic_time"
-            android:singleLine="true"
-            android:textSize="@dimen/_12ssp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edt_shift_start_time" />
+
 
 
        <!-- <androidx.appcompat.widget.AppCompatTextView
@@ -230,27 +355,7 @@
         </RadioGroup>-->
 
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_add_shift"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="@dimen/_12sdp"
-            android:layout_marginTop="@dimen/_38sdp"
-            android:layout_marginEnd="@dimen/_12sdp"
-            android:layout_marginBottom="@dimen/_32sdp"
-            android:background="@drawable/button_background"
-            android:elevation="10dp"
-            android:fontFamily="@font/gilroy_medium"
-            android:gravity="center"
-            android:text="Add Shift"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_12ssp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edt_shift_end_time" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

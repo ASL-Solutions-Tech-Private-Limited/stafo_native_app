@@ -21,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ajithvgiri.searchdialog.OnSearchItemSelected
 import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
@@ -33,6 +35,8 @@ import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 import com.google.android.material.textfield.TextInputEditText
+import com.stafo.app.base.adapter.RadioShiftAdapter
+import com.stafo.app.screens.settings.dataClass.ShiftDataList
 import com.stafo.app.utils.setIsLock
 import com.stafo.app.utils.setIsLockUser
 import java.text.SimpleDateFormat
@@ -42,20 +46,19 @@ import java.util.Locale
 class AddEmployeeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddEmployeeBinding
 
-   // private var mSteps = 1
-    private var selectGender: String="male"
-    private var selectJobTitle: String=""
+    // private var mSteps = 1
+    private var selectGender: String = "male"
+    private var selectJobTitle: String = ""
 
     private val calendar = Calendar.getInstance()
     private var mDateOfJoining: String = ""
-
-
 
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
 
 
+    var selectedShiftIds: List<String> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,12 +73,11 @@ class AddEmployeeActivity : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
 
-
-       /* binding?.apply {
-            rpbBasicInfo.setProgress(100f)
-            rpbBasicInfo.setUnfilledColor(resources.getColor(R.color.tea_green))
-            rpbBasicInfo.setFilledColor(resources.getColor(R.color.colorTextPrimary))
-        }*/
+        /* binding?.apply {
+             rpbBasicInfo.setProgress(100f)
+             rpbBasicInfo.setUnfilledColor(resources.getColor(R.color.tea_green))
+             rpbBasicInfo.setFilledColor(resources.getColor(R.color.colorTextPrimary))
+         }*/
 
 
 
@@ -130,54 +132,7 @@ class AddEmployeeActivity : AppCompatActivity() {
                 finish()
             }
 
-
-
-
-            /*binding.genderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-                val radioButton = group.findViewById<RadioButton>(R.id.male)
-                val radioButton1 = group.findViewById<RadioButton>(R.id.female)
-                when (checkedId) {
-                    R.id.male -> {
-                        selectGender = "male"
-                        radioButton.setTextColor(resources.getColor(R.color.white))
-                        val drawable = radioButton.compoundDrawables[0]
-                        drawable.setColorFilter(
-                            resources.getColor(R.color.white),
-                            PorterDuff.Mode.SRC_IN
-                        )
-                        radioButton.setCompoundDrawables(drawable, null, null, null)
-
-                        radioButton1.setTextColor(resources.getColor(R.color.black))
-                        val drawable1 = radioButton1.compoundDrawables[0]
-                        drawable1.setColorFilter(
-                            resources.getColor(R.color.black),
-                            PorterDuff.Mode.SRC_IN
-                        )
-                        radioButton1.setCompoundDrawables(drawable1, null, null, null)
-                    }
-
-                    R.id.female -> {
-                        selectGender = "female"
-                        radioButton1.setTextColor(resources.getColor(R.color.white))
-                        val drawable = radioButton1.compoundDrawables[0]
-                        drawable.setColorFilter(
-                            resources.getColor(R.color.white),
-                            PorterDuff.Mode.SRC_IN
-                        )
-                        radioButton1.setCompoundDrawables(drawable, null, null, null)
-
-                        radioButton.setTextColor(resources.getColor(R.color.black))
-                        val drawable1 = radioButton.compoundDrawables[0]
-                        drawable1.setColorFilter(
-                            resources.getColor(R.color.black),
-                            PorterDuff.Mode.SRC_IN
-                        )
-                        radioButton.setCompoundDrawables(drawable1, null, null, null)
-                    }
-                }
-
-
-            }*/
+            getEmployeeComId()?.let { settingsViewModel.getShiftList(this@AddEmployeeActivity, it) }
 
             binding.genderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
                 val radioButton = group.findViewById<RadioButton>(R.id.male)
@@ -277,19 +232,27 @@ class AddEmployeeActivity : AppCompatActivity() {
             btnNext.setOnClickListener { _ ->
 
                 if (validateBasicInfo()) {
-                    val requestBody = AddEmpRequestBody(
 
-                        name = tieStaffName.text.toString().trim(),
-                        email = tieEmailId.text.toString().trim(),
-                        position = selectJobTitle,
-                        phone = tieMobileNo.text.toString(),
-                        date_of_joining = mDateOfJoining,
-                        salary = tieBasicSalary.text.toString().trim(),
-                        gender = selectGender,
-                        address = tieAddress.text.toString()
-                    )
+                    if (selectedShiftIds.isNotEmpty()) {
+                        val requestBody = AddEmpRequestBody(
 
-                    settingsViewModel.addEmployee(this@AddEmployeeActivity, requestBody)
+                            name = tieStaffName.text.toString().trim(),
+                            email = tieEmailId.text.toString().trim(),
+                            position = selectJobTitle,
+                            phone = tieMobileNo.text.toString(),
+                            date_of_joining = mDateOfJoining,
+                            salary = tieBasicSalary.text.toString().trim(),
+                            gender = selectGender,
+                            address = tieAddress.text.toString()
+                        )
+
+                        settingsViewModel.addEmployee(
+                            this@AddEmployeeActivity,
+                            selectedShiftIds,
+                            requestBody
+                        )
+                    }
+
                 }
 
 
@@ -327,7 +290,8 @@ class AddEmployeeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         getEmployeeComId()?.let {
-            settingsViewModel.getDepartmentList(this@AddEmployeeActivity,
+            settingsViewModel.getDepartmentList(
+                this@AddEmployeeActivity,
                 it
             )
         }
@@ -341,45 +305,45 @@ class AddEmployeeActivity : AppCompatActivity() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
 
+        settingsViewModel.mShiftListResponse.observe(this) {
 
-        /*getEmployeeComId()?.let { settingsViewModel.getBranchList(this, it) }
+            if (it.success) {
 
-        settingsViewModel.mBranchListResponse.observe(this) {
+                if (it.data.isNotEmpty()) {
 
-            if (it.data.isNotEmpty()){
-                mBranchList = it.data
-                binding?.let { it1 ->
-                    setupSearchableDialog(
-                        mBranchList,
-                        "Branch",
-                        it1.tieBranch
-                    )
-                }
+                    val shiftList = ArrayList<SearchListItem>().apply {
+                        it.data.forEach { shift ->
+                            add(
+                                SearchListItem(
+                                    id = shift.id ?: 0,
+                                    title = shift.shift_name ?: "No Name"
+                                )
+                            )
+                        }
+                    }
+
+                    binding.tieShiftTiming.setOnClickListener {
+                        val dialog =
+                            SearchableDialog(this@AddEmployeeActivity, shiftList, "Shift List")
+                        dialog.setOnItemSelected(object : OnSearchItemSelected {
+                            override fun onClick(position: Int, searchListItem: SearchListItem) {
+
+                                selectedShiftIds = listOf(searchListItem.id.toString())
+
+                                binding.tieShiftTiming.setText(searchListItem.title)
+                                dialog.dismiss()
+                            }
+                        })
+                        dialog.show()
+                    }
+
+
+                } else startActivity(Intent(this@AddEmployeeActivity, AddShiftActivity::class.java))
+
+
             }
-
         }
 
-        getEmployeeComId()?.let {
-            settingsViewModel.getDepartmentList(this@AddEmployeeActivity,
-                it
-            )
-        }
-
-
-        settingsViewModel.mDepartmentListResponse.observe(this) {
-
-            if (it.data.isNotEmpty()){
-                mDepartmentList = it.data
-                binding?.let { it1 ->
-                    setupSearchableDialog(
-                        mDepartmentList,
-                        "Department",
-                        it1.tieDepartment
-                    )
-                }
-            }
-
-        }*/
 
 
 
@@ -396,51 +360,45 @@ class AddEmployeeActivity : AppCompatActivity() {
         }
 
 
+        /*  settingsViewModel.getJobTitleList(this)
+
+
+          settingsViewModel.mJobTitleResponse.observe(this) {
+            if (it.status){
+
+               val jobTitles = it.data.map { it.name }
+               // val jobTitles = mutableListOf("Select Job Title") + it.data.map { it.name }
+
+                val adapterTitle =
+                    ArrayAdapter(this@AddEmployeeActivity, R.layout.custom_spinner_item, jobTitles)
+                binding.spinnerJobTitle.setAdapter(adapterTitle)
+
+                binding.spinnerJobTitle.onItemSelectedListener =
+                    object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            val selectedItem = parent.getItemAtPosition(position).toString()
+                            selectJobTitle = selectedItem
+                        }
+
+                        override fun onNothingSelected(parent: AdapterView<*>) {
+                        }
+                    }
 
 
 
-      /*  settingsViewModel.getJobTitleList(this)
+            }else{
+                CustomToast(this,it.message)
+            }
 
-
-        settingsViewModel.mJobTitleResponse.observe(this) {
-          if (it.status){
-
-             val jobTitles = it.data.map { it.name }
-             // val jobTitles = mutableListOf("Select Job Title") + it.data.map { it.name }
-
-              val adapterTitle =
-                  ArrayAdapter(this@AddEmployeeActivity, R.layout.custom_spinner_item, jobTitles)
-              binding.spinnerJobTitle.setAdapter(adapterTitle)
-
-              binding.spinnerJobTitle.onItemSelectedListener =
-                  object : AdapterView.OnItemSelectedListener {
-                      override fun onItemSelected(
-                          parent: AdapterView<*>,
-                          view: View?,
-                          position: Int,
-                          id: Long
-                      ) {
-                          val selectedItem = parent.getItemAtPosition(position).toString()
-                          selectJobTitle = selectedItem
-                      }
-
-                      override fun onNothingSelected(parent: AdapterView<*>) {
-                      }
-                  }
-
-
-
-          }else{
-              CustomToast(this,it.message)
-          }
-
-        }*/
+          }*/
 
 
     }
-
-
-
 
 
     private fun handleLoader(status: String) {
@@ -452,18 +410,13 @@ class AddEmployeeActivity : AppCompatActivity() {
     }
 
 
-
-
-
-
-
     private fun validateBasicInfo(): Boolean {
         binding?.apply {
             if (tieStaffName.text.isNullOrEmpty()) {
                 tieStaffName.error = "Please enter staff name"
                 tieStaffName.requestFocus()
                 return false
-            }   else if (tieMobileNo.text.isNullOrEmpty()) {
+            } else if (tieMobileNo.text.isNullOrEmpty()) {
                 tieMobileNo.error = "Please enter mobile number"
                 tieMobileNo.requestFocus()
                 return false
@@ -472,15 +425,13 @@ class AddEmployeeActivity : AppCompatActivity() {
                 tieEmailId.requestFocus()
                 return false
             } else if (tieDateJoining.text.isNullOrEmpty()) {
-               CustomToast(this@AddEmployeeActivity,"Please enter date of joining")
+                CustomToast(this@AddEmployeeActivity, "Please enter date of joining")
                 return false
             } else if (tieBasicSalary.text.isNullOrEmpty()) {
                 tieBasicSalary.error = "Please enter basic salary"
                 tieBasicSalary.requestFocus()
                 return false
-            }
-
-            else if (tieAddress.text.isNullOrEmpty()) {
+            } else if (tieAddress.text.isNullOrEmpty()) {
                 tieAddress.error = "Please enter address"
                 tieAddress.requestFocus()
                 return false
@@ -496,7 +447,7 @@ class AddEmployeeActivity : AppCompatActivity() {
                 selectedDate.set(year, monthOfYear, dayOfMonth)
                 val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
                 val formattedDate = dateFormat.format(selectedDate.time)
-                mDateOfJoining=formattedDate
+                mDateOfJoining = formattedDate
 
                 val displayFormat = SimpleDateFormat("dd MMM yy", Locale.getDefault())
                 val formattedDisplayDate = displayFormat.format(selectedDate.time)
@@ -509,7 +460,6 @@ class AddEmployeeActivity : AppCompatActivity() {
         )
         datePickerDialog.show()
     }
-
 
 
 }

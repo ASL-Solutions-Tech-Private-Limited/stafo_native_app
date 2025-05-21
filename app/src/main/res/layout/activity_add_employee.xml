@@ -342,7 +342,28 @@
                             android:hint="Date of Joining" />
 
                     </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        app:endIconDrawable="@drawable/ic_arrow_down"
+                        app:endIconMode="custom">
 
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tie_shift_timing"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_background"
+                            android:focusable="false"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black"
+                            android:focusableInTouchMode="false"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:hint="Select Shift" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_basic_salary"

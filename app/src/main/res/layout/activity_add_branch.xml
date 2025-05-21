@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_registration_title"
+        android:id="@+id/tv_branch_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_12sdp"
@@ -41,7 +41,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_registration_title">
+        app:layout_constraintTop_toBottomOf="@id/tv_branch_title">
 
 
         <ScrollView
@@ -98,10 +98,12 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:focusable="false"
+                            android:inputType="textMultiLine"
+                            android:maxLines="4"
+                            android:minLines="2"
                             android:focusableInTouchMode="false"
                             android:fontFamily="@font/gilroy_medium"
                             android:hint="Branch Address"
-                            android:inputType="textPersonName"
                             android:textSize="@dimen/_12ssp" />
                     </com.google.android.material.textfield.TextInputLayout>
 
