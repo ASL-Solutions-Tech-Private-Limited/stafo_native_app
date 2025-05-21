@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -246,12 +247,16 @@ class AddEmployeeActivity : AppCompatActivity() {
                             address = tieAddress.text.toString()
                         )
 
+
+                        Log.d("res","post add employee data ${requestBody} ${selectedShiftIds}")
+
+
                         settingsViewModel.addEmployee(
                             this@AddEmployeeActivity,
                             selectedShiftIds,
                             requestBody
                         )
-                    }
+                    } else CustomToast(this@AddEmployeeActivity,"Please select Shift")
 
                 }
 

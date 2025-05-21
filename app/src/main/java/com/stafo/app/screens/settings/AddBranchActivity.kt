@@ -55,6 +55,7 @@ class AddBranchActivity : AppCompatActivity() {
 
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -86,6 +87,11 @@ class AddBranchActivity : AppCompatActivity() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
         settingsViewModel.mCreateBranchResponse.observe(this) {
+            CustomToast(this, it.message)
+            onBackPressedDispatcher.onBackPressed()
+            finish()
+        }
+        settingsViewModel.mEditBranchResponse.observe(this) {
             CustomToast(this, it.message)
             onBackPressedDispatcher.onBackPressed()
             finish()
@@ -217,6 +223,8 @@ class AddBranchActivity : AppCompatActivity() {
 
             if (branchData != null) {
                 branchId=branchData.id
+                latitude=branchData.latitude
+                longitude=branchData.longitude
 
                 binding.tieBranchName.setText(branchData.branch_name)
                 binding.tieBranchAddress.setText(branchData.branch_address)

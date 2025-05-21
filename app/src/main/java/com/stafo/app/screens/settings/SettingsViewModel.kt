@@ -4047,10 +4047,12 @@ class SettingsViewModel : BaseViewModel() {
 
                 Log.d("add_emp", "Final Shift Data: $shiftIdsMap")
 
+                Log.d("add_emp", "res first  data ${request}")
+
                 val response = ASLEmpMng.instance.apiStores()?.callAddEmp(shiftIdsMap,request)
 
 
-                Log.d("add_emp", "res first  data ${request.toString()} : ${response?.body()}")
+
 
 
                 withContext(Dispatchers.Main) {
