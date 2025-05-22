@@ -66,7 +66,6 @@ class SubMenuActivity : AppCompatActivity() {
                         override fun onActionClick(action: String) {
                             when (action) {
                                 "Employee" -> {
-
                                     startActivity(
                                         Intent(
                                             this@SubMenuActivity,
@@ -107,7 +106,6 @@ class SubMenuActivity : AppCompatActivity() {
 
 
                                 }
-
                                 "Branches" -> {
                                     startActivity(
                                         Intent(
@@ -122,7 +120,6 @@ class SubMenuActivity : AppCompatActivity() {
 
 
                                 }
-
                                 "Policy" -> {
 
                                     startActivity(
@@ -137,7 +134,6 @@ class SubMenuActivity : AppCompatActivity() {
                                     )
 
                                 }
-
                                 "Location\nTrack" -> {
 
                                     startActivity(
@@ -152,7 +148,6 @@ class SubMenuActivity : AppCompatActivity() {
                                     )
 
                                 }
-
                                 "Request\nDevice" -> {
                                     startActivity(
                                         Intent(
@@ -167,7 +162,14 @@ class SubMenuActivity : AppCompatActivity() {
                                     )
 
                                 }
-
+                                "Holidays" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity,
+                                            HolidayActivity::class.java
+                                        )
+                                    )
+                                }
                             }
                         }
 
@@ -234,6 +236,15 @@ class SubMenuActivity : AppCompatActivity() {
                                         R.anim.slide_to_left
                                     )
                                 }
+
+                                "Holidays" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity,
+                                            HolidayActivity::class.java
+                                        )
+                                    )
+                                }
                             }
                         }
 
@@ -253,6 +264,7 @@ class SubMenuActivity : AppCompatActivity() {
         mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
+        mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
         mActionList.add(ActionModel("Request\nDevice", R.drawable.ic_device_request))
         return mActionList
@@ -262,6 +274,7 @@ class SubMenuActivity : AppCompatActivity() {
         mActionList.add(ActionModel("Attendance", R.drawable.ic_attendace))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
+        mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
         return mActionList
     }
