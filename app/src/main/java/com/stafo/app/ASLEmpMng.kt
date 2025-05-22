@@ -11,6 +11,7 @@ import com.mmi.services.account.MapmyIndiaAccountManager
 import com.orhanobut.hawk.Hawk
 import com.stafo.app.base.NetworkConnectivityHandler
 import com.stafo.app.base.NetworkMonitor
+import com.stafo.app.utils.scheduleDailyEndOfDaySync
 
 class ASLEmpMng : MultiDexApplication() {
     init {
@@ -35,7 +36,7 @@ class ASLEmpMng : MultiDexApplication() {
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
       //  FirebaseApp.initializeApp(this)
-
+        scheduleDailyEndOfDaySync(applicationContext)
         registerActivityLifecycleCallbacks(NetworkConnectivityHandler(this))
 
         initMapMyIndia()
@@ -56,6 +57,5 @@ class ASLEmpMng : MultiDexApplication() {
         MapmyIndiaAccountManager.getInstance().setAtlasGrantType("client_credentials")
         MapmyIndiaAccountManager.getInstance().setAtlasClientId("96dHZVzsAuveHJyb4fsrVuXD0YNPrFaochM2cB-f7hG7DijsK6wuIGwWgAo7ksFFxTVpPm2mORP_XLz9OkWc1Q==")
         MapmyIndiaAccountManager.getInstance().setAtlasClientSecret("lrFxI-iSEg9UFw9ZECaYSUPOvunPyH3qtIQyBP0lo-8yMBn9fNnEUP8xU44RbKPf-yq4d7x-H1T6fo1qyZRdt7x6r4gib2ys")
-
     }
 }

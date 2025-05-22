@@ -84,6 +84,7 @@ class ViewDeviceRequestEmpActivity : AppCompatActivity() {
 
                         binding.etDirSearch.isFocusable = false
                         binding.etDirSearch.isFocusableInTouchMode = false
+                        binding.rvRequestDeviceList.visibility = View.GONE
                         binding.txtMsg.visibility = View.VISIBLE
                     }
 
@@ -91,12 +92,14 @@ class ViewDeviceRequestEmpActivity : AppCompatActivity() {
 
                     binding.etDirSearch.isFocusable = false
                     binding.etDirSearch.isFocusableInTouchMode = false
+                    binding.rvRequestDeviceList.visibility = View.GONE
                     binding.txtMsg.visibility = View.VISIBLE
                 }
             } else {
 
                 binding.etDirSearch.isFocusable = false
                 binding.etDirSearch.isFocusableInTouchMode = false
+                binding.rvRequestDeviceList.visibility = View.GONE
                 binding.txtMsg.visibility = View.VISIBLE
             }
         }

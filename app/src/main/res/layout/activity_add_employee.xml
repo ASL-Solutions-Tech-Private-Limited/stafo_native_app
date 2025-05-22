@@ -469,21 +469,21 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_address"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_126sdp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_12sdp">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/tie_address"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_126sdp"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
-                            android:gravity="start|top"
                             android:hint="Address"
-                            android:maxLines="3"
+                            android:maxLines="4"
+                            android:minLines="2"
                             android:textSize="@dimen/_12ssp"
                             android:textColor="@color/black"
-                            android:inputType="textImeMultiLine"
+                            android:inputType="textMultiLine"
                             android:textAlignment="viewStart" />
 
                     </com.google.android.material.textfield.TextInputLayout>

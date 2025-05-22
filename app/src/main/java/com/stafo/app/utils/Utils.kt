@@ -7,6 +7,7 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Context.BATTERY_SERVICE
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -26,6 +27,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.net.wifi.WifiManager
+import android.os.BatteryManager
 import android.os.Build
 import android.os.CountDownTimer
 import android.os.Environment
@@ -56,8 +58,12 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
 import com.stafo.app.screens.auth.LoginWithOTPActivity
@@ -71,6 +77,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.orhanobut.hawk.Hawk
 import com.stafo.app.R
+import com.stafo.app.base.EndOfDaySyncWorker
 import com.stafo.app.screens.ui.SplashActivity
 import com.trackier.sdk.TrackierEvent
 import com.trackier.sdk.TrackierSDK.trackEvent
@@ -1414,6 +1421,7 @@ fun getFormattedDate2(date: String, possibleFormats: List<String>, returnDateFor
     return "Invalid Date"
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun extractDayNameDateAndMonth(inputDate: String): Triple<String, Int, Int> {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val date = LocalDate.parse(inputDate, formatter)
@@ -1872,5 +1880,46 @@ fun isNetworkAvailable(context: Context): Boolean {
     val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
 
     return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+}
+
+
+
+
+
+fun getBatteryPercentage(context: Context): Int {
+    val bm = context.getSystemService(BATTERY_SERVICE) as BatteryManager
+    return bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+}
+ fun getDeviceName(): String {
+    return "${Build.MANUFACTURER} ${Build.MODEL}"
+}
+
+fun getAndroidVersion(): String {
+    return Build.VERSION.RELEASE ?: "Unknown"
+}
+
+fun scheduleDailyEndOfDaySync(context: Context) {
+    val currentDate = Calendar.getInstance()
+    val dueDate = Calendar.getInstance()
+
+    dueDate.set(Calendar.HOUR_OF_DAY, 15)
+    dueDate.set(Calendar.MINUTE, 30)
+    dueDate.set(Calendar.SECOND, 0)
+
+    if (dueDate.before(currentDate)) {
+        dueDate.add(Calendar.HOUR_OF_DAY, 24)
+    }
+
+    val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
+
+    val dailyWorkRequest = PeriodicWorkRequestBuilder<EndOfDaySyncWorker>(24,TimeUnit.HOURS)
+        .setInitialDelay(timeDiff,TimeUnit.MILLISECONDS)
+        .build()
+
+    WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+        "endOfDaySyncWork",
+        ExistingPeriodicWorkPolicy.REPLACE,
+        dailyWorkRequest
+    )
 }
 

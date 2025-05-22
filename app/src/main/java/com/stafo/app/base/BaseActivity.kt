@@ -6,6 +6,7 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.stafo.app.utils.scheduleDailyEndOfDaySync
 
 
 open abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel> : AppCompatActivity() {
@@ -37,7 +38,6 @@ open abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel> : AppCo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         performDataBinding()
-
 
     }
 

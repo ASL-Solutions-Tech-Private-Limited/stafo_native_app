@@ -236,15 +236,14 @@ class AddEmployeeActivity : AppCompatActivity() {
 
                     if (selectedShiftIds.isNotEmpty()) {
                         val requestBody = AddEmpRequestBody(
-
                             name = tieStaffName.text.toString().trim(),
                             email = tieEmailId.text.toString().trim(),
-                            position = selectJobTitle,
                             phone = tieMobileNo.text.toString(),
-                            date_of_joining = mDateOfJoining,
-                            salary = tieBasicSalary.text.toString().trim(),
+                            dateOfJoining = mDateOfJoining,
                             gender = selectGender,
-                            address = tieAddress.text.toString()
+                            address = tieAddress.text.toString(),
+                            salary = tieBasicSalary.text.toString().trim(),
+                            shiftIds=selectedShiftIds
                         )
 
 
@@ -253,7 +252,6 @@ class AddEmployeeActivity : AppCompatActivity() {
 
                         settingsViewModel.addEmployee(
                             this@AddEmployeeActivity,
-                            selectedShiftIds,
                             requestBody
                         )
                     } else CustomToast(this@AddEmployeeActivity,"Please select Shift")
@@ -450,7 +448,7 @@ class AddEmployeeActivity : AppCompatActivity() {
             this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
                 val selectedDate = Calendar.getInstance()
                 selectedDate.set(year, monthOfYear, dayOfMonth)
-                val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 val formattedDate = dateFormat.format(selectedDate.time)
                 mDateOfJoining = formattedDate
 

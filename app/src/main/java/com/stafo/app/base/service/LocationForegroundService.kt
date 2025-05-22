@@ -15,12 +15,20 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
 import com.stafo.app.base.network.RetrofitInstance
 import com.stafo.app.base.notification.NotificationsHelper
+import com.stafo.app.database.AppDatabase
+import com.stafo.app.database.dao.LocationDao
+import com.stafo.app.database.dataClass.LocationEntity
 import com.stafo.app.screens.settings.dataClass.EmployeePostLocationRequest
+import com.stafo.app.utils.getAndroidVersion
+import com.stafo.app.utils.getBatteryPercentage
+import com.stafo.app.utils.getDeviceName
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getUserAccessToken
+import com.tanodxyz.gdownload.isNetworkAvailable
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
+import java.util.Calendar
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -36,6 +44,8 @@ class LocationForegroundService : Service() {
 
     private var lat: Double? = null
     private var longi: Double? = null
+
+    private lateinit var locationDao: LocationDao
 
     inner class LocalBinder : Binder() {
         fun getService(): LocationForegroundService = this@LocationForegroundService
@@ -75,7 +85,7 @@ class LocationForegroundService : Service() {
         }.start()
     }
 
-    private fun postGeoLocation(lat: String, long: String) {
+/*    private fun postGeoLocation(lat: String, long: String){
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val request = EmployeePostLocationRequest(
@@ -95,18 +105,107 @@ class LocationForegroundService : Service() {
                 Log.e("API Error", "Exception: ${e.message}")
             }
         }
+    }*/
+
+    private suspend fun postGeoLocation(lat: String, long: String): Boolean {
+        return try {
+            val request = EmployeePostLocationRequest(
+                employee_id = getEmployeeDetails()?.id.toString(),
+                latitude = lat,
+                longitude = long
+            )
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val all = locationDao.getAllLocations()
+                all.forEachIndexed { index, location ->
+                    Log.d("DB_LOG", "Location #$index: $location")
+                }
+            }
+
+
+
+
+
+            val token = getUserAccessToken() ?: return false
+
+            val response = RetrofitInstance.apiService.callPostGeoLocation("Bearer $token", request)
+
+            if (response.isSuccessful) {
+                withContext(Dispatchers.Main) {
+                    Log.d("res", "Location updated successfully: ${response.body()}")
+                }
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            Log.e("API Error", "Exception: ${e.message}")
+            false
+        }
     }
+
+
+    /*  private fun startRecurringTimer() {
+          handler = Handler(Looper.getMainLooper())
+          runnable = object : Runnable {
+              override fun run() {
+                  postGeoLocation(lat.toString(), longi.toString())
+                  handler?.postDelayed(this, 10000)
+              }
+          }
+          handler?.post(runnable!!)
+      }*/
 
     private fun startRecurringTimer() {
         handler = Handler(Looper.getMainLooper())
         runnable = object : Runnable {
             override fun run() {
-                postGeoLocation(lat.toString(), longi.toString())
+                if (lat != null && longi != null) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val location = LocationEntity(
+                            latitude = lat.toString(),
+                            longitude = longi.toString(),
+                            deviceName = getDeviceName(),
+                            batteryPercentage = getBatteryPercentage(this@LocationForegroundService),
+                            androidVersion = getAndroidVersion()
+                        )
+                        locationDao.insertLocation(location)
+                    }
+
+                    // Try to sync if network available
+                    if (isNetworkAvailable()) {
+                        syncLocationsToServer()
+                    }
+                } else {
+                    Log.w(TAG, "Skipped saving location: lat/long not yet available.")
+                }
+
                 handler?.postDelayed(this, 10000)
             }
+
         }
         handler?.post(runnable!!)
     }
+
+    private fun syncLocationsToServer() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val unsynced = locationDao.getUnsyncedLocations()
+            if (unsynced.isNotEmpty()) {
+                val idsSynced = mutableListOf<Int>()
+                for (item in unsynced) {
+                    val success = postGeoLocation(item.latitude, item.longitude)
+                    if (success) {
+                        idsSynced.add(item.id)
+                    }
+                }
+
+                if (idsSynced.isNotEmpty()) {
+                    locationDao.markLocationsAsSynced(idsSynced)
+                }
+            }
+        }
+    }
+
 
     private fun stopRecurringTimer() {
         handler?.removeCallbacksAndMessages(null)
@@ -120,6 +219,18 @@ class LocationForegroundService : Service() {
         startAsForegroundService()
         setupLocationUpdates()
         startServiceRunningTicker()
+
+
+        locationDao = AppDatabase.getDatabase(this).locationDao()
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val all = locationDao.getAllLocations()
+            all.forEachIndexed { index, location ->
+                Log.d("DB_LOG", "Location #$index: $location")
+            }
+        }
+
     }
 
     override fun onDestroy() {
@@ -134,6 +245,11 @@ class LocationForegroundService : Service() {
 
         stopSelf()
     }
+
+
+
+
+
 
 
     private fun startAsForegroundService() {
@@ -182,11 +298,14 @@ class LocationForegroundService : Service() {
                         lat = location.latitude
                         longi = location.longitude
                         Log.d(TAG, "Live location: $lat, $longi")
-                    } else {
-                        Log.w(TAG, "Ignored 0.0 location")
+
+                        if (handler == null) {
+                            startRecurringTimer()
+                        }
                     }
                 }
             }
+
         }
     }
 

@@ -3,6 +3,8 @@ package com.stafo.app.screens.ui
 import android.app.DatePickerDialog
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
@@ -60,6 +62,8 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
         observeViewModel()
 
     }
+
+
 
 
 
@@ -189,6 +193,47 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
         val mapmyIndiaMapView = findViewById<MapmyIndiaMapView>(R.id.idMapView)
         val mapView = mapmyIndiaMapView.mapView
 
+        if (points.isEmpty()) return
+        if (mapView.overlays == null) return
+
+        mapView.overlays.clear()
+
+        val geoPointsArrayList = ArrayList(points)
+
+        val startMarker = Marker(mapView).apply {
+            position = geoPointsArrayList.first()
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            title = "Start Point"
+        }
+        mapView.overlays.add(startMarker)
+
+        val endMarker = Marker(mapView).apply {
+            position = geoPointsArrayList.last()
+            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            title = "End Point"
+        }
+        mapView.overlays.add(endMarker)
+
+        val pathOverlay = PathOverlay(this).apply {
+            color = ContextCompat.getColor(this@AutoSearchPlaceActivity, android.R.color.holo_red_dark)
+            width = 10f
+            this.points = geoPointsArrayList
+        }
+        mapView.overlays.add(pathOverlay)
+
+        drawPolygonsForStayDuration(mapView, geoPointsArrayList)
+
+        mapView.setBounds(geoPointsArrayList)
+        mapView.invalidate()
+    }
+
+
+
+    /*private fun addMarkersAndPath(points: List<GeoPoint>) {
+        val mapmyIndiaMapView = findViewById<MapmyIndiaMapView>(R.id.idMapView)
+        val mapView = mapmyIndiaMapView.mapView
+
+
 
 
 
@@ -226,7 +271,7 @@ class AutoSearchPlaceActivity : AppCompatActivity() {
 
         mapView.setBounds(geoPointsArrayList)
         mapView.invalidate()
-    }
+    }*/
 
     private fun drawPolygonsForStayDuration(mapView: MapView, points: List<GeoPoint>) {
         val radius = 50.0 // meters

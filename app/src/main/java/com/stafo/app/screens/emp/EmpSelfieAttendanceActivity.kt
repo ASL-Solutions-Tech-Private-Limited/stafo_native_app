@@ -58,6 +58,10 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     private var radar  :Float = 0.0f
     private var checkBranch  :Boolean = false
 
+    private var isSubmitting = false
+    private var isFetchingLocation = false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -139,30 +143,21 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
             }
 
             btnPunchIn.setOnClickListener {
+                if (isSubmitting) return@setOnClickListener
+
                 if (selfieImage == null) {
                     CustomToast(this@EmpSelfieAttendanceActivity, "Please upload a selfie first")
                 } else {
+                    isSubmitting = true
+                    btnPunchIn.isEnabled = false
 
-
-                    if (checkBranch){
+                    if (checkBranch) {
                         getCurrentLocation { userLat, userLong ->
-
-
-                            Log.d("res","punch distance: $userLat $userLong")
-                            Log.d("res","branch distance: $branchLat $branchLong")
-
-
                             val distance = getDistance(userLat, userLong, branchLat, branchLong)
-
-                            Log.d("res"," distance: $distance $radar")
-
                             val tolerance = 1.0f
 
                             if (distance <= radar + tolerance) {
-
-                                val employeeId = getEmployeeDetails()?.id
-
-                                employeeId?.let { empId ->
+                                getEmployeeDetails()?.id?.let { empId ->
                                     settingsViewModel.selfieAttendanceEmpolyee(
                                         this@EmpSelfieAttendanceActivity,
                                         empId,
@@ -172,26 +167,25 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                             } else {
                                 CustomToast(this@EmpSelfieAttendanceActivity, "You are outside the allowed area. Move closer.")
                             }
-                        }
-                    }else{
-                        val employeeId = getEmployeeDetails()?.id
 
-                        employeeId?.let { empId ->
+                            isSubmitting = false
+                            btnPunchIn.isEnabled = true
+                        }
+                    } else {
+                        getEmployeeDetails()?.id?.let { empId ->
                             settingsViewModel.selfieAttendanceEmpolyee(
                                 this@EmpSelfieAttendanceActivity,
                                 empId,
                                 selfieImage
                             )
                         }
+
+                        isSubmitting = false
+                        btnPunchIn.isEnabled = true
                     }
-
-
-
-
                 }
-
-
             }
+
 
 
         }
@@ -253,26 +247,43 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     fun getCurrentLocation(callback: (Double, Double) -> Unit) {
+        if (isFetchingLocation) return
+        isFetchingLocation = true
+
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        val locationRequest = LocationRequest.create().apply {
-            priority = Priority.PRIORITY_HIGH_ACCURACY
-            interval = 1000
-            numUpdates = 1
-        }
-
-        fusedLocationClient.requestLocationUpdates(locationRequest, object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                val location = locationResult.lastLocation
-                if (location != null) {
-                    callback(location.latitude, location.longitude)
-                } else {
-                    CustomToast(this@EmpSelfieAttendanceActivity, "Unable to fetch accurate location.")
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                isFetchingLocation = false
+                callback(location.latitude, location.longitude)
+            } else {
+                val locationRequest = LocationRequest.create().apply {
+                    priority = Priority.PRIORITY_HIGH_ACCURACY
+                    interval = 1000
+                    numUpdates = 1
                 }
-                fusedLocationClient.removeLocationUpdates(this)
+
+                fusedLocationClient.requestLocationUpdates(locationRequest, object : LocationCallback() {
+                    override fun onLocationResult(locationResult: LocationResult) {
+                        fusedLocationClient.removeLocationUpdates(this)
+                        isFetchingLocation = false
+
+                        val freshLocation = locationResult.lastLocation
+                        if (freshLocation != null) {
+                            callback(freshLocation.latitude, freshLocation.longitude)
+                        } else {
+                            CustomToast(this@EmpSelfieAttendanceActivity, "Unable to fetch accurate location.")
+                            isSubmitting = false
+                        }
+                    }
+                }, Looper.getMainLooper())
             }
-        }, Looper.getMainLooper())
+        }.addOnFailureListener {
+            isFetchingLocation = false
+            isSubmitting = false
+            CustomToast(this@EmpSelfieAttendanceActivity, "Failed to get location.")
+        }
     }
+
 
 
     fun getDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float {

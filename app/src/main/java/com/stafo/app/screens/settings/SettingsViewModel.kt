@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.caverock.androidsvg.SVG
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.stafo.app.ASLEmpMng
 import com.stafo.app.R
 import com.stafo.app.base.BaseViewModel
@@ -4031,71 +4032,45 @@ class SettingsViewModel : BaseViewModel() {
 
 
 
-    fun addEmployee(mContext: Context,selectedShiftIds: List<String>, request: AddEmpRequestBody) {
+    fun addEmployee(
+        mContext: Context,
+        request: AddEmpRequestBody
+    ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
+            CustomToast(mContext, "Network not available. Please check your internet connection and try again.")
             return
         }
 
         getLoaderLiveData().value = "load"
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val shiftIdsMap = HashMap<String, String>()
-                selectedShiftIds.forEachIndexed { index, shiftId ->
-                    shiftIdsMap["shift_ids[$index]"] = shiftId
-                }
 
-                Log.d("add_emp", "Final Shift Data: $shiftIdsMap")
+                Log.d("add_emp", "Request Body: $request")
 
-                Log.d("add_emp", "res first  data ${request}")
-
-                val response = ASLEmpMng.instance.apiStores()?.callAddEmp(shiftIdsMap,request)
-
-
-
-
+                val response = ASLEmpMng.instance.apiStores()?.callAddEmp(request)
 
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
-                    response?.let {
-
-                        if (it.isSuccessful) {
-
-                            mAddEmp.postValue(response.body())
-                        } else {
-
-
-                            if (response.code()==422){
-                                CustomToast(mContext, response.body()?.message?:"")
-                            }else{
-                                it.errorBody()?.charStream()?.let { errorStream ->
-                                    val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                    CustomToast(mContext as LoginActivity, error?.message ?: "")
-                                } ?: run {
-                                    CustomToast(
-                                        mContext,
-                                        mContext.getString(R.string.error_something_went_wrong)
-                                    )
-                                }
-                            }
-
-                        }
-                    } ?: run {
-                        CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
-                        )
+                    if (response != null && response.isSuccessful) {
+                        mAddEmp.postValue(response.body())
+                    } else {
+                        // Handle errors here if needed
+                        CustomToast(mContext, "Error: ${response?.message() ?: "Unknown error"}")
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
-                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                    CustomToast(mContext, "Something went wrong.")
                 }
             }
         }
     }
+
+
+
 
     fun createNewShift(mContext: Context, request: ShiftCreateRequest) {
         if (!isNetworkAvailable(mContext)) {

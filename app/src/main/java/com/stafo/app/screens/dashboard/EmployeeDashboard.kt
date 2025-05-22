@@ -444,12 +444,7 @@ class EmployeeDashboard : AppCompatActivity() {
                 mEmplyeeInfo = it.employeeInfo
                 setEmployeeComId(it.employeeInfo.companyId.toString())
                 setEmployeeBranchId(it.employeeInfo.branchId.toString())
-               /* it.employeeInfo.shift?.let { shift ->
-                    val startTime12Hr = convertTo12HourFormat(shift.startTime)
-                    val endTime12Hr = convertTo12HourFormat(shift.endTime)
-                    binding.tvOfficeTiming.text =
-                        "Your Office timing is $startTime12Hr to $endTime12Hr"
-                }*/
+
 
                 it.employeeInfo.shifts.firstOrNull()?.let { shift ->
                     val startTime12Hr = convertTo12HourFormat(shift.startTime)

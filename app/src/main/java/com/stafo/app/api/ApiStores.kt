@@ -221,8 +221,7 @@ interface ApiStores {
 
     @POST("api/employees-create")
     suspend fun callAddEmp(
-        @FieldMap shiftIds: Map<String, String>,
-        @Body addEmpRequest: AddEmpRequestBody,
+        @Body body: AddEmpRequestBody,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<AddEmpResponse>
 
