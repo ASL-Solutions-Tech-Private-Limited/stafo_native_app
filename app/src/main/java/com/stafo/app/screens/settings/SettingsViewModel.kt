@@ -146,8 +146,6 @@ class SettingsViewModel : BaseViewModel() {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-
-
                 val response = ASLEmpMng.instance.apiStores()?.callPostGeoLocation(request)
                 Log.d("res", "Location: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
