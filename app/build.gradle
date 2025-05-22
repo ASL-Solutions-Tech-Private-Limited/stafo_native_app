@@ -114,6 +114,7 @@ dependencies {
      */
     def life_versions = "1.1.1"
     def kotlin_version = "1.8.22"
+    def room_version = "2.5.2"
     // ext.anko_version = '0.10.8'
 
     implementation "android.arch.lifecycle:extensions:$life_versions"
@@ -245,8 +246,10 @@ dependencies {
 
     // payu sdk
     implementation 'in.payu:payu-checkout-pro:2.7.1'
-
-
+    // room database
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
 
 
 
