@@ -3,4 +3,8 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">aslhr.2ndwork.in</domain>
     </domain-config>
+
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">apis.mapmyindia.com</domain>
+    </domain-config>
 </network-security-config>
