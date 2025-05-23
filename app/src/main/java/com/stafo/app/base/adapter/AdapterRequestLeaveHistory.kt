@@ -52,7 +52,7 @@ class AdapterRequestLeaveHistory(
                 }else if (this.leaveType=="2"){
                     binding.txtLeaveType.text="Sick Leave"
                 }else{
-                    binding.txtLeaveType.text="Previllage Leave"
+                    binding.txtLeaveType.text="Privilege Leave"
                 }
 
                 //binding.txtLeaveType.text = this.leaveType

@@ -52,7 +52,7 @@ class AdapterEmployeeAllLeaveList(
                 } else if (this.leaveType == 2) {
                     binding.txtLeaveType.text = "Sick Leave"
                 } else if (this.leaveType == 3) {
-                    binding.txtLeaveType.text = "Privillage Leave"
+                    binding.txtLeaveType.text = "Privilege Leave"
                 } else {
                     binding.txtLeaveType.text = "Casual Leave"
                 }

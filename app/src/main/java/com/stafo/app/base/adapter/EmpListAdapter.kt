@@ -15,6 +15,7 @@ import com.stafo.app.screens.emp.EmployeeProfileDetails
 import com.stafo.app.screens.settings.UploadSelfieAttendanceActivity
 import com.stafo.app.screens.settings.ViewAllEmployeeActivity
 import com.stafo.app.screens.settings.dataClass.GetEmployee
+import com.stafo.app.screens.settings.dataClass.Shift
 import com.stafo.app.screens.ui.AutoSearchPlaceActivity
 import com.stafo.app.utils.generateTextBitmap
 
@@ -24,6 +25,9 @@ class EmpListAdapter(
     var from: String,
     var onEmGeoClick: onGeoClick
 ) : RecyclerView.Adapter<EmpListAdapter.ViewHolder>() {
+    private var mAssignShifts: List<Shift> = emptyList()
+
+
     inner class ViewHolder(val binding: RecyViewEmployeeItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -56,12 +60,6 @@ class EmpListAdapter(
                 } else {
                     binding.approveLvEmpImage.setImageBitmap(placeholderBitmap)
                 }
-
-
-
-
-
-
                 if (from == "View All") {
 
                     binding.llcViewProfile.visibility = View.GONE
@@ -69,22 +67,22 @@ class EmpListAdapter(
                     binding.llcAddAttendance.visibility = View.GONE
                     binding.llcShiftTime.visibility = View.GONE
 
-                    if (this.status=="1"){
+                    if (this.status == "1") {
                         binding.llcActiveEmp.visibility = View.GONE
                         binding.llcInActiveEmp.visibility = View.VISIBLE
-                    }else{
+                    } else {
                         binding.llcActiveEmp.visibility = View.VISIBLE
                         binding.llcInActiveEmp.visibility = View.GONE
                     }
 
 
-                    if (this.selfieImage.isNullOrEmpty()){
-                        binding.llcUploadSelfie.visibility=View.VISIBLE
-                        binding.llcRemoveSelfie.visibility=View.GONE
+                    if (this.selfieImage.isNullOrEmpty()) {
+                        binding.llcUploadSelfie.visibility = View.VISIBLE
+                        binding.llcRemoveSelfie.visibility = View.GONE
 
-                    }else{
-                        binding.llcRemoveSelfie.visibility=View.VISIBLE
-                        binding.llcUploadSelfie.visibility=View.GONE
+                    } else {
+                        binding.llcRemoveSelfie.visibility = View.VISIBLE
+                        binding.llcUploadSelfie.visibility = View.GONE
                     }
 
                     binding.llcRemoveSelfie.setOnClickListener {
@@ -104,28 +102,22 @@ class EmpListAdapter(
 
 
                     binding.llcActiveEmp.setOnClickListener {
-                        (context as ViewAllEmployeeActivity).showActiveAlert(list[position].id.toString(),"1")
+                        (context as ViewAllEmployeeActivity).showActiveAlert(
+                            list[position].id.toString(),
+                            "1"
+                        )
                     }
 
                     binding.llcInActiveEmp.setOnClickListener {
-                        (context as ViewAllEmployeeActivity).showActiveAlert(list[position].id.toString(),"0")
+                        (context as ViewAllEmployeeActivity).showActiveAlert(
+                            list[position].id.toString(),
+                            "0"
+                        )
                     }
-
-
-                   /* binding.llcViewProfile.setOnClickListener {
-                        context.startActivity(
-                            Intent(
-                                context,
-                                EmployeeProfileDetails::class.java
-                            ).apply {
-                                putExtra("EMP_ID", list[position].id.toString())
-                                putExtra("EMP_TYPE", "View")
-                            })
-                    }*/
 
                     binding.ivEdit.setOnClickListener {
 
-                        Log.d("res","id :${list[position].id}]")
+                        Log.d("res", "id :${list[position].id}]")
                         context.startActivity(
                             Intent(
                                 context,
@@ -164,19 +156,6 @@ class EmpListAdapter(
                             })
                     }
 
-                /*    if (this.geo_status != null) {
-                        binding.llcReqLocation.visibility = View.VISIBLE
-                        binding.llcViewMap.visibility = View.GONE
-                       // binding.txtReqLocation.text = "Request Location"
-                    } else if (this.geo_status == "1") {
-                        binding.llcReqLocation.visibility = View.GONE
-                        binding.llcViewMap.visibility = View.VISIBLE
-                       // binding.txtReqLocation.text = "View Location"
-                    } else {
-                        binding.llcViewMap.visibility = View.GONE
-                        binding.llcReqLocation.visibility = View.VISIBLE
-                       // binding.txtReqLocation.text = "Request Location"
-                    }*/
                     binding.llcReqLocation.setOnClickListener {
                         onEmGeoClick.onEMPClick(
                             list[position].id.toString(),
@@ -197,11 +176,17 @@ class EmpListAdapter(
                 }
 
                 binding.llcAddAttendance.setOnClickListener {
-                    (context as ViewAllEmployeeActivity).showCustomBottomSheet(this.id,this.attendanceType)
+                    (context as ViewAllEmployeeActivity).showCustomBottomSheet(
+                        this.id,
+                        this.attendanceType
+                    )
                 }
 
                 binding.llcShiftTime.setOnClickListener {
-                    (context as ViewAllEmployeeActivity).showShiftCustomBottomSheet(this.id.toString())
+                    mAssignShifts = this.shifts
+                    (context as ViewAllEmployeeActivity).showShiftCustomBottomSheet(
+                        this.id.toString()
+                    )
                 }
 
 
@@ -223,5 +208,8 @@ class EmpListAdapter(
     }
 
 
+    fun getAssignShift(): List<Shift> {
+        return mAssignShifts
+    }
 
 }

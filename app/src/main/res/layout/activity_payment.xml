@@ -148,7 +148,6 @@
             android:layout_toRightOf="@+id/txt_leave_date1"
             android:fontFamily="@font/gilroy_medium"
             android:singleLine="true"
-            android:text="02/11/2024-03/11/2024"
             android:textAlignment="textEnd"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -177,7 +176,7 @@
             android:layout_marginTop="@dimen/_6sdp"
             android:fontFamily="@font/gilroy_medium"
             android:singleLine="true"
-            android:text="2 days"
+
             android:textAlignment="textEnd"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -193,7 +192,7 @@
             android:layout_marginTop="@dimen/_6sdp"
             android:fontFamily="@font/gilroy_medium"
             android:singleLine="true"
-            android:text="2 jan,2024"
+
             android:textAlignment="textEnd"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
@@ -222,7 +221,7 @@
             android:layout_marginBottom="@dimen/_12sdp"
             android:fontFamily="@font/gilroy_medium"
             android:singleLine="true"
-            android:text="2 jan,2024"
+
             android:textAlignment="textEnd"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />

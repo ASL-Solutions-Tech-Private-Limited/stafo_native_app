@@ -15,6 +15,7 @@ import com.stafo.app.databinding.ItemEmpAttendaceLayoutBinding
 import com.stafo.app.screens.emp.EmployeeAttendance
 import com.stafo.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.stafo.app.screens.settings.dataClass.EmployeeDataList
+import com.stafo.app.utils.convertTo12Hour
 import com.stafo.app.utils.generateTextBitmap
 import com.stafo.app.utils.showFullScreenImage
 
@@ -90,8 +91,8 @@ class EmployeeAttendanceAdapter(
                     binding.tvCheckOut.text = ""
 
                 } else {
-                    binding.tvCheckIn.text = this.attendances[0].in_time
-                    binding.tvCheckOut.text = this.attendances[0].out_time
+                    binding.tvCheckIn.text = convertTo12Hour(this.attendances.first().in_time)
+                    binding.tvCheckOut.text =  convertTo12Hour(this.attendances.last().out_time)
                 }
 
                 holder.itemView.setOnClickListener {

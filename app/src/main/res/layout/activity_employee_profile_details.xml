@@ -400,8 +400,10 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/tie_address"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_100sdp"
+                        android:layout_height="wrap_content"
                         android:gravity="start|top"
+                        android:maxLines="4"
+                        android:minLines="2"
                         android:inputType="textMultiLine"
                         android:background="@drawable/edit_text_background"
                         android:fontFamily="@font/gilroy_medium"
@@ -587,7 +589,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit_text_background"
                         android:fontFamily="@font/gilroy_medium"
-                        android:hint="Gurdian's Name"
+                        android:hint="Guardian's Name"
                         android:inputType="textPersonName" />
 
                 </com.google.android.material.textfield.TextInputLayout>

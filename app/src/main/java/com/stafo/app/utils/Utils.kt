@@ -1872,6 +1872,18 @@ fun convertTo12HourFormat3(dateTime: String?): String {
     }
 }
 
+fun convertTo12Hour(time: String?): String {
+    if (time.isNullOrEmpty()) return "--"
+    return try {
+        val sdf24 = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+        val sdf12 = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val date = sdf24.parse(time)
+        date?.let { sdf12.format(it) } ?: "--"
+    } catch (e: Exception) {
+        "--"
+    }
+}
+
 fun isNetworkAvailable(context: Context): Boolean {
     val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

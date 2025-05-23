@@ -3,7 +3,9 @@ package com.stafo.app.screens.settings
 import android.annotation.SuppressLint
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.CheckBox
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +25,7 @@ import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.stafo.app.screens.settings.dataClass.ShiftDataList
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -83,11 +86,38 @@ class AddShiftActivity : AppCompatActivity() {
         settingsViewModel.mShiftListResponse.observe(this) {
 
             if (it.success) {
-                val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-                binding.rvShowShiftList.setLayoutManager(layoutManager)
-                rvAdapter = ShiftAdapter(it.data, this@AddShiftActivity)
-                binding.rvShowShiftList.adapter = rvAdapter
-                rvAdapter.notifyDataSetChanged()
+
+                if (!it.data.isNullOrEmpty()){
+
+                    val formattedList = it.data.map { shift ->
+                        val start = shift.start_time
+                        val end = shift.end_time
+
+                        val formattedStart = if (!start.isNullOrEmpty() && is24HourFormat(start)) {
+                            convertTo12HourFormat(start)
+                        } else start
+
+                        val formattedEnd = if (!end.isNullOrEmpty() && is24HourFormat(end)) {
+                            convertTo12HourFormat(end)
+                        } else end
+
+                        ShiftDataList(
+                            id = shift.id,
+                            shift_name = shift.shift_name,
+                            start_time = formattedStart,
+                            end_time = formattedEnd,
+                            created_at = shift.created_at,
+                            updated_at = shift.updated_at
+                        )
+                    }
+
+                    val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
+                    binding.rvShowShiftList.layoutManager = layoutManager
+                    rvAdapter = ShiftAdapter(formattedList, this@AddShiftActivity)
+                    binding.rvShowShiftList.adapter = rvAdapter
+                    rvAdapter.notifyDataSetChanged()
+                }
+
 
             } else {
                 CustomToast(this, it.message)
@@ -122,6 +152,32 @@ class AddShiftActivity : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
+
+    fun is24HourFormat(time: String): Boolean {
+        return try {
+            val format24 = SimpleDateFormat("HH:mm", Locale.getDefault())
+            format24.isLenient = false
+            format24.parse(time)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun convertTo12HourFormat(time24: String): String {
+        return try {
+            val sdf24 = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val sdf12 = SimpleDateFormat("hh:mm a", Locale.getDefault())
+            val date = sdf24.parse(time24)
+            sdf12.format(date!!)
+        } catch (e: Exception) {
+            time24
+        }
+    }
+
+
+
+
 
     private fun onClickListener() {
         binding.apply {
@@ -167,6 +223,19 @@ class AddShiftActivity : AppCompatActivity() {
         edtShiftName = view.findViewById(R.id.edt_shift_name)
         edtShiftStartTime = view.findViewById(R.id.edt_shift_start_time)
         edtShiftEndTime = view.findViewById(R.id.edt_shift_end_time)
+        val cbSunday = view.findViewById<CheckBox>(R.id.cb_sunday)
+        val cbMonday = view.findViewById<CheckBox>(R.id.cb_monday)
+        val cbTuesday = view.findViewById<CheckBox>(R.id.cb_tuesday)
+        val cbWednesday = view.findViewById<CheckBox>(R.id.cb_wednesday)
+        val cbThursday = view.findViewById<CheckBox>(R.id.cb_thursday)
+        val cbFriday = view.findViewById<CheckBox>(R.id.cb_friday)
+        val cbSaturday = view.findViewById<CheckBox>(R.id.cb_saturday)
+
+
+
+
+
+
         val btnCancel = view.findViewById<AppCompatImageView>(R.id.bottom_sheet_cancel)
 
         edtShiftStartTime.setOnClickListener {
@@ -192,34 +261,20 @@ class AddShiftActivity : AppCompatActivity() {
                 val formattedEndTime = convertTo24HourFormat(endTime)
 
 
+
                 val requestBody = ShiftCreateRequest(
                     shift_name = edtShiftName.text.toString(),
                     start_time = formattedStartTime,
-                    end_time = formattedEndTime
+                    end_time = formattedEndTime,
+                    sunday = cbSunday.isChecked,
+                    monday = cbMonday.isChecked,
+                    tuesday = cbTuesday.isChecked,
+                    wednesday = cbWednesday.isChecked,
+                    thursday = cbThursday.isChecked,
+                    friday = cbFriday.isChecked,
+                    saturday = cbSaturday.isChecked
                 )
                 settingsViewModel.createNewShift(this, requestBody)
-
-
-
-            /*    val startTime = edtShiftStartTime.text.toString()
-                val endTime = edtShiftEndTime.text.toString()
-
-                if (!isEndTimeValid(startTime, endTime)) {
-                    CustomToast(this, "End time cannot be earlier than start time!")
-                    return@setOnClickListener
-                } else {
-                    val formattedStartTime = convertTo24HourFormat(startTime)
-                    val formattedEndTime = convertTo24HourFormat(endTime)
-
-
-                    val requestBody = ShiftCreateRequest(
-                        shift_name = edtShiftName.text.toString(),
-                        start_time = formattedStartTime,
-                        end_time = formattedEndTime
-                    )
-                    settingsViewModel.createNewShift(this, requestBody)
-                }*/
-
 
             }
         }

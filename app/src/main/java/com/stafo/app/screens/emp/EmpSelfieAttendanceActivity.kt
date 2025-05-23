@@ -1,5 +1,6 @@
 package com.stafo.app.screens.emp
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
@@ -7,8 +8,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import android.util.Log
@@ -16,6 +19,12 @@ import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -44,6 +53,9 @@ import okhttp3.Response
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class EmpSelfieAttendanceActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmpSelfieAttendanceBinding
@@ -61,6 +73,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     private var isSubmitting = false
     private var isFetchingLocation = false
 
+    private var imageCapture: ImageCapture? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,7 +89,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
 
 
-        if (ContextCompat.checkSelfPermission(
+  /*      if (ContextCompat.checkSelfPermission(
                 this@EmpSelfieAttendanceActivity,
                 android.Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_DENIED
@@ -87,9 +100,6 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                 100
             )
         } else {
-     /*       val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            cameraIntent.putExtra("android.intent.extras.CAMERA_FACING", 1)
-            startActivityForResult(cameraIntent, 123)*/
 
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             cameraIntent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1)
@@ -97,14 +107,18 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         }
 
         onClickListener()
+        observeViewModel()*/
+
+
+
+
+
         observeViewModel()
-
-
+        onClickListener()
     }
 
     private fun onClickListener() {
         binding.apply {
-
             imageBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
                 finish()
@@ -121,9 +135,13 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                 settingsViewModel.getEmpAttendanceBranch(this@EmpSelfieAttendanceActivity, request)
             }
 
+            if (ContextCompat.checkSelfPermission(this@EmpSelfieAttendanceActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this@EmpSelfieAttendanceActivity, arrayOf(Manifest.permission.CAMERA), 100)
+            } else {
+                startCamera()
+            }
 
-
-            tvTakeSelfie.setOnClickListener {
+          /*  tvTakeSelfie.setOnClickListener {
 
                 if (ContextCompat.checkSelfPermission(
                         this@EmpSelfieAttendanceActivity,
@@ -140,9 +158,9 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                     cameraIntent.putExtra("android.intent.extras.CAMERA_FACING", 1)
                     startActivityForResult(cameraIntent, 123)
                 }
-            }
+            }*/
 
-            btnPunchIn.setOnClickListener {
+           /* btnPunchIn.setOnClickListener {
                 if (isSubmitting) return@setOnClickListener
 
                 if (selfieImage == null) {
@@ -184,7 +202,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                         btnPunchIn.isEnabled = true
                     }
                 }
-            }
+            }*/
 
 
 
@@ -194,8 +212,104 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     }
 
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 100 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startCamera()
+        } else {
+            CustomToast(this, "Camera permission denied")
+        }
+    }
+
+    private fun startCamera() {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+        cameraProviderFuture.addListener({
+            val cameraProvider = cameraProviderFuture.get()
+            val preview = Preview.Builder().build().also {
+                it.setSurfaceProvider(binding.previewView.surfaceProvider)
+            }
+
+            imageCapture = ImageCapture.Builder()
+                .setTargetRotation(binding.previewView.display.rotation)
+                .build()
+
+            val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+
+            try {
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
+
+                // Auto capture after 5 seconds
+                Handler(Looper.getMainLooper()).postDelayed({
+                    takePhoto()
+                }, 3000)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+        }, ContextCompat.getMainExecutor(this))
+    }
+
+    private fun takePhoto() {
+        val imageCapture = imageCapture ?: return
+        val outputFile = File(externalCacheDir, "selfie.jpg")
+
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(outputFile).build()
+        imageCapture.takePicture(
+            outputOptions,
+            ContextCompat.getMainExecutor(this),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    selfieImage = outputFile
+                    selfieImage?.let {
+                        if (checkBranch) {
+                            getCurrentLocation { userLat, userLong ->
+                                val distance = getDistance(userLat, userLong, branchLat, branchLong)
+                                val tolerance = 1.0f
+
+                                if (distance <= radar + tolerance) {
+                                    getEmployeeDetails()?.id?.let { empId ->
+                                        settingsViewModel.selfieAttendanceEmpolyee(
+                                            this@EmpSelfieAttendanceActivity,
+                                            empId,
+                                            selfieImage
+                                        )
+                                    }
+                                } else {
+                                    CustomToast(this@EmpSelfieAttendanceActivity, "You are outside the allowed area. Move closer.")
+                                }
+
+                            }
+                        } else {
+                            getEmployeeDetails()?.id?.let { empId ->
+                                settingsViewModel.selfieAttendanceEmpolyee(
+                                    this@EmpSelfieAttendanceActivity,
+                                    empId,
+                                    selfieImage
+                                )
+                            }
+
+                        }
+                    }
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                    CustomToast(this@EmpSelfieAttendanceActivity, "Capture failed: ${exception.message}")
 
 
+                }
+            }
+        )
+    }
+
+    fun onApiResponseSuccess() {
+        binding.cameraOverlayView.setStrokeColor(Color.GREEN)
+    }
+
+    fun onApiResponseError() {
+        binding.cameraOverlayView.setStrokeColor(Color.RED)
+    }
 
     private fun observeViewModel() {
 
@@ -207,15 +321,29 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         settingsViewModel.mSelfieAttendanceEmpResponse.observe(this) {
 
             if (it.status) {
+                binding.rtlAttendanceMsg.visibility=View.VISIBLE
+
+                val currentTime = Calendar.getInstance().time
+                val formatter = SimpleDateFormat("dd MMM yyyy hh:mm a", Locale.getDefault())
+                val formattedDateTime = formatter.format(currentTime)
+                binding.tvPunchTime.text = formattedDateTime
+
+                binding.tvPunchUser.text= "Punched by ${getEmployeeDetails()?.name?:""}"
+                val bitmap = BitmapFactory.decodeFile(selfieImage?.absolutePath)
+                binding.civPunchSelfie.setImageBitmap(bitmap)
+
+                onApiResponseSuccess()
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    onBackPressedDispatcher.onBackPressed()
+                    finish()
+                }, 3000)
 
 
 
-                Log.d("res","${it.similarity}")
-                CustomToast(this, it.message)
-                onBackPressedDispatcher.onBackPressed()
-                finish()
             } else {
-                CustomToast(this, it.message)
+                onApiResponseError()
+                binding.rtlAttendanceMsg.visibility=View.GONE
             }
 
 
@@ -300,7 +428,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 123 && resultCode == RESULT_OK) {
             val imageBitmap: Bitmap? = data?.extras?.get("data") as? Bitmap
@@ -327,7 +455,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
             } else {
                 CustomToast(this, "Failed to capture image. Try again.")
             }
-        }
+        }*/
 
 
     private fun bitmapToFile(bitmap: Bitmap, context: Context): File? {

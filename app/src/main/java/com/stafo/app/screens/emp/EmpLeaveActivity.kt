@@ -127,7 +127,7 @@ class EmpLeaveActivity : AppCompatActivity() {
 
                     } else if (selectedValue == "Sick Leave") {
                         leaveType = 2
-                    } else if (selectedValue == "Previllage Leave") {
+                    } else if (selectedValue == "Privilege Leave") {
                         leaveType = 3
                     }
 

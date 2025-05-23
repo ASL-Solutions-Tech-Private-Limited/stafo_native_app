@@ -33,10 +33,14 @@ import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.stafo.app.base.adapter.ShiftAdapter
 import com.stafo.app.screens.settings.dataClass.InActiveEmpRequest
 import com.stafo.app.screens.settings.dataClass.RemoveSelfieRequest
+import com.stafo.app.screens.settings.dataClass.Shift
 import com.stafo.app.screens.settings.dataClass.ShiftDataList
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class ViewAllEmployeeActivity : AppCompatActivity() {
 
@@ -57,6 +61,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var shiftBottomSheetDialog: BottomSheetDialog
     private lateinit var rvRadioShift: RecyclerView
+    private lateinit var cbSelectAll: CheckBox
     private lateinit var rvRadioShiftAdapter: RadioShiftAdapter
     private val calendar = Calendar.getInstance()
 
@@ -70,6 +75,9 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
 
     var selectedShiftIds: List<String> = emptyList()
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -150,9 +158,41 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         settingsViewModel.mShiftListResponse.observe(this) {
 
             if (it.success) {
-
                 if (it.data.isNotEmpty()) {
-                    shiftList = it.data
+                    val formattedList = it.data.map { shift ->
+                        val start = shift.start_time
+                        val end = shift.end_time
+
+                        val formattedStart = if (!start.isNullOrEmpty() && is24HourFormat(start)) {
+                            convertTo12HourFormat(start)
+                        } else start
+
+                        val formattedEnd = if (!end.isNullOrEmpty() && is24HourFormat(end)) {
+                            convertTo12HourFormat(end)
+                        } else end
+
+                        ShiftDataList(
+                            id = shift.id,
+                            shift_name = shift.shift_name,
+                            start_time = formattedStart,
+                            end_time = formattedEnd,
+                            created_at = shift.created_at,
+                            updated_at = shift.updated_at
+                        )
+                    }
+
+                    var mAssignShift = emptyList<Shift>()
+                    if (::rvAdapter.isInitialized) {
+                        mAssignShift = rvAdapter.getAssignShift()
+                    }
+                    shiftList = formattedList
+
+                    val allMatched = shiftList.all { shift ->
+                        mAssignShift.any { it.id.toString() == shift.id.toString() }
+                    }
+                    cbSelectAll.isChecked = allMatched
+
+
                     val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
                     rvRadioShift.setLayoutManager(layoutManager)
                     rvRadioShiftAdapter = RadioShiftAdapter(
@@ -163,7 +203,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
                                 selectedShiftIds = selectedShifts
                             }
-                        })
+                        },mAssignShift)
                     rvRadioShift.adapter = rvRadioShiftAdapter
                     rvAdapter.notifyDataSetChanged()
                 } else {
@@ -246,6 +286,28 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         }
     }
 
+    fun is24HourFormat(time: String): Boolean {
+        return try {
+            val format24 = SimpleDateFormat("HH:mm", Locale.getDefault())
+            format24.isLenient = false
+            format24.parse(time)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun convertTo12HourFormat(time24: String): String {
+        return try {
+            val sdf24 = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val sdf12 = SimpleDateFormat("hh:mm a", Locale.getDefault())
+            val date = sdf24.parse(time24)
+            sdf12.format(date!!)
+        } catch (e: Exception) {
+            time24
+        }
+    }
+
 
     fun showActiveAlert(id: String, status: String) {
         val builder = AlertDialog.Builder(this@ViewAllEmployeeActivity)
@@ -301,6 +363,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         super.onBackPressed()
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
     }
+
     private fun setOnClickEvents() {
 
 
@@ -314,7 +377,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         }
 
         binding.imageBack.setOnClickListener {
-           onBackPressed()
+            onBackPressed()
         }
 
 
@@ -335,10 +398,10 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         bottomSheetDialog.setCancelable(false)
 
         val btnCancel = view.findViewById<AppCompatImageView>(R.id.bottom_sheet_cancel)
-   /*     val llFromOffice = view.findViewById<LinearLayout>(R.id.ll_from_office)
-        val llFromAny = view.findViewById<LinearLayout>(R.id.ll_from_any)
-        val imgOffice = view.findViewById<ImageView>(R.id.img_office)
-        val imgAny = view.findViewById<ImageView>(R.id.img_any)*/
+        /*     val llFromOffice = view.findViewById<LinearLayout>(R.id.ll_from_office)
+             val llFromAny = view.findViewById<LinearLayout>(R.id.ll_from_any)
+             val imgOffice = view.findViewById<ImageView>(R.id.img_office)
+             val imgAny = view.findViewById<ImageView>(R.id.img_any)*/
         val switchAllow = view.findViewById<SwitchCompat>(R.id.switch_allow)
         val switchSelfie = view.findViewById<SwitchCompat>(R.id.switch_selfie)
         val switchQr = view.findViewById<SwitchCompat>(R.id.switch_qr)
@@ -395,26 +458,25 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         }
 
 
+        /*   llFromOffice.setOnClickListener {
 
-     /*   llFromOffice.setOnClickListener {
+               attendanceLocation = "from office"
+               llFromOffice.setBackgroundResource(R.drawable.custom_switch_card_bg)
+               llFromAny.setBackgroundResource(R.drawable.custom_switch_card_bg2)
 
-            attendanceLocation = "from office"
-            llFromOffice.setBackgroundResource(R.drawable.custom_switch_card_bg)
-            llFromAny.setBackgroundResource(R.drawable.custom_switch_card_bg2)
+               imgOffice.setImageResource(R.drawable.ic_lv_active_radio)
+               imgAny.setImageResource(R.drawable.ic_lv_inactive_radio)
 
-            imgOffice.setImageResource(R.drawable.ic_lv_active_radio)
-            imgAny.setImageResource(R.drawable.ic_lv_inactive_radio)
+           }
 
-        }
+           llFromAny.setOnClickListener {
+               attendanceLocation = "from anywhere"
+               llFromOffice.setBackgroundResource(R.drawable.custom_switch_card_bg2)
+               llFromAny.setBackgroundResource(R.drawable.custom_switch_card_bg)
 
-        llFromAny.setOnClickListener {
-            attendanceLocation = "from anywhere"
-            llFromOffice.setBackgroundResource(R.drawable.custom_switch_card_bg2)
-            llFromAny.setBackgroundResource(R.drawable.custom_switch_card_bg)
-
-            imgOffice.setImageResource(R.drawable.ic_lv_inactive_radio)
-            imgAny.setImageResource(R.drawable.ic_lv_active_radio)
-        }*/
+               imgOffice.setImageResource(R.drawable.ic_lv_inactive_radio)
+               imgAny.setImageResource(R.drawable.ic_lv_active_radio)
+           }*/
 
 
 
@@ -471,10 +533,14 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         val btnCancel = view.findViewById<AppCompatImageView>(R.id.bottom_sheet_cancel)
         rvRadioShift = view.findViewById(R.id.rv_radio_shift)
         val btnSubmit = view.findViewById<AppCompatButton>(R.id.btn_submit)
-        val cbSelectAll = view.findViewById<CheckBox>(R.id.cbSelectAll)
+         cbSelectAll = view.findViewById(R.id.cbSelectAll)
 
         cbSelectAll.setOnCheckedChangeListener { _, isChecked ->
-            rvRadioShiftAdapter.setMultiSelectionEnabled(isChecked)
+
+            if (::rvRadioShiftAdapter.isInitialized){
+                rvRadioShiftAdapter.setMultiSelectionEnabled(isChecked)
+            }
+            //rvRadioShiftAdapter.setMultiSelectionEnabled(isChecked)
         }
 
 

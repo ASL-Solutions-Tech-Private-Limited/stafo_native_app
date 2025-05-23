@@ -230,7 +230,7 @@
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_weight="1"
             android:fontFamily="@font/gilroy_regular"
-            android:text="Last PunchIn -"
+            android:text="Last Punch-"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />

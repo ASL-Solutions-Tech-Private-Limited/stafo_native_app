@@ -68,7 +68,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_feedback"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_126sdp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_12sdp"
         android:layout_marginTop="@dimen/_12sdp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -78,12 +78,14 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tie_feedback"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_126sdp"
+            android:layout_height="wrap_content"
             android:background="@drawable/edit_text_background"
             android:fontFamily="@font/gilroy_medium"
             android:gravity="start|top"
-            android:hint="Leave feedback"
-            android:inputType="textImeMultiLine"
+            android:maxLines="5"
+            android:minLines="2"
+            android:hint="Describe it here…"
+            android:inputType="textMultiLine"
             android:textAlignment="viewStart" />
 
     </com.google.android.material.textfield.TextInputLayout>

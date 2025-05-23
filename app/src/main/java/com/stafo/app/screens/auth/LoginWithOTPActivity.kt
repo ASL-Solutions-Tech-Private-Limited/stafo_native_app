@@ -3,6 +3,7 @@ package com.stafo.app.screens.auth
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import com.stafo.app.R
@@ -24,6 +26,8 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
     override val layoutId: Int = R.layout.activity_login_with_otpactivity
     override val viewModel: AuthViewModel by lazy { AuthViewModel() }
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
+
+    private val MY_PERMISSIONS_REQUEST_LOCATION: Int = 99
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,6 +144,7 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
         dialog.show()
     }
 
+
     private fun arePermissionsGranted(): Boolean {
         val locationGranted = ContextCompat.checkSelfPermission(
             this, Manifest.permission.ACCESS_FINE_LOCATION
@@ -171,12 +176,16 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
         }
 
         if (fineLocationGranted && coarseLocationGranted && notificationGranted) {
-            enableLoginButton()
+            if (isLocationEnabled()) {
+                enableLoginButton()
+            } else {
+                showEnableLocationDialog()
+            }
         } else {
             if (isPermissionPermanentlyDenied()) {
                 showSettingsDialog()
             } else {
-                Toast.makeText(this, "Permissions required to continue", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Permissions are required to continue", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -196,12 +205,39 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
 
     private fun isPermissionPermanentlyDenied(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (
-                shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION).not() &&
-                        shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION).not() &&
+                !ActivityCompat.shouldShowRequestPermissionRationale(
+                    this, Manifest.permission.ACCESS_FINE_LOCATION
+                ) &&
+                        !ActivityCompat.shouldShowRequestPermissionRationale(
+                            this, Manifest.permission.ACCESS_COARSE_LOCATION
+                        ) &&
                         (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
-                                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS).not())
+                                !ActivityCompat.shouldShowRequestPermissionRationale(
+                                    this, Manifest.permission.POST_NOTIFICATIONS
+                                ))
                 )
     }
+
+    private fun isLocationEnabled(): Boolean {
+        val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+
+
+    private fun showEnableLocationDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Enable Location")
+            .setMessage("Location services are turned off. Please enable them.")
+            .setPositiveButton("Open Settings") { _, _ ->
+                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+
 
     private fun showSettingsDialog() {
         AlertDialog.Builder(this)
@@ -223,6 +259,7 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
         startActivity(intent)
     }
 
+
     private fun enableLoginButton() {
         viewDataBinding?.btnSignIn?.apply {
             isEnabled = true
@@ -233,7 +270,7 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
                 if (!mobileNumber.isNullOrEmpty()) {
                     if (arePermissionsGranted()) {
 
-                        viewModel?.sendOTP(
+                        viewModel.sendOTP(
                             this@LoginWithOTPActivity,
                             viewDataBinding?.tieMobileNo?.text.toString().trim()
                         )
@@ -241,6 +278,11 @@ class LoginWithOTPActivity : BaseActivity<ActivityLoginWithOtpactivityBinding, A
                     } else {
                         requestPermissions()
                     }
+
+
+
+
+
 
                 } else CustomToast(this@LoginWithOTPActivity, "Please enter your mobile number!")
 

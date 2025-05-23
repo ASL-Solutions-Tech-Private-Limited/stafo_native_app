@@ -33,7 +33,7 @@
     <string name="report">Report</string>
     <string name="profile_details">Profile details</string>
     <string name="gender">Gender</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="what_is_your_age">What is your age?</string>
     <string name="upload_your_profile_picture">Upload your Profile Picture</string>
     <string name="from_gallery">From Gallery</string>
@@ -55,7 +55,7 @@
     <string name="error_something_went_wrong">Something went wrong</string>
     <string name="cash_withdrawal">Cash Withdrawal</string>
     <string name="balance_enq">Balance Enquiry</string>
-    <string name="mini_statement">Mini Statment</string>
+    <string name="mini_statement">Mini Statement</string>
     <string name="aadhaar">Aadhaar Number</string>
     <string name="enter_aadhaar_no">Enter Aadhaar Number</string>
     <string name="customer_number">Customer Mobile Number</string>

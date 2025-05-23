@@ -6,17 +6,31 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.R
 import com.stafo.app.databinding.RadioShiftItemLayoutBinding
+import com.stafo.app.screens.settings.dataClass.Shift
 import com.stafo.app.screens.settings.dataClass.ShiftDataList
 
 class RadioShiftAdapter(
     private var shiftList: List<ShiftDataList>,
     var context: Context,
-    var listener: ActionClickListener
+    var listener: ActionClickListener,
+    var mAssignShift: List<Shift>
 ) : RecyclerView.Adapter<RadioShiftAdapter.ViewHolder>() {
 
     private var selectedItems = mutableSetOf<Int>()
     private var selectedShiftIds = mutableSetOf<String>()
     private var isMultiSelectionEnabled = false
+
+    init {
+        if (mAssignShift.isNotEmpty()) {
+            shiftList.forEachIndexed { index, shift ->
+                if (mAssignShift.any { it.id.toString() == shift.id.toString() }) {
+                    selectedItems.add(index)
+                    selectedShiftIds.add(shift.id.toString())
+                }
+            }
+        }
+    }
+
 
     inner class ViewHolder(val binding: RadioShiftItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -32,7 +46,7 @@ class RadioShiftAdapter(
         val shiftData = shiftList[position]
         holder.binding.txtShiftName.text = shiftData.shift_name
         holder.binding.txtShiftTime.text =
-            "Shift Time: ${shiftData.start_time} - ${shiftData.end_time}"
+            "${shiftData.start_time} - ${shiftData.end_time}"
         val isSelected = selectedItems.contains(position)
 
         if (isSelected) {
