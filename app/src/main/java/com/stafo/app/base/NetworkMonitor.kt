@@ -1,41 +1,55 @@
 package com.stafo.app.base
 
 import android.app.Application
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.net.ConnectivityManager
+import android.net.Network
 import android.net.NetworkCapabilities
-import android.os.Build
+import android.net.NetworkRequest
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
-object NetworkMonitor : BroadcastReceiver() {
+object NetworkMonitor {
 
-    private val _isConnected = MutableLiveData<Boolean>(true)
+    private val _isConnected = MutableLiveData<Boolean>(false)
     val isConnected: LiveData<Boolean> = _isConnected
 
-    fun register(application: Application) {
-        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        application.registerReceiver(this, filter)
-    }
+    private var connectivityManager: ConnectivityManager? = null
+    private var networkCallback: ConnectivityManager.NetworkCallback? = null
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        context?.let {
-            _isConnected.postValue(isInternetAvailable(it))
+    fun startMonitoring(application: Application) {
+        connectivityManager = application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                _isConnected.postValue(true)
+            }
+
+            override fun onLost(network: Network) {
+                _isConnected.postValue(false)
+            }
+
+            override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
+                val hasInternet = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                _isConnected.postValue(hasInternet)
+            }
         }
+
+        val request = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .build()
+
+        connectivityManager?.registerNetworkCallback(request, networkCallback!!)
+
+        val activeNetwork = connectivityManager?.activeNetwork
+        val capabilities = connectivityManager?.getNetworkCapabilities(activeNetwork)
+        val connected = capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+        _isConnected.postValue(connected)
     }
 
-    private fun isInternetAvailable(context: Context): Boolean {
-        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val network = cm.activeNetwork ?: return false
-            val capabilities = cm.getNetworkCapabilities(network) ?: return false
-            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-        } else {
-            val networkInfo = cm.activeNetworkInfo
-            networkInfo != null && networkInfo.isConnected
+    fun stopMonitoring() {
+        networkCallback?.let {
+            connectivityManager?.unregisterNetworkCallback(it)
         }
     }
 }

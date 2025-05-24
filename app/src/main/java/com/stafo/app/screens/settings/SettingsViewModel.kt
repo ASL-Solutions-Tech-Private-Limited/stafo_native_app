@@ -84,6 +84,8 @@ import com.stafo.app.screens.settings.dataClass.InActiveEmpResponse
 import com.stafo.app.screens.settings.dataClass.JobTitleResponse
 import com.stafo.app.screens.settings.dataClass.LeaveRequestBody
 import com.stafo.app.screens.settings.dataClass.LeaveResponse
+import com.stafo.app.screens.settings.dataClass.LocationLogRequest
+import com.stafo.app.screens.settings.dataClass.LocationLogResponse
 import com.stafo.app.screens.settings.dataClass.OnLeaveResponse
 import com.stafo.app.screens.settings.dataClass.PanVerifyRequestBody
 import com.stafo.app.screens.settings.dataClass.PanVerifyResponse
@@ -119,6 +121,7 @@ import com.stafo.app.screens.settings.dataClass.UpdateCompanyProfile
 import com.stafo.app.screens.settings.dataClass.UpdateCompanyProfileResponse
 import com.stafo.app.screens.settings.dataClass.UpdateEmployeeProfile
 import com.stafo.app.screens.settings.dataClass.UpdateEmployeeProfileResponse
+import com.stafo.app.screens.settings.dataClass.UpdateShiftResponse
 import com.stafo.app.screens.settings.dataClass.UpgradePackageResponse
 import com.stafo.app.screens.settings.dataClass.VerifyGSTNumberResponse
 import com.stafo.app.screens.settings.dataClass.VerifyRegisterNumberResponse
@@ -490,6 +493,111 @@ class SettingsViewModel : BaseViewModel() {
 
     val mEditBranchResponse: LiveData<EditBranchResponse> get() = mEditBranch
 
+    private var mUpdateShift: MutableLiveData<UpdateShiftResponse> = MutableLiveData()
+
+    val mUpdateShiftResponse: LiveData<UpdateShiftResponse> get() = mUpdateShift
+
+    private var mLocationLog: MutableLiveData<LocationLogResponse> = MutableLiveData()
+
+    val mLocationLogResponse: LiveData<LocationLogResponse> get() = mLocationLog
+
+
+    fun locationLog(mContext: Context,request: LocationLogRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callDeviceLog(request)
+                Log.d("res", "Location Log " + response?.body())
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mLocationLog.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+    fun updateShift(mContext: Context, id:Int,request: ShiftCreateRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callUpdateShift(id,request)
+                Log.d("res", "shift Edit " + response?.body())
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mUpdateShift.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
 

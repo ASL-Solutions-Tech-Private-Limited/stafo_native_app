@@ -71,7 +71,7 @@ class AuthViewModel() : BaseViewModel() {
 
 
 
-    fun verifyOTP(mContext: Context, mobileNumber: String,otp:String,deviceId:String) {
+    fun verifyOTP(mContext: Context, request:VerifyOtpRequestBody) {
 
         if (!isNetworkAvailable(mContext)) {
             CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
@@ -82,12 +82,7 @@ class AuthViewModel() : BaseViewModel() {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val request = VerifyOtpRequestBody(
-                    mobile_number = mobileNumber,
-                    otp = otp,
-                    device_id = deviceId,
-                    firebase_token = getFBToken() ?: ""
-                )
+
                 val response = ASLEmpMng.instance.apiStores()?.verifyUserOtp(request)
 
                 withContext(Dispatchers.Main) {

@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base white background with top corners rounded -->
     <item>
-        <shape>
-            <gradient
-                android:type="linear"
-                android:startColor="#B3808080"
-                android:endColor="@color/tea_green"
-                android:angle="90"/>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/white" />
+            <corners android:radius="0dp"/>
         </shape>
     </item>
-</selector>
+
+    <!-- Gradient overlay at the bottom -->
+    <item>
+
+        <shape android:shape="rectangle">
+            <corners
+                android:radius="0dp"/>
+            <gradient
+                android:angle="90"
+                android:centerColor="@color/date_bg_light"
+                android:endColor="@color/light_blue"
+                android:startColor="@color/white"
+                android:type="linear" />
+        </shape>
+    </item>
+
+</layer-list>

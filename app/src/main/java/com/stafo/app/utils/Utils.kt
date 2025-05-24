@@ -23,6 +23,7 @@ import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -1893,7 +1894,10 @@ fun isNetworkAvailable(context: Context): Boolean {
 
     return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }
-
+fun isGpsEnabled(context: Context): Boolean {
+    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+}
 
 
 
@@ -1914,8 +1918,8 @@ fun scheduleDailyEndOfDaySync(context: Context) {
     val currentDate = Calendar.getInstance()
     val dueDate = Calendar.getInstance()
 
-    dueDate.set(Calendar.HOUR_OF_DAY, 15)
-    dueDate.set(Calendar.MINUTE, 30)
+    dueDate.set(Calendar.HOUR_OF_DAY, 19)
+    dueDate.set(Calendar.MINUTE, 46)
     dueDate.set(Calendar.SECOND, 0)
 
     if (dueDate.before(currentDate)) {
@@ -1934,4 +1938,8 @@ fun scheduleDailyEndOfDaySync(context: Context) {
         dailyWorkRequest
     )
 }
+
+
+
+
 

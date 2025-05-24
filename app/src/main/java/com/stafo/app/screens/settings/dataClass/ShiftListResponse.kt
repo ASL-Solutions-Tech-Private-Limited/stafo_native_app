@@ -12,5 +12,12 @@ data class ShiftDataList(
     val start_time: String,
     val end_time: String,
     val created_at: String,
-    val updated_at: String
+    val updated_at: String,
+    val sunday: Int,
+    val monday: Int,
+    val tuesday: Int,
+    val wednesday: Int,
+    val thursday: Int,
+    val friday: Int,
+    val saturday: Int
 )

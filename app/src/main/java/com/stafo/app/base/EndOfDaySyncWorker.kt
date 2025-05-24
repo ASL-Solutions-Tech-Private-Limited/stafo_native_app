@@ -24,6 +24,7 @@ class EndOfDaySyncWorker(appContext: Context, workerParams: WorkerParameters) :
         if (allLocations.isNotEmpty()) {
             val success = postAllLocations(allLocations)
             if (success) {
+
                 locationDao.clearAllLocations()
                 return Result.success()
             }
@@ -61,6 +62,7 @@ class EndOfDaySyncWorker(appContext: Context, workerParams: WorkerParameters) :
             false
         }
     }
+
 
 
 

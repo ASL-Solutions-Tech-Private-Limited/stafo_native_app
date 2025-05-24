@@ -12,6 +12,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.stafo.app.screens.ui.SplashActivity
+import com.stafo.app.utils.CustomToast
 
 class NetworkConnectivityHandler(private val application: Application) :
     Application.ActivityLifecycleCallbacks {
@@ -20,10 +21,11 @@ class NetworkConnectivityHandler(private val application: Application) :
     private var currentActivity: Activity? = null
 
     init {
-        NetworkMonitor.register(application)
+        NetworkMonitor.startMonitoring(application)
 
         NetworkMonitor.isConnected.observeForever { isConnected ->
             Log.d("NetworkHandler", "Network connected: $isConnected")
+
 
             if (!isConnected) {
                 Handler(Looper.getMainLooper()).postDelayed({
