@@ -58,6 +58,7 @@ import com.stafo.app.screens.crm.CRMLeadDashboard
 import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.recharge.RechargeActivity
 import com.stafo.app.screens.reports.ReportsActivity
+import com.stafo.app.screens.settings.HolidayActivity
 import com.stafo.app.screens.settings.SubMenuActivity
 import com.tanodxyz.gdownload.isNetworkAvailable
 
@@ -310,6 +311,15 @@ class EmployerDashboard : AppCompatActivity() {
                                     showCompanyVerificationDialog()
                                 }
 
+                            }
+
+                            "Holidays" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        HolidayActivity::class.java
+                                    )
+                                )
                             }
 
                         }
@@ -695,6 +705,7 @@ class EmployerDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("Performance Type", R.drawable.ic_performace))
         mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
+        mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
         mActionList.add(ActionModel("Request Device", R.drawable.ic_device_request))
         return mActionList

@@ -2,6 +2,7 @@ package com.stafo.app.base.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.R
@@ -14,7 +15,8 @@ import java.util.Locale
 
 class AdapterHoliday (
     private var list: List<Holiday>,
-    var context: Context
+    var context: Context,
+    val isEmp: Boolean = false
 ) : RecyclerView.Adapter<AdapterHoliday.ViewHolder>() {
     inner class ViewHolder(val binding: RecyHolidayItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -43,6 +45,10 @@ class AdapterHoliday (
                  binding.txtHolidayDay.text = formatDay(this.start_date)
                  binding.txtHolidayDate.text = formatDate(this.start_date)
                  binding.txtHolidayMonth.text = formatMonthDate(this.start_date)
+
+                 if (isEmp)
+                     binding.itemDelete.visibility = View.GONE
+                 else binding.itemDelete.visibility = View.VISIBLE
 
                  binding.itemDelete.setOnClickListener {
                      showCompanyDeleteDialog(this.id)

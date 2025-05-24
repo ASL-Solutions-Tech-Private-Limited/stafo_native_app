@@ -54,6 +54,7 @@ import com.stafo.app.screens.emp.EmployeeProfileDetails
 import com.stafo.app.screens.emp.EmployeePunchInActivity
 import com.stafo.app.screens.emp.QRCodeAttendanceEmpActivity
 import com.stafo.app.screens.notification.NotificationActivity
+import com.stafo.app.screens.settings.HolidayActivity
 import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
 import com.stafo.app.screens.settings.PolicyActivity
 import com.stafo.app.screens.settings.SettingsViewModel
@@ -225,6 +226,15 @@ class EmployeeDashboard : AppCompatActivity() {
                                 Intent(
                                     this@EmployeeDashboard,
                                     CRMLeadDashboard::class.java
+                                )
+                            )
+                        }
+
+                        "Holidays" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard,
+                                    HolidayActivity::class.java
                                 )
                             )
                         }
@@ -1116,6 +1126,7 @@ class EmployeeDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
+        mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
         return mActionList
     }
