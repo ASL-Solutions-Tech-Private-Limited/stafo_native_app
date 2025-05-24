@@ -2,9 +2,7 @@ package com.stafo.app.screens.emp
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.ProgressDialog
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -13,8 +11,8 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.MediaStore
 import android.util.Log
+import android.view.Surface
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -24,10 +22,8 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.gms.location.LocationCallback
@@ -42,17 +38,8 @@ import com.stafo.app.screens.settings.dataClass.GetAttendanceBranchRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeDetails
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.Response
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -229,8 +216,16 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                 it.setSurfaceProvider(binding.previewView.surfaceProvider)
             }
 
+            val rotation =
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                    display?.rotation ?: Surface.ROTATION_0
+                } else {
+                    @Suppress("DEPRECATION")
+                    windowManager.defaultDisplay.rotation
+                }
+
             imageCapture = ImageCapture.Builder()
-                .setTargetRotation(binding.previewView.display.rotation)
+                .setTargetRotation(rotation)
                 .build()
 
             val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
@@ -239,17 +234,13 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
 
-                // Auto capture after 5 seconds
-                Handler(Looper.getMainLooper()).postDelayed({
-                    takePhoto()
-                }, 3000)
-
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("TAG", "startCamera: ${e.localizedMessage}")
             }
 
         }, ContextCompat.getMainExecutor(this))
     }
+
 
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
@@ -267,7 +258,6 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                             getCurrentLocation { userLat, userLong ->
                                 val distance = getDistance(userLat, userLong, branchLat, branchLong)
                                 val tolerance = 1.0f
-
                                 if (distance <= radar + tolerance) {
                                     getEmployeeDetails()?.id?.let { empId ->
                                         settingsViewModel.selfieAttendanceEmpolyee(
@@ -295,7 +285,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                 }
 
                 override fun onError(exception: ImageCaptureException) {
-                    CustomToast(this@EmpSelfieAttendanceActivity, "Capture failed: ${exception.message}")
+                    CustomToast(this@EmpSelfieAttendanceActivity, "Capture failed! try again.")
 
 
                 }
@@ -312,35 +302,22 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-
-
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-
-
-
         settingsViewModel.mSelfieAttendanceEmpResponse.observe(this) {
-
             if (it.status) {
                 binding.rtlAttendanceMsg.visibility=View.VISIBLE
-
                 val currentTime = Calendar.getInstance().time
                 val formatter = SimpleDateFormat("dd MMM yyyy hh:mm a", Locale.getDefault())
                 val formattedDateTime = formatter.format(currentTime)
                 binding.tvPunchTime.text = formattedDateTime
-
                 binding.tvPunchUser.text= "Punched by ${getEmployeeDetails()?.name?:""}"
                 val bitmap = BitmapFactory.decodeFile(selfieImage?.absolutePath)
                 binding.civPunchSelfie.setImageBitmap(bitmap)
-
                 onApiResponseSuccess()
-
                 Handler(Looper.getMainLooper()).postDelayed({
                     onBackPressedDispatcher.onBackPressed()
                     finish()
                 }, 3000)
-
-
-
             } else {
                 onApiResponseError()
                 binding.rtlAttendanceMsg.visibility=View.GONE
@@ -350,7 +327,6 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         }
 
         settingsViewModel.mGetAttendanceBranchResponse.observe(this) { response ->
-
             if (response?.status == true) {
                 val branchData = response.data
                 if (branchData != null && branchData.latitude != null && branchData.longitude != null) {
@@ -359,6 +335,9 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                     branchLat = branchData.latitude.toDouble()
                     branchLong = branchData.longitude.toDouble()
                     radar = branchData.radar.toFloat()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        takePhoto()
+                    }, 3000)
                 } else {
                     checkBranch = false
                 }
@@ -367,10 +346,6 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
             }
         }
-
-
-
-
     }
 
     @SuppressLint("MissingPermission")
