@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.CheckBox
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -87,7 +88,7 @@ class AddShiftActivity : AppCompatActivity() {
 
             if (it.success) {
 
-                if (!it.data.isNullOrEmpty()){
+                if (!it.data.isNullOrEmpty()) {
 
                     val formattedList = it.data.map { shift ->
                         val start = shift.start_time
@@ -107,15 +108,24 @@ class AddShiftActivity : AppCompatActivity() {
                             start_time = formattedStart,
                             end_time = formattedEnd,
                             created_at = shift.created_at,
-                            updated_at = shift.updated_at
+                            updated_at = shift.updated_at,
+                            sunday = shift.sunday,
+                            monday = shift.monday,
+                            tuesday = shift.tuesday,
+                            wednesday = shift.wednesday,
+                            thursday = shift.thursday,
+                            friday = shift.friday,
+                            saturday = shift.saturday
                         )
                     }
 
-                    val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-                    binding.rvShowShiftList.layoutManager = layoutManager
-                    rvAdapter = ShiftAdapter(formattedList, this@AddShiftActivity)
-                    binding.rvShowShiftList.adapter = rvAdapter
-                    rvAdapter.notifyDataSetChanged()
+                    if (::rvAdapter.isInitialized) {
+                        rvAdapter.updateList(formattedList)
+                    } else {
+                        rvAdapter = ShiftAdapter(formattedList, this@AddShiftActivity)
+                        binding.rvShowShiftList.layoutManager = LinearLayoutManager(this)
+                        binding.rvShowShiftList.adapter = rvAdapter
+                    }
                 }
 
 
@@ -123,8 +133,31 @@ class AddShiftActivity : AppCompatActivity() {
                 CustomToast(this, it.message)
             }
         }
+        settingsViewModel.mDeleteResponse.observe(this) {
 
+            if (it.status) {
+                getEmployeeComId()?.let { empId ->
+                    settingsViewModel.getShiftList(this@AddShiftActivity, empId)
+                }
+                CustomToast(this, it.message)
 
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
+
+        settingsViewModel.mUpdateShiftResponse.observe(this) {
+
+            if (it.success) {
+                getEmployeeComId()?.let { empId ->
+                    settingsViewModel.getShiftList(this@AddShiftActivity, empId)
+                }
+                CustomToast(this, it.message)
+                bottomSheetDialog.dismiss()
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
 
         settingsViewModel.mShiftCreateResponse.observe(this) {
 
@@ -176,9 +209,6 @@ class AddShiftActivity : AppCompatActivity() {
     }
 
 
-
-
-
     private fun onClickListener() {
         binding.apply {
 
@@ -196,7 +226,22 @@ class AddShiftActivity : AppCompatActivity() {
 
 
             llcAddShift.setOnClickListener {
-                showCustomBottomSheet()
+                var dataClass = ShiftDataList(
+                    id = 0,
+                    shift_name = "shift.shift_name",
+                    start_time = "formattedStart",
+                    end_time = "formattedEnd",
+                    created_at = "shift.created_at",
+                    updated_at = "",
+                    sunday = 0,
+                    monday = 0,
+                    tuesday = 0,
+                    wednesday = 0,
+                    thursday = 0,
+                    friday = 0,
+                    saturday = 0
+                )
+                showCustomBottomSheet("Add", dataClass)
             }
             imageBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
@@ -208,7 +253,7 @@ class AddShiftActivity : AppCompatActivity() {
     }
 
     @SuppressLint("MissingInflatedId")
-    private fun showCustomBottomSheet() {
+    fun showCustomBottomSheet(type: String, editShift: ShiftDataList) {
         bottomSheetDialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.custom_bottom_sheet_add_shift_layout, null)
 
@@ -220,6 +265,7 @@ class AddShiftActivity : AppCompatActivity() {
 
         bottomSheetDialog.setCancelable(false)
 
+        val titleBottom = view.findViewById<TextView>(R.id.text_view)
         edtShiftName = view.findViewById(R.id.edt_shift_name)
         edtShiftStartTime = view.findViewById(R.id.edt_shift_start_time)
         edtShiftEndTime = view.findViewById(R.id.edt_shift_end_time)
@@ -230,11 +276,7 @@ class AddShiftActivity : AppCompatActivity() {
         val cbThursday = view.findViewById<CheckBox>(R.id.cb_thursday)
         val cbFriday = view.findViewById<CheckBox>(R.id.cb_friday)
         val cbSaturday = view.findViewById<CheckBox>(R.id.cb_saturday)
-
-
-
-
-
+        val btnSubmit = view.findViewById<AppCompatButton>(R.id.btn_add_shift)
 
         val btnCancel = view.findViewById<AppCompatImageView>(R.id.bottom_sheet_cancel)
 
@@ -245,13 +287,31 @@ class AddShiftActivity : AppCompatActivity() {
             timePickerDialog(edtShiftEndTime, false)
         }
 
+        if (type == "Edit") {
+
+            titleBottom.text = "Edit Shift"
+            btnSubmit.text="Submit"
+            edtShiftName.setText(editShift.shift_name)
+            edtShiftStartTime.setText(editShift.start_time)
+            edtShiftEndTime.setText(editShift.end_time)
+
+            cbSunday.isChecked = editShift.sunday == 1
+            cbMonday.isChecked = editShift.monday == 1
+            cbTuesday.isChecked = editShift.tuesday == 1
+            cbWednesday.isChecked = editShift.wednesday == 1
+            cbThursday.isChecked = editShift.thursday == 1
+            cbFriday.isChecked = editShift.friday == 1
+            cbSaturday.isChecked = editShift.saturday == 1
+        }
+
 
         btnCancel.setOnClickListener {
             bottomSheetDialog.dismiss()
         }
-        val btnSubmit = view.findViewById<AppCompatButton>(R.id.btn_add_shift)
+
 
         btnSubmit.setOnClickListener {
+
 
             if (isValidate()) {
                 val startTime = edtShiftStartTime.text.toString()
@@ -260,21 +320,38 @@ class AddShiftActivity : AppCompatActivity() {
                 val formattedStartTime = convertTo24HourFormat(startTime)
                 val formattedEndTime = convertTo24HourFormat(endTime)
 
+                if (type == "Edit") {
 
+                    val requestBody = ShiftCreateRequest(
+                        shift_name = edtShiftName.text.toString(),
+                        start_time = formattedStartTime,
+                        end_time = formattedEndTime,
+                        sunday = cbSunday.isChecked,
+                        monday = cbMonday.isChecked,
+                        tuesday = cbTuesday.isChecked,
+                        wednesday = cbWednesday.isChecked,
+                        thursday = cbThursday.isChecked,
+                        friday = cbFriday.isChecked,
+                        saturday = cbSaturday.isChecked
+                    )
+                    settingsViewModel.updateShift(this, editShift.id, requestBody)
 
-                val requestBody = ShiftCreateRequest(
-                    shift_name = edtShiftName.text.toString(),
-                    start_time = formattedStartTime,
-                    end_time = formattedEndTime,
-                    sunday = cbSunday.isChecked,
-                    monday = cbMonday.isChecked,
-                    tuesday = cbTuesday.isChecked,
-                    wednesday = cbWednesday.isChecked,
-                    thursday = cbThursday.isChecked,
-                    friday = cbFriday.isChecked,
-                    saturday = cbSaturday.isChecked
-                )
-                settingsViewModel.createNewShift(this, requestBody)
+                } else {
+                    val requestBody = ShiftCreateRequest(
+                        shift_name = edtShiftName.text.toString(),
+                        start_time = formattedStartTime,
+                        end_time = formattedEndTime,
+                        sunday = cbSunday.isChecked,
+                        monday = cbMonday.isChecked,
+                        tuesday = cbTuesday.isChecked,
+                        wednesday = cbWednesday.isChecked,
+                        thursday = cbThursday.isChecked,
+                        friday = cbFriday.isChecked,
+                        saturday = cbSaturday.isChecked
+                    )
+                    settingsViewModel.createNewShift(this, requestBody)
+                }
+
 
             }
         }
@@ -301,24 +378,6 @@ class AddShiftActivity : AppCompatActivity() {
         }
     }
 
-    private fun isEndTimeValid(startTime: String, endTime: String): Boolean {
-        if (startTime.isEmpty() || endTime.isEmpty()) return false
-
-        val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-
-        val startCal = Calendar.getInstance()
-        val endCal = Calendar.getInstance()
-
-        try {
-            startCal.time = timeFormat.parse(startTime)!!
-            endCal.time = timeFormat.parse(endTime)!!
-            return !endCal.before(startCal)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return false
-    }
-
 
     private fun isValidate(): Boolean {
         binding.apply {
@@ -338,29 +397,6 @@ class AddShiftActivity : AppCompatActivity() {
         }
         return true
     }
-
-    /*  private fun timePickerDialog(view: AppCompatEditText, isStartTime: Boolean) {
-          val cal = Calendar.getInstance()
-          val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-              cal.set(Calendar.HOUR_OF_DAY, hour)
-              cal.set(Calendar.MINUTE, minute)
-
-              // Convert to 12-hour format with AM/PM
-              val timeFormat = SimpleDateFormat("hh:mm a", Locale.ENGLISH)
-              view.setText(timeFormat.format(cal.time))
-
-
-
-          }
-
-          TimePickerDialog(
-              view.context, // Use view's context
-              timeSetListener,
-              cal.get(Calendar.HOUR_OF_DAY),
-              cal.get(Calendar.MINUTE),
-              false // Keeps the picker in 24-hour mode
-          ).show()
-      }*/
 
 
     private fun timePickerDialog(view: AppCompatEditText, isStartTime: Boolean) {
@@ -396,6 +432,28 @@ class AddShiftActivity : AppCompatActivity() {
             cal.get(Calendar.MINUTE),
             false
         ).show()
+    }
+
+
+    fun deleteShift(shiftId: Int) {
+
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle(R.string.app_name)
+        builder.setMessage("Are you sure? Delete this.")
+
+        builder.setPositiveButton("Yes") { dialog, _ ->
+            settingsViewModel.companyDeleteShift(this, shiftId)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+
+
     }
 
 

@@ -8,8 +8,9 @@ data class LocationEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val latitude: String,
     val longitude: String,
-    val timestamp: Long = System.currentTimeMillis(),
-    val isSynced: Boolean = false,
+    val timestamp: String,
+    val isNetwork: Boolean = false,
+    val isGpsTurn: Boolean = false,
     val deviceName: String,
     val batteryPercentage: Int,
     val androidVersion: String

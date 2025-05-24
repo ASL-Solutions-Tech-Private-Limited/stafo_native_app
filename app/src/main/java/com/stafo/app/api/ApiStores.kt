@@ -111,6 +111,8 @@ import com.stafo.app.screens.settings.dataClass.InActiveEmpResponse
 import com.stafo.app.screens.settings.dataClass.JobTitleResponse
 import com.stafo.app.screens.settings.dataClass.LeaveRequestBody
 import com.stafo.app.screens.settings.dataClass.LeaveResponse
+import com.stafo.app.screens.settings.dataClass.LocationLogRequest
+import com.stafo.app.screens.settings.dataClass.LocationLogResponse
 import com.stafo.app.screens.settings.dataClass.OnLeaveResponse
 import com.stafo.app.screens.settings.dataClass.PanVerifyRequestBody
 import com.stafo.app.screens.settings.dataClass.PanVerifyResponse
@@ -146,6 +148,7 @@ import com.stafo.app.screens.settings.dataClass.UpdateCompanyProfile
 import com.stafo.app.screens.settings.dataClass.UpdateCompanyProfileResponse
 import com.stafo.app.screens.settings.dataClass.UpdateEmployeeProfile
 import com.stafo.app.screens.settings.dataClass.UpdateEmployeeProfileResponse
+import com.stafo.app.screens.settings.dataClass.UpdateShiftResponse
 import com.stafo.app.screens.settings.dataClass.UpgradePackageResponse
 import com.stafo.app.screens.settings.dataClass.VerifyGSTNumberResponse
 import com.stafo.app.screens.settings.dataClass.VerifyRegisterNumberResponse
@@ -170,6 +173,7 @@ import retrofit2.http.Header
 import retrofit2.http.HeaderMap
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.PartMap
 import retrofit2.http.Path
@@ -230,6 +234,14 @@ interface ApiStores {
         @Body request: ShiftCreateRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<ShiftCreateResponse>
+
+
+    @PUT("api/shifts/{id}")
+    suspend fun callUpdateShift(
+        @Path("id") id: Int,
+        @Body request: ShiftCreateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateShiftResponse>
 
     @GET("api/shifts")
     suspend fun callShiftList(
@@ -486,6 +498,8 @@ interface ApiStores {
     suspend fun callDeleteBranch(
         @Path("id") id: Int, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeleteResponse>
+
+
 
 
     @DELETE("api/shifts/{id}")
@@ -838,6 +852,12 @@ interface ApiStores {
     suspend fun callSubscriptionInfo(
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<MySubscriptionResponse>
+
+    @POST("api/devicelog-store")
+    suspend fun callDeviceLog(
+        @Body request: LocationLogRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<LocationLogResponse>
 
 
 }

@@ -59,7 +59,7 @@ class BranchAdapter (
     }
 
 
-   private fun showCompanyDeleteDialog(itemId:Int) {
+    private fun showCompanyDeleteDialog(itemId:Int) {
         val builder = androidx.appcompat.app.AlertDialog.Builder(context)
         builder.setTitle(R.string.app_name)
         builder.setMessage("Are you sure? Delete this.")

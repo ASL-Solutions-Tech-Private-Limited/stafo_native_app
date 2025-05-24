@@ -177,7 +177,14 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
                             start_time = formattedStart,
                             end_time = formattedEnd,
                             created_at = shift.created_at,
-                            updated_at = shift.updated_at
+                            updated_at = shift.updated_at,
+                            sunday = shift.sunday,
+                            monday = shift.monday,
+                            tuesday = shift.tuesday,
+                            wednesday = shift.wednesday,
+                            thursday = shift.thursday,
+                            friday = shift.friday,
+                            saturday = shift.saturday
                         )
                     }
 

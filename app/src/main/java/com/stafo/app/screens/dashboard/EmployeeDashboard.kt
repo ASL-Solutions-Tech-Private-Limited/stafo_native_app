@@ -519,6 +519,12 @@ class EmployeeDashboard : AppCompatActivity() {
                             if (!isServiceRunning(LocationForegroundService::class.java)) {
                                 startService(Intent(this, LocationForegroundService::class.java))
                             }
+
+
+
+
+
+
                         }
 
                         if (punchInTime != null && punchOutTime != null) {

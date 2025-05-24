@@ -75,7 +75,7 @@ class AadhaarOtpVerifyActivity : AppCompatActivity() {
                 }
             })
             btnOtpVerify.setOnClickListener {
-                authViewModel.verifyOTP(this@AadhaarOtpVerifyActivity, mobile, otp,deviceID)
+               // authViewModel.verifyOTP(this@AadhaarOtpVerifyActivity, mobile, otp,deviceID)
             }
 
             ivBack.setOnClickListener { _ ->

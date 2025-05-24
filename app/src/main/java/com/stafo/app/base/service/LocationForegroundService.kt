@@ -28,7 +28,10 @@ import com.tanodxyz.gdownload.isNetworkAvailable
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -160,11 +163,16 @@ class LocationForegroundService : Service() {
         handler = Handler(Looper.getMainLooper())
         runnable = object : Runnable {
             override fun run() {
+
+
                 if (lat != null && longi != null) {
                     CoroutineScope(Dispatchers.IO).launch {
                         val location = LocationEntity(
                             latitude = lat.toString(),
                             longitude = longi.toString(),
+                            timestamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()),
+                            isNetwork = true,
+                            isGpsTurn = true,
                             deviceName = getDeviceName(),
                             batteryPercentage = getBatteryPercentage(this@LocationForegroundService),
                             androidVersion = getAndroidVersion()
