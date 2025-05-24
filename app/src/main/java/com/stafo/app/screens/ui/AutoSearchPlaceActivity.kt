@@ -13,12 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.mappls.sdk.maps.MapplsMap
-import com.mappls.sdk.maps.annotations.Icon
-import com.mappls.sdk.maps.annotations.IconFactory
-import com.mappls.sdk.maps.annotations.MarkerOptions
-import com.mappls.sdk.maps.annotations.PolylineOptions
-import com.mappls.sdk.maps.geometry.LatLng
 import com.mmi.MapView
 import com.mmi.layers.Marker
 import com.mmi.layers.PathOverlay

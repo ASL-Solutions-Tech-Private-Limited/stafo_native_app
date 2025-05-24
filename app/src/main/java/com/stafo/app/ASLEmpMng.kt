@@ -5,8 +5,6 @@ import android.os.StrictMode
 import android.util.Log
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
-import com.mappls.sdk.maps.Mappls
-import com.mappls.sdk.services.account.MapplsAccountManager
 import com.stafo.app.api.ApiClient
 import com.stafo.app.api.ApiStores
 import com.mmi.services.account.MapmyIndiaAccountManager
@@ -55,12 +53,5 @@ class ASLEmpMng : MultiDexApplication() {
         MapmyIndiaAccountManager.getInstance().setAtlasClientId("96dHZVzsAuveHJyb4fsrVuXD0YNPrFaochM2cB-f7hG7DijsK6wuIGwWgAo7ksFFxTVpPm2mORP_XLz9OkWc1Q==")
         MapmyIndiaAccountManager.getInstance().setAtlasClientSecret("lrFxI-iSEg9UFw9ZECaYSUPOvunPyH3qtIQyBP0lo-8yMBn9fNnEUP8xU44RbKPf-yq4d7x-H1T6fo1qyZRdt7x6r4gib2ys")
 
-
-        //
-        MapplsAccountManager.getInstance().setRestAPIKey("b99061448178b709d1b24054f7ea218d");
-        MapplsAccountManager.getInstance().setMapSDKKey("b99061448178b709d1b24054f7ea218d");
-        MapplsAccountManager.getInstance().setAtlasClientId("client_credentials");
-        MapplsAccountManager.getInstance().setAtlasClientSecret("96dHZVzsAuveHJyb4fsrVuXD0YNPrFaochM2cB-f7hG7DijsK6wuIGwWgAo7ksFFxTVpPm2mORP_XLz9OkWc1Q==");
-        Mappls.getInstance(getApplicationContext());
     }
 }
