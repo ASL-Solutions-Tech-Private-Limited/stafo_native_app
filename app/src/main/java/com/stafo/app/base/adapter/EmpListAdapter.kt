@@ -1,6 +1,5 @@
 package com.stafo.app.base.adapter
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.stafo.app.R
 import com.stafo.app.databinding.RecyViewEmployeeItemLayoutBinding
 import com.stafo.app.screens.emp.EmployeeProfileDetails
 import com.stafo.app.screens.settings.UploadSelfieAttendanceActivity
@@ -17,6 +15,7 @@ import com.stafo.app.screens.settings.ViewAllEmployeeActivity
 import com.stafo.app.screens.settings.dataClass.GetEmployee
 import com.stafo.app.screens.settings.dataClass.Shift
 import com.stafo.app.screens.ui.AutoSearchPlaceActivity
+import com.stafo.app.utils.currencyFormatter
 import com.stafo.app.utils.generateTextBitmap
 
 class EmpListAdapter(
@@ -47,6 +46,8 @@ class EmpListAdapter(
                 binding.txtEmpName.text = this.name
                 binding.txtMobile.text = this.phone
                 binding.txtEmail.text = this.email
+                binding.txtJobTitle.text = this.position
+                binding.txtSalaryTitle.text = currencyFormatter(this.salary.toString())
 
                 val placeholderBitmap = generateTextBitmap(this.name ?: "?")
                 if (!this.selfieImage.isNullOrEmpty()) {
