@@ -62,7 +62,6 @@ class CRMViewModel: BaseViewModel() {
 
     fun updateLead(mContext: Context, id: Int,request:LeadCreateRequest) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -109,7 +108,6 @@ class CRMViewModel: BaseViewModel() {
 
     fun getFollowUpList(mContext: Context, id: String) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -155,7 +153,6 @@ class CRMViewModel: BaseViewModel() {
 
     fun createNewFollowUp(mContext: Context, request: CreateFollowUpRequest) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -201,7 +198,6 @@ class CRMViewModel: BaseViewModel() {
 
     fun createNewLead(mContext: Context, request: LeadCreateRequest) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -247,7 +243,6 @@ class CRMViewModel: BaseViewModel() {
 
     fun getAllLeadList(mContext: Context, isCompanyLogin:Boolean,id:String) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -294,7 +289,6 @@ class CRMViewModel: BaseViewModel() {
 
     fun getLeadDashboard(mContext: Context,isCompanyLogin:Boolean,id:String) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"

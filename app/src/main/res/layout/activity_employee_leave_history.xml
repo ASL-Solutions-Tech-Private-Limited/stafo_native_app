@@ -89,7 +89,7 @@
                 android:fontFamily="@font/gilroy_semi_bold"
                 android:gravity="center"
                 android:paddingVertical="@dimen/_5sdp"
-                android:text="Privileged\nLeave"
+                android:text="Privilege\nLeave"
                 android:textColor="#565656"
                 android:textSize="@dimen/_11ssp"
                 app:drawableTint="@color/black" />

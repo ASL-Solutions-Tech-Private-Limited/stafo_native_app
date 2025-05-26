@@ -1145,4 +1145,15 @@ class EmployeeDashboard : AppCompatActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("NetworkHandler", " onDestroy called on activity")
+    }
+
+
+
+
+
 }

@@ -9,9 +9,9 @@ data class LocationEntity(
     val latitude: String,
     val longitude: String,
     val timestamp: String,
-    val isNetwork: Boolean = false,
-    val isGpsTurn: Boolean = false,
-    val deviceName: String,
-    val batteryPercentage: Int,
-    val androidVersion: String
+    val isNetwork: Boolean,
+    val isGpsTurn: Boolean,
+    val deviceName: String = "",
+    val batteryPercentage: Int = 0,
+    val androidVersion: String = ""
 )

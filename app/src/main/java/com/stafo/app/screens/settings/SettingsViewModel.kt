@@ -497,12 +497,10 @@ class SettingsViewModel : BaseViewModel() {
 
     val mUpdateShiftResponse: LiveData<UpdateShiftResponse> get() = mUpdateShift
 
-    private var mLocationLog: MutableLiveData<LocationLogResponse> = MutableLiveData()
-
-    val mLocationLogResponse: LiveData<LocationLogResponse> get() = mLocationLog
 
 
-    fun locationLog(mContext: Context,request: LocationLogRequest) {
+
+    /*fun locationLog(mContext: Context,request: LocationLogRequest) {
 
         if (!isNetworkAvailable(mContext)) {
             CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
@@ -547,7 +545,7 @@ class SettingsViewModel : BaseViewModel() {
                 }
             }
         }
-    }
+    }*/
 
 
 
@@ -555,7 +553,6 @@ class SettingsViewModel : BaseViewModel() {
     fun updateShift(mContext: Context, id:Int,request: ShiftCreateRequest) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -605,7 +602,6 @@ class SettingsViewModel : BaseViewModel() {
     fun editBranch(mContext: Context, id:Int,request: AddBranchRequest) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -660,7 +656,6 @@ class SettingsViewModel : BaseViewModel() {
         id: String
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -709,7 +704,6 @@ class SettingsViewModel : BaseViewModel() {
         request: SalarySlipRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -757,7 +751,6 @@ class SettingsViewModel : BaseViewModel() {
         request: SalaryRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -807,7 +800,6 @@ class SettingsViewModel : BaseViewModel() {
         request: SalaryGeneratedRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -856,7 +848,6 @@ class SettingsViewModel : BaseViewModel() {
         request: SalaryTypeDeleteRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -904,7 +895,6 @@ class SettingsViewModel : BaseViewModel() {
         request: SalaryTypeListRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -953,7 +943,6 @@ class SettingsViewModel : BaseViewModel() {
         request: SalaryTypeRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1002,7 +991,6 @@ class SettingsViewModel : BaseViewModel() {
         request: ReportsEmployeeListRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1050,7 +1038,6 @@ class SettingsViewModel : BaseViewModel() {
         request: ReportsEmployeeListRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1099,7 +1086,6 @@ class SettingsViewModel : BaseViewModel() {
         request: ReportsEmployeeListRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1148,7 +1134,6 @@ class SettingsViewModel : BaseViewModel() {
         request: AssignBranchRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1194,7 +1179,6 @@ class SettingsViewModel : BaseViewModel() {
         request: AssignDepartmentRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1241,7 +1225,6 @@ class SettingsViewModel : BaseViewModel() {
         request: GetAttendanceBranchRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1287,10 +1270,11 @@ class SettingsViewModel : BaseViewModel() {
     fun getBannerImage(
         mContext: Context
     ) {
+
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1338,6 +1322,10 @@ class SettingsViewModel : BaseViewModel() {
     fun upgradePackage(
         mContext: Context
     ) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1387,9 +1375,9 @@ class SettingsViewModel : BaseViewModel() {
         request: RemoveSelfieRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1439,9 +1427,9 @@ class SettingsViewModel : BaseViewModel() {
         file: File?
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1507,9 +1495,9 @@ class SettingsViewModel : BaseViewModel() {
         request: InActiveEmpRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1557,6 +1545,12 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: CreateLeavePolicyRequest
     ) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1602,9 +1596,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1649,7 +1643,6 @@ class SettingsViewModel : BaseViewModel() {
         request: SendFeedbackRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1704,7 +1697,6 @@ class SettingsViewModel : BaseViewModel() {
 
         ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1781,7 +1773,6 @@ class SettingsViewModel : BaseViewModel() {
         request: QRAttendanceMarkRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1829,7 +1820,6 @@ class SettingsViewModel : BaseViewModel() {
         request: SetAttendanceTypeRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1883,9 +1873,9 @@ class SettingsViewModel : BaseViewModel() {
         request: DayPunchINRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1936,7 +1926,6 @@ class SettingsViewModel : BaseViewModel() {
         file: File?
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().postValue("load")
@@ -2003,7 +1992,6 @@ class SettingsViewModel : BaseViewModel() {
         request: CompanyViewRequestDevice
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2053,7 +2041,6 @@ class SettingsViewModel : BaseViewModel() {
         request: CompanyAcceptDeviceRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2103,7 +2090,6 @@ class SettingsViewModel : BaseViewModel() {
         request: ChangeDeviceRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2150,7 +2136,6 @@ class SettingsViewModel : BaseViewModel() {
         request: EmployeeViewDocumentRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2203,7 +2188,6 @@ class SettingsViewModel : BaseViewModel() {
         id:Int
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2248,6 +2232,11 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         id:Int
     ) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -2292,7 +2281,6 @@ class SettingsViewModel : BaseViewModel() {
         id:Int
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2339,7 +2327,6 @@ class SettingsViewModel : BaseViewModel() {
         request: PanVerifyRequestBody
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2385,7 +2372,6 @@ class SettingsViewModel : BaseViewModel() {
         request: PanVerifyRequestBody
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2433,7 +2419,6 @@ class SettingsViewModel : BaseViewModel() {
     ) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2480,9 +2465,9 @@ class SettingsViewModel : BaseViewModel() {
         request: PanVerifyRequestBody
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -2528,7 +2513,6 @@ class SettingsViewModel : BaseViewModel() {
         file: File?
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2597,9 +2581,7 @@ class SettingsViewModel : BaseViewModel() {
         employeeId: Int,
         file: File?
     ) {
-
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2666,9 +2648,7 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: DepartmentCreateRequest
     ) {
-
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2718,7 +2698,6 @@ class SettingsViewModel : BaseViewModel() {
     ) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2802,7 +2781,6 @@ class SettingsViewModel : BaseViewModel() {
     fun uploadPolicy(mContext: Context, title: String, description: String, file: File) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2854,7 +2832,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun fetchPolicy(mContext: Context,id:Int) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -2903,7 +2880,6 @@ class SettingsViewModel : BaseViewModel() {
         documentTypeIds: List<Int>
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2995,7 +2971,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getGeoLocationHist(mContext: Context, request: GeoLocationHistResquest) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3040,7 +3015,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getJobTitleList(mContext: Context) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3085,7 +3059,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getEmployeeLeaveHist(mContext: Context, request: GetEmployeeLeaveHistRequestBody) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3132,7 +3105,6 @@ class SettingsViewModel : BaseViewModel() {
     fun getAllLeaveList(mContext: Context, request: LeaveRequestBody) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3180,7 +3152,6 @@ class SettingsViewModel : BaseViewModel() {
     fun assignShift(mContext: Context, employeeId: String, selectedShiftIds: List<String>) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3227,7 +3198,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun punchInRequest(mContext: Context, request: PunchInRequest) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3274,7 +3244,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun updateEmployeeDetails(mContext: Context, id: String, request: UpdateEmployeeProfile) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3321,7 +3290,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun fetchEmployeeDetails(mContext: Context, id: String) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3368,7 +3336,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun updateCompanyProfile(mContext: Context, request: UpdateCompanyProfile) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3414,6 +3381,12 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getEmployeeAttendRecord(mContext: Context, id: String, date: String) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3457,7 +3430,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getAllEmployeeList(mContext: Context) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3500,6 +3472,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun getOnLeaveList(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3542,7 +3518,6 @@ class SettingsViewModel : BaseViewModel() {
     fun postPendingLeave(mContext: Context, request: ApproveLeaveRequest) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3585,6 +3560,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun getPendingLeaveList(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3626,7 +3605,6 @@ class SettingsViewModel : BaseViewModel() {
     fun getHolidayList(mContext: Context, id: String) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3671,7 +3649,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getCompanyDetails(mContext: Context) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3715,7 +3692,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun requestLeaveEmp(mContext: Context, request: EmployeeLeaveRequestBody) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3761,9 +3737,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun addHoliday(mContext: Context, request: CreateHolidayRequest) {
-
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -3807,7 +3781,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getCompanyDashboard(mContext: Context) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3853,7 +3826,6 @@ class SettingsViewModel : BaseViewModel() {
     fun getEmpList(mContext: Context, date: String) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -3899,7 +3871,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getViewBranchList(mContext: Context, id: String) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3949,7 +3920,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getShiftList(mContext: Context, id: String) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3993,9 +3963,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getBranchList(mContext: Context, id: String) {
-
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -4041,7 +4009,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getDepartmentList(mContext: Context, id: String) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -4089,7 +4056,6 @@ class SettingsViewModel : BaseViewModel() {
     fun createBranch(mContext: Context, request: AddBranchRequest) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -4145,7 +4111,6 @@ class SettingsViewModel : BaseViewModel() {
         request: AddEmpRequestBody
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext, "Network not available. Please check your internet connection and try again.")
             return
         }
 
@@ -4182,7 +4147,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun createNewShift(mContext: Context, request: ShiftCreateRequest) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -4232,7 +4196,6 @@ class SettingsViewModel : BaseViewModel() {
     fun sendGeoLocationRequest(mContext: Context, empID: String, permission: String) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -4284,7 +4247,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getEmployeDashboard(mContext: Context) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -4329,7 +4291,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getMonthlyAttendance(mContext: Context, date: String, emp: String) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 

@@ -853,11 +853,7 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<MySubscriptionResponse>
 
-    @POST("api/devicelog-store")
-    suspend fun callDeviceLog(
-        @Body request: LocationLogRequest,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
-    ): Response<LocationLogResponse>
+
 
 
 }

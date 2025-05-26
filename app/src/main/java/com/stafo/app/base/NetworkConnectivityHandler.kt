@@ -4,55 +4,47 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.stafo.app.screens.ui.SplashActivity
-import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.isNetworkAvailable
 
 class NetworkConnectivityHandler(private val application: Application) :
     Application.ActivityLifecycleCallbacks {
 
-    private val dialogMap = mutableMapOf<Activity, AlertDialog>()
+    private val dialogMap = mutableMapOf<String, AlertDialog>()
     private var currentActivity: Activity? = null
+    private var hasRestartedAfterNetworkRestore = false
 
     init {
         NetworkMonitor.startMonitoring(application)
 
         NetworkMonitor.isConnected.observeForever { isConnected ->
-            Log.d("NetworkHandler", "Network connected: $isConnected")
+            currentActivity?.let { activity ->
+                if (activity is SplashActivity || activity.isFinishing || activity.isDestroyed) return@observeForever
 
+                if (isConnected) {
+                    dismissDialog(activity, "internet")
+                    if (!hasRestartedAfterNetworkRestore) {
+                        hasRestartedAfterNetworkRestore = true
+                        activity.recreate()
+                    }
 
-            if (!isConnected) {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    currentActivity?.let { activity ->
-                        if (activity is SplashActivity) {
-                            Log.d("NetworkHandler", "Skipping dialog on SplashActivity")
-                            return@postDelayed
-                        }
-
-                        if (!activity.isFinishing && !activity.isDestroyed) {
-                            if (dialogMap[activity]?.isShowing != true) {
-                                val dialog =
-                                    AlertDialog.Builder(activity).setTitle("No Internet Connection")
-                                        .setMessage("Please check your internet connection.")
-                                        .setCancelable(false).setPositiveButton("OK", null).create()
-                                dialog.show()
-                                dialogMap[activity] = dialog
-                                Log.d(
-                                    "NetworkHandler", "Dialog shown on: ${activity.localClassName}"
-                                )
-                            }
-                        }
-                    } ?: Log.d("NetworkHandler", "No current activity to show dialog")
-                }, 500)
-            } else {
-                currentActivity?.let { activity ->
-                    dismissDialog(activity)
+                } else {
+                    hasRestartedAfterNetworkRestore = false
+                    showCustomDialog(
+                        activity,
+                        "No Internet Connection",
+                        "Please check your internet connection.",
+                        "internet"
+                    )
                 }
             }
         }
@@ -66,70 +58,114 @@ class NetworkConnectivityHandler(private val application: Application) :
 
     private fun isLocationEnabled(context: Context): Boolean {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
+    private fun showCustomDialog(activity: Activity, title: String, message: String, tag: String) {
 
-    private fun dismissDialog(activity: Activity) {
-        dialogMap[activity]?.takeIf { it.isShowing }?.dismiss()
-        dialogMap.remove(activity)
-        Log.d("NetworkHandler", "Dialog dismissed on: ${activity.localClassName}")
+        if (activity.isFinishing || activity.isDestroyed) {
+            return
+        }
+
+        if (dialogMap[tag]?.isShowing == true) {
+            return
+        }
+
+        try {
+            val dialog = AlertDialog.Builder(activity)
+                .setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Open Settings") { _, _ ->
+                    val intent = Intent(Settings.ACTION_SETTINGS)
+                    activity.startActivity(intent)
+                }
+                .create()
+            dialog.show()
+            dialogMap[tag] = dialog
+        } catch (e: Exception) {
+            Log.e("NetworkHandler", "Dialog [$tag] failed to show", e)
+        }
     }
 
+    private fun dismissDialog(activity: Activity, tag: String) {
+        val dialog = dialogMap[tag]
+        if (dialog != null) {
+            if (dialog.isShowing) {
+                dialog.dismiss()
+            }
+            dialogMap.remove(tag)
+        }
+    }
 
     override fun onActivityResumed(activity: Activity) {
         currentActivity = activity
 
         Handler(Looper.getMainLooper()).postDelayed({
-            if (NetworkMonitor.isConnected.value == false) {
-                showAlertDialog(activity, "No Internet", "Please check your internet connection.")
-            }
+            if (activity is SplashActivity) return@postDelayed
 
-            if (!hasLocationPermission(activity)) {
-                showAlertDialog(activity, "Location Permission", "Location permission is required.")
+            val isConnected = NetworkMonitor.isConnected.value
+            val fallbackConnected = isNetworkAvailable(activity)
+
+            if (isConnected == false || !fallbackConnected) {
+                showCustomDialog(
+                    activity,
+                    "No Internet Connection",
+                    "Please check your internet connection.",
+                    "internet"
+                )
+            } else {
+                dismissDialog(activity, "internet")
             }
 
             if (!isLocationEnabled(activity)) {
-                showAlertDialog(
-                    activity, "Enable Location", "Location services are OFF. Please enable GPS."
+                showCustomDialog(
+                    activity,
+                    "Enable Location",
+                    "Location services are OFF. Please enable GPS.",
+                    "gps"
                 )
+            } else {
+                dismissDialog(activity, "gps")
+            }
+
+            if (!hasLocationPermission(activity)) {
+                showCustomDialog(
+                    activity,
+                    "Location Permission",
+                    "Location permission is required.",
+                    "permission"
+                )
+            } else {
+                dismissDialog(activity, "permission")
             }
 
         }, 300)
     }
 
-
     override fun onActivityPaused(activity: Activity) {
-        if (currentActivity == activity) {
-            currentActivity = null
-        }
+        if (currentActivity == activity) currentActivity = null
     }
 
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
     override fun onActivityStarted(activity: Activity) {
         Log.d("NetworkHandler", "onActivityStarted: ${activity.localClassName}")
     }
 
-    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
     override fun onActivityStopped(activity: Activity) {}
     override fun onActivityDestroyed(activity: Activity) {
-        dismissDialog(activity)
-    }
-
-    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-
-
-    private fun showAlertDialog(activity: Activity, title: String, message: String) {
-        if (!activity.isFinishing && !activity.isDestroyed) {
-            val dialog = AlertDialog.Builder(activity).setTitle(title).setMessage(message)
-                .setCancelable(false).setPositiveButton("OK") { dialog, _ ->
-                    dialog.dismiss()
-                }.create()
-            dialog.show()
+        val iterator = dialogMap.entries.iterator()
+        while (iterator.hasNext()) {
+            val entry = iterator.next()
+            val dialog = entry.value
+            if (dialog.isShowing && dialog.context === activity) {
+                dialog.dismiss()
+                iterator.remove()
+            }
         }
     }
 
 
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
 }
-

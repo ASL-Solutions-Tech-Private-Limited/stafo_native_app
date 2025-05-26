@@ -87,18 +87,6 @@ class EmployerDashboard : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
 
-        /*  if (getIsLockUser()==true){
-              if (getIsLock()==true){
-                  val delayMillis = 100L
-                  Handler(Looper.getMainLooper()).postDelayed({
-                      showLockScreen()
-                  }, delayMillis)
-              }
-          }else{
-              showScreenLockDialog()
-          }*/
-
-
         initViews()
         setOnClickEvents()
         observeViewModel()

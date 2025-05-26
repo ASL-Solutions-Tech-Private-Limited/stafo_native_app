@@ -317,7 +317,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                 Handler(Looper.getMainLooper()).postDelayed({
                     onBackPressedDispatcher.onBackPressed()
                     finish()
-                }, 3000)
+                }, 1000)
             } else {
                 onApiResponseError()
                 binding.rtlAttendanceMsg.visibility=View.GONE
@@ -330,7 +330,6 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
             if (response?.status == true) {
                 val branchData = response.data
                 if (branchData != null && branchData.latitude != null && branchData.longitude != null) {
-                    Log.d("res","check branch")
                     checkBranch = true
                     branchLat = branchData.latitude.toDouble()
                     branchLong = branchData.longitude.toDouble()
@@ -340,6 +339,9 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                     }, 3000)
                 } else {
                     checkBranch = false
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        takePhoto()
+                    }, 3000)
                 }
             } else {
                 checkBranch = false

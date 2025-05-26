@@ -2,6 +2,8 @@ package com.stafo.app.base.service
 
 import android.Manifest
 import android.app.ActivityManager
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -13,17 +15,21 @@ import android.widget.Toast
 import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
+import com.google.gson.Gson
 import com.stafo.app.base.network.RetrofitInstance
 import com.stafo.app.base.notification.NotificationsHelper
 import com.stafo.app.database.AppDatabase
 import com.stafo.app.database.dao.LocationDao
 import com.stafo.app.database.dataClass.LocationEntity
 import com.stafo.app.screens.settings.dataClass.EmployeePostLocationRequest
+import com.stafo.app.screens.settings.dataClass.LocationLogRequest
 import com.stafo.app.utils.getAndroidVersion
 import com.stafo.app.utils.getBatteryPercentage
 import com.stafo.app.utils.getDeviceName
+import com.stafo.app.utils.getEmployeeComId
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getUserAccessToken
+import com.stafo.app.utils.isGpsEnabled
 import com.tanodxyz.gdownload.isNetworkAvailable
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
@@ -60,6 +66,7 @@ class LocationForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
         if (intent?.action == "STOP_FOREGROUND_SERVICE") {
             stopForegroundService()
             return START_NOT_STICKY
@@ -88,27 +95,7 @@ class LocationForegroundService : Service() {
         }.start()
     }
 
-/*    private fun postGeoLocation(lat: String, long: String){
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val request = EmployeePostLocationRequest(
-                    employee_id = getEmployeeDetails()?.id.toString(),
-                    latitude = lat,
-                    longitude = long
-                )
-                val token = getUserAccessToken() ?: return@launch
 
-                val response = RetrofitInstance.apiService.callPostGeoLocation("Bearer $token", request)
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        Log.d("res", "Location updated successfully: ${response.body()}")
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("API Error", "Exception: ${e.message}")
-            }
-        }
-    }*/
 
     private suspend fun postGeoLocation(lat: String, long: String): Boolean {
         return try {
@@ -118,20 +105,9 @@ class LocationForegroundService : Service() {
                 longitude = long
             )
 
-            CoroutineScope(Dispatchers.IO).launch {
-                val all = locationDao.getAllLocations()
-                all.forEachIndexed { index, location ->
-                    Log.d("DB_LOG", "Location #$index: $location")
-                }
-            }
-
-
-
-
-
             val token = getUserAccessToken() ?: return false
 
-            val response = RetrofitInstance.apiService.callPostGeoLocation("Bearer $token", request)
+            val response = RetrofitInstance.getApiService(applicationContext).callPostGeoLocation("Bearer $token", request)
 
             if (response.isSuccessful) {
                 withContext(Dispatchers.Main) {
@@ -148,71 +124,41 @@ class LocationForegroundService : Service() {
     }
 
 
-    /*  private fun startRecurringTimer() {
-          handler = Handler(Looper.getMainLooper())
-          runnable = object : Runnable {
-              override fun run() {
-                  postGeoLocation(lat.toString(), longi.toString())
-                  handler?.postDelayed(this, 10000)
-              }
-          }
-          handler?.post(runnable!!)
-      }*/
-
-    private fun startRecurringTimer() {
-        handler = Handler(Looper.getMainLooper())
-        runnable = object : Runnable {
-            override fun run() {
-
-
-                if (lat != null && longi != null) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        val location = LocationEntity(
-                            latitude = lat.toString(),
-                            longitude = longi.toString(),
-                            timestamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()),
-                            isNetwork = true,
-                            isGpsTurn = true,
-                            deviceName = getDeviceName(),
-                            batteryPercentage = getBatteryPercentage(this@LocationForegroundService),
-                            androidVersion = getAndroidVersion()
-                        )
-                        locationDao.insertLocation(location)
-                    }
-
-                    // Try to sync if network available
-                    if (isNetworkAvailable()) {
-                        syncLocationsToServer()
-                    }
-                } else {
-                    Log.w(TAG, "Skipped saving location: lat/long not yet available.")
-                }
-
-                handler?.postDelayed(this, 10000)
-            }
-
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        val restartIntent = Intent(applicationContext, LocationForegroundService::class.java).apply {
+            setPackage(packageName)
         }
-        handler?.post(runnable!!)
+
+        val restartPendingIntent = PendingIntent.getService(
+            applicationContext,
+            1,
+            restartIntent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.set(
+            AlarmManager.ELAPSED_REALTIME,
+            SystemClock.elapsedRealtime() + 2000,
+            restartPendingIntent
+        )
+
     }
 
-    private fun syncLocationsToServer() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val unsynced = locationDao.getUnsyncedLocations()
-            if (unsynced.isNotEmpty()) {
-                val idsSynced = mutableListOf<Int>()
-                for (item in unsynced) {
-                    val success = postGeoLocation(item.latitude, item.longitude)
-                    if (success) {
-                        idsSynced.add(item.id)
-                    }
-                }
 
-                if (idsSynced.isNotEmpty()) {
-                    locationDao.markLocationsAsSynced(idsSynced)
-                }
-            }
-        }
-    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     private fun stopRecurringTimer() {
@@ -231,13 +177,6 @@ class LocationForegroundService : Service() {
 
         locationDao = AppDatabase.getDatabase(this).locationDao()
 
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val all = locationDao.getAllLocations()
-            all.forEachIndexed { index, location ->
-                Log.d("DB_LOG", "Location #$index: $location")
-            }
-        }
 
     }
 
@@ -305,17 +244,129 @@ class LocationForegroundService : Service() {
                     if (location.latitude != 0.0 && location.longitude != 0.0) {
                         lat = location.latitude
                         longi = location.longitude
-                        Log.d(TAG, "Live location: $lat, $longi")
+
+                        Log.e("service", "Live location: $lat, $longi")
 
                         if (handler == null) {
-                            startRecurringTimer()
+                            if (isNetworkAvailable()) {
+
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    postGeoLocation(lat.toString(), longi.toString())
+                                }
+                            } else {
+
+                                startRecurringTimer()
+                            }
                         }
+
                     }
                 }
             }
 
         }
     }
+
+
+    private fun startRecurringTimer() {
+        handler = Handler(Looper.getMainLooper())
+        runnable = object : Runnable {
+            override fun run() {
+                val gpsOn = isGpsEnabled(applicationContext)
+                val networkOn = isNetworkAvailable()
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    if (networkOn) {
+                        // First sync offline data
+                        val synced = syncLocationsToServer()
+
+                        // Only post current location if syncing succeeded
+                        if (synced && lat != null && longi != null) {
+                            postGeoLocation(lat.toString(), longi.toString())
+                        }
+                    } else {
+                        // Save to DB
+                        val location = LocationEntity(
+                            latitude = lat?.toString() ?: "N/A",
+                            longitude = longi?.toString() ?: "N/A",
+                            timestamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()),
+                            isNetwork = false,
+                            isGpsTurn = gpsOn,
+                            deviceName = getDeviceName(),
+                            batteryPercentage = getBatteryPercentage(this@LocationForegroundService),
+                            androidVersion = getAndroidVersion()
+                        )
+                        locationDao.insertLocation(location)
+
+                        if (!gpsOn) {
+                            Log.d("DB_LOG", "GPS OFF — fallback location stored once.")
+                            stopRecurringTimer() // Optional
+                        } else {
+                            Log.d("DB_LOG", "GPS ON — offline location stored.")
+                        }
+                    }
+                }
+
+                handler?.postDelayed(this, 20_000)
+            }
+        }
+
+        handler?.post(runnable!!)
+    }
+
+
+
+
+    private suspend fun syncLocationsToServer(): Boolean {
+        return withContext(Dispatchers.IO) {
+            val all = locationDao.getAllLocations()
+
+            if (all.isNullOrEmpty()) {
+                Log.d("DB_LOG", "No offline locations to sync.")
+                return@withContext true // Nothing to sync is considered "successful"
+            }
+
+            // Log for debugging
+            all.forEachIndexed { index, location ->
+                Log.d("DB_LOG", "Location #$index: $location")
+            }
+
+            postLocationLog(all)
+        }
+    }
+
+
+    private suspend fun postLocationLog(list: List<LocationEntity>): Boolean {
+        return try {
+            val jsonLogData = Gson().toJson(list)
+
+            val request = LocationLogRequest(
+                company_id = getEmployeeComId().toString(),
+                employee_id = getEmployeeDetails()?.id.toString(),
+                log_data = jsonLogData
+            )
+
+            Log.d("res", "Location log request: $request")
+            val response = RetrofitInstance.getApiService(applicationContext).callDeviceLog(request)
+
+            if (response.isSuccessful) {
+                Log.d("res", "Location log updated successfully: ${response.body()}")
+                locationDao.clearAllLocations()
+                true
+            } else {
+                Log.e("res", "Failed to update location log: ${response.errorBody()?.string()}")
+                false
+            }
+        } catch (e: Exception) {
+            Log.e("res", "Exception: ${e.message}")
+            false
+        }
+    }
+
+
+
+
+
+
 
     private fun startServiceRunningTicker() {
         timerJob?.cancel()

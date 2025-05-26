@@ -1,10 +1,17 @@
 package com.stafo.app
 
 import android.content.Context
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.StrictMode
 import android.util.Log
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.stafo.app.api.ApiClient
 import com.stafo.app.api.ApiStores
 import com.mmi.services.account.MapmyIndiaAccountManager
@@ -36,10 +43,14 @@ class ASLEmpMng : MultiDexApplication() {
         val builder = StrictMode.VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
       //  FirebaseApp.initializeApp(this)
-        scheduleDailyEndOfDaySync(applicationContext)
-        registerActivityLifecycleCallbacks(NetworkConnectivityHandler(this))
+
+        val networkHandler = NetworkConnectivityHandler(this)
+        registerActivityLifecycleCallbacks(networkHandler)
 
         initMapMyIndia()
+
+
+
 
     }
 
