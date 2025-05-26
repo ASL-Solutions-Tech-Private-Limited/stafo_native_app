@@ -15,6 +15,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.stafo.app.R
 import com.stafo.app.base.adapter.ActionsListAdapter
 import com.stafo.app.base.adapter.AdapterOnLeave
@@ -25,17 +27,22 @@ import com.stafo.app.base.model.DashboardType
 import com.stafo.app.base.model.DashboardWish
 import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmployerDashboardBinding
+import com.stafo.app.screens.bbps.BBPSDashboard
 import com.stafo.app.screens.emp.EmplyeeAttendaceListActivity
 import com.stafo.app.screens.emp.ViewEmpLocationTrackActivity
+import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.performance.PerformanceActivity
 import com.stafo.app.screens.profile.CompanyProfileActivity
 import com.stafo.app.screens.rank.RankListActivity
+import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.screens.settings.AddEmployeeActivity
 import com.stafo.app.screens.settings.BranchActivity
+import com.stafo.app.screens.settings.HolidayActivity
 import com.stafo.app.screens.settings.LeaveManagementActivity
 import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
 import com.stafo.app.screens.settings.PolicyActivity
 import com.stafo.app.screens.settings.SettingsViewModel
+import com.stafo.app.screens.settings.SubMenuActivity
 import com.stafo.app.screens.settings.VerifyCompanyDetailsActivity
 import com.stafo.app.screens.settings.ViewAllEmployeeActivity
 import com.stafo.app.screens.settings.ViewDeviceRequestEmpActivity
@@ -51,16 +58,6 @@ import com.stafo.app.utils.getTodayDate
 import com.stafo.app.utils.setEmployeeComId
 import com.stafo.app.utils.setIsLock
 import com.stafo.app.utils.setIsLockUser
-import com.bumptech.glide.Glide
-import com.google.gson.Gson
-import com.stafo.app.screens.chat.ChatWithCompanyActivity
-import com.stafo.app.screens.crm.CRMLeadDashboard
-import com.stafo.app.screens.notification.NotificationActivity
-import com.stafo.app.screens.recharge.RechargeActivity
-import com.stafo.app.screens.reports.ReportsActivity
-import com.stafo.app.screens.settings.HolidayActivity
-import com.stafo.app.screens.settings.SubMenuActivity
-import com.tanodxyz.gdownload.isNetworkAvailable
 
 class EmployerDashboard : AppCompatActivity() {
 
@@ -194,7 +191,7 @@ class EmployerDashboard : AppCompatActivity() {
                                 startActivity(
                                     Intent(
                                         this@EmployerDashboard,
-                                        CRMLeadDashboard::class.java
+                                        BBPSDashboard::class.java
                                     )
                                 )
                             }
