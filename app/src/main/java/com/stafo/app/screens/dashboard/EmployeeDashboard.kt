@@ -2,6 +2,7 @@ package com.stafo.app.screens.dashboard
 
 import android.Manifest
 import android.app.ActivityManager
+import android.app.AlarmManager
 import android.app.KeyguardManager
 import android.app.Service
 import android.content.Context
@@ -23,6 +24,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.AlarmManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -62,11 +64,13 @@ import com.stafo.app.screens.settings.SubMenuActivity
 import com.stafo.app.screens.ui.EmplyeeyerProfile
 import com.stafo.app.screens.ui.WishListActivity
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.checkExactAlarmPermission
 import com.stafo.app.utils.convertTo12HourFormat
 import com.stafo.app.utils.doLogout
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getFormattedDate2
 import com.stafo.app.utils.getGreetingBasedOnTime
+import com.stafo.app.utils.requestIgnoreBatteryOptimization
 import com.stafo.app.utils.setEmployeeBranchId
 import com.stafo.app.utils.setEmployeeComId
 import com.stafo.app.utils.setIsLock
@@ -113,31 +117,12 @@ class EmployeeDashboard : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         // reviewManager = ReviewManagerFactory.create(this)
         reviewManager = FakeReviewManager(this)
-
-
-        /* if (getIsLockUser() ==true){
-             if (getIsLock() ==true){
-                 val delayMillis = 100L
-                 Handler(Looper.getMainLooper()).postDelayed({
-                     showLockScreen()
-                 }, delayMillis)
-
-             }
-         }else{
-             showScreenLockDialog()
-         }*/
-
-
-
-
-
-
-
-
         setupViews()
         onClickListener()
-        //setupImageSlider()
+
     }
+
+
 
     private fun setupViews() {
         binding?.apply {
@@ -499,22 +484,14 @@ class EmployeeDashboard : AppCompatActivity() {
 
                 wishList.clear()
 
-
-
-
                 if (!it.employeeInfo.punches.isNullOrEmpty()) {
-                    Log.d("res", "true ")
-
                     val punchesToday = it.employeeInfo.punches.filter { punch ->
                         val punchDate = punch.punchIn?.let {
                             SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(it)
                         }?.let {
                             SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
                         }
-                        punchDate == SimpleDateFormat(
-                            "yyyy-MM-dd",
-                            Locale.getDefault()
-                        ).format(Date())
+                        punchDate == SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                     }
 
                     if (punchesToday.isNotEmpty()) {
@@ -524,139 +501,45 @@ class EmployeeDashboard : AppCompatActivity() {
                         val geoStatus = it.employeeInfo.geoStatus
                         val shiftEndTime = it.employeeInfo.shifts.firstOrNull()?.endTime
 
-                        if (punchInTime != null && geoStatus == "1") {
+                        val now = Calendar.getInstance()
 
-                            if (!isServiceRunning(LocationForegroundService::class.java)) {
-                                startService(Intent(this, LocationForegroundService::class.java))
-                            }
-
-
-
-
-
-
+                        if (punchOutTime != null) {
+                            stopLocationServiceIfRunning()
+                            updateUIForPunchOut(punchOutTime)
                         }
+                        else if (punchInTime != null && geoStatus == "1") {
+                            checkExactAlarmPermission(this) { exactAlarmGranted ->
+                                if (exactAlarmGranted) {
+                                    requestIgnoreBatteryOptimization(this) { batteryOptGranted ->
+                                        if (batteryOptGranted) {
+                                            startLocationServiceIfNotRunning()
+                                            updateUIForPunchIn(punchInTime)
 
-                        if (punchInTime != null && punchOutTime != null) {
+                                            val shiftEndReached = shiftEndTime?.let { endTime ->
+                                                val shiftEndCal = Calendar.getInstance()
+                                                val end = SimpleDateFormat("HH:mm", Locale.getDefault()).parse(endTime)
+                                                shiftEndCal.set(Calendar.HOUR_OF_DAY, end.hours)
+                                                shiftEndCal.set(Calendar.MINUTE, end.minutes)
+                                                shiftEndCal.set(Calendar.SECOND, 0)
+                                                now.after(shiftEndCal)
+                                            } ?: false
 
-                            if (isServiceRunning(LocationForegroundService::class.java)) {
+                                            if (shiftEndReached) {
+                                                stopLocationServiceIfRunning()
+                                                Log.d("res", "Stopped service after shift end.")
+                                            }
 
-                                val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                startService(stopIntent)
-
-                                /*val serviceIntent = Intent(this, LocationForegroundService::class.java)
-                                stopService(serviceIntent)*/
-                                Log.d("res", "Stopped service after punch out.")
-                            }
-
-                            // If last punch has both In and Out, allow another Punch In
-                            binding.btnPunchIn.text = "Punch In"
-                            binding.btnPunchIn.isEnabled = true
-                            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-                            binding.tvOfficeTiming.text = "Punched Out At ${
-                                getFormattedDate2(
-                                    punchOutTime,
-                                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
-                                    "hh:mm a dd MMM yyyy"
-                                )
-                            }"
-
-                        } else if (punchInTime != null) {
-                            // If last punch only has In, allow Punch Out
-                            binding.btnPunchIn.text = "Punch Out"
-                            binding.btnPunchIn.isEnabled = true
-                            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-                            binding.tvOfficeTiming.text = "Punched In At ${
-                                getFormattedDate2(
-                                    punchInTime,
-                                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
-                                    "hh:mm a dd MMM yyyy"
-                                )
-                            }"
-                        }
-                       /* val currentDateTime = Calendar.getInstance()
-                        if (shiftEndTime != null) {
-
-
-                            val shiftEndCalendar = Calendar.getInstance()
-                            val shiftEndTimeDate =
-                                SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
-
-                            shiftEndTimeDate?.let {
-                                shiftEndCalendar.set(Calendar.HOUR_OF_DAY, it.hours)
-                                shiftEndCalendar.set(Calendar.MINUTE, it.minutes)
-                                shiftEndCalendar.set(Calendar.SECOND, 0)
-                            }
-
-                            if (shiftEndTime != null && currentDateTime.after(shiftEndCalendar)) {
-
-                                Log.d("res", "end time service")
-
-
-                                if (isServiceRunning(LocationForegroundService::class.java)) {
-
-                                    val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                    stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                    startService(stopIntent)
-                                    *//*val serviceIntent = Intent(this, LocationForegroundService::class.java)
-                                    stopService(serviceIntent)*//*
-                                    Log.d("res", "Stopped service after shift end.")
-                                }
-                            }
-                        }else{
-                            if (isServiceRunning(LocationForegroundService::class.java)) {
-
-                                val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                startService(stopIntent)
-                                Log.d("res", "Stopped service not find shift time.")
-                            }
-
-                        }*/
-
-                        val currentDateTime = Calendar.getInstance()
-
-                        if (!shiftEndTime.isNullOrEmpty()) {
-                            val shiftEndCalendar = Calendar.getInstance()
-                            val shiftEndTimeDate =
-                                SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
-
-                            shiftEndTimeDate?.let {
-                                shiftEndCalendar.set(Calendar.HOUR_OF_DAY, it.hours)
-                                shiftEndCalendar.set(Calendar.MINUTE, it.minutes)
-                                shiftEndCalendar.set(Calendar.SECOND, 0)
-                            }
-
-                            if (currentDateTime.after(shiftEndCalendar)) {
-                                Log.d("res", "End time reached, stopping service.")
-
-                                if (isServiceRunning(LocationForegroundService::class.java)) {
-                                    val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                    stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                    startService(stopIntent)
-                                    Log.d("res", "Stopped service after shift end.")
-                                }
-                            }
-                        } else {
-
-                            val currentHour = currentDateTime.get(Calendar.HOUR_OF_DAY)
-                            val currentMinute = currentDateTime.get(Calendar.MINUTE)
-
-                            if (currentHour == 20 && currentMinute == 0) {
-
-                                Log.d("res", "Shift time is empty, checking 8:00 PM condition.")
-
-                                if (isServiceRunning(LocationForegroundService::class.java)) {
-                                    val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                    stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                    startService(stopIntent)
-                                    Log.d("res", "Stopped service at 8:00 PM as shift time was empty.")
+                                            if (shiftEndTime.isNullOrEmpty()) {
+                                                if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(Calendar.MINUTE) == 0) {
+                                                    stopLocationServiceIfRunning()
+                                                    Log.d("res", "Stopped service at 9 PM, no shift end.")
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
-
-
 
                     } else {
                         binding.btnPunchIn.text = "Punch In"
@@ -664,6 +547,7 @@ class EmployeeDashboard : AppCompatActivity() {
                         binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
                     }
                 }
+
 
 
             }
@@ -786,6 +670,53 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
     }
+
+
+    private fun startLocationServiceIfNotRunning() {
+        if (!isServiceRunning(LocationForegroundService::class.java)) {
+            startService(Intent(this, LocationForegroundService::class.java))
+        }
+    }
+
+    private fun stopLocationServiceIfRunning() {
+        if (isServiceRunning(LocationForegroundService::class.java)) {
+            val stopIntent = Intent(this, LocationForegroundService::class.java)
+            stopIntent.action = "STOP_FOREGROUND_SERVICE"
+            ContextCompat.startForegroundService(this, stopIntent)
+        }
+    }
+
+    private fun updateUIForPunchOut(punchOutTime: String) {
+        binding.btnPunchIn.text = "Punch In"
+        binding.btnPunchIn.isEnabled = true
+        binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+        binding.tvOfficeTiming.text = "Punched Out At ${
+            getFormattedDate2(
+                punchOutTime,
+                listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
+                "hh:mm a dd MMM yyyy"
+            )
+        }"
+    }
+
+    private fun updateUIForPunchIn(punchInTime: String) {
+        binding.btnPunchIn.text = "Punch Out"
+        binding.btnPunchIn.isEnabled = true
+        binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+        binding.tvOfficeTiming.text = "Punched In At ${
+            getFormattedDate2(
+                punchInTime,
+                listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
+                "hh:mm a dd MMM yyyy"
+            )
+        }"
+    }
+
+
+
+
+
+
 
 
     override fun onBackPressed() {

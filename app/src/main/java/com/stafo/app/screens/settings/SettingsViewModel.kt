@@ -127,6 +127,7 @@ import com.stafo.app.screens.settings.dataClass.VerifyGSTNumberResponse
 import com.stafo.app.screens.settings.dataClass.VerifyRegisterNumberResponse
 import com.stafo.app.screens.settings.dataClass.ViewBranchResponse
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.doLogout
 import com.stafo.app.utils.getUserAccessToken
 import com.stafo.app.utils.isNetworkAvailable
 import kotlinx.coroutines.Dispatchers
@@ -3306,14 +3307,21 @@ class SettingsViewModel : BaseViewModel() {
                         if (it.isSuccessful) {
                             mFetchEmployeeDetails.postValue(it.body())
                         } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
+                            when (it.code()) {
+                                401 -> {
+                                    doLogout(mContext)
+                                }
+                                else -> {
+                                    it.errorBody()?.charStream()?.let { errorStream ->
+                                        val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                        CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                    } ?: run {
+                                        CustomToast(
+                                            mContext,
+                                            mContext.getString(R.string.error_something_went_wrong)
+                                        )
+                                    }
+                                }
                             }
                         }
                     } ?: run {
@@ -3646,8 +3654,56 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-
     fun getCompanyDetails(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callCompanyProfile()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mCompanyProfile.postValue(it.body())
+                        } else {
+                            when (it.code()) {
+                                401 -> {
+                                   doLogout(mContext)
+                                }
+                                else -> {
+                                    it.errorBody()?.charStream()?.let { errorStream ->
+                                        val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                        CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                    } ?: run {
+                                        CustomToast(
+                                            mContext,
+                                            mContext.getString(R.string.error_something_went_wrong)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+  /*  fun getCompanyDetails(mContext: Context) {
         if (!isNetworkAvailable(mContext)) {
             return
         }
@@ -3687,7 +3743,7 @@ class SettingsViewModel : BaseViewModel() {
                 }
             }
         }
-    }
+    }*/
 
 
     fun requestLeaveEmp(mContext: Context, request: EmployeeLeaveRequestBody) {
@@ -3795,14 +3851,21 @@ class SettingsViewModel : BaseViewModel() {
                         if (it.isSuccessful) {
                             mAttendanceSummary.postValue(it.body())
                         } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
+                            when (it.code()) {
+                                401 -> {
+                                    doLogout(mContext)
+                                }
+                                else -> {
+                                    it.errorBody()?.charStream()?.let { errorStream ->
+                                        val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                        CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                    } ?: run {
+                                        CustomToast(
+                                            mContext,
+                                            mContext.getString(R.string.error_something_went_wrong)
+                                        )
+                                    }
+                                }
                             }
                         }
                     } ?: run {
@@ -4261,14 +4324,21 @@ class SettingsViewModel : BaseViewModel() {
                         if (it.isSuccessful) {
                             mEmployeeDashoard.postValue(it.body())
                         } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
+                            when (it.code()) {
+                                401 -> {
+                                    doLogout(mContext)
+                                }
+                                else -> {
+                                    it.errorBody()?.charStream()?.let { errorStream ->
+                                        val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                        CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                    } ?: run {
+                                        CustomToast(
+                                            mContext,
+                                            mContext.getString(R.string.error_something_went_wrong)
+                                        )
+                                    }
+                                }
                             }
                         }
                     } ?: run {

@@ -13,6 +13,9 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import androidx.core.content.ContextCompat
+import com.stafo.app.screens.auth.LoginWithOTPActivity
+import com.stafo.app.screens.auth.OnBoardingActivity
+import com.stafo.app.screens.auth.OtpVerifyActivity
 import com.stafo.app.screens.ui.SplashActivity
 import com.stafo.app.utils.isNetworkAvailable
 
@@ -28,7 +31,7 @@ class NetworkConnectivityHandler(private val application: Application) :
 
         NetworkMonitor.isConnected.observeForever { isConnected ->
             currentActivity?.let { activity ->
-                if (activity is SplashActivity || activity.isFinishing || activity.isDestroyed) return@observeForever
+                if (shouldSkipDialog(activity)) return@observeForever
 
                 if (isConnected) {
                     dismissDialog(activity, "internet")
@@ -36,7 +39,6 @@ class NetworkConnectivityHandler(private val application: Application) :
                         hasRestartedAfterNetworkRestore = true
                         activity.recreate()
                     }
-
                 } else {
                     hasRestartedAfterNetworkRestore = false
                     showCustomDialog(
@@ -63,25 +65,27 @@ class NetworkConnectivityHandler(private val application: Application) :
     }
 
     private fun showCustomDialog(activity: Activity, title: String, message: String, tag: String) {
+        if (shouldSkipDialog(activity)) return
 
-        if (activity.isFinishing || activity.isDestroyed) {
-            return
-        }
-
-        if (dialogMap[tag]?.isShowing == true) {
-            return
-        }
+        if (dialogMap[tag]?.isShowing == true) return
 
         try {
+            val intent = when (tag) {
+                "internet" -> Intent(Settings.ACTION_WIRELESS_SETTINGS)
+                "permission" -> Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                "gps" -> Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                else -> Intent(Settings.ACTION_SETTINGS)
+            }
+
             val dialog = AlertDialog.Builder(activity)
                 .setTitle(title)
                 .setMessage(message)
                 .setCancelable(false)
                 .setPositiveButton("Open Settings") { _, _ ->
-                    val intent = Intent(Settings.ACTION_SETTINGS)
                     activity.startActivity(intent)
                 }
                 .create()
+
             dialog.show()
             dialogMap[tag] = dialog
         } catch (e: Exception) {
@@ -99,11 +103,19 @@ class NetworkConnectivityHandler(private val application: Application) :
         }
     }
 
+    private fun shouldSkipDialog(activity: Activity?): Boolean {
+        if (activity == null || activity.isFinishing || activity.isDestroyed) return true
+        return activity is SplashActivity ||
+                activity is OnBoardingActivity ||
+                activity is LoginWithOTPActivity ||
+                activity is OtpVerifyActivity
+    }
+
     override fun onActivityResumed(activity: Activity) {
         currentActivity = activity
 
         Handler(Looper.getMainLooper()).postDelayed({
-            if (activity is SplashActivity) return@postDelayed
+            if (shouldSkipDialog(activity)) return@postDelayed
 
             val isConnected = NetworkMonitor.isConnected.value
             val fallbackConnected = isNetworkAvailable(activity)
@@ -165,7 +177,6 @@ class NetworkConnectivityHandler(private val application: Application) :
             }
         }
     }
-
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
 }

@@ -1,6 +1,8 @@
 package com.stafo.app.screens.dashboard
 
+import android.app.ActivityManager
 import android.app.KeyguardManager
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -519,10 +521,25 @@ class EmployerDashboard : AppCompatActivity() {
         }
     }
 
-    private fun stopLocationService() {
-        val intent = Intent(this, LocationForegroundService::class.java)
-        stopService(intent)
+    private fun stopLocationServiceIfRunning() {
+        if (isServiceRunning(LocationForegroundService::class.java)) {
+            val stopIntent = Intent(this, LocationForegroundService::class.java)
+            stopIntent.action = "STOP_FOREGROUND_SERVICE"
+            ContextCompat.startForegroundService(this, stopIntent)
+        }
     }
+
+
+    private fun isServiceRunning(serviceClass: Class<out Service>): Boolean {
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in activityManager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
 
     private fun setOnClickEvents() {
 
@@ -545,21 +562,8 @@ class EmployerDashboard : AppCompatActivity() {
 
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
-
-
-
-       /* binding.llcRecharge.setOnClickListener {
-            startActivity(Intent(this, DashboardActivity::class.java))
-        }
-
-        binding.llcLoan.setOnClickListener {
-            startActivity(Intent(this, ChatWithCompanyActivity::class.java))
-            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
-        }*/
-
-
-
-        stopLocationService()
+        
+        stopLocationServiceIfRunning()
 
         settingsViewModel.getCompanyDetails(this@EmployerDashboard)
 

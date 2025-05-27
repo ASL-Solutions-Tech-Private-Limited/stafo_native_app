@@ -2,6 +2,7 @@ package com.stafo.app.utils
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
@@ -34,7 +35,9 @@ import android.os.CountDownTimer
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.provider.MediaStore
+import android.provider.Settings
 import android.provider.Settings.Secure
 import android.text.SpannableString
 import android.text.Spanned
@@ -1939,7 +1942,32 @@ fun scheduleDailyEndOfDaySync(context: Context) {
     )
 }
 
+fun checkExactAlarmPermission(context: Context, onResult: (Boolean) -> Unit) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val alarmManager = context.getSystemService(AlarmManager::class.java)
+        if (!alarmManager.canScheduleExactAlarms()) {
+            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+            intent.data = Uri.parse("package:${context.packageName}")
+            (context as Activity).startActivityForResult(intent, 1001)
+            onResult(false)
+        } else {
+            onResult(true)
+        }
+    } else {
+        onResult(true)
+    }
+}
 
-
+fun requestIgnoreBatteryOptimization(context: Context, onResult: (Boolean) -> Unit) {
+    val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+    if (!pm.isIgnoringBatteryOptimizations(context.packageName)) {
+        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+        intent.data = Uri.parse("package:${context.packageName}")
+        (context as Activity).startActivityForResult(intent, 1002)
+        onResult(false)
+    } else {
+        onResult(true)
+    }
+}
 
 
