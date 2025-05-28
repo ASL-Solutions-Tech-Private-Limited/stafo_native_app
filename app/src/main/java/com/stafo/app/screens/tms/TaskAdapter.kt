@@ -8,12 +8,13 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.R
 import com.stafo.app.databinding.ItemTaskCardLayoutBinding
+import com.stafo.app.screens.tms.dataClass.TaskData
 
 class TaskAdapter(
-    private val tasks: List<TaskMSDashboard.TaskModel>,
-    private val onEditClick: (TaskMSDashboard.TaskModel) -> Unit,
-    private val onDeleteClick: (TaskMSDashboard.TaskModel) -> Unit,
-    private val itemClick: (TaskMSDashboard.TaskModel) -> Unit
+    private val tasks: List<TaskData>,
+    private val onEditClick: (TaskData) -> Unit,
+    private val onDeleteClick: (TaskData) -> Unit,
+    private val itemClick: (TaskData) -> Unit
 ) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     inner class TaskViewHolder(val binding: ItemTaskCardLayoutBinding) :
@@ -31,10 +32,10 @@ class TaskAdapter(
 
         with(holder.binding) {
             taskTitle.text = task.title
-            taskDate.text = "${task.date} ·"
+            taskDate.text = "${task.start_date} ·"
             taskPriority.text = "${task.priority} Priority"
             taskStatus.text = task.status
-            taskAssign.text = task.assignee
+            //taskAssign.text = task.assignee
 
             // Use the same background and tint based on status
             taskStatus.setBackgroundResource(R.drawable.bg_status_in_progress)

@@ -1,4 +1,4 @@
-package com.stafo.app.screens.crm.dataClass
+package com.stafo.app.screens.tms.dataClass
 
 data class TaskListResponse(
     val success: Boolean,

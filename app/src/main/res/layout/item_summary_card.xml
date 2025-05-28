@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/_100sdp"
     android:layout_height="@dimen/_80sdp"
-    android:layout_margin="@dimen/_12sdp"
+    android:layout_margin="@dimen/_10sdp"
     android:gravity="center"
     app:cardCornerRadius="@dimen/_6sdp"
     android:background="@color/white"
@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:layout_margin="@dimen/_6sdp"
+        android:layout_marginVertical="@dimen/_6sdp"
+        android:layout_marginHorizontal="@dimen/_4sdp"
         android:orientation="vertical">
 
         <ImageView
@@ -31,7 +32,7 @@
             android:textColor="@color/black"
             android:fontFamily="@font/gilroy_semi_bold"
             android:textSize="@dimen/_14ssp"
-            android:textStyle="bold" />
+            />
 
         <TextView
             android:id="@+id/summaryLabel"
@@ -39,8 +40,7 @@
             android:layout_height="wrap_content"
             android:text="In Progress"
             android:textSize="@dimen/_10ssp"
-            android:textStyle="bold"
-            android:fontFamily="@font/gilroy_semi_bold"
+            android:fontFamily="@font/gilroy_medium"
             android:textColor="@color/gray_colour" />
 
     </LinearLayout>

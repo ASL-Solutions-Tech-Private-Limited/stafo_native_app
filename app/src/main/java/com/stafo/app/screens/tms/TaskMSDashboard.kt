@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -12,11 +13,22 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityTaskMsdashboardBinding
+import com.stafo.app.utils.CustomLoader
+import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.getEmployeeComId
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class TaskMSDashboard : AppCompatActivity() {
+
     private lateinit var binding: ActivityTaskMsdashboardBinding
     private lateinit var selectedTab: TextView
     private lateinit var tabList: List<TextView>
+
+    private val customLoader: CustomLoader by lazy { CustomLoader(this) }
+    private val tmsViewModel: TMSViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -30,32 +42,39 @@ class TaskMSDashboard : AppCompatActivity() {
         }
 
         setupViews()
+        observeViewModel()
     }
 
     private fun setupViews() {
-        binding?.apply {
-            totalTask?.apply {
-                summaryCount?.text = "6"
-                summaryLabel?.text = "Total Tasks"
-                iconSummary?.setImageResource(R.drawable.ic_task)
+        binding.apply {
+
+            getEmployeeComId()?.let {
+                tmsViewModel.getTaskList(this@TaskMSDashboard, it)
             }
 
-            inProgressTask?.apply {
-                summaryCount?.text = "2"
-                summaryLabel?.text = "In Progress"
-                iconSummary?.setImageResource(R.drawable.ic_pending)
+
+            totalTask.apply {
+                summaryCount.text = "6"
+                summaryLabel.text = "Total Tasks"
+                iconSummary.setImageResource(R.drawable.ic_task)
             }
 
-            completeTask?.apply {
-                summaryCount?.text = "4"
-                summaryLabel?.text = "Completed"
-                iconSummary?.setImageResource(R.drawable.ic_complete)
+            inProgressTask.apply {
+                summaryCount.text = "2"
+                summaryLabel.text = "In Progress"
+                iconSummary.setImageResource(R.drawable.ic_pending)
             }
 
-            overDuaTask?.apply {
-                summaryCount?.text = "2"
-                summaryLabel?.text = "Over Due"
-                iconSummary?.setImageResource(R.drawable.ic_overdue)
+            completeTask.apply {
+                summaryCount.text = "4"
+                summaryLabel.text = "Completed"
+                iconSummary.setImageResource(R.drawable.ic_complete)
+            }
+
+            overDuaTask.apply {
+                summaryCount.text = "2"
+                summaryLabel.text = "Over Due"
+                iconSummary.setImageResource(R.drawable.ic_overdue)
             }
 
             btnAddTask.setOnClickListener {
@@ -117,23 +136,96 @@ class TaskMSDashboard : AppCompatActivity() {
             TaskModel("New feature planning", "Aug 21", "High", "Pending", "Nida")
         )
 
-        val taskAdapter = TaskAdapter(dummyTasks, {
 
-        }, {}, {
-            startActivity(Intent(this@TaskMSDashboard, TaskDescriptionActivity::class.java))
-        })
-        binding.recyclerTasks.adapter = taskAdapter
-        binding.recyclerTasks.layoutManager = LinearLayoutManager(this)
     }
 
 
     data class TaskModel(
-        val title: String,
-        val date: String,
-        val priority: String, // "High", "Medium", "Low"
+        val title: String, val date: String, val priority: String, // "High", "Medium", "Low"
         val status: String,   // "In Progress", "Pending", etc.
         val assignee: String
     )
+
+
+    private fun observeViewModel() {
+
+
+        tmsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
+
+        tmsViewModel.mTaskListResponse.observe(this) {
+
+            if (it.success) {
+                if (!it.data.isNullOrEmpty()) {
+
+                    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    val today = Calendar.getInstance().time
+
+                    val totalTasks = it.data.size
+
+
+                    val inProgressTasks = it.data.count { task ->
+                        task.status.equals("active", ignoreCase = true) &&
+                                dateFormat.parse(task.end_date)?.after(today) == true ||
+                                dateFormat.parse(task.end_date)?.equals(today) == true
+                    }
+
+                    val completedTasks = it.data.count { task ->
+                        task.status.equals("completed", ignoreCase = true)
+                    }
+
+                    val overdueTasks = it.data.count { task ->
+                        task.status.equals("active", ignoreCase = true) &&
+                                dateFormat.parse(task.end_date)?.before(today) == true
+                    }
+
+                    // Log for debug
+                    Log.d("TaskCounts", "Total: $totalTasks")
+                    Log.d("TaskCounts", "Completed: $completedTasks")
+                    Log.d("TaskCounts", "In Progress: $inProgressTasks")
+                    Log.d("TaskCounts", "Overdue: $overdueTasks")
+
+                    // Set values to UI
+                    binding.totalTask.summaryCount.text = totalTasks.toString()
+                    binding.inProgressTask.summaryCount.text = inProgressTasks.toString()
+                    binding.completeTask.summaryCount.text = completedTasks.toString()
+                    binding.overDuaTask.summaryCount.text = overdueTasks.toString()
+
+                    val taskAdapter = TaskAdapter(
+                        it.data,
+                        {},
+                        {},
+                        {
+                            startActivity(Intent(this@TaskMSDashboard, TaskDescriptionActivity::class.java))
+                        }
+                    )
+                    binding.recyclerTasks.adapter = taskAdapter
+                    binding.recyclerTasks.layoutManager = LinearLayoutManager(this)
+
+                } else {
+                    // Empty state
+                    binding.totalTask.summaryCount.text = "0"
+                    binding.inProgressTask.summaryCount.text = "0"
+                    binding.completeTask.summaryCount.text = "0"
+                    binding.overDuaTask.summaryCount.text = "0"
+                }
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
+
+
+
+
+    }
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
+        }
+    }
 
 
 }

@@ -85,7 +85,7 @@
                 android:textSize="@dimen/_12ssp" />
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.button.MaterialButton
@@ -96,15 +96,18 @@
                     android:text="+"
                     app:cornerRadius="@dimen/_6sdp" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/civAssign"
-                    android:layout_width="@dimen/_56sdp"
-                    android:layout_height="@dimen/_56sdp"
-                    android:layout_margin="@dimen/_4sdp"
-                    android:src="@drawable/demo_avatar"
-                    android:visibility="gone"
-                    app:civ_border_color="@color/app_theme_colour"
-                    app:civ_border_width="@dimen/_1sdp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvAssignEmp"
+                    android:layout_toRightOf="@+id/btnAssign"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:visibility="visible"
+                    tools:itemCount="1"
+                    tools:listitem="@layout/item_attach_doc_lsit" />
+
+
             </RelativeLayout>
 
             <TextView

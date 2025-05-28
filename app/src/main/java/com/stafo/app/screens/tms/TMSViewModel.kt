@@ -11,7 +11,10 @@ import com.stafo.app.R
 import com.stafo.app.base.BaseViewModel
 import com.stafo.app.base.model.ErrorResponse
 import com.stafo.app.screens.auth.LoginActivity
-import com.stafo.app.screens.crm.dataClass.TaskListResponse
+import com.stafo.app.screens.tms.dataClass.CreateTaskRequest
+import com.stafo.app.screens.tms.dataClass.CreateTaskResponse
+import com.stafo.app.screens.tms.dataClass.TaskListRequest
+import com.stafo.app.screens.tms.dataClass.TaskListResponse
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.doLogout
 import kotlinx.coroutines.Dispatchers
@@ -22,12 +25,54 @@ import kotlinx.coroutines.withContext
 class TMSViewModel : BaseViewModel() {
 
     private var mTaskList: MutableLiveData<TaskListResponse> = MutableLiveData()
-
-
-
     val mTaskListResponse: LiveData<TaskListResponse> get() = mTaskList
 
-    fun getTaskList(mContext: Context, comId: Int) {
+    private var mCreateTask: MutableLiveData<CreateTaskResponse> = MutableLiveData()
+    val mCreateTaskResponse: LiveData<CreateTaskResponse> get() = mCreateTask
+
+    fun createTask(mContext: Context, request: CreateTaskRequest) {
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callCreateTask(request)
+                Log.d("tms", "createTask: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mCreateTask.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun getTaskList(mContext: Context, comId:String) {
 
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
@@ -35,18 +80,13 @@ class TMSViewModel : BaseViewModel() {
 
 
                 val response = ASLEmpMng.instance.apiStores()?.callTaskList(comId)
-                Log.d("crm", "lead update: ${response?.body().toString()}")
+                Log.d("tms", "getTaskList: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
                         if (it.isSuccessful) {
                             mTaskList.postValue(it.body())
                         } else {
-                            when(it.code()){
-                                401->{
-                                    doLogout(mContext)
-                                }
-                            }
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
                                 CustomToast(mContext as LoginActivity, error?.message ?: "")

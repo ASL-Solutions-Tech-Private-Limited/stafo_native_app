@@ -20,16 +20,28 @@ import com.stafo.app.R
 import com.stafo.app.databinding.ActivityCreateTaskBinding
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.dataClass.GetEmployee
+import com.stafo.app.screens.tms.adapter.AdapterAssignTaskEmp
+import com.stafo.app.screens.tms.dataClass.AssignTaskEmp
+import com.stafo.app.screens.tms.dataClass.CreateTaskRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class CreateTaskActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateTaskBinding
     private lateinit var attachmentAdapter: AttachmentAdapter
-    private val attachmentList = mutableListOf<String>() // Replace with your actual file model
+    private lateinit var rvAssignEmpList: AdapterAssignTaskEmp
+    private val assignEmpList = mutableListOf<AssignTaskEmp>()
+    private val attachmentList = mutableListOf<String>()
+
     private val settingsViewModel: SettingsViewModel by viewModels()
+    private val tmsViewModel: TMSViewModel by viewModels()
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
+
+    private var selectedPriority: String=""
+    private var selectedEndDate: String=""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,7 +68,12 @@ class CreateTaskActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+
+
         settingsViewModel.getAllEmployeeList(this)
+
+
+
         updatePriorityUI()
         binding.ivBack.setOnClickListener {
             onBackPressed()
@@ -65,7 +82,7 @@ class CreateTaskActivity : AppCompatActivity() {
 
 
         binding.btnAttach.setOnClickListener {
-            addDummyAttachment() // Replace with actual file picker
+            addDummyAttachment()
         }
 
         binding.edtDeadline.setOnClickListener {
@@ -81,17 +98,47 @@ class CreateTaskActivity : AppCompatActivity() {
         binding.btnCreateTask.setOnClickListener {
             val title = binding.edtTaskTitle.text.toString()
             val description = binding.edtTaskDescription.text.toString()
-            val deadline = binding.edtDeadline.text.toString()
             val priority = getSelectedPriority()
+            val request = CreateTaskRequest(
+                company_id = 1,
+                title =title,
+                description = description,
+                start_date = "2025-05-16",
+                end_date = selectedEndDate,
+                status = "Active",
+                priority = selectedPriority,
+                task_assign = assignEmpList.map { it.id }
+            )
 
-            // Validate and handle task creation
-            Toast.makeText(this, "Task Created with priority: $priority", Toast.LENGTH_SHORT).show()
+            tmsViewModel.createTask(this, request)
         }
+
+
+        binding.rvAssignEmp.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rvAssignEmpList = AdapterAssignTaskEmp(assignEmpList)
+        binding.rvAssignEmp.adapter = rvAssignEmpList
+
+
 
         obverseViewModel()
     }
 
     private fun obverseViewModel() {
+        tmsViewModel.getLoaderLiveData().observe(this) {
+            if (it == "load") {
+                customLoader.show()
+            } else {
+                customLoader.dismiss()
+            }
+        }
+
+        tmsViewModel.mCreateTaskResponse.observe(this) {
+            if (it.success){
+                 CustomToast(this,it.message)
+            } else CustomToast(this,it.message)
+
+        }
+
 
         settingsViewModel.getLoaderLiveData().observe(this) {
             if (it == "load") {
@@ -126,16 +173,29 @@ class CreateTaskActivity : AppCompatActivity() {
 
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()
+
         DatePickerDialog(
             this,
             { _, year, month, dayOfMonth ->
-                binding.edtDeadline.setText("$dayOfMonth/${month + 1}/$year")
+                val selectedCal = Calendar.getInstance().apply {
+                    set(Calendar.YEAR, year)
+                    set(Calendar.MONTH, month)
+                    set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                }
+                val displayFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+                val postFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+                val displayDate = displayFormat.format(selectedCal.time)
+                val postDate = postFormat.format(selectedCal.time)
+                binding.edtDeadline.setText(displayDate)
+                selectedEndDate = postDate
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         ).show()
     }
+
 
     private fun updatePriorityUI() {
         val low = binding.priorityLow
@@ -204,17 +264,40 @@ class CreateTaskActivity : AppCompatActivity() {
             val dialog = SearchableDialog(this@CreateTaskActivity, empList, "Employee List")
             dialog.setOnItemSelected(object : OnSearchItemSelected {
                 override fun onClick(position: Int, searchListItem: SearchListItem) {
-                    binding.btnAssign.visibility = View.GONE
-                    binding.civAssign.visibility = View.VISIBLE
-                    Glide.with(this@CreateTaskActivity)
-                        .load(R.drawable.demo_avatar)
-                        .into(binding.civAssign)
-                    //   binding.etEmployee.setText(searchListItem.title)
+                    val selectedEmp = AssignTaskEmp(
+                        id = searchListItem.id,
+                        name = searchListItem.title
+                    )
+                    if (!assignEmpList.any { it.id == selectedEmp.id }) {
+                        assignEmpList.add(selectedEmp)
+                        rvAssignEmpList.notifyItemInserted(assignEmpList.size - 1)
+                    }
                     dialog.dismiss()
                 }
             })
             dialog.show()
         }
+
+
+
+
+        /* binding.btnAssign.setOnClickListener {
+             val dialog = SearchableDialog(this@CreateTaskActivity, empList, "Employee List")
+             dialog.setOnItemSelected(object : OnSearchItemSelected {
+                 override fun onClick(position: Int, searchListItem: SearchListItem) {
+                *//*     binding.btnAssign.visibility = View.GONE
+                    binding.civAssign.visibility = View.VISIBLE
+                    Glide.with(this@CreateTaskActivity)
+                        .load(R.drawable.demo_avatar)
+                        .into(binding.civAssign)
+                    //   binding.etEmployee.setText(searchListItem.title)*//*
+
+
+                    dialog.dismiss()
+                }
+            })
+            dialog.show()
+        }*/
     }
 
 }
