@@ -35,6 +35,7 @@ import com.stafo.app.screens.crm.dataClass.LeadCreateResponse
 import com.stafo.app.screens.crm.dataClass.LeadDashboardRequest
 import com.stafo.app.screens.crm.dataClass.LeadListRequest
 import com.stafo.app.screens.crm.dataClass.LeadListResponse
+import com.stafo.app.screens.crm.dataClass.TaskListResponse
 import com.stafo.app.screens.crm.dataClass.UpdateLeadResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
 import com.stafo.app.screens.payroll.dataClass.SalaryRequest
@@ -831,5 +832,11 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<MySubscriptionResponse>
 
+
+    @GET("api/task/list/{company_id}")
+    suspend fun callTaskList(
+        @Path("company_id") id: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TaskListResponse>
 
 }
