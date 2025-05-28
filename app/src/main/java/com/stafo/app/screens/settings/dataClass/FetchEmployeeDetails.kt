@@ -44,6 +44,8 @@ data class EmployeeDataFetch(
     @SerializedName("geo_status") val geoStatus: String?,
     @SerializedName("created_at") val createdAt: String,
     @SerializedName("updated_at") val updatedAt: String,
-    @SerializedName("branch_name") val brancName: String?,
+    @SerializedName("branch_name") val branchName: String?,
+    @SerializedName("device_id") val deviceId: String?,
+    @SerializedName("device_name") val deviceName: String?,
     @SerializedName("department_name") val departmentName: String?
 )

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.stafo.app.databinding.RecyViewEmployeeItemLayoutBinding
+import com.stafo.app.screens.emp.EmpSelfieAttendanceActivity
 import com.stafo.app.screens.emp.EmployeeProfileDetails
 import com.stafo.app.screens.settings.UploadSelfieAttendanceActivity
 import com.stafo.app.screens.settings.ViewAllEmployeeActivity
@@ -65,6 +66,7 @@ class EmpListAdapter(
 
                     binding.llcViewProfile.visibility = View.GONE
                     binding.ivEdit.visibility = View.VISIBLE
+                    binding.ivPunch.visibility = View.VISIBLE
                     binding.llcAddAttendance.visibility = View.GONE
                     binding.llcShiftTime.visibility = View.GONE
 
@@ -129,6 +131,18 @@ class EmpListAdapter(
 
                             })
                     }
+                    binding.ivPunch.setOnClickListener {
+
+                        Log.d("EMP_ID", "id :${list[position].id}]")
+                        context.startActivity(
+                            Intent(
+                                context,
+                                EmpSelfieAttendanceActivity::class.java
+                            ).apply {
+                                putExtra("EMP_ID", list[position].id.toString())
+
+                            })
+                    }
 
 
                     if (this.geo_status == "1") {
@@ -171,6 +185,7 @@ class EmpListAdapter(
                     binding.llcReqLocation.visibility = View.GONE
                     binding.llcViewMap.visibility = View.GONE
                     binding.ivEdit.visibility = View.GONE
+                    binding.ivPunch.visibility = View.GONE
                     binding.llcAddAttendance.visibility = View.VISIBLE
                     binding.llcShiftTime.visibility = View.VISIBLE
 

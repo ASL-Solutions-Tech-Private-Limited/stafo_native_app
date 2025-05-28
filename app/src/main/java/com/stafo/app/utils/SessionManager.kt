@@ -20,6 +20,20 @@ private val EMP_BRANCH_ID = "emp_branch_id"
 private val isLockSet = "is_lock_set"
 private val isLockUserSet = "is_lock_user_set"
 private val fbToken = "fb_token"
+private val deviceId = "device_id"
+
+
+
+fun setEMPDevice(context: Context, loginDevice: String) {
+    Hawk.put(deviceId, loginDevice)
+}
+fun getEMPDevice(context: Context): String? {
+    return Hawk.get(deviceId, null)
+}
+
+
+
+
 
 
 // SharedPreferences Helper
@@ -58,6 +72,8 @@ fun setIsCOMPANYLogin(context: Context, isLogin: Boolean) {
 fun getIsCOMPANYLogin(context: Context): Boolean {
     return getPrefs(context).getBoolean(isCOMPANYLogin, Hawk.get(isCOMPANYLogin, false))
 }*/
+
+
 private fun getPrefs(context: Context): SharedPreferences {
     return context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
 }
@@ -74,12 +90,16 @@ fun setIsOnBoardingScreenShown(context: Context, isShown: Boolean) {
 fun isOnBoardingScreenShown(context: Context): Boolean {
     return getOnBoardingPrefs(context).getBoolean(isOnBoardingShown, false)
 }
+
+
 fun setIsEMPLogin(context: Context, isLogin: Boolean) {
     getPrefs(context).edit().putBoolean(isEMPLogin, isLogin).apply()
 }
 fun getIsEMPLogin(context: Context): Boolean {
     return getPrefs(context).getBoolean(isEMPLogin, false)
 }
+
+
 fun setIsCOMPANYLogin(context: Context, isLogin: Boolean) {
     getPrefs(context).edit().putBoolean(isCOMPANYLogin, isLogin).apply()
 }

@@ -38,6 +38,7 @@ import com.stafo.app.screens.settings.dataClass.GetAttendanceBranchRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeDetails
+import com.stafo.app.utils.getIsCOMPANYLogin
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -64,6 +65,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     private var isFetchingLocation = false
 
     private var imageCapture: ImageCapture? = null
+    private var mEmpID = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +79,10 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
+        if (getIsCOMPANYLogin(this@EmpSelfieAttendanceActivity)){
+            mEmpID = intent.getStringExtra("EMP_ID").toString()
+        } else mEmpID=getEmployeeDetails()?.id.toString()
+
 
         observeViewModel()
         onClickListener()
@@ -89,12 +95,13 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                 finish()
             }
 
-            val employeeId = getEmployeeDetails()?.id
 
-            employeeId?.let { empId ->
+
+
+            mEmpID.let { empId ->
 
                 val request = GetAttendanceBranchRequest(
-                    employee_id = empId.toString()
+                    employee_id = empId
                 )
 
                 settingsViewModel.getEmpAttendanceBranch(this@EmpSelfieAttendanceActivity, request)
@@ -257,11 +264,9 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
                                 if (distance <= radar) {
                                     Log.e("LocationDebug", "User is WITHIN radar. Taking photo.")
-                                    getEmployeeDetails()?.id?.let { empId ->
-                                        settingsViewModel.selfieAttendanceEmpolyee(
-                                            this@EmpSelfieAttendanceActivity, empId, selfieImage
-                                        )
-                                    }
+                                    settingsViewModel.selfieAttendanceEmpolyee(
+                                        this@EmpSelfieAttendanceActivity, mEmpID.toInt(), selfieImage
+                                    )
                                 } else {
                                     onApiResponseError()
                                     CustomToast(
@@ -277,11 +282,9 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                         } else {
                             Log.e("LocationDebug", "Branch details not available for location check.")
                             isSubmitting = false
-                            getEmployeeDetails()?.id?.let { empId ->
-                                settingsViewModel.selfieAttendanceEmpolyee(
-                                    this@EmpSelfieAttendanceActivity, empId, selfieImage
-                                )
-                            }
+                            settingsViewModel.selfieAttendanceEmpolyee(
+                                this@EmpSelfieAttendanceActivity, mEmpID.toInt(), selfieImage
+                            )
                         }
                     }
                 }
