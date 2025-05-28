@@ -236,87 +236,62 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                     selfieImage = outputFile
                     selfieImage?.let {
                         if (checkBranch) {
-                            Log.e(
-                                "LocationDebug",
-                                "Current Location for check:$checkBranch"
-                            )
+
+                            if (branchLat == 0.0 || branchLong == 0.0) {
+                                Log.e("LocationDebug", "Branch Lat/Long not initialized properly.")
+                                CustomToast(this@EmpSelfieAttendanceActivity, "Please try again.")
+                                onBackPressedDispatcher.onBackPressed()
+                                finish()
+                                return
+                            }
+
                             getCurrentLocation { currentLat, currentLong ->
 
+                                val distance = calculateDistance(
+                                    currentLat, currentLong, branchLat, branchLong
+                                )
 
-                                if (checkBranch) {
-                                    //val distance = distance(currentLat, currentLong, branchLat, branchLong)
-                                    val distance = calculateDistance(
-                                        currentLat, currentLong, branchLat, branchLong
-                                    )
+                                Log.e("LocationDebug", "Current Location: Lat=$currentLat, Lon=$currentLong")
+                                Log.e("LocationDebug", "Branch Location: Lat=$branchLat, Lon=$branchLong, Radar=$radar")
+                                Log.e("LocationDebug", "Calculated distance: $distance meters")
 
-                                    Log.e(
-                                        "LocationDebug",
-                                        "Current Location for check: Lat=$currentLat, Lon=$currentLong"
-                                    )
-                                    Log.e(
-                                        "LocationDebug",
-                                        "Branch Location: Lat=$branchLat, Lon=$branchLong, Radar=$radar"
-                                    )
-
-                                    Log.e("LocationDebug", "Calculated distance: $distance meters")
-
-                                    if (distance <= radar) {
-                                        Log.e(
-                                            "LocationDebug", "User is WITHIN radar. Taking photo."
-                                        )
-                                        getEmployeeDetails()?.id?.let { empId ->
-                                            settingsViewModel.selfieAttendanceEmpolyee(
-                                                this@EmpSelfieAttendanceActivity, empId, selfieImage
-                                            )
-                                        }
-                                    } else {
-                                        onApiResponseError()
-                                        CustomToast(
-                                            this@EmpSelfieAttendanceActivity,
-                                            "Please move closer to the branch area to punch attendance."
-                                        )
-                                        isSubmitting = false
-                                        onBackPressedDispatcher.onBackPressed()
-                                        finish()
-                                    }
-                                } else {
-                                    Log.e(
-                                        "LocationDebug",
-                                        "Branch details not available for location check."
-                                    )
-                                    CustomToast(
-                                        this@EmpSelfieAttendanceActivity,
-                                        "Branch location not found. Cannot verify proximity."
-                                    )
-                                    isSubmitting = false
-
+                                if (distance <= radar) {
+                                    Log.e("LocationDebug", "User is WITHIN radar. Taking photo.")
                                     getEmployeeDetails()?.id?.let { empId ->
                                         settingsViewModel.selfieAttendanceEmpolyee(
                                             this@EmpSelfieAttendanceActivity, empId, selfieImage
                                         )
                                     }
+                                } else {
+                                    onApiResponseError()
+                                    CustomToast(
+                                        this@EmpSelfieAttendanceActivity,
+                                        "Please move closer to the branch area to punch attendance."
+                                    )
+                                    isSubmitting = false
+                                    onBackPressedDispatcher.onBackPressed()
+                                    finish()
                                 }
                             }
 
-
                         } else {
+                            Log.e("LocationDebug", "Branch details not available for location check.")
+                            isSubmitting = false
                             getEmployeeDetails()?.id?.let { empId ->
                                 settingsViewModel.selfieAttendanceEmpolyee(
                                     this@EmpSelfieAttendanceActivity, empId, selfieImage
                                 )
                             }
-
                         }
                     }
                 }
 
                 override fun onError(exception: ImageCaptureException) {
                     CustomToast(this@EmpSelfieAttendanceActivity, "Capture failed! try again.")
-
-
                 }
             })
     }
+
 
     fun onApiResponseSuccess() {
         binding.cameraOverlayView.setStrokeColor(Color.GREEN)
@@ -344,6 +319,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                     finish()
                 }, 1000)
             } else {
+                CustomToast(this,it.message)
                 onApiResponseError()
                 binding.rtlAttendanceMsg.visibility = View.GONE
             }
