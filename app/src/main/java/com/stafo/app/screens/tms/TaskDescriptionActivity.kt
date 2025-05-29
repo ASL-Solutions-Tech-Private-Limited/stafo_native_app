@@ -1,5 +1,6 @@
 package com.stafo.app.screens.tms
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -9,7 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityTaskDescriptionBinding
+import com.stafo.app.screens.tms.dataClass.TaskData
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -32,19 +37,68 @@ class TaskDescriptionActivity : AppCompatActivity() {
 
     private fun setupData() {
         binding?.apply {
-            taskStatus.text = "Overdue"
-            taskPriority.text = "High Priority"
-            taskPriority.setTextColor(
-                ContextCompat.getColor(
-                    this@TaskDescriptionActivity,
-                    R.color.priority_high
-                )
-            )
-            taskStatus.backgroundTintList =
-                ContextCompat.getColorStateList(
-                    this@TaskDescriptionActivity,
-                    R.color.status_overdue
-                )
+
+            val task = intent.getSerializableExtra("task_data") as? TaskData
+            if (task != null) {
+                taskTitle.text = task.title
+                taskDescription.text = task.description
+                taskStatus.text = task.status
+                taskPriority.text = task.priority
+
+                when (task.priority.lowercase()) {
+                    "low" -> {
+                        taskPriority.setTextColor(ContextCompat.getColor(this@TaskDescriptionActivity, R.color.priority_low))
+                    }
+                    "medium" -> {
+                        taskPriority.setTextColor(ContextCompat.getColor(this@TaskDescriptionActivity, R.color.priority_medium))
+                    }
+                    "high" -> {
+                        taskPriority.setTextColor(ContextCompat.getColor(this@TaskDescriptionActivity, R.color.priority_high))
+                    }
+                    "urgent" -> {
+                        taskPriority.setTextColor(ContextCompat.getColor(this@TaskDescriptionActivity, R.color.priority_urgent))
+                    }
+                }
+
+
+                val statusLower = task.status.lowercase(Locale.getDefault())
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val today = dateFormat.parse(dateFormat.format(Date()))
+                val taskEndDate = try {
+                    dateFormat.parse(task.end_date)
+                } catch (e: Exception) {
+                    null
+                }
+
+                val isOverdue = taskEndDate != null && today != null && taskEndDate.before(today) && statusLower != "completed"
+
+                when {
+                    isOverdue -> {
+                        taskStatus.text = "Overdue"
+                        taskStatus.backgroundTintList =
+                            ContextCompat.getColorStateList(this@TaskDescriptionActivity, R.color.status_overdue)
+                    }
+                    statusLower == "pending" -> {
+                        taskStatus.backgroundTintList =
+                            ContextCompat.getColorStateList(this@TaskDescriptionActivity, R.color.status_pending)
+                    }
+                    statusLower == "in progress" -> {
+                        taskStatus.backgroundTintList =
+                            ContextCompat.getColorStateList(this@TaskDescriptionActivity, R.color.status_in_progress)
+                    }
+                    statusLower == "completed" -> {
+                        taskStatus.backgroundTintList =
+                            ContextCompat.getColorStateList(this@TaskDescriptionActivity, R.color.status_completed)
+                    }
+                    else -> {
+                        taskStatus.backgroundTintList =
+                            ContextCompat.getColorStateList(this@TaskDescriptionActivity, R.color.grey_300)
+                    }
+                }
+
+            }
+
+
         }
     }
 

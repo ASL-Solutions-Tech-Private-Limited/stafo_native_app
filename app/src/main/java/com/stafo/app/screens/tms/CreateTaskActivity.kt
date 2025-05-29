@@ -3,6 +3,7 @@ package com.stafo.app.screens.tms
 import android.app.DatePickerDialog
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -23,10 +24,15 @@ import com.stafo.app.screens.settings.dataClass.GetEmployee
 import com.stafo.app.screens.tms.adapter.AdapterAssignTaskEmp
 import com.stafo.app.screens.tms.dataClass.AssignTaskEmp
 import com.stafo.app.screens.tms.dataClass.CreateTaskRequest
+import com.stafo.app.screens.tms.dataClass.TaskData
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.getFormattedDate2
+import com.stafo.app.utils.reportsFormatToMonthYear
+import com.stafo.app.utils.showFormatDate
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class CreateTaskActivity : AppCompatActivity() {
@@ -40,8 +46,8 @@ class CreateTaskActivity : AppCompatActivity() {
     private val tmsViewModel: TMSViewModel by viewModels()
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
 
-    private var selectedPriority: String=""
-    private var selectedEndDate: String=""
+    private var selectedPriority: String = ""
+    private var selectedEndDate: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -68,60 +74,154 @@ class CreateTaskActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        binding.apply {
+            val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            val task = intent.getSerializableExtra("task_data") as? TaskData
+            val taskType = intent.getStringExtra("task_type") ?: ""
+
+            if (taskType == "Update") {
+                pageTitle.text = "Update Task"
+                btnCreateTask.text="Update"
+
+                task?.let {
+                    edtTaskTitle.setText(it.title)
+                    edtTaskDescription.setText(it.description)
+                    selectedEndDate = it.end_date
+
+                    edtDeadline.setText(showFormatDate(it.end_date))
+
+                    when (it.priority.lowercase()) {
+                        "low" -> binding.priorityLow.isChecked = true
+                        "medium" -> binding.priorityMedium.isChecked = true
+                        "high" -> binding.priorityHigh.isChecked = true
+                        "urgent" -> binding.priorityUrgent.isChecked = true
+                    }
+
+                    updatePriorityUI()
+
+                    Log.e("TAG", "setupListeners: ${it.priority}")
+                }
+
+            } else {
+                pageTitle.text = "Create Task"
+                btnCreateTask.text = "Create"
+            }
 
 
-        settingsViewModel.getAllEmployeeList(this)
 
 
 
-        updatePriorityUI()
-        binding.ivBack.setOnClickListener {
-            onBackPressed()
-        }
 
 
 
-        binding.btnAttach.setOnClickListener {
-            addDummyAttachment()
-        }
 
-        binding.edtDeadline.setOnClickListener {
-            showDatePicker()
-        }
 
-        binding.priorityGroup.setOnCheckedChangeListener { _, _ ->
             updatePriorityUI()
+
+
+
+
+            settingsViewModel.getAllEmployeeList(this@CreateTaskActivity)
+
+
+
+
+            binding.ivBack.setOnClickListener {
+                onBackPressed()
+            }
+
+
+
+            binding.btnAttach.setOnClickListener {
+                addDummyAttachment()
+            }
+
+            binding.edtDeadline.setOnClickListener {
+                showDatePicker()
+            }
+
+            binding.priorityGroup.setOnCheckedChangeListener { _, _ ->
+                updatePriorityUI()
+            }
+
+
+
+            binding.btnCreateTask.setOnClickListener {
+                if (isValidation()) {
+                    val title = binding.edtTaskTitle.text.toString()
+                    val description = binding.edtTaskDescription.text.toString()
+                    selectedPriority = getSelectedPriority()
+                    if (assignEmpList.isNotEmpty()) {
+
+                        if (!selectedPriority.isNullOrBlank()) {
+
+
+                            if (taskType == "Update") {
+                                val request = CreateTaskRequest(
+                                    company_id = 1,
+                                    title = title,
+                                    description = description,
+                                    start_date = currentDate,
+                                    end_date = selectedEndDate,
+                                    status = "Active",
+                                    priority = selectedPriority,
+                                    task_assign = assignEmpList.map { it.id })
+
+                                tmsViewModel.updateTask(this@CreateTaskActivity,task!!.id, request)
+                            } else {
+
+                                val request = CreateTaskRequest(
+                                    company_id = 1,
+                                    title = title,
+                                    description = description,
+                                    start_date = currentDate,
+                                    end_date = selectedEndDate,
+                                    status = "Active",
+                                    priority = selectedPriority,
+                                    task_assign = assignEmpList.map { it.id })
+
+                                tmsViewModel.createTask(this@CreateTaskActivity, request)
+                            }
+
+
+                        } else CustomToast(this@CreateTaskActivity, "Please select priority")
+
+
+                    } else CustomToast(this@CreateTaskActivity, "Please assign employee")
+
+
+                }
+
+            }
+
+
+            binding.rvAssignEmp.layoutManager =
+                LinearLayoutManager(this@CreateTaskActivity, LinearLayoutManager.HORIZONTAL, false)
+            rvAssignEmpList = AdapterAssignTaskEmp(assignEmpList)
+            binding.rvAssignEmp.adapter = rvAssignEmpList
+
+
+
+            obverseViewModel()
         }
-
-
-
-        binding.btnCreateTask.setOnClickListener {
-            val title = binding.edtTaskTitle.text.toString()
-            val description = binding.edtTaskDescription.text.toString()
-            val priority = getSelectedPriority()
-            val request = CreateTaskRequest(
-                company_id = 1,
-                title =title,
-                description = description,
-                start_date = "2025-05-16",
-                end_date = selectedEndDate,
-                status = "Active",
-                priority = selectedPriority,
-                task_assign = assignEmpList.map { it.id }
-            )
-
-            tmsViewModel.createTask(this, request)
-        }
-
-
-        binding.rvAssignEmp.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        rvAssignEmpList = AdapterAssignTaskEmp(assignEmpList)
-        binding.rvAssignEmp.adapter = rvAssignEmpList
-
-
-
-        obverseViewModel()
     }
+
+    private fun isValidation(): Boolean {
+        binding.apply {
+            if (edtTaskTitle.text.isNullOrEmpty()) {
+                CustomToast(this@CreateTaskActivity, "Please enter task title")
+                return false
+            } else if (edtTaskDescription.text.isNullOrEmpty()) {
+                CustomToast(this@CreateTaskActivity, "Please enter task description")
+                return false
+            } else if (edtDeadline.text.isNullOrEmpty()) {
+                CustomToast(this@CreateTaskActivity, "Please enter deadline")
+                return false
+            }
+        }
+        return true
+    }
+
 
     private fun obverseViewModel() {
         tmsViewModel.getLoaderLiveData().observe(this) {
@@ -133,9 +233,21 @@ class CreateTaskActivity : AppCompatActivity() {
         }
 
         tmsViewModel.mCreateTaskResponse.observe(this) {
-            if (it.success){
-                 CustomToast(this,it.message)
-            } else CustomToast(this,it.message)
+            if (it.success) {
+                CustomToast(this, it.message)
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            } else CustomToast(this, it.message)
+
+        }
+
+
+        tmsViewModel.mUpdateTaskResponse.observe(this) {
+            if (it.success) {
+                CustomToast(this, it.message)
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            } else CustomToast(this, it.message)
 
         }
 
@@ -149,8 +261,7 @@ class CreateTaskActivity : AppCompatActivity() {
         }
 
         settingsViewModel.mGetAllEmployeeResponse.observe(this) { employeeList ->
-            if (!employeeList.data.isNullOrEmpty())
-                setupEmpListDialog(employeeList.data)
+            if (!employeeList.data.isNullOrEmpty()) setupEmpListDialog(employeeList.data)
             else CustomToast(this, "No Employee Found")
         }
     }
@@ -209,13 +320,11 @@ class CreateTaskActivity : AppCompatActivity() {
         allButtons.forEach {
             it.setTextColor(ContextCompat.getColor(this, R.color.black))
             ViewCompat.setBackgroundTintList(
-                it,
-                ContextCompat.getColorStateList(this, R.color.grey_300)
+                it, ContextCompat.getColorStateList(this, R.color.grey_300)
             ) // optional
             it.buttonTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(
-                    this,
-                    R.color.grey_600
+                    this, R.color.grey_600
                 )
             ) // default radio dot color
         }
@@ -254,8 +363,7 @@ class CreateTaskActivity : AppCompatActivity() {
             data.forEach { employee ->
                 add(
                     SearchListItem(
-                        id = employee.id ?: 0,
-                        title = employee.name ?: "No Name"
+                        id = employee.id ?: 0, title = employee.name ?: "No Name"
                     )
                 )
             }
@@ -265,8 +373,7 @@ class CreateTaskActivity : AppCompatActivity() {
             dialog.setOnItemSelected(object : OnSearchItemSelected {
                 override fun onClick(position: Int, searchListItem: SearchListItem) {
                     val selectedEmp = AssignTaskEmp(
-                        id = searchListItem.id,
-                        name = searchListItem.title
+                        id = searchListItem.id, name = searchListItem.title
                     )
                     if (!assignEmpList.any { it.id == selectedEmp.id }) {
                         assignEmpList.add(selectedEmp)
@@ -277,8 +384,6 @@ class CreateTaskActivity : AppCompatActivity() {
             })
             dialog.show()
         }
-
-
 
 
         /* binding.btnAssign.setOnClickListener {

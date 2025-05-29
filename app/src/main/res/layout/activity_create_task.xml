@@ -27,6 +27,7 @@
                 android:src="@drawable/ic_back" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/page_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_12sdp"
@@ -69,10 +70,12 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtTaskDescription"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_80sdp"
+                    android:layout_height="wrap_content"
                     android:fontFamily="@font/gilroy_regular"
                     android:gravity="start|top"
-                    android:inputType="textPersonName" />
+                    android:maxLines="5"
+                    android:minLines="2"
+                    android:inputType="textMultiLine" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView

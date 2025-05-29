@@ -1560,6 +1560,20 @@ fun reportsFormatToMonthYear(dateString: String?): String {
 }
 
 
+fun showFormatDate(dateString: String?): String {
+    if (dateString.isNullOrEmpty()) return "N/A"
+
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        val date = inputFormat.parse(dateString)
+        if (date != null) outputFormat.format(date) else "N/A"
+    } catch (e: Exception) {
+        "N/A"
+    }
+}
+
+
 fun showCustomMonthYearPicker(
     context: Context,
     onSelected: (formattedDate: String, displayDate: String) -> Unit

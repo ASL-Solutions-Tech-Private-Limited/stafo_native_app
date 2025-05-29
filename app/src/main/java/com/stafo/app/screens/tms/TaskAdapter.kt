@@ -11,7 +11,7 @@ import com.stafo.app.databinding.ItemTaskCardLayoutBinding
 import com.stafo.app.screens.tms.dataClass.TaskData
 
 class TaskAdapter(
-    private val tasks: List<TaskData>,
+    private val tasks: MutableList<TaskData>,
     private val onEditClick: (TaskData) -> Unit,
     private val onDeleteClick: (TaskData) -> Unit,
     private val itemClick: (TaskData) -> Unit
@@ -67,6 +67,11 @@ class TaskAdapter(
         }
     }
 
+    fun updateData(newTasks: List<TaskData>) {
+        (tasks as? MutableList)?.clear()
+        (tasks as? MutableList)?.addAll(newTasks)
+        notifyDataSetChanged()
+    }
 
     override fun getItemCount(): Int = tasks.size
 }

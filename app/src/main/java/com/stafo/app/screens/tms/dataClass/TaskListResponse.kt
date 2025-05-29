@@ -1,5 +1,7 @@
 package com.stafo.app.screens.tms.dataClass
 
+import java.io.Serializable
+
 data class TaskListResponse(
     val success: Boolean,
     val message: String,
@@ -18,7 +20,7 @@ data class TaskData(
     val created_at: String,
     val updated_at: String,
     val company: TaskListCompany
-)
+): Serializable
 
 data class TaskListCompany(
     val id: Int,
@@ -26,4 +28,4 @@ data class TaskListCompany(
     val company_code: String?,
     val email: String,
     val mobile_no: String
-)
+): Serializable

@@ -13,6 +13,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityTaskMsdashboardBinding
+import com.stafo.app.screens.settings.BranchActivity
+import com.stafo.app.screens.tms.dataClass.TaskData
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
@@ -26,27 +28,51 @@ class TaskMSDashboard : AppCompatActivity() {
     private lateinit var selectedTab: TextView
     private lateinit var tabList: List<TextView>
 
+
+    private var filteredTaskList: MutableList<TaskData> = mutableListOf()
+    private lateinit var taskAdapter: TaskAdapter
+    private var fullTaskList: MutableList<TaskData> = mutableListOf()
+
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val tmsViewModel: TMSViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        //  setContentView(R.layout.activity_task_msdashboard)
         binding = ActivityTaskMsdashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+
+
         setupViews()
         observeViewModel()
     }
 
+    override fun onResume() {
+        super.onResume()
+        getEmployeeComId()?.let {
+            tmsViewModel.getTaskList(this@TaskMSDashboard, it)
+        }
+    }
+
+
     private fun setupViews() {
         binding.apply {
+
+            swipeRefreshLayout.setOnRefreshListener {
+                binding.swipeRefreshLayout.isRefreshing = false
+
+                getEmployeeComId()?.let {
+                    tmsViewModel.getTaskList(this@TaskMSDashboard, it)
+                }
+
+            }
+
 
             getEmployeeComId()?.let {
                 tmsViewModel.getTaskList(this@TaskMSDashboard, it)
@@ -82,7 +108,6 @@ class TaskMSDashboard : AppCompatActivity() {
             }
         }
         setupTabSelection()
-        setupRecyclerView()
     }
 
 
@@ -117,34 +142,10 @@ class TaskMSDashboard : AppCompatActivity() {
         tab.setBackgroundResource(R.drawable.bg_tab_selected)
         tab.setTextColor(ContextCompat.getColor(this, R.color.white))
         selectedTab = tab
-        val selectedText = tab.text.toString()
-        Log.d("SelectedTab", selectedText)
-        // You can also call a function with selectedText
+
+        filterTasksByTab()
     }
 
-    private fun setupRecyclerView() {
-        val dummyTasks = listOf(
-            TaskModel("Prepare quarterly report", "Aug 15", "High", "In Progress", "Hamid"),
-            TaskModel("Team meeting follow-up", "Aug 17", "Medium", "Pending", "Sara"),
-            TaskModel("Finalize UI Design", "Aug 10", "Low", "Completed", "Ali"),
-            TaskModel("Client call review", "Aug 20", "High", "Overdue", "Ayesha"),
-            TaskModel("Testing new build", "Aug 19", "High", "In Progress", "Omer"),
-            TaskModel("Bug fixes - sprint 5", "Aug 22", "Medium", "Pending", "Zain"),
-            TaskModel("Deployment setup", "Aug 18", "Low", "Completed", "Imran"),
-            TaskModel("Write release notes", "Aug 23", "High", "Overdue", "Anam"),
-            TaskModel("UX research", "Aug 16", "Medium", "In Progress", "Fahad"),
-            TaskModel("New feature planning", "Aug 21", "High", "Pending", "Nida")
-        )
-
-
-    }
-
-
-    data class TaskModel(
-        val title: String, val date: String, val priority: String, // "High", "Medium", "Low"
-        val status: String,   // "In Progress", "Pending", etc.
-        val assignee: String
-    )
 
 
     private fun observeViewModel() {
@@ -154,20 +155,18 @@ class TaskMSDashboard : AppCompatActivity() {
 
 
         tmsViewModel.mTaskListResponse.observe(this) {
-
             if (it.success) {
                 if (!it.data.isNullOrEmpty()) {
-
                     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    val today = Calendar.getInstance().time
+                    val today = dateFormat.parse(dateFormat.format(Calendar.getInstance().time))!!
 
                     val totalTasks = it.data.size
 
-
                     val inProgressTasks = it.data.count { task ->
+                        val endDate = dateFormat.parse(task.end_date)
                         task.status.equals("active", ignoreCase = true) &&
-                                dateFormat.parse(task.end_date)?.after(today) == true ||
-                                dateFormat.parse(task.end_date)?.equals(today) == true
+                                endDate != null &&
+                                (endDate.equals(today) || endDate.after(today))
                     }
 
                     val completedTasks = it.data.count { task ->
@@ -175,8 +174,10 @@ class TaskMSDashboard : AppCompatActivity() {
                     }
 
                     val overdueTasks = it.data.count { task ->
+                        val endDate = dateFormat.parse(task.end_date)
                         task.status.equals("active", ignoreCase = true) &&
-                                dateFormat.parse(task.end_date)?.before(today) == true
+                                endDate != null &&
+                                endDate.before(today)
                     }
 
                     // Log for debug
@@ -191,24 +192,35 @@ class TaskMSDashboard : AppCompatActivity() {
                     binding.completeTask.summaryCount.text = completedTasks.toString()
                     binding.overDuaTask.summaryCount.text = overdueTasks.toString()
 
-                    val taskAdapter = TaskAdapter(
-                        it.data,
-                        {},
-                        {},
-                        {
-                            startActivity(Intent(this@TaskMSDashboard, TaskDescriptionActivity::class.java))
-                        }
-                    )
-                    binding.recyclerTasks.adapter = taskAdapter
-                    binding.recyclerTasks.layoutManager = LinearLayoutManager(this)
+                    fullTaskList = it.data?.toMutableList() ?: mutableListOf()
+                    setupRecyclerView()
+                    filterTasksByTab()
+
+
+
 
                 } else {
-                    // Empty state
+
                     binding.totalTask.summaryCount.text = "0"
                     binding.inProgressTask.summaryCount.text = "0"
                     binding.completeTask.summaryCount.text = "0"
                     binding.overDuaTask.summaryCount.text = "0"
                 }
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
+
+
+
+        tmsViewModel.mDeleteTaskResponse.observe(this) {
+
+            if (it.status) {
+              CustomToast(this, it.message)
+                getEmployeeComId()?.let {
+                    tmsViewModel.getTaskList(this@TaskMSDashboard, it)
+                }
+
             } else {
                 CustomToast(this, it.message)
             }
@@ -227,5 +239,82 @@ class TaskMSDashboard : AppCompatActivity() {
         }
     }
 
+    private fun setupRecyclerView() {
+        taskAdapter = TaskAdapter(
+            mutableListOf(),
+            { task ->
+                val intent = Intent(this@TaskMSDashboard, CreateTaskActivity::class.java)
+                intent.putExtra("task_data", task)
+                intent.putExtra("task_type", "Update")
+                startActivity(intent)
+            },
+            { task -> showCompanyDeleteDialog(task.id) },
+            { task ->
+                val intent = Intent(this@TaskMSDashboard, TaskDescriptionActivity::class.java)
+                intent.putExtra("task_data", task)
+                startActivity(intent)
+            }
+        )
 
+        binding.recyclerTasks.adapter = taskAdapter
+        binding.recyclerTasks.layoutManager = LinearLayoutManager(this)
+    }
+
+
+
+
+    private fun filterTasksByTab() {
+        if (!::taskAdapter.isInitialized) return
+
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val today = dateFormat.parse(dateFormat.format(Calendar.getInstance().time))!!
+
+        val filtered = when (selectedTab.text.toString().lowercase()) {
+            "all tasks" -> fullTaskList
+            "in progress" -> fullTaskList.filter { task ->
+                val endDate = dateFormat.parse(task.end_date)
+                task.status.equals("active", ignoreCase = true) &&
+                        endDate != null && (endDate >= today)
+            }
+            "pending" -> fullTaskList.filter {
+                it.status.equals("pending", ignoreCase = true)
+            }
+            "completed" -> fullTaskList.filter {
+                it.status.equals("completed", ignoreCase = true)
+            }
+            "overdue" -> fullTaskList.filter { task ->
+                val endDate = dateFormat.parse(task.end_date)
+                task.status.equals("active", ignoreCase = true) &&
+                        endDate != null && (endDate < today)
+            }
+            else -> fullTaskList
+        }
+
+        filteredTaskList.clear()
+        filteredTaskList.addAll(filtered)
+        taskAdapter.updateData(filteredTaskList)
+    }
+
+
+
+
+
+
+    private fun showCompanyDeleteDialog(itemId:Int) {
+        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+        builder.setTitle(R.string.app_name)
+        builder.setMessage("Are you sure? Delete this.")
+
+        builder.setPositiveButton("Yes") { dialog, _ ->
+            tmsViewModel.deleteTask(this@TaskMSDashboard,itemId)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
 }

@@ -279,13 +279,20 @@ class SubscriptionActivity : AppCompatActivity() {
         additionalParamsMap["udf3"] = dataModel.package_id
 
 
-        val payUPaymentParams = PayUPaymentParams.Builder().setKey(dataModel.merchantKey)
-            .setTransactionId(dataModel.txnid).setAmount(dataModel.amount)
-            .setProductInfo(dataModel.productinfo).setFirstName(dataModel.firstname)
-            .setEmail(dataModel.email).setPhone(dataModel.phone.toString())
-            .setSurl("https://stafo.in/api/success").setFurl("https://stafo.in/api/failure")
-            .setIsProduction(true).setUserCredential("${dataModel.merchantKey}:${dataModel.email}")
-            .setAdditionalParams(additionalParamsMap).build()
+        val payUPaymentParams = PayUPaymentParams.Builder()
+            .setKey(dataModel.merchantKey)
+            .setTransactionId(dataModel.txnid)
+            .setAmount(dataModel.amount)
+            .setProductInfo(dataModel.productinfo)
+            .setFirstName(dataModel.firstname)
+            .setEmail(dataModel.email)
+            .setPhone(dataModel.phone.toString())
+            .setSurl("https://stafo.in/api/success")
+            .setFurl("https://stafo.in/api/failure")
+            .setIsProduction(true)
+            .setUserCredential("${dataModel.merchantKey}:${dataModel.email}")
+            .setAdditionalParams(additionalParamsMap)
+            .build()
 
 
 
@@ -424,6 +431,10 @@ class SubscriptionActivity : AppCompatActivity() {
         val hashBytes = messageDigest.digest()
         return hashBytes.joinToString("") { "%02x".format(it) }
     }
+
+
+
+
 
     fun JSONObject.toMap(): Map<String, Any> {
         val map = mutableMapOf<String, Any>()

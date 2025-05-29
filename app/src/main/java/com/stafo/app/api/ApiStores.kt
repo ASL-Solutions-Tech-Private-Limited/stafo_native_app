@@ -153,7 +153,9 @@ import com.stafo.app.screens.subscription.dataClass.PaymentUpdateRequest
 import com.stafo.app.screens.subscription.dataClass.PaymentUpdateResponse
 import com.stafo.app.screens.tms.dataClass.CreateTaskRequest
 import com.stafo.app.screens.tms.dataClass.CreateTaskResponse
+import com.stafo.app.screens.tms.dataClass.DeleteTaskResponse
 import com.stafo.app.screens.tms.dataClass.TaskListRequest
+import com.stafo.app.screens.tms.dataClass.UpdateTaskResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -841,5 +843,20 @@ interface ApiStores {
         @Body request:CreateTaskRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<CreateTaskResponse>
+
+    @POST("api/task/update/{id}")
+    suspend fun callUpdateTask(
+        @Path ("id")taskId:Int,
+        @Body request:CreateTaskRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateTaskResponse>
+
+    @DELETE("api/task/delete/{id}")
+    suspend fun callDeleteTask(
+        @Path ("id")taskId:Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteTaskResponse>
+
+
 
 }
