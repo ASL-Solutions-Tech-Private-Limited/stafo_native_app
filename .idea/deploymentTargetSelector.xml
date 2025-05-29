@@ -15,10 +15,10 @@
       </SelectionState>
       <SelectionState runConfigName="Asl_EMP__1.0.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-05-27T20:55:50.615283100Z">
+        <DropdownSelection timestamp="2025-05-29T14:27:04.513623200Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=13911499310008M" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=bc4b65940621" />
             </handle>
           </Target>
         </DropdownSelection>

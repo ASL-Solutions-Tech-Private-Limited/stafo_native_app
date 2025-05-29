@@ -49,4 +49,5 @@
     <color name="semiTransparentBlue">#330099cc</color>
     <color name="steel_blue">#90D5FF</color>
     <color name="emerald_green">#0AAA40</color>
+    <color name="green">#008000</color>
 </resources>

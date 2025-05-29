@@ -57,23 +57,24 @@
 
         <ImageView
             android:id="@+id/iv_edit"
-            android:layout_width="@dimen/_22sdp"
-            android:layout_height="@dimen/_22sdp"
+            android:layout_width="@dimen/_23sdp"
+            android:layout_height="@dimen/_23sdp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:background="@drawable/custom_emp_item_bg2"
-            android:padding="@dimen/_6sdp"
+            android:padding="6dp"
             android:src="@drawable/ic_editing" />
 
         <ImageView
             android:id="@+id/iv_punch"
-            android:layout_width="@dimen/_22sdp"
-            android:layout_height="@dimen/_22sdp"
+            android:layout_width="@dimen/_23sdp"
+            android:layout_height="@dimen/_23sdp"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="@dimen/_12sdp"
             android:layout_toLeftOf="@+id/iv_edit"
             android:background="@drawable/custom_set_punch_bg"
-            android:padding="5dp"
+            android:padding="4dp"
+            android:visibility="gone"
             android:tint="@color/white"
             android:src="@drawable/set_attendance"
             tools:ignore="UseAppTint" />

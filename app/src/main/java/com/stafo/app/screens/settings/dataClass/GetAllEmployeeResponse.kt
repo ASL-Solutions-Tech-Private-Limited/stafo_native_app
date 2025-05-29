@@ -1,6 +1,7 @@
 package com.stafo.app.screens.settings.dataClass
 
 import com.google.gson.annotations.SerializedName
+import com.stafo.app.base.model.Punch
 
 data class GetAllEmployeeResponse(
     val status: Boolean,
@@ -25,6 +26,7 @@ data class GetEmployee(
     val status: String,
     @SerializedName("device_status") val deviceStatus: String?,
     @SerializedName("attendance_type") val attendanceType: String?,
+    val punches: List<Punch>,
     val attendances: List<Attendance>,
     val shifts: List<Shift>
 )
