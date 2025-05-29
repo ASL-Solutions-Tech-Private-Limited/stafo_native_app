@@ -2,15 +2,19 @@ package com.stafo.app
 
 import android.content.Context
 import android.os.StrictMode
-import android.util.Log
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
-import com.stafo.app.api.ApiClient
-import com.stafo.app.api.ApiStores
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import com.mmi.services.account.MapmyIndiaAccountManager
 import com.orhanobut.hawk.Hawk
+import com.stafo.app.api.ApiClient
+import com.stafo.app.api.ApiStores
 import com.stafo.app.base.NetworkConnectivityHandler
-import com.stafo.app.base.NetworkMonitor
+import com.stafo.app.screens.bbps.dataClasses.BillerDetailsResponse
+import com.stafo.app.screens.bbps.dataClasses.ParamInfoAdapter
+import com.stafo.app.screens.crm.dataClass.BillerAdditionalInfoAdapter
+import com.stafo.app.screens.crm.dataClass.BillerTimeoutAdapter
 import com.stafo.app.utils.scheduleDailyEndOfDaySync
 
 class ASLEmpMng : MultiDexApplication() {
@@ -38,6 +42,22 @@ class ASLEmpMng : MultiDexApplication() {
       //  FirebaseApp.initializeApp(this)
         scheduleDailyEndOfDaySync(applicationContext)
         registerActivityLifecycleCallbacks(NetworkConnectivityHandler(this))
+
+        val gson = GsonBuilder()
+            .registerTypeAdapter(
+                BillerDetailsResponse.Data.MdmRequestNew.Biller.BillerAdditionalInfoUnion::class.java,
+                BillerAdditionalInfoAdapter()
+            )
+            .registerTypeAdapter(
+                object :
+                    TypeToken<List<BillerDetailsResponse.Data.MdmRequestNew.Biller.BillerAdditionalInfoUnion.ParamInfo>>() {}.type,
+                ParamInfoAdapter()
+            )
+            .registerTypeAdapter(
+                object : TypeToken<List<String>>() {}.type,
+                BillerTimeoutAdapter()
+            )
+            .create()
 
         initMapMyIndia()
 

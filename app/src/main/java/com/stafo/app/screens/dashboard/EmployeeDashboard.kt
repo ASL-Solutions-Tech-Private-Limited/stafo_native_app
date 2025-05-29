@@ -45,6 +45,7 @@ import com.stafo.app.base.model.FullScreenDialog
 import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmpDashboardBinding
 import com.stafo.app.databinding.CustomBottomSheetAttendanceLayoutBinding
+import com.stafo.app.screens.bbps.BBPSDashboard
 import com.stafo.app.screens.crm.CRMLeadDashboard
 import com.stafo.app.screens.emp.EmpBranchDetailsActivity
 import com.stafo.app.screens.emp.EmpSelfieAttendanceActivity
@@ -235,6 +236,14 @@ class EmployeeDashboard : AppCompatActivity() {
                                 Intent(
                                     this@EmployeeDashboard,
                                     HolidayActivity::class.java
+                                )
+                            )
+                        }
+                        "BBPS" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard,
+                                    BBPSDashboard::class.java
                                 )
                             )
                         }
@@ -1125,6 +1134,7 @@ class EmployeeDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("Attendance", R.drawable.ic_employee))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
+        mActionList.add(ActionModel("BBPS", R.drawable.ic_bbps_ic))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))

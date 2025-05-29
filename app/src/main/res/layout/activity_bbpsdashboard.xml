@@ -93,6 +93,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/gilroy_semi_bold"
                     android:text="View All"
+                    android:id="@+id/tvViewAll"
                     android:textColor="#6366F1"
                     android:textSize="@dimen/_12ssp" />
 
@@ -137,12 +138,14 @@
                             android:text="Zero Convenience Fee"
                             android:textColor="#6366F1"
                             android:textSize="@dimen/_12ssp"
+                            android:id="@+id/tvZeroConvenienceFee"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
+                            android:id="@+id/tvZeroConvenienceFeeDesc"
                             android:fontFamily="@font/gilroy_medium"
                             android:text="Pay your bills without any extra charges!"
                             android:textColor="#64748B"
@@ -188,12 +191,14 @@
                             android:text="New: Insurance Premium"
                             android:textColor="#EA580C"
                             android:textSize="@dimen/_12ssp"
+                            android:id="@+id/tvNewInsurancePremium"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
+                            android:id="@+id/tvNewInsurancePremiumDesc"
                             android:text="Pay premiums with a click!"
                             android:textColor="#7C2D12"
                             android:textSize="@dimen/_10ssp" />

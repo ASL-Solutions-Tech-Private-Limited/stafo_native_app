@@ -12,6 +12,7 @@ import com.stafo.app.R
 import com.stafo.app.base.adapter.SubMneuActionsListAdapter
 import com.stafo.app.base.model.ActionModel
 import com.stafo.app.databinding.ActivitySubMenuBinding
+import com.stafo.app.screens.bbps.BBPSDashboard
 import com.stafo.app.screens.emp.EmpBranchDetailsActivity
 import com.stafo.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.stafo.app.screens.emp.EmployeeLeaveHistoryActivity
@@ -170,6 +171,13 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                 }
+                                "BBPS" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity, BBPSDashboard::class.java
+                                        )
+                                    )
+                                }
                             }
                         }
 
@@ -245,6 +253,13 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                 }
+                                "BBPS" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity, BBPSDashboard::class.java
+                                        )
+                                    )
+                                }
                             }
                         }
 
@@ -263,6 +278,7 @@ class SubMenuActivity : AppCompatActivity() {
         mActionList.add(ActionModel("Performance", R.drawable.ic_performace))
         mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
+        mActionList.add(ActionModel("BBPS", R.drawable.ic_bbps_ic))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
@@ -273,6 +289,7 @@ class SubMenuActivity : AppCompatActivity() {
     private fun empActionList(): List<ActionModel> {
         mActionList.add(ActionModel("Attendance", R.drawable.ic_attendace))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
+        mActionList.add(ActionModel("BBPS", R.drawable.ic_bbps_ic))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))

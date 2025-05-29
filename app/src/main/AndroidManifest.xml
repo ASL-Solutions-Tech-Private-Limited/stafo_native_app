@@ -52,6 +52,18 @@
         tools:replace="android:allowBackup,android:theme"
         tools:targetApi="31">
         <activity
+            android:name=".screens.bbps.BillDetailsAndPaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.bbps.BillerDetailsViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.bbps.BillerByCategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.bbps.BBPSBillerListActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.bbps.BBPSDashboard"
             android:exported="false" />
         <activity

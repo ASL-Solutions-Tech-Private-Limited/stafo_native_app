@@ -36,6 +36,7 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import android.provider.Settings.Secure
+import android.text.InputType
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
@@ -1938,6 +1939,58 @@ fun scheduleDailyEndOfDaySync(context: Context) {
         dailyWorkRequest
     )
 }
+
+
+val gradientList = listOf(
+    intArrayOf(Color.parseColor("#8E2DE2"), Color.parseColor("#4A00E0")), // purple-blue
+    intArrayOf(Color.parseColor("#FF512F"), Color.parseColor("#DD2476")), // orange-pink
+    intArrayOf(Color.parseColor("#36D1DC"), Color.parseColor("#5B86E5")), // blue gradient
+    intArrayOf(Color.parseColor("#00C9FF"), Color.parseColor("#92FE9D")), // aqua-green
+    intArrayOf(Color.parseColor("#f7971e"), Color.parseColor("#ffd200")), // golden-orange
+    intArrayOf(Color.parseColor("#ff6a00"), Color.parseColor("#ee0979")), // sunset
+    intArrayOf(Color.parseColor("#7F00FF"), Color.parseColor("#E100FF")), // violet
+    intArrayOf(Color.parseColor("#00F260"), Color.parseColor("#0575E6"))  // green-blue
+)
+
+
+fun showSearchableDialog(
+    context: Context,
+    title: String,
+    items: List<String>,
+    onItemSelected: (String) -> Unit
+) {
+    val dialog = AlertDialog.Builder(context)
+        .setTitle(title)
+        .setItems(items.toTypedArray()) { _, which ->
+            onItemSelected(items[which])
+        }
+        .create()
+    dialog.show()
+}
+
+
+ fun getInputTypeUtil(dataType: String?): Int {
+    return when (dataType?.uppercase()) {
+        "NUMERIC" -> InputType.TYPE_CLASS_NUMBER
+        "ALPHABET" -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS
+        "ALPHANUMERIC" -> InputType.TYPE_CLASS_TEXT
+        else -> InputType.TYPE_CLASS_TEXT
+    }
+}
+
+
+fun jsonObjectToMap(jsonObject: JSONObject): Map<String, Any> {
+    val map = mutableMapOf<String, Any>()
+    val keys = jsonObject.keys()
+    while (keys.hasNext()) {
+        val key = keys.next()
+        val value = jsonObject.get(key)
+        map[key] = value
+    }
+    return map
+}
+
+
 
 
 

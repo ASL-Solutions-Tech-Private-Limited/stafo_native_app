@@ -18,7 +18,11 @@ import com.stafo.app.screens.auth.dataClass.OtpResponse
 import com.stafo.app.screens.auth.dataClass.OtpVerifyResponse
 import com.stafo.app.screens.auth.dataClass.SelfieAttendanceResponse
 import com.stafo.app.screens.auth.dataClass.StatesListResponse
-import com.stafo.app.screens.billpayment.dataClass.BbpsOperatorDetailsResponse
+import com.stafo.app.screens.bbps.dataClasses.BBPSCategoryResponse
+import com.stafo.app.screens.bbps.dataClasses.BillerBillFetchResponse
+import com.stafo.app.screens.bbps.dataClasses.BillerDetailsResponse
+import com.stafo.app.screens.bbps.dataClasses.BillerListResponse
+import com.stafo.app.screens.bbps.dataClasses.InitiateBBPSBillResponse
 import com.stafo.app.screens.billpayment.dataClass.CategoryMenuResponse
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorRequest
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorResponse
@@ -32,8 +36,6 @@ import com.stafo.app.screens.crm.dataClass.CreateFollowUpResponse
 import com.stafo.app.screens.crm.dataClass.FollowUpListResponse
 import com.stafo.app.screens.crm.dataClass.LeadCreateRequest
 import com.stafo.app.screens.crm.dataClass.LeadCreateResponse
-import com.stafo.app.screens.crm.dataClass.LeadDashboardRequest
-import com.stafo.app.screens.crm.dataClass.LeadListRequest
 import com.stafo.app.screens.crm.dataClass.LeadListResponse
 import com.stafo.app.screens.crm.dataClass.UpdateLeadResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
@@ -43,7 +45,6 @@ import com.stafo.app.screens.payroll.dataClass.SalarySlipRequest
 import com.stafo.app.screens.payroll.dataClass.SalarySlipResponse
 import com.stafo.app.screens.performance.dataClass.AddPerformanceRequest
 import com.stafo.app.screens.performance.dataClass.AddPerformanceResponse
-import com.stafo.app.screens.performance.dataClass.DeletePerformanceRequest
 import com.stafo.app.screens.performance.dataClass.DeletePerformanceResponse
 import com.stafo.app.screens.performance.dataClass.PerformanceAddRequest
 import com.stafo.app.screens.performance.dataClass.PerformanceAddResponse
@@ -61,7 +62,6 @@ import com.stafo.app.screens.settings.dataClass.AssignBranchRequest
 import com.stafo.app.screens.settings.dataClass.AssignBranchResponse
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentResponse
-import com.stafo.app.screens.settings.dataClass.AssignShiftRequest
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.stafo.app.screens.settings.dataClass.BannerResponse
 import com.stafo.app.screens.settings.dataClass.BranchListResponse
@@ -153,6 +153,7 @@ import com.stafo.app.screens.settings.dataClass.UpgradePackageResponse
 import com.stafo.app.screens.settings.dataClass.VerifyGSTNumberResponse
 import com.stafo.app.screens.settings.dataClass.VerifyRegisterNumberResponse
 import com.stafo.app.screens.settings.dataClass.ViewBranchResponse
+import com.stafo.app.screens.subscription.dataClass.CheckPaymentStatusRequest
 import com.stafo.app.screens.subscription.dataClass.HashGenerateRequest
 import com.stafo.app.screens.subscription.dataClass.HashGenerateResponse
 import com.stafo.app.screens.subscription.dataClass.MySubscriptionResponse
@@ -169,7 +170,6 @@ import retrofit2.http.Field
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.HeaderMap
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -860,4 +860,39 @@ interface ApiStores {
     ): Response<LocationLogResponse>
 
 
+    @POST("api/biller/category")
+    suspend fun callBillerCategory(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<BBPSCategoryResponse>
+
+    @POST("api/getBiller")
+    suspend fun callBillerList(
+        @Body request: HashMap<String, String>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<BillerListResponse>
+
+    @POST("api/biller/detail")
+    suspend fun callBillerDetails(
+        @Body request: HashMap<String, String>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<BillerDetailsResponse>
+
+
+    @POST("api/fetchBill")
+    suspend fun callBillerBill(
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<BillerBillFetchResponse>
+
+    @POST("api/payBill")
+    suspend fun callInitiateBillPayment(
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<InitiateBBPSBillResponse>
+
+    @POST("api/checkPaymentStatus")
+    suspend fun callCheckPaymentStatus(
+        @Body request: CheckPaymentStatusRequest,
+        @HeaderMap header: Map<String, String> = ApiClient.headerMap()
+    ): Response<InitiateBBPSBillResponse>
 }

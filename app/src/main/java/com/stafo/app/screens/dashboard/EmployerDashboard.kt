@@ -28,6 +28,7 @@ import com.stafo.app.base.model.DashboardWish
 import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmployerDashboardBinding
 import com.stafo.app.screens.bbps.BBPSDashboard
+import com.stafo.app.screens.crm.CRMLeadDashboard
 import com.stafo.app.screens.emp.EmplyeeAttendaceListActivity
 import com.stafo.app.screens.emp.ViewEmpLocationTrackActivity
 import com.stafo.app.screens.notification.NotificationActivity
@@ -191,7 +192,7 @@ class EmployerDashboard : AppCompatActivity() {
                                 startActivity(
                                     Intent(
                                         this@EmployerDashboard,
-                                        BBPSDashboard::class.java
+                                        CRMLeadDashboard::class.java
                                     )
                                 )
                             }
@@ -315,6 +316,13 @@ class EmployerDashboard : AppCompatActivity() {
                                     Intent(
                                         this@EmployerDashboard,
                                         HolidayActivity::class.java
+                                    )
+                                )
+                            }
+                            "BBPS" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard, BBPSDashboard::class.java
                                     )
                                 )
                             }
@@ -697,6 +705,7 @@ class EmployerDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("Employee", R.drawable.ic_employee))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Location Track", R.drawable.ic_location))
+        mActionList.add(ActionModel("BBPS", R.drawable.ic_bbps_ic))
         mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Performance Type", R.drawable.ic_performace))

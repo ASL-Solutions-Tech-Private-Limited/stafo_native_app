@@ -3,8 +3,6 @@ package com.stafo.app.screens.subscription
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Base64
-import android.util.Base64.NO_WRAP
 import android.util.Log
 import android.webkit.WebView
 import android.widget.TextView
@@ -19,7 +17,6 @@ import com.payu.base.models.ErrorResponse
 import com.payu.base.models.PayUPaymentParams
 import com.payu.checkoutpro.PayUCheckoutPro
 import com.payu.checkoutpro.utils.PayUCheckoutProConstants
-import com.payu.checkoutpro.utils.PayUCheckoutProConstants.CP_HASH_NAME
 import com.payu.ui.model.listeners.PayUCheckoutProListener
 import com.payu.ui.model.listeners.PayUHashGenerationListener
 import com.stafo.app.R
@@ -34,10 +31,7 @@ import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 import org.json.JSONObject
-import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
 
 
 class SubscriptionActivity : AppCompatActivity() {
@@ -78,10 +72,7 @@ class SubscriptionActivity : AppCompatActivity() {
     }
 
     private fun onClickListener() {
-
-
         binding.apply {
-
             billPaymentsViewModel.getPackagePlanList(
                 this@SubscriptionActivity
             )
@@ -121,21 +112,6 @@ class SubscriptionActivity : AppCompatActivity() {
                         )
                     }
                 }
-
-                // startPayment()
-
-                /*  getEmployeeComId()?.let { it1 ->
-                      val request=  HashGenerateRequest(
-                          company_id = it1,
-                          package_id = ""
-                      )
-
-                      billPaymentsViewModel.getHashPayu(
-                          this@SubscriptionActivity,request
-                      )
-                  }*/
-
-
             }
 
 
@@ -179,42 +155,20 @@ class SubscriptionActivity : AppCompatActivity() {
 
 
     private fun observeViewModel() {
-
-
         billPaymentsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-
         billPaymentsViewModel.mPackageResponse.observe(this) {
-
             if (it.status) {
-
-
                 if (it.data.isNotEmpty()) {
-
                     list = it.data
-
-
                     val packageItem = list.firstOrNull()
-
-
                     packageItem?.let {
-
                         if (!it.discount_price.isNullOrBlank()) {
                             selectPlanId = it.id.toString()
                             binding.tvPrice.text = "₹" + it.discount_price.removeSuffix(".00")
                             binding.tvDuration.text = "${list[0].days} days"
                         }
-
-
                     }
-
-                    /*binding.tvPrice.text = "₹" + list[0].discount_price.removeSuffix(".00")
-                    binding.tvDuration.text = "${it.data[0].days} days"*/
-
-
                     val features = list[0].features?.filter { it.pivot.feature_value != "No" }
-
-
-
                     if (!features.isNullOrEmpty()) {
                         rvAdapter = AdapterPlanList(features, this, 0)
                         val layoutManager =
@@ -223,36 +177,23 @@ class SubscriptionActivity : AppCompatActivity() {
                         binding.rvFeatureList.adapter = rvAdapter
                         rvAdapter.notifyDataSetChanged()
                     }
-
-
                 }
-
-
             }
         }
 
         billPaymentsViewModel.mHashGenerateResponse.observe(this) {
-
             if (it.status) {
-
                 Log.d("PayU", "get generated hash & params ${it.hashParam}")
-
                 it.hashParam?.let { it1 -> startPayment(it1, it.hash!!) }
             }
         }
-
-
         billPaymentsViewModel.mPaymentUpdateResponse.observe(this) {
-
             if (it.status) {
                 paymentStatus(status, productInfo, txnId, amount)
-
             } else {
                 CustomToast(this, it.message)
             }
         }
-
-
     }
 
     private fun handleLoader(status: String) {
@@ -264,8 +205,6 @@ class SubscriptionActivity : AppCompatActivity() {
     }
 
     private fun startPayment(dataModel: HashParam, getHash: String) {
-
-
         txnId = dataModel.txnid.toString()
         status = ""
         amount = dataModel.amount.toString()
@@ -278,7 +217,6 @@ class SubscriptionActivity : AppCompatActivity() {
         additionalParamsMap["udf2"] = dataModel.duration
         additionalParamsMap["udf3"] = dataModel.package_id
 
-
         val payUPaymentParams = PayUPaymentParams.Builder().setKey(dataModel.merchantKey)
             .setTransactionId(dataModel.txnid).setAmount(dataModel.amount)
             .setProductInfo(dataModel.productinfo).setFirstName(dataModel.firstname)
@@ -287,55 +225,34 @@ class SubscriptionActivity : AppCompatActivity() {
             .setIsProduction(true).setUserCredential("${dataModel.merchantKey}:${dataModel.email}")
             .setAdditionalParams(additionalParamsMap).build()
 
-
-
-
-
-
-
-
-
-
-
         PayUCheckoutPro.open(
             this, payUPaymentParams, object : PayUCheckoutProListener {
                 override fun generateHash(
                     map: HashMap<String, String?>,
                     hashGenerationListener: PayUHashGenerationListener
                 ) {
-
-
                     val hashName = map["hashName"]
                     val hashData = map["hashString"]
-
-                    Log.d("PayU", "hashName: $hashName")
-                    Log.d("PayU", "hashString: $hashData")
-
                     if (!hashName.isNullOrEmpty() && !hashData.isNullOrEmpty()) {
                         val hashDataWithSalt = "$hashData${dataModel.salt}"
                         val hash = calculateHash(hashDataWithSalt.trim())
                         val hashMap = HashMap<String, String?>()
                         hashMap[hashName] = hash
-                        Log.d("PayU", "Generated hash: $hash")
                         hashGenerationListener.onHashGenerated(hashMap)
                     }
                 }
 
                 override fun onPaymentSuccess(response: Any) {
                     response as HashMap<*, *>
-
                     val payUResponseStr =
                         response[PayUCheckoutProConstants.CP_PAYU_RESPONSE] as? String
                     val payUJson = JSONObject(payUResponseStr ?: "{}")
-
-
                     val resultJson =
                         if (payUJson.has("result") && payUJson.opt("result") is JSONObject) {
                             payUJson.optJSONObject("result") ?: JSONObject()
                         } else {
                             payUJson
                         }
-
                     txnId = resultJson.optString("txnid")
                     status = resultJson.optString("status")
                     amount = resultJson.optString("amount")
@@ -358,30 +275,13 @@ class SubscriptionActivity : AppCompatActivity() {
                             this@SubscriptionActivity, request
                         )
                     }
-
-
-                    Log.d("PayU", "TxnId: $txnId")
-                    Log.d("PayU", "Status: $status")
-                    Log.d("PayU", "Amount: $amount")
-                    Log.d("PayU", "Mode: $paymentMode")
-                    Log.d("PayU", "Product: $productInfo")
-
-
                 }
-
 
                 override fun onPaymentFailure(response: Any) {
                     response as HashMap<*, *>
-
                     val payUResponseStr =
                         response[PayUCheckoutProConstants.CP_PAYU_RESPONSE] as? String
                     val payUJson = JSONObject(payUResponseStr ?: "{}")
-
-
-
-
-
-
                     getEmployeeComId()?.let { it1 ->
                         val request = PaymentUpdateRequest(
                             company_id = it1,
@@ -393,25 +293,19 @@ class SubscriptionActivity : AppCompatActivity() {
                             payment_Message = "failed",
                             payment_info = payUJson.toMap()
                         )
-
                         billPaymentsViewModel.updateSubscriptionPayment(
                             this@SubscriptionActivity, request
                         )
                     }
-
-
                 }
 
                 override fun onPaymentCancel(isTxnInitiated: Boolean) {
-
                     CustomToast(this@SubscriptionActivity, "Payment Cancelled")
-
                 }
 
                 override fun onError(errorResponse: ErrorResponse) {
                     Log.e("PayU", "Error: ${errorResponse.errorMessage} ${errorResponse.errorCode}")
                 }
-
                 override fun setWebViewProperties(webView: WebView?, bank: Any?) {
                     // Optional: Customize WebView if needed
                 }

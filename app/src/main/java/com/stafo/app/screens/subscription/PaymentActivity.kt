@@ -44,11 +44,7 @@ class PaymentActivity : AppCompatActivity() {
     }
 
     private fun onClickListener() {
-
-
         binding.apply {
-
-
             imageBack.setOnClickListener {
                 when (paymentType) {
                     "success" -> {
