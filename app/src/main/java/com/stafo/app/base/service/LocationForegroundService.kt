@@ -120,6 +120,10 @@ class LocationForegroundService : Service() {
             Log.e(TAG, "SecurityException while scheduling alarm: ${e.message}")
         }
     }
+
+
+
+
     fun stopForegroundService() {
         if (!isServiceRunning(LocationForegroundService::class.java)) {
             return
@@ -140,11 +144,6 @@ class LocationForegroundService : Service() {
 
         stopSelf()
     }
-
-
-
-
-
 
     private fun cancelServiceRestartAlarm() {
         val intent = Intent(applicationContext, LocationForegroundService::class.java)
@@ -172,9 +171,39 @@ class LocationForegroundService : Service() {
         // no stopSelf() here!
     }
 
-
-
     private fun scheduleServiceRestart() {
+        val intent = Intent(applicationContext, LocationForegroundService::class.java)
+        val pendingIntent = PendingIntent.getService(
+            applicationContext,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
+        )
+
+        if (pendingIntent != null) {
+            Log.d(TAG, "Restart alarm already scheduled, skipping.")
+            return
+        }
+
+        val newPendingIntent = PendingIntent.getService(
+            applicationContext,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setRepeating(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + 5000,
+            5000,
+            newPendingIntent
+        )
+        Log.d(TAG, "Restart alarm scheduled.")
+    }
+
+
+ /*   private fun scheduleServiceRestart() {
         val intent = Intent(applicationContext, LocationForegroundService::class.java)
         val pendingIntent = PendingIntent.getService(applicationContext, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
@@ -185,7 +214,7 @@ class LocationForegroundService : Service() {
             5000,
             pendingIntent
         )
-    }
+    }*/
 
 
 
