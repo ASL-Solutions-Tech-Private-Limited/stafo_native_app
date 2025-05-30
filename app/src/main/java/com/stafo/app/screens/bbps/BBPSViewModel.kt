@@ -15,6 +15,7 @@ import com.stafo.app.screens.bbps.dataClasses.BillerBillFetchResponse
 import com.stafo.app.screens.bbps.dataClasses.BillerDetailsResponse
 import com.stafo.app.screens.bbps.dataClasses.BillerListResponse
 import com.stafo.app.screens.bbps.dataClasses.InitiateBBPSBillResponse
+import com.stafo.app.screens.bbps.dataClasses.PromoCodeListResponse
 import com.stafo.app.screens.subscription.dataClass.CheckPaymentStatusRequest
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.isNetworkAvailable
@@ -39,6 +40,9 @@ class BBPSViewModel() : BaseViewModel() {
 
     private var mInitiateBillPayment: MutableLiveData<InitiateBBPSBillResponse> = MutableLiveData()
     val mInitiateBillPaymentResponse: LiveData<InitiateBBPSBillResponse> get() = mInitiateBillPayment
+
+    private var mPromoCodeList: MutableLiveData<PromoCodeListResponse> = MutableLiveData()
+    val mPromoCodeListResponse: LiveData<PromoCodeListResponse> get() = mPromoCodeList
 
 
     fun getBBPSCategory(mContext: Context) {
@@ -268,6 +272,47 @@ class BBPSViewModel() : BaseViewModel() {
                     Log.d("res", response?.body().toString())
                     if (response != null && response.isSuccessful) {
                         mInitiateBillPayment.postValue(response.body())
+                    } else {
+                        val errorBody = response?.errorBody()?.string()
+                        errorBody?.let { errorJson ->
+                            val error = Gson().fromJson(errorJson, ErrorResponse::class.java)
+                            CustomToast(mContext, error?.message ?: "Unknown error")
+                        } ?: run {
+                            CustomToast(
+                                mContext,
+                                mContext.getString(R.string.error_something_went_wrong)
+                            )
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    Log.e("EXCEPTION", "Error: ${e.localizedMessage}")
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun getPromoCodeList(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            CustomToast(
+                mContext,
+                "Network not available.Please check your internet connection and try again."
+            )
+            return
+        }
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val response = ASLEmpMng.instance.apiStores()?.callPromoCodeList()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    Log.d("res", response?.body().toString())
+                    if (response != null && response.isSuccessful) {
+                        mPromoCodeList.postValue(response.body())
                     } else {
                         val errorBody = response?.errorBody()?.string()
                         errorBody?.let { errorJson ->

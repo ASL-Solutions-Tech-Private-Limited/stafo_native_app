@@ -23,6 +23,7 @@ import com.stafo.app.screens.bbps.dataClasses.BillerBillFetchResponse
 import com.stafo.app.screens.bbps.dataClasses.BillerDetailsResponse
 import com.stafo.app.screens.bbps.dataClasses.BillerListResponse
 import com.stafo.app.screens.bbps.dataClasses.InitiateBBPSBillResponse
+import com.stafo.app.screens.bbps.dataClasses.PromoCodeListResponse
 import com.stafo.app.screens.billpayment.dataClass.CategoryMenuResponse
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorRequest
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorResponse
@@ -895,4 +896,9 @@ interface ApiStores {
         @Body request: CheckPaymentStatusRequest,
         @HeaderMap header: Map<String, String> = ApiClient.headerMap()
     ): Response<InitiateBBPSBillResponse>
+
+    @POST("api/promo-codes/list")
+    suspend fun callPromoCodeList(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<PromoCodeListResponse>
 }

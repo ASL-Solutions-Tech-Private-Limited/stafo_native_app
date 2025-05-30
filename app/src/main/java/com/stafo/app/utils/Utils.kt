@@ -6,6 +6,8 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.BATTERY_SERVICE
 import android.content.DialogInterface
@@ -1990,6 +1992,30 @@ fun jsonObjectToMap(jsonObject: JSONObject): Map<String, Any> {
     return map
 }
 
+fun isPromoExpired(expiresAt: String): Boolean {
+    return try {
+        val formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME
+        val expiryDateTime = ZonedDateTime.parse(expiresAt, formatter)
+        val currentDateTime = ZonedDateTime.now()
+        currentDateTime.isAfter(expiryDateTime)
+    } catch (e: Exception) {
+        // Handle parsing errors
+        true // treat as expired if invalid date format
+    }
+}
+
+
+fun copyTextFromTextView(context: Context, textView: TextView) {
+    val textToCopy = textView.text.toString()
+    if (textToCopy.isNotBlank()) {
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("Copied Text", textToCopy)
+        clipboard.setPrimaryClip(clip)
+        Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+    } else {
+        Toast.makeText(context, "Nothing to copy", Toast.LENGTH_SHORT).show()
+    }
+}
 
 
 

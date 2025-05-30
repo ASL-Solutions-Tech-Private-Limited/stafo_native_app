@@ -10,10 +10,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityBbpsdashboardBinding
 import com.stafo.app.screens.bbps.adapters.BBPSCategoriesAdapter
 import com.stafo.app.screens.dashboard.BannerAdapterBBPS
+import com.stafo.app.utils.getCompanyDetails
 import com.stafo.app.utils.gradientList
 
 
@@ -129,6 +131,16 @@ class BBPSDashboard : AppCompatActivity() {
             tvZeroConvenienceFeeDesc.text = "Automated, error-free payroll linked to attendance."
             tvNewInsurancePremium.text = "NEW:Geo Location Tracking"
             tvNewInsurancePremiumDesc.text = "Live tracking for field staff with complete history."
+            Glide.with(ivProfile).load(getCompanyDetails()?.companyName ?: "")
+                .placeholder(R.drawable.ic_bbps_ic).into(ivProfile)
+
+            tvViewProfile.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@BBPSDashboard, BBPSProfileActivity::class.java
+                    )
+                )
+            }
         }
     }
 
