@@ -2,9 +2,14 @@ package com.stafo.app.screens.tms
 
 import android.app.DatePickerDialog
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -48,6 +53,8 @@ class CreateTaskActivity : AppCompatActivity() {
 
     private var selectedPriority: String = ""
     private var selectedEndDate: String = ""
+    private var selectedTaskStatus: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -75,6 +82,58 @@ class CreateTaskActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         binding.apply {
+
+
+
+            binding.rvAssignEmp.layoutManager =
+                LinearLayoutManager(this@CreateTaskActivity, LinearLayoutManager.HORIZONTAL, false)
+            rvAssignEmpList = AdapterAssignTaskEmp(assignEmpList)
+            binding.rvAssignEmp.adapter = rvAssignEmpList
+
+
+
+            val options = resources.getStringArray(R.array.task_status)
+
+
+            val adapterSpinner = object : ArrayAdapter<String>(
+                this@CreateTaskActivity,
+                R.layout.custom_spinner_item,
+                options
+            ) {
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val view = super.getView(position, convertView, parent)
+                    val textView = view.findViewById<TextView>(R.id.tv_item)
+                    textView.setTextColor(
+                        if (position == 0) Color.GRAY else Color.BLACK
+                    )
+                    return view
+                }
+
+                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val view = super.getDropDownView(position, convertView, parent)
+                    val textView = view.findViewById<TextView>(R.id.tv_item)
+                    textView.setTextColor(
+                        if (position == 0) Color.GRAY else Color.BLACK
+                    )
+                    return view
+                }
+            }
+
+            spinnerTaskStatus.adapter = adapterSpinner
+            spinnerTaskStatus.setSelection(0)
+            spinnerTaskStatus.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                    if (position != 0) {
+                        selectedTaskStatus = parent.getItemAtPosition(position).toString()
+                    } else {
+                        selectedTaskStatus = ""
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {}
+            }
+
+
             val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
             val task = intent.getSerializableExtra("task_data") as? TaskData
             val taskType = intent.getStringExtra("task_type") ?: ""
@@ -89,6 +148,38 @@ class CreateTaskActivity : AppCompatActivity() {
                     selectedEndDate = it.end_date
 
                     edtDeadline.setText(showFormatDate(it.end_date))
+
+
+                    val statusIndex = options.indexOfFirst { status ->
+                        status.equals(it.status, ignoreCase = true)
+                    }
+                    if (statusIndex >= 0) {
+                        spinnerTaskStatus.setSelection(statusIndex)
+                    }
+
+
+
+                    if (it.assigned_employees.isNotEmpty()) {
+                        assignEmpList.clear()
+                        it.assigned_employees.forEach { emp ->
+                            val selectedEmp = AssignTaskEmp(
+                                id = emp.pivot.employee_id,
+                                name = emp.name
+                            )
+                            assignEmpList.add(selectedEmp)
+                            if (::rvAssignEmpList.isInitialized) {
+                                rvAssignEmpList.notifyItemInserted(assignEmpList.size - 1)
+                            }
+
+
+                        }
+
+                    }
+
+                    Log.e("TAG", "Task status: ${task.status}")
+
+
+
 
                     when (it.priority.lowercase()) {
                         "low" -> binding.priorityLow.isChecked = true
@@ -106,6 +197,7 @@ class CreateTaskActivity : AppCompatActivity() {
                 pageTitle.text = "Create Task"
                 btnCreateTask.text = "Create"
             }
+
 
 
 
@@ -163,26 +255,29 @@ class CreateTaskActivity : AppCompatActivity() {
                                     description = description,
                                     start_date = currentDate,
                                     end_date = selectedEndDate,
-                                    status = "Active",
+                                    status = selectedTaskStatus,
                                     priority = selectedPriority,
                                     task_assign = assignEmpList.map { it.id })
 
                                 tmsViewModel.updateTask(this@CreateTaskActivity,task!!.id, request)
                             } else {
 
-                                val request = CreateTaskRequest(
-                                    company_id = 1,
-                                    title = title,
-                                    description = description,
-                                    start_date = currentDate,
-                                    end_date = selectedEndDate,
-                                    status = "Active",
-                                    priority = selectedPriority,
-                                    task_assign = assignEmpList.map { it.id })
+                                if (!selectedTaskStatus.isNullOrBlank()) {
+                                    val request = CreateTaskRequest(
+                                        company_id = 1,
+                                        title = title,
+                                        description = description,
+                                        start_date = currentDate,
+                                        end_date = selectedEndDate,
+                                        status = selectedTaskStatus,
+                                        priority = selectedPriority,
+                                        task_assign = assignEmpList.map { it.id })
 
-                                tmsViewModel.createTask(this@CreateTaskActivity, request)
+                                    tmsViewModel.createTask(this@CreateTaskActivity, request)
+                                } else CustomToast(this@CreateTaskActivity,"Please select task status")
+
+
                             }
-
 
                         } else CustomToast(this@CreateTaskActivity, "Please select priority")
 
@@ -195,10 +290,6 @@ class CreateTaskActivity : AppCompatActivity() {
             }
 
 
-            binding.rvAssignEmp.layoutManager =
-                LinearLayoutManager(this@CreateTaskActivity, LinearLayoutManager.HORIZONTAL, false)
-            rvAssignEmpList = AdapterAssignTaskEmp(assignEmpList)
-            binding.rvAssignEmp.adapter = rvAssignEmpList
 
 
 

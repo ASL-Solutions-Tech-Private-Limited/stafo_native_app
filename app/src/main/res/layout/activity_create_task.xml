@@ -78,6 +78,40 @@
                     android:inputType="textMultiLine" />
             </com.google.android.material.textfield.TextInputLayout>
 
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <Spinner
+                    android:id="@+id/spinner_task_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_38sdp"
+                    android:background="@drawable/task_edit_text_background"
+                    android:dropDownVerticalOffset="@dimen/_34sdp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="5dip"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/_14sdp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_arrow_down"
+                    android:tint="@color/black"
+                    tools:ignore="UseAppTint" />
+            </RelativeLayout>
+
+
+
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

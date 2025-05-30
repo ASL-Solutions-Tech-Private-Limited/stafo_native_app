@@ -20,6 +20,7 @@ import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class TaskMSDashboard : AppCompatActivity() {
@@ -63,6 +64,11 @@ class TaskMSDashboard : AppCompatActivity() {
 
     private fun setupViews() {
         binding.apply {
+
+            ivBack.setOnClickListener {
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            }
 
             swipeRefreshLayout.setOnRefreshListener {
                 binding.swipeRefreshLayout.isRefreshing = false
@@ -157,14 +163,18 @@ class TaskMSDashboard : AppCompatActivity() {
         tmsViewModel.mTaskListResponse.observe(this) {
             if (it.success) {
                 if (!it.data.isNullOrEmpty()) {
+
                     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                    val today = dateFormat.parse(dateFormat.format(Calendar.getInstance().time))!!
+                    val todayString = dateFormat.format(Date())
+                    val today = dateFormat.parse(todayString)
 
                     val totalTasks = it.data.size
 
                     val inProgressTasks = it.data.count { task ->
                         val endDate = dateFormat.parse(task.end_date)
-                        task.status.equals("active", ignoreCase = true) &&
+                        (task.status.equals("active", ignoreCase = true) ||
+                                task.status.equals("pending", ignoreCase = true) ||
+                                task.status.equals("in progress", ignoreCase = true)) &&
                                 endDate != null &&
                                 (endDate.equals(today) || endDate.after(today))
                     }
@@ -173,12 +183,17 @@ class TaskMSDashboard : AppCompatActivity() {
                         task.status.equals("completed", ignoreCase = true)
                     }
 
+
+
                     val overdueTasks = it.data.count { task ->
                         val endDate = dateFormat.parse(task.end_date)
-                        task.status.equals("active", ignoreCase = true) &&
+                        (task.status.equals("pending", ignoreCase = true) ||
+                                task.status.equals("in progress", ignoreCase = true) ||
+                                task.status.equals("active", ignoreCase = true)) &&
                                 endDate != null &&
                                 endDate.before(today)
                     }
+
 
                     // Log for debug
                     Log.d("TaskCounts", "Total: $totalTasks")
@@ -271,22 +286,28 @@ class TaskMSDashboard : AppCompatActivity() {
 
         val filtered = when (selectedTab.text.toString().lowercase()) {
             "all tasks" -> fullTaskList
+
             "in progress" -> fullTaskList.filter { task ->
-                val endDate = dateFormat.parse(task.end_date)
-                task.status.equals("active", ignoreCase = true) &&
-                        endDate != null && (endDate >= today)
+                task.status.equals("active", ignoreCase = true) ||
+                        task.status.equals("in progress", ignoreCase = true)
             }
+
             "pending" -> fullTaskList.filter {
                 it.status.equals("pending", ignoreCase = true)
             }
+
             "completed" -> fullTaskList.filter {
                 it.status.equals("completed", ignoreCase = true)
             }
+
             "overdue" -> fullTaskList.filter { task ->
                 val endDate = dateFormat.parse(task.end_date)
-                task.status.equals("active", ignoreCase = true) &&
-                        endDate != null && (endDate < today)
+                (task.status.equals("active", ignoreCase = true) ||
+                        task.status.equals("in progress", ignoreCase = true) ||
+                        task.status.equals("pending", ignoreCase = true)) &&
+                        endDate != null && endDate < today
             }
+
             else -> fullTaskList
         }
 
@@ -294,6 +315,7 @@ class TaskMSDashboard : AppCompatActivity() {
         filteredTaskList.addAll(filtered)
         taskAdapter.updateData(filteredTaskList)
     }
+
 
 
 

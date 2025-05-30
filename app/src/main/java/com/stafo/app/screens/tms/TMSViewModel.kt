@@ -11,9 +11,12 @@ import com.stafo.app.R
 import com.stafo.app.base.BaseViewModel
 import com.stafo.app.base.model.ErrorResponse
 import com.stafo.app.screens.auth.LoginActivity
+import com.stafo.app.screens.tms.dataClass.AddCommentRequest
+import com.stafo.app.screens.tms.dataClass.AddCommentResponse
 import com.stafo.app.screens.tms.dataClass.CreateTaskRequest
 import com.stafo.app.screens.tms.dataClass.CreateTaskResponse
 import com.stafo.app.screens.tms.dataClass.DeleteTaskResponse
+import com.stafo.app.screens.tms.dataClass.TaskCommentListResponse
 import com.stafo.app.screens.tms.dataClass.TaskListRequest
 import com.stafo.app.screens.tms.dataClass.TaskListResponse
 import com.stafo.app.screens.tms.dataClass.UpdateTaskResponse
@@ -39,6 +42,174 @@ class TMSViewModel : BaseViewModel() {
     private var mDeleteTask: MutableLiveData<DeleteTaskResponse> = MutableLiveData()
     val mDeleteTaskResponse: LiveData<DeleteTaskResponse> get() = mDeleteTask
 
+    private var mTaskCommentList: MutableLiveData<TaskCommentListResponse> = MutableLiveData()
+    val mTaskCommentListResponse: LiveData<TaskCommentListResponse> get() = mTaskCommentList
+
+    private var mAddComment: MutableLiveData<AddCommentResponse> = MutableLiveData()
+    val mAddCommentResponse: LiveData<AddCommentResponse> get() = mAddComment
+
+
+
+    fun removeFile(mContext: Context,id:Int) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callDeleteAttachFile(id)
+                Log.d("tms", "removeFile: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mDeleteTask.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun deleteComment(mContext: Context,id:Int) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callDeleteComment(id)
+                Log.d("tms", "deleteComment: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mDeleteTask.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+    fun addComment(mContext: Context,request: AddCommentRequest) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callAddComment(request)
+                Log.d("tms", "addComment: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAddComment.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun getCommentList(mContext: Context,taskId:Int) {
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callCommentList(taskId)
+                Log.d("tms", "getCommentList: ${response?.body().toString()}")
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mTaskCommentList.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
     fun deleteTask(mContext: Context,id:Int) {

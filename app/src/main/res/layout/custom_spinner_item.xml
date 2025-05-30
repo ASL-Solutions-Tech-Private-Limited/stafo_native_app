@@ -9,4 +9,4 @@
     android:textColor="@color/black"
     android:fontFamily="@font/gilroy_regular"
     android:paddingHorizontal="@dimen/_10sdp"
-    android:paddingVertical="@dimen/_5sdp"/>
+    android:paddingVertical="@dimen/_6sdp"/>

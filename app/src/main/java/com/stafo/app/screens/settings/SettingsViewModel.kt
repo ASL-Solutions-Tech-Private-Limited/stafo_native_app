@@ -2703,6 +2703,8 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callJobTitleList()
+
+
                 Log.d("res", "job " + response?.body().toString())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"

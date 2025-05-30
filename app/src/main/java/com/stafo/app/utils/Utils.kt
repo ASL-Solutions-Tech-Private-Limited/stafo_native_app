@@ -1753,3 +1753,23 @@ fun generateGradientDrawables(count: Int): List<GradientDrawable> {
 
     return gradientList
 }
+
+
+fun getTimeOnly12HrFormat(isoDateTime: String?): String {
+    if (isoDateTime.isNullOrBlank()) return "--"
+
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())
+        inputFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        outputFormat.timeZone = TimeZone.getDefault()
+
+        val date = inputFormat.parse(isoDateTime)
+        date?.let { outputFormat.format(it) } ?: "--"
+    } catch (e: Exception) {
+        e.printStackTrace()
+        "--"
+    }
+}
+

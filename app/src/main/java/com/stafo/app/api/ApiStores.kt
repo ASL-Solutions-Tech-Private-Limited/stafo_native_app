@@ -151,9 +151,12 @@ import com.stafo.app.screens.subscription.dataClass.MySubscriptionResponse
 import com.stafo.app.screens.subscription.dataClass.PackageResponse
 import com.stafo.app.screens.subscription.dataClass.PaymentUpdateRequest
 import com.stafo.app.screens.subscription.dataClass.PaymentUpdateResponse
+import com.stafo.app.screens.tms.dataClass.AddCommentRequest
+import com.stafo.app.screens.tms.dataClass.AddCommentResponse
 import com.stafo.app.screens.tms.dataClass.CreateTaskRequest
 import com.stafo.app.screens.tms.dataClass.CreateTaskResponse
 import com.stafo.app.screens.tms.dataClass.DeleteTaskResponse
+import com.stafo.app.screens.tms.dataClass.TaskCommentListResponse
 import com.stafo.app.screens.tms.dataClass.TaskListRequest
 import com.stafo.app.screens.tms.dataClass.UpdateTaskResponse
 import okhttp3.MultipartBody
@@ -858,5 +861,28 @@ interface ApiStores {
     ): Response<DeleteTaskResponse>
 
 
+    @GET("api/task/comment-list")
+    suspend fun callCommentList(
+        @Query("task_id") taskId: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TaskCommentListResponse>
+
+    @POST("api/task/comment-create")
+    suspend fun callAddComment(
+        @Body request:AddCommentRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AddCommentResponse>
+
+    @DELETE("api/task/comment-delete/{id}")
+    suspend fun callDeleteComment(
+        @Path ("id")commentId:Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteTaskResponse>
+
+    @DELETE("api/task/file-delete/{id}")
+    suspend fun callDeleteAttachFile(
+        @Path ("id")fileId:Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteTaskResponse>
 
 }
