@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.textfield.TextInputLayout
 import com.stafo.app.R
 import com.stafo.app.base.request.AddBranchRequest
 import com.stafo.app.databinding.ActivityAddBranchBinding
@@ -232,10 +233,16 @@ class AddBranchActivity : AppCompatActivity() {
 
                 binding.tieBranchAddress.isFocusable=true
                 binding.tieBranchAddress.isFocusableInTouchMode=true
+                binding.tilBranchAddress.endIconMode = TextInputLayout.END_ICON_NONE
 
             } else{
                 binding.tieBranchAddress.isFocusable=false
                 binding.tieBranchAddress.isFocusableInTouchMode=false
+                binding.tilBranchAddress.endIconMode = TextInputLayout.END_ICON_CUSTOM
+                binding.tilBranchAddress.setEndIconDrawable(R.drawable.ic_add_location)
+                tieBranchAddress.setOnClickListener {
+                    getLocation()
+                }
             }
 
 
@@ -288,9 +295,7 @@ class AddBranchActivity : AppCompatActivity() {
                 }
             }
 
-            tieBranchAddress.setOnClickListener {
-                getLocation()
-            }
+
 
             ivBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()

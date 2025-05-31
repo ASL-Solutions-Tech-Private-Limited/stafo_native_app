@@ -52,7 +52,7 @@
 
 
 
-    <LinearLayout
+   <!-- <LinearLayout
         android:id="@+id/ll_tab"
         android:layout_width="match_parent"
         android:layout_height="45dp"
@@ -98,7 +98,7 @@
 
 
         </RadioGroup>
-    </LinearLayout>
+    </LinearLayout>-->
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/llc_custom"
@@ -291,7 +291,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_tab" />
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout" />
 
     <Button
         android:id="@+id/btn_add_address"

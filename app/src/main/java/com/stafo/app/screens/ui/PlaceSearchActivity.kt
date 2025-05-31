@@ -157,7 +157,7 @@ class PlaceSearchActivity : AppCompatActivity() {
             setUpMapClickListener()
 
 
-            binding.rdgpProfile.setOnCheckedChangeListener { _, checkedId ->
+            /*binding.rdgpProfile.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
                     R.id.radio_map -> {
                         addressType = "map"
@@ -174,7 +174,7 @@ class PlaceSearchActivity : AppCompatActivity() {
                 }
 
 
-            }
+            }*/
 
 
 
@@ -191,8 +191,15 @@ class PlaceSearchActivity : AppCompatActivity() {
 
             binding.btnAddAddress.setOnClickListener {
 
+                val returnIntent = Intent()
+                returnIntent.putExtra("type", "map")
+                returnIntent.putExtra("latitude", getLati)
+                returnIntent.putExtra("longitude", getLongi)
+                setResult(Activity.RESULT_OK, returnIntent)
+                finish()
 
-                when (addressType) {
+
+                /*when (addressType) {
                     "map" -> {
                         val returnIntent = Intent()
                         returnIntent.putExtra("type", "map")
@@ -216,7 +223,7 @@ class PlaceSearchActivity : AppCompatActivity() {
 
 
                     }
-                }
+                }*/
 
             }
         }
