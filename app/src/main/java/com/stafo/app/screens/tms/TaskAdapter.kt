@@ -32,14 +32,11 @@ class TaskAdapter(
 
         with(holder.binding) {
             taskTitle.text = task.title
-            taskDate.text = "${task.start_date} ·"
+            taskDate.text = "${task.startDate} ·"
             taskPriority.text = "${task.priority} Priority"
             taskStatus.text = task.status
-            //taskAssign.text = task.assignee
 
-            // Use the same background and tint based on status
             taskStatus.setBackgroundResource(R.drawable.bg_status_in_progress)
-
             val tintColor = when (task.status) {
                 "In Progress" -> ContextCompat.getColor(ctx, R.color.status_in_progress)
                 "Pending" -> ContextCompat.getColor(ctx, R.color.status_pending)
@@ -50,7 +47,7 @@ class TaskAdapter(
 
             ViewCompat.setBackgroundTintList(taskStatus, ColorStateList.valueOf(tintColor))
 
-            // Set assignee text color based on priority
+
             val priorityColor = when (task.priority) {
                 "High" -> ContextCompat.getColor(ctx, R.color.priority_high)
                 "Medium" -> ContextCompat.getColor(ctx, R.color.priority_medium)

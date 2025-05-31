@@ -162,6 +162,7 @@ import com.stafo.app.screens.tms.dataClass.UpdateTaskResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -841,18 +842,43 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<TaskListResponse>
 
+    @Multipart
     @POST("api/task/create")
-    suspend fun callCreateTask(
-        @Body request:CreateTaskRequest,
+    suspend fun createTask(
+        @Part("company_id") companyId: RequestBody,
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody,
+        @Part("start_date") startDate: RequestBody,
+        @Part("end_date") endDate: RequestBody,
+        @Part("status") status: RequestBody,
+        @Part("priority") priority: RequestBody,
+        @Part taskAssign: List<MultipartBody.Part>,
+        @Part files: List<MultipartBody.Part>,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<CreateTaskResponse>
 
+
+    @Multipart
     @POST("api/task/update/{id}")
+    suspend fun callUpdateTask(
+        @Path("id") taskId: Int,
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody,
+        @Part("start_date") startDate: RequestBody,
+        @Part("end_date") endDate: RequestBody,
+        @Part("status") status: RequestBody,
+        @Part("priority") priority: RequestBody,
+        @Part taskAssign: List<MultipartBody.Part>,
+        @Part files: List<MultipartBody.Part>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateTaskResponse>
+
+   /* @POST("api/task/update/{id}")
     suspend fun callUpdateTask(
         @Path ("id")taskId:Int,
         @Body request:CreateTaskRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
-    ): Response<UpdateTaskResponse>
+    ): Response<UpdateTaskResponse>*/
 
     @DELETE("api/task/delete/{id}")
     suspend fun callDeleteTask(

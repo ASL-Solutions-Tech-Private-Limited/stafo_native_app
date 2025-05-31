@@ -24,7 +24,7 @@ class AdapterAssignTaskEmp (private val items: List<AssignTaskEmp>) :
 
     override fun onBindViewHolder(holder: AttachmentViewHolder, position: Int) {
         holder.binding.tvFileName.text = items[position].name
-        // Add icon or remove button logic here if needed
+
     }
 
     override fun getItemCount(): Int = items.size

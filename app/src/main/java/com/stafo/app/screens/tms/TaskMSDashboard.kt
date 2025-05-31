@@ -153,7 +153,6 @@ class TaskMSDashboard : AppCompatActivity() {
     }
 
 
-
     private fun observeViewModel() {
 
 
@@ -171,12 +170,14 @@ class TaskMSDashboard : AppCompatActivity() {
                     val totalTasks = it.data.size
 
                     val inProgressTasks = it.data.count { task ->
-                        val endDate = dateFormat.parse(task.end_date)
-                        (task.status.equals("active", ignoreCase = true) ||
-                                task.status.equals("pending", ignoreCase = true) ||
-                                task.status.equals("in progress", ignoreCase = true)) &&
-                                endDate != null &&
-                                (endDate.equals(today) || endDate.after(today))
+                        val endDate = dateFormat.parse(task.endDate)
+                        (task.status.equals(
+                            "active",
+                            ignoreCase = true
+                        ) || task.status.equals("pending", ignoreCase = true) || task.status.equals(
+                            "in progress",
+                            ignoreCase = true
+                        )) && endDate != null && (endDate.equals(today) || endDate.after(today))
                     }
 
                     val completedTasks = it.data.count { task ->
@@ -184,14 +185,18 @@ class TaskMSDashboard : AppCompatActivity() {
                     }
 
 
-
                     val overdueTasks = it.data.count { task ->
-                        val endDate = dateFormat.parse(task.end_date)
-                        (task.status.equals("pending", ignoreCase = true) ||
-                                task.status.equals("in progress", ignoreCase = true) ||
-                                task.status.equals("active", ignoreCase = true)) &&
-                                endDate != null &&
-                                endDate.before(today)
+                        val endDate = dateFormat.parse(task.endDate)
+                        (task.status.equals(
+                            "pending",
+                            ignoreCase = true
+                        ) || task.status.equals(
+                            "in progress",
+                            ignoreCase = true
+                        ) || task.status.equals(
+                            "active",
+                            ignoreCase = true
+                        )) && endDate != null && endDate.before(today)
                     }
 
 
@@ -212,8 +217,6 @@ class TaskMSDashboard : AppCompatActivity() {
                     filterTasksByTab()
 
 
-
-
                 } else {
 
                     binding.totalTask.summaryCount.text = "0"
@@ -231,7 +234,7 @@ class TaskMSDashboard : AppCompatActivity() {
         tmsViewModel.mDeleteTaskResponse.observe(this) {
 
             if (it.status) {
-              CustomToast(this, it.message)
+                CustomToast(this, it.message)
                 getEmployeeComId()?.let {
                     tmsViewModel.getTaskList(this@TaskMSDashboard, it)
                 }
@@ -240,8 +243,6 @@ class TaskMSDashboard : AppCompatActivity() {
                 CustomToast(this, it.message)
             }
         }
-
-
 
 
     }
@@ -255,27 +256,20 @@ class TaskMSDashboard : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        taskAdapter = TaskAdapter(
-            mutableListOf(),
-            { task ->
-                val intent = Intent(this@TaskMSDashboard, CreateTaskActivity::class.java)
-                intent.putExtra("task_data", task)
-                intent.putExtra("task_type", "Update")
-                startActivity(intent)
-            },
-            { task -> showCompanyDeleteDialog(task.id) },
-            { task ->
-                val intent = Intent(this@TaskMSDashboard, TaskDescriptionActivity::class.java)
-                intent.putExtra("task_data", task)
-                startActivity(intent)
-            }
-        )
+        taskAdapter = TaskAdapter(mutableListOf(), { task ->
+            val intent = Intent(this@TaskMSDashboard, CreateTaskActivity::class.java)
+            intent.putExtra("task_data", task)
+            intent.putExtra("task_type", "Update")
+            startActivity(intent)
+        }, { task -> showCompanyDeleteDialog(task.id) }, { task ->
+            val intent = Intent(this@TaskMSDashboard, TaskDescriptionActivity::class.java)
+            intent.putExtra("task_data", task)
+            startActivity(intent)
+        })
 
         binding.recyclerTasks.adapter = taskAdapter
         binding.recyclerTasks.layoutManager = LinearLayoutManager(this)
     }
-
-
 
 
     private fun filterTasksByTab() {
@@ -288,8 +282,10 @@ class TaskMSDashboard : AppCompatActivity() {
             "all tasks" -> fullTaskList
 
             "in progress" -> fullTaskList.filter { task ->
-                task.status.equals("active", ignoreCase = true) ||
-                        task.status.equals("in progress", ignoreCase = true)
+                task.status.equals("active", ignoreCase = true) || task.status.equals(
+                    "in progress",
+                    ignoreCase = true
+                )
             }
 
             "pending" -> fullTaskList.filter {
@@ -301,11 +297,17 @@ class TaskMSDashboard : AppCompatActivity() {
             }
 
             "overdue" -> fullTaskList.filter { task ->
-                val endDate = dateFormat.parse(task.end_date)
-                (task.status.equals("active", ignoreCase = true) ||
-                        task.status.equals("in progress", ignoreCase = true) ||
-                        task.status.equals("pending", ignoreCase = true)) &&
-                        endDate != null && endDate < today
+                val endDate = dateFormat.parse(task.endDate)
+                (task.status.equals(
+                    "active",
+                    ignoreCase = true
+                ) || task.status.equals(
+                    "in progress",
+                    ignoreCase = true
+                ) || task.status.equals(
+                    "pending",
+                    ignoreCase = true
+                )) && endDate != null && endDate < today
             }
 
             else -> fullTaskList
@@ -317,18 +319,13 @@ class TaskMSDashboard : AppCompatActivity() {
     }
 
 
-
-
-
-
-
-    private fun showCompanyDeleteDialog(itemId:Int) {
+    private fun showCompanyDeleteDialog(itemId: Int) {
         val builder = androidx.appcompat.app.AlertDialog.Builder(this)
         builder.setTitle(R.string.app_name)
         builder.setMessage("Are you sure? Delete this.")
 
         builder.setPositiveButton("Yes") { dialog, _ ->
-            tmsViewModel.deleteTask(this@TaskMSDashboard,itemId)
+            tmsViewModel.deleteTask(this@TaskMSDashboard, itemId)
             dialog.dismiss()
         }
 

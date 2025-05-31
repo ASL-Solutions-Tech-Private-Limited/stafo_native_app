@@ -1,9 +1,14 @@
 package com.stafo.app.screens.tms
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -29,9 +34,11 @@ import com.stafo.app.screens.settings.dataClass.GetEmployee
 import com.stafo.app.screens.tms.adapter.AdapterAssignTaskEmp
 import com.stafo.app.screens.tms.dataClass.AssignTaskEmp
 import com.stafo.app.screens.tms.dataClass.CreateTaskRequest
+import com.stafo.app.screens.tms.dataClass.TaskAttachment
 import com.stafo.app.screens.tms.dataClass.TaskData
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.getEmployeeComId
 import com.stafo.app.utils.getFormattedDate2
 import com.stafo.app.utils.reportsFormatToMonthYear
 import com.stafo.app.utils.showFormatDate
@@ -45,7 +52,7 @@ class CreateTaskActivity : AppCompatActivity() {
     private lateinit var attachmentAdapter: AttachmentAdapter
     private lateinit var rvAssignEmpList: AdapterAssignTaskEmp
     private val assignEmpList = mutableListOf<AssignTaskEmp>()
-    private val attachmentList = mutableListOf<String>()
+
 
     private val settingsViewModel: SettingsViewModel by viewModels()
     private val tmsViewModel: TMSViewModel by viewModels()
@@ -54,6 +61,16 @@ class CreateTaskActivity : AppCompatActivity() {
     private var selectedPriority: String = ""
     private var selectedEndDate: String = ""
     private var selectedTaskStatus: String = ""
+    private var postTaskId: Int=0
+
+    private val fileUrl:String ="https://stafo.in/uploads/task"
+
+    private val FILE_PICKER_REQUEST_CODE = 101
+
+    val attachmentList = mutableListOf<TaskAttachment>()
+    val toDeleteIds = mutableListOf<Int>()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +89,24 @@ class CreateTaskActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        attachmentAdapter = AttachmentAdapter(attachmentList)
+        attachmentAdapter = AttachmentAdapter(
+            attachmentList,
+            onRemoveClick = { position ->
+                if (position in attachmentList.indices) {
+                    val attachment = attachmentList[position]
+                    if (!attachment.isLocal && attachment.id != null) {
+                        toDeleteIds.add(attachment.id)
+                    }
+
+                    attachmentList.removeAt(position)
+                    attachmentAdapter.notifyItemRemoved(position)
+
+                    if (attachmentList.isEmpty()) {
+                        binding.rvAttachFiles.visibility = View.GONE
+                    }
+                }
+            }
+        )
         binding.rvAttachFiles.apply {
             layoutManager =
                 LinearLayoutManager(this@CreateTaskActivity, LinearLayoutManager.HORIZONTAL, false)
@@ -84,21 +118,17 @@ class CreateTaskActivity : AppCompatActivity() {
         binding.apply {
 
 
-
             binding.rvAssignEmp.layoutManager =
                 LinearLayoutManager(this@CreateTaskActivity, LinearLayoutManager.HORIZONTAL, false)
             rvAssignEmpList = AdapterAssignTaskEmp(assignEmpList)
             binding.rvAssignEmp.adapter = rvAssignEmpList
 
 
-
             val options = resources.getStringArray(R.array.task_status)
 
 
             val adapterSpinner = object : ArrayAdapter<String>(
-                this@CreateTaskActivity,
-                R.layout.custom_spinner_item,
-                options
+                this@CreateTaskActivity, R.layout.custom_spinner_item, options
             ) {
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                     val view = super.getView(position, convertView, parent)
@@ -109,7 +139,9 @@ class CreateTaskActivity : AppCompatActivity() {
                     return view
                 }
 
-                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                override fun getDropDownView(
+                    position: Int, convertView: View?, parent: ViewGroup
+                ): View {
                     val view = super.getDropDownView(position, convertView, parent)
                     val textView = view.findViewById<TextView>(R.id.tv_item)
                     textView.setTextColor(
@@ -122,7 +154,9 @@ class CreateTaskActivity : AppCompatActivity() {
             spinnerTaskStatus.adapter = adapterSpinner
             spinnerTaskStatus.setSelection(0)
             spinnerTaskStatus.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                override fun onItemSelected(
+                    parent: AdapterView<*>, view: View?, position: Int, id: Long
+                ) {
                     if (position != 0) {
                         selectedTaskStatus = parent.getItemAtPosition(position).toString()
                     } else {
@@ -134,21 +168,24 @@ class CreateTaskActivity : AppCompatActivity() {
             }
 
 
+
+
+
             val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
             val task = intent.getSerializableExtra("task_data") as? TaskData
             val taskType = intent.getStringExtra("task_type") ?: ""
 
             if (taskType == "Update") {
                 pageTitle.text = "Update Task"
-                btnCreateTask.text="Update"
+                btnCreateTask.text = "Update"
 
                 task?.let {
+                    postTaskId=task.id
                     edtTaskTitle.setText(it.title)
                     edtTaskDescription.setText(it.description)
-                    selectedEndDate = it.end_date
+                    selectedEndDate = it.endDate
 
-                    edtDeadline.setText(showFormatDate(it.end_date))
-
+                    edtDeadline.setText(showFormatDate(it.endDate))
 
                     val statusIndex = options.indexOfFirst { status ->
                         status.equals(it.status, ignoreCase = true)
@@ -157,30 +194,35 @@ class CreateTaskActivity : AppCompatActivity() {
                         spinnerTaskStatus.setSelection(statusIndex)
                     }
 
-
-
-                    if (it.assigned_employees.isNotEmpty()) {
+                    if (it.assignedEmployees.isNotEmpty()) {
                         assignEmpList.clear()
-                        it.assigned_employees.forEach { emp ->
-                            val selectedEmp = AssignTaskEmp(
-                                id = emp.pivot.employee_id,
-                                name = emp.name
-                            )
+                        it.assignedEmployees.forEach { emp ->
+                            val selectedEmp = AssignTaskEmp(id = emp.pivot.employeeId, name = emp.name)
                             assignEmpList.add(selectedEmp)
                             if (::rvAssignEmpList.isInitialized) {
                                 rvAssignEmpList.notifyItemInserted(assignEmpList.size - 1)
                             }
-
-
                         }
-
                     }
 
-                    Log.e("TAG", "Task status: ${task.status}")
+                    // <-- FIXED HERE: use your TaskAttachment data class properly -->
+                    if (it.taskFiles.isNotEmpty()) {
+                        attachmentList.clear()
+                        it.taskFiles.forEach { file ->
+                            attachmentList.add(
+                                TaskAttachment(
+                                    id = file.taskId,
+                                    uri = Uri.parse(file.filename),
+                                    isLocal = false,
+                                    fileUrl = fileUrl
+                                )
+                            )
+                            attachmentAdapter.notifyItemInserted(attachmentList.size - 1)
+                        }
+                        binding.rvAttachFiles.visibility = View.VISIBLE
+                    }
 
-
-
-
+                    // Remaining UI setup unchanged
                     when (it.priority.lowercase()) {
                         "low" -> binding.priorityLow.isChecked = true
                         "medium" -> binding.priorityMedium.isChecked = true
@@ -189,15 +231,11 @@ class CreateTaskActivity : AppCompatActivity() {
                     }
 
                     updatePriorityUI()
-
-                    Log.e("TAG", "setupListeners: ${it.priority}")
                 }
-
             } else {
                 pageTitle.text = "Create Task"
                 btnCreateTask.text = "Create"
             }
-
 
 
 
@@ -225,7 +263,7 @@ class CreateTaskActivity : AppCompatActivity() {
 
 
             binding.btnAttach.setOnClickListener {
-                addDummyAttachment()
+                openFilePicker()
             }
 
             binding.edtDeadline.setOnClickListener {
@@ -240,6 +278,9 @@ class CreateTaskActivity : AppCompatActivity() {
 
             binding.btnCreateTask.setOnClickListener {
                 if (isValidation()) {
+                    val fileUris = attachmentAdapter.getAttachFiles()
+
+                    Log.e("attachedFiles", "post file : $fileUris")
                     val title = binding.edtTaskTitle.text.toString()
                     val description = binding.edtTaskDescription.text.toString()
                     selectedPriority = getSelectedPriority()
@@ -249,32 +290,49 @@ class CreateTaskActivity : AppCompatActivity() {
 
 
                             if (taskType == "Update") {
-                                val request = CreateTaskRequest(
-                                    company_id = 1,
-                                    title = title,
-                                    description = description,
-                                    start_date = currentDate,
-                                    end_date = selectedEndDate,
-                                    status = selectedTaskStatus,
-                                    priority = selectedPriority,
-                                    task_assign = assignEmpList.map { it.id })
+                                val newFileUris = attachmentList.filter { it.isLocal }.mapNotNull { it.uri }
 
-                                tmsViewModel.updateTask(this@CreateTaskActivity,task!!.id, request)
-                            } else {
-
-                                if (!selectedTaskStatus.isNullOrBlank()) {
-                                    val request = CreateTaskRequest(
-                                        company_id = 1,
+                                getEmployeeComId()?.let { it1 ->
+                                    val request =   CreateTaskRequest(
+                                        company_id = it1.toInt(),
                                         title = title,
                                         description = description,
                                         start_date = currentDate,
                                         end_date = selectedEndDate,
                                         status = selectedTaskStatus,
                                         priority = selectedPriority,
-                                        task_assign = assignEmpList.map { it.id })
+                                        task_assign = assignEmpList.mapNotNull { it.id },
+                                        files = emptyList()
+                                    )
+                                    tmsViewModel.updateTask(this@CreateTaskActivity, postTaskId, request, newFileUris)
+                                }
 
-                                    tmsViewModel.createTask(this@CreateTaskActivity, request)
-                                } else CustomToast(this@CreateTaskActivity,"Please select task status")
+
+                            } else {
+
+                                if (!selectedTaskStatus.isNullOrBlank()) {
+
+                                    getEmployeeComId()?.let { it1 ->
+                                    val request = CreateTaskRequest(
+                                        company_id = it1.toInt(),
+                                        title = title,
+                                        description = description,
+                                        start_date = currentDate,
+                                        end_date = selectedEndDate,
+                                        status = selectedTaskStatus,
+                                        priority = selectedPriority,
+                                        task_assign = assignEmpList.mapNotNull { it.id },
+                                        files = emptyList()
+                                    )
+
+                                    val fileUris = attachmentList.mapNotNull { it.uri }
+
+                                    tmsViewModel.createTask(this@CreateTaskActivity, request, fileUris)
+                                    }
+
+                                } else CustomToast(
+                                    this@CreateTaskActivity, "Please select task status"
+                                )
 
 
                             }
@@ -296,6 +354,23 @@ class CreateTaskActivity : AppCompatActivity() {
             obverseViewModel()
         }
     }
+
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.data?.let { uri ->
+                attachmentList.add(TaskAttachment(uri = uri, isLocal = true))
+                binding.rvAttachFiles.visibility = View.VISIBLE
+                attachmentAdapter.notifyItemInserted(attachmentList.size - 1)
+            }
+        }
+    }
+
+
+
 
     private fun isValidation(): Boolean {
         binding.apply {
@@ -357,11 +432,6 @@ class CreateTaskActivity : AppCompatActivity() {
         }
     }
 
-    private fun addDummyAttachment() {
-        attachmentList.add("File ${attachmentList.size + 1}")
-        binding.rvAttachFiles.visibility = View.VISIBLE
-        attachmentAdapter.notifyItemInserted(attachmentList.size - 1)
-    }
 
     private fun getSelectedPriority(): String {
         return when (binding.priorityGroup.checkedRadioButtonId) {
@@ -495,5 +565,24 @@ class CreateTaskActivity : AppCompatActivity() {
             dialog.show()
         }*/
     }
+
+
+    private fun openFilePicker() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            type = "*/*"
+            putExtra(
+                Intent.EXTRA_MIME_TYPES, arrayOf(
+                    "application/pdf",
+                    "application/msword",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                )
+            )
+        }
+        startActivityForResult(
+            Intent.createChooser(intent, "Select a file"), FILE_PICKER_REQUEST_CODE
+        )
+    }
+
+
 
 }

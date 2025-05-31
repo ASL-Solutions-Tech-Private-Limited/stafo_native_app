@@ -1,46 +1,51 @@
 package com.stafo.app.screens.tms.dataClass
 
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 data class TaskListResponse(
     val success: Boolean,
     val message: String,
-    val data: List<TaskData>
+    val data: List<TaskData>,
+    @SerializedName("file_path") val filePath: String
 )
 
 data class TaskData(
     val id: Int,
-    val company_id: Int,
+    @SerializedName("company_id") val companyId: Int,
     val title: String,
     val description: String,
-    val start_date: String,
-    val end_date: String,
+    @SerializedName("start_date") val startDate: String,
+    @SerializedName("end_date") val endDate: String,
     val status: String,
     val priority: String,
-    val created_at: String,
-    val updated_at: String,
+    @SerializedName("created_at") val createdAt: String,
+    @SerializedName("updated_at") val updatedAt: String,
     val company: Company,
-    val assigned_employees: List<AssignedEmployee>
-): Serializable
+    @SerializedName("assigned_employees") val assignedEmployees: List<AssignedEmployee>,
+    @SerializedName("task_files") val taskFiles: List<TaskFile>
+) : Serializable
 
 data class Company(
     val id: Int,
-    val company_name: String,
-    val company_code: String?,
+    @SerializedName("company_name") val companyName: String,
+    @SerializedName("company_code") val companyCode: String?,
     val email: String,
-    val mobile_no: String
-): Serializable
+    @SerializedName("mobile_no") val mobileNo: String
+) : Serializable
 
 data class AssignedEmployee(
-    val emp_id: String,
+    @SerializedName("emp_id") val empId: String,
     val name: String,
     val email: String,
     val phone: String,
     val pivot: Pivot
-): Serializable
+) : Serializable
 
 data class Pivot(
-    val task_id: Int,
-    val employee_id: Int
-): Serializable
+    @SerializedName("task_id") val taskId: Int, @SerializedName("employee_id") val employeeId: Int
+) : Serializable
 
+data class TaskFile(
+    @SerializedName("task_id") val taskId: Int, val filename: String
+) : Serializable

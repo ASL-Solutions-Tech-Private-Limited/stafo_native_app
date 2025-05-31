@@ -8,5 +8,6 @@ data class CreateTaskRequest(
     val end_date: String,
     val status: String,
     val priority: String,
-    val task_assign: List<Int>
+    val task_assign: List<Int>,
+    val files: List<String?>
 )
