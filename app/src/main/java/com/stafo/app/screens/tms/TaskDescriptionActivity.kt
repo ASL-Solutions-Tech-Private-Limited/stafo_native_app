@@ -40,7 +40,7 @@ class TaskDescriptionActivity : AppCompatActivity() {
     private lateinit var commentAdapter: CommentAdapter
     private val comments = mutableListOf<Comment>()
 
-    private var taskId:String=""
+    private var taskId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,26 +55,24 @@ class TaskDescriptionActivity : AppCompatActivity() {
     private fun setupData() {
         binding.apply {
 
-         ivBack.setOnClickListener {
-             onBackPressedDispatcher.onBackPressed()
-             finish()
-         }
-
-
+            ivBack.setOnClickListener {
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            }
 
 
             val task = intent.getSerializableExtra("task_data") as? TaskData
             if (task != null) {
-                taskId=task.id.toString()
-                tmsViewModel.getCommentList(this@TaskDescriptionActivity,task.id)
+                taskId = task.id.toString()
+                tmsViewModel.getCommentList(this@TaskDescriptionActivity, task.id)
 
                 taskTitle.text = task.title
                 taskDescription.text = task.description
                 taskStatus.text = task.status
                 taskPriority.text = task.priority
-                taskDueDate.text = showFormatDate(task.end_date)
+                taskDueDate.text = showFormatDate(task.endDate)
 
-                val adapterAssign = AdapterAssignEmployee(task.assigned_employees)
+                val adapterAssign = AdapterAssignEmployee(task.assignedEmployees)
                 rvAssignEmployee.apply {
                     layoutManager = LinearLayoutManager(this@TaskDescriptionActivity)
                     adapter = adapterAssign
@@ -82,16 +80,35 @@ class TaskDescriptionActivity : AppCompatActivity() {
 
                 when (task.priority.lowercase()) {
                     "low" -> {
-                        taskPriority.setTextColor(ContextCompat.getColor(this@TaskDescriptionActivity, R.color.priority_low))
+                        taskPriority.setTextColor(
+                            ContextCompat.getColor(
+                                this@TaskDescriptionActivity, R.color.priority_low
+                            )
+                        )
                     }
+
                     "medium" -> {
-                        taskPriority.setTextColor(ContextCompat.getColor(this@TaskDescriptionActivity, R.color.priority_medium))
+                        taskPriority.setTextColor(
+                            ContextCompat.getColor(
+                                this@TaskDescriptionActivity, R.color.priority_medium
+                            )
+                        )
                     }
+
                     "high" -> {
-                        taskPriority.setTextColor(ContextCompat.getColor(this@TaskDescriptionActivity, R.color.priority_high))
+                        taskPriority.setTextColor(
+                            ContextCompat.getColor(
+                                this@TaskDescriptionActivity, R.color.priority_high
+                            )
+                        )
                     }
+
                     "urgent" -> {
-                        taskPriority.setTextColor(ContextCompat.getColor(this@TaskDescriptionActivity, R.color.priority_urgent))
+                        taskPriority.setTextColor(
+                            ContextCompat.getColor(
+                                this@TaskDescriptionActivity, R.color.priority_urgent
+                            )
+                        )
                     }
                 }
 
@@ -100,34 +117,44 @@ class TaskDescriptionActivity : AppCompatActivity() {
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 val today = dateFormat.parse(dateFormat.format(Date()))
                 val taskEndDate = try {
-                    dateFormat.parse(task.end_date)
+                    dateFormat.parse(task.endDate)
                 } catch (e: Exception) {
                     null
                 }
 
-                val isOverdue = taskEndDate != null && today != null && taskEndDate.before(today) && statusLower != "completed"
+                val isOverdue =
+                    taskEndDate != null && today != null && taskEndDate.before(today) && statusLower != "completed"
 
                 when {
                     isOverdue -> {
                         taskStatus.text = "Overdue"
-                        taskStatus.backgroundTintList =
-                            ContextCompat.getColorStateList(this@TaskDescriptionActivity, R.color.status_overdue)
+                        taskStatus.backgroundTintList = ContextCompat.getColorStateList(
+                            this@TaskDescriptionActivity, R.color.status_overdue
+                        )
                     }
+
                     statusLower == "pending" -> {
-                        taskStatus.backgroundTintList =
-                            ContextCompat.getColorStateList(this@TaskDescriptionActivity, R.color.status_pending)
+                        taskStatus.backgroundTintList = ContextCompat.getColorStateList(
+                            this@TaskDescriptionActivity, R.color.status_pending
+                        )
                     }
+
                     statusLower == "in progress" -> {
-                        taskStatus.backgroundTintList =
-                            ContextCompat.getColorStateList(this@TaskDescriptionActivity, R.color.status_in_progress)
+                        taskStatus.backgroundTintList = ContextCompat.getColorStateList(
+                            this@TaskDescriptionActivity, R.color.status_in_progress
+                        )
                     }
+
                     statusLower == "completed" -> {
-                        taskStatus.backgroundTintList =
-                            ContextCompat.getColorStateList(this@TaskDescriptionActivity, R.color.status_completed)
+                        taskStatus.backgroundTintList = ContextCompat.getColorStateList(
+                            this@TaskDescriptionActivity, R.color.status_completed
+                        )
                     }
+
                     else -> {
-                        taskStatus.backgroundTintList =
-                            ContextCompat.getColorStateList(this@TaskDescriptionActivity, R.color.grey_300)
+                        taskStatus.backgroundTintList = ContextCompat.getColorStateList(
+                            this@TaskDescriptionActivity, R.color.grey_300
+                        )
                     }
                 }
 
@@ -147,29 +174,24 @@ class TaskDescriptionActivity : AppCompatActivity() {
             if (it.success) {
                 if (!it.data.isNullOrEmpty()) {
 
-                    commentAdapter = CommentAdapter(this,it.data,
-                        onCommentLongPressed = { comment ->
-                            AlertDialog.Builder(this)
-                                .setTitle("Delete Comment")
+                    commentAdapter = CommentAdapter(
+                        this, it.data, onCommentLongPressed = { comment ->
+                            AlertDialog.Builder(this).setTitle("Delete Comment")
                                 .setMessage("Do you want to delete this comment?")
                                 .setPositiveButton("Yes") { _, _ ->
                                     //deleteCommentApi(comment.id)
 
-                                    tmsViewModel.deleteComment(this,comment.id)
-                                }
-                                .setNegativeButton("Cancel") { _, _ ->
+                                    tmsViewModel.deleteComment(this, comment.id)
+                                }.setNegativeButton("Cancel") { _, _ ->
                                     commentAdapter.clearSelection()
-                                }
-                                .setOnDismissListener {
+                                }.setOnDismissListener {
                                     commentAdapter.clearSelection()
-                                }
-                                .show()
+                                }.show()
                         })
                     binding.rvCommentList.apply {
                         layoutManager = LinearLayoutManager(this@TaskDescriptionActivity)
                         adapter = commentAdapter
                     }
-
 
 
                 }
@@ -178,24 +200,20 @@ class TaskDescriptionActivity : AppCompatActivity() {
             }
         }
         tmsViewModel.mAddCommentResponse.observe(this) {
-            if (it.message!=null) {
-                 tmsViewModel.getCommentList(this,taskId.toInt())
+            if (it.message != null) {
+                tmsViewModel.getCommentList(this, taskId.toInt())
             } else {
                 CustomToast(this, it.message)
             }
         }
         tmsViewModel.mDeleteTaskResponse.observe(this) {
             if (it.status) {
-                tmsViewModel.getCommentList(this@TaskDescriptionActivity,taskId.toInt())
+                tmsViewModel.getCommentList(this@TaskDescriptionActivity, taskId.toInt())
                 CustomToast(this, it.message)
             } else {
                 CustomToast(this, it.message)
             }
         }
-
-
-
-
 
 
     }
@@ -209,21 +227,13 @@ class TaskDescriptionActivity : AppCompatActivity() {
     }
 
 
-
-
-
-
-
-
-
-
-  /*  private fun setupCommentList() {
-        commentAdapter = CommentAdapter(comments)
-        binding.rvCommentList.apply {
-            layoutManager = LinearLayoutManager(this@TaskDescriptionActivity)
-            adapter = commentAdapter
-        }
-    }*/
+    /*  private fun setupCommentList() {
+          commentAdapter = CommentAdapter(comments)
+          binding.rvCommentList.apply {
+              layoutManager = LinearLayoutManager(this@TaskDescriptionActivity)
+              adapter = commentAdapter
+          }
+      }*/
 
     private fun setupAddCommentButton() {
         binding.btnAddComment.setOnClickListener {
@@ -244,28 +254,28 @@ class TaskDescriptionActivity : AppCompatActivity() {
                     text = text, timestamp = getCurrentTime(), isMine = true
                 )
 
-                if (getIsCOMPANYLogin(this)){
-                    val request= AddCommentRequest(
+                if (getIsCOMPANYLogin(this)) {
+                    val request = AddCommentRequest(
                         task_id = taskId.toInt(),
-                        company_id = getEmployeeComId()?.toInt()?:0,
+                        company_id = getEmployeeComId()?.toInt() ?: 0,
                         comments = text
                     )
 
-                    tmsViewModel.addComment(this,request)
-                }else{
-                    val request= AddCommentRequest(
+                    tmsViewModel.addComment(this, request)
+                } else {
+                    val request = AddCommentRequest(
                         task_id = taskId.toInt(),
-                        employee_id = getEmployeeDetails()?.id?:0,
+                        employee_id = getEmployeeDetails()?.id ?: 0,
                         comments = text
                     )
 
-                    tmsViewModel.addComment(this,request)
+                    tmsViewModel.addComment(this, request)
                 }
 
 
-               /* comments.add(newComment)
-                commentAdapter.notifyItemInserted(comments.size - 1)
-                binding.rvCommentList.scrollToPosition(comments.size - 1)*/
+                /* comments.add(newComment)
+                 commentAdapter.notifyItemInserted(comments.size - 1)
+                 binding.rvCommentList.scrollToPosition(comments.size - 1)*/
                 bottomSheet.dismiss()
             }
         }
@@ -274,16 +284,16 @@ class TaskDescriptionActivity : AppCompatActivity() {
         bottomSheet.show()
     }
 
-  /*  private fun loadDemoComments() {
-        comments.addAll(
-            listOf(
-                Comment("Hey, did you finish this task?", "09:45 AM", isMine = false),
-                Comment("Working on it. Will update by noon.", "09:47 AM", isMine = true),
-                Comment("Okay, thanks!", "09:50 AM", isMine = false)
-            )
-        )
-        commentAdapter.notifyDataSetChanged()
-    }*/
+    /*  private fun loadDemoComments() {
+          comments.addAll(
+              listOf(
+                  Comment("Hey, did you finish this task?", "09:45 AM", isMine = false),
+                  Comment("Working on it. Will update by noon.", "09:47 AM", isMine = true),
+                  Comment("Okay, thanks!", "09:50 AM", isMine = false)
+              )
+          )
+          commentAdapter.notifyDataSetChanged()
+      }*/
 
     private fun getCurrentTime(): String {
         val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
