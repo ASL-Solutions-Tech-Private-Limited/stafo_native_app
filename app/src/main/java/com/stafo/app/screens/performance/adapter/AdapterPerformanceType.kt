@@ -3,6 +3,7 @@ package com.stafo.app.screens.performance.adapter
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,12 +38,13 @@ class AdapterPerformanceType(
                 binding.tvDesc.text = this.description
 
                 binding.itemEdit.setOnClickListener {
+                    val pId=this.id
                     context.startActivity(
                         Intent(
                             context,
                             CreatePerformanceTypeActivity::class.java
                         ).apply {
-                            putExtra("id", list[position].id.toString())
+                            putExtra("id", pId.toString())
                             putExtra("name", list[position].name)
                             putExtra("desc", list[position].description)
                         })

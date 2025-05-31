@@ -12,6 +12,7 @@ import com.stafo.app.R
 import com.stafo.app.base.adapter.SubMneuActionsListAdapter
 import com.stafo.app.base.model.ActionModel
 import com.stafo.app.databinding.ActivitySubMenuBinding
+import com.stafo.app.screens.crm.CRMLeadDashboard
 import com.stafo.app.screens.emp.EmpBranchDetailsActivity
 import com.stafo.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.stafo.app.screens.emp.EmployeeLeaveHistoryActivity
@@ -79,6 +80,14 @@ class SubMenuActivity : AppCompatActivity() {
                                         R.anim.slide_to_left
                                     )
 
+                                }
+                                "CRM" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity,
+                                            CRMLeadDashboard::class.java
+                                        )
+                                    )
                                 }
                                 "Reports" -> {
                                     startActivity(Intent(this@SubMenuActivity, ReportsActivity::class.java))
@@ -198,6 +207,15 @@ class SubMenuActivity : AppCompatActivity() {
                                     )
                                 }
 
+                                "CRM" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity,
+                                            CRMLeadDashboard::class.java
+                                        )
+                                    )
+                                }
+
                                 "Leaves" -> {
                                     startActivity(
                                         Intent(
@@ -258,6 +276,7 @@ class SubMenuActivity : AppCompatActivity() {
 
     private fun actionList(): List<ActionModel> {
         mActionList.add(ActionModel("Employee", R.drawable.ic_employee))
+        mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Location\nTrack", R.drawable.ic_location))
         mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
         mActionList.add(ActionModel("Performance", R.drawable.ic_performace))
@@ -272,6 +291,7 @@ class SubMenuActivity : AppCompatActivity() {
 
     private fun empActionList(): List<ActionModel> {
         mActionList.add(ActionModel("Attendance", R.drawable.ic_attendace))
+        mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
