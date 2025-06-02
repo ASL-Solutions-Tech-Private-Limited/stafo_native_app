@@ -880,6 +880,12 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<UpdateTaskResponse>*/
 
+
+
+
+
+
+
     @DELETE("api/task/delete/{id}")
     suspend fun callDeleteTask(
         @Path ("id")taskId:Int,
@@ -910,5 +916,7 @@ interface ApiStores {
         @Path ("id")fileId:Int,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeleteTaskResponse>
+
+
 
 }

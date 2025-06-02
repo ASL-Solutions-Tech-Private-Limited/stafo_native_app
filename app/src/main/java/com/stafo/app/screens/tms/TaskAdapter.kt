@@ -12,6 +12,7 @@ import com.stafo.app.screens.tms.dataClass.TaskData
 
 class TaskAdapter(
     private val tasks: MutableList<TaskData>,
+    private val isLogin: Boolean,
     private val onEditClick: (TaskData) -> Unit,
     private val onDeleteClick: (TaskData) -> Unit,
     private val itemClick: (TaskData) -> Unit
@@ -56,8 +57,20 @@ class TaskAdapter(
             }
 
             taskPriority.setTextColor(priorityColor)
+
+            if (isLogin){
+                ivEdit.visibility = android.view.View.VISIBLE
+                ivDelete.visibility = android.view.View.VISIBLE
+            }else{
+                ivEdit.visibility = android.view.View.GONE
+                ivDelete.visibility = android.view.View.GONE
+            }
+
             ivEdit.setOnClickListener { onEditClick(task) }
             ivDelete.setOnClickListener { onDeleteClick(task) }
+
+
+
             root.setOnClickListener {
                 itemClick(task)
             }

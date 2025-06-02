@@ -199,6 +199,7 @@ class TaskDescriptionActivity : AppCompatActivity() {
                 CustomToast(this, it.message)
             }
         }
+
         tmsViewModel.mAddCommentResponse.observe(this) {
             if (it.message != null) {
                 tmsViewModel.getCommentList(this, taskId.toInt())

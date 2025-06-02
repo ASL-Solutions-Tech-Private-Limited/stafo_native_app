@@ -3,6 +3,7 @@ package com.stafo.app.screens.tms
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -18,6 +19,7 @@ import com.stafo.app.screens.tms.dataClass.TaskData
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
+import com.stafo.app.utils.getIsCOMPANYLogin
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -107,6 +109,13 @@ class TaskMSDashboard : AppCompatActivity() {
                 summaryCount.text = "2"
                 summaryLabel.text = "Over Due"
                 iconSummary.setImageResource(R.drawable.ic_overdue)
+            }
+
+
+            if (getIsCOMPANYLogin(this@TaskMSDashboard)){
+                btnAddTask.visibility = View.VISIBLE
+            }else{
+                btnAddTask.visibility = View.GONE
             }
 
             btnAddTask.setOnClickListener {
@@ -256,7 +265,9 @@ class TaskMSDashboard : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        taskAdapter = TaskAdapter(mutableListOf(), { task ->
+        val isLogin= getIsCOMPANYLogin(this)
+
+        taskAdapter = TaskAdapter(mutableListOf(), isLogin,{ task ->
             val intent = Intent(this@TaskMSDashboard, CreateTaskActivity::class.java)
             intent.putExtra("task_data", task)
             intent.putExtra("task_type", "Update")

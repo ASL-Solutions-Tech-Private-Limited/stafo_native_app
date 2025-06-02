@@ -18,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -61,15 +62,16 @@ class CreateTaskActivity : AppCompatActivity() {
     private var selectedPriority: String = ""
     private var selectedEndDate: String = ""
     private var selectedTaskStatus: String = ""
-    private var postTaskId: Int=0
+    private var postTaskId: Int = 0
+    private var deleteAttachFileId: Int = 0
+    private var removeId: Int = 0
 
-    private val fileUrl:String ="https://stafo.in/uploads/task"
+    private val fileUrl: String = "https://stafo.in/uploads/task"
 
     private val FILE_PICKER_REQUEST_CODE = 101
 
     val attachmentList = mutableListOf<TaskAttachment>()
     val toDeleteIds = mutableListOf<Int>()
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,28 +92,50 @@ class CreateTaskActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         attachmentAdapter = AttachmentAdapter(
-            attachmentList,
-            onRemoveClick = { position ->
+            attachmentList, onRemoveClick = { position ->
                 if (position in attachmentList.indices) {
+
+
                     val attachment = attachmentList[position]
+
                     if (!attachment.isLocal && attachment.id != null) {
-                        toDeleteIds.add(attachment.id)
+                        deleteAttachFileId = attachment.id
+                        removeId = attachment.id
+
+                        AlertDialog.Builder(this@CreateTaskActivity).setTitle("Delete Attachment")
+                            .setMessage("Are you sure you want to delete this attachment?")
+                            .setPositiveButton("Yes") { dialog, _ ->
+                                deleteAttachFile(attachment.id)
+                                dialog.dismiss()
+                            }.setNegativeButton("Cancel") { dialog, _ ->
+                                dialog.dismiss()
+                            }.show()
+
+                    }else{
+
+                        attachmentList.removeAt(position)
+                        attachmentAdapter.notifyItemRemoved(position)
                     }
 
-                    attachmentList.removeAt(position)
-                    attachmentAdapter.notifyItemRemoved(position)
+
+
+
 
                     if (attachmentList.isEmpty()) {
                         binding.rvAttachFiles.visibility = View.GONE
                     }
                 }
-            }
-        )
+            })
         binding.rvAttachFiles.apply {
             layoutManager =
                 LinearLayoutManager(this@CreateTaskActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = attachmentAdapter
         }
+    }
+
+
+    private fun deleteAttachFile(id: Int) {
+        tmsViewModel.deleteAttachFile(this, id)
     }
 
     private fun setupListeners() {
@@ -168,9 +192,6 @@ class CreateTaskActivity : AppCompatActivity() {
             }
 
 
-
-
-
             val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
             val task = intent.getSerializableExtra("task_data") as? TaskData
             val taskType = intent.getStringExtra("task_type") ?: ""
@@ -180,7 +201,7 @@ class CreateTaskActivity : AppCompatActivity() {
                 btnCreateTask.text = "Update"
 
                 task?.let {
-                    postTaskId=task.id
+                    postTaskId = task.id
                     edtTaskTitle.setText(it.title)
                     edtTaskDescription.setText(it.description)
                     selectedEndDate = it.endDate
@@ -197,7 +218,8 @@ class CreateTaskActivity : AppCompatActivity() {
                     if (it.assignedEmployees.isNotEmpty()) {
                         assignEmpList.clear()
                         it.assignedEmployees.forEach { emp ->
-                            val selectedEmp = AssignTaskEmp(id = emp.pivot.employeeId, name = emp.name)
+                            val selectedEmp =
+                                AssignTaskEmp(id = emp.pivot.employeeId, name = emp.name)
                             assignEmpList.add(selectedEmp)
                             if (::rvAssignEmpList.isInitialized) {
                                 rvAssignEmpList.notifyItemInserted(assignEmpList.size - 1)
@@ -205,7 +227,6 @@ class CreateTaskActivity : AppCompatActivity() {
                         }
                     }
 
-                    // <-- FIXED HERE: use your TaskAttachment data class properly -->
                     if (it.taskFiles.isNotEmpty()) {
                         attachmentList.clear()
                         it.taskFiles.forEach { file ->
@@ -222,7 +243,6 @@ class CreateTaskActivity : AppCompatActivity() {
                         binding.rvAttachFiles.visibility = View.VISIBLE
                     }
 
-                    // Remaining UI setup unchanged
                     when (it.priority.lowercase()) {
                         "low" -> binding.priorityLow.isChecked = true
                         "medium" -> binding.priorityMedium.isChecked = true
@@ -290,29 +310,10 @@ class CreateTaskActivity : AppCompatActivity() {
 
 
                             if (taskType == "Update") {
-                                val newFileUris = attachmentList.filter { it.isLocal }.mapNotNull { it.uri }
+                                val newFileUris =
+                                    attachmentList.filter { it.isLocal }.mapNotNull { it.uri }
 
                                 getEmployeeComId()?.let { it1 ->
-                                    val request =   CreateTaskRequest(
-                                        company_id = it1.toInt(),
-                                        title = title,
-                                        description = description,
-                                        start_date = currentDate,
-                                        end_date = selectedEndDate,
-                                        status = selectedTaskStatus,
-                                        priority = selectedPriority,
-                                        task_assign = assignEmpList.mapNotNull { it.id },
-                                        files = emptyList()
-                                    )
-                                    tmsViewModel.updateTask(this@CreateTaskActivity, postTaskId, request, newFileUris)
-                                }
-
-
-                            } else {
-
-                                if (!selectedTaskStatus.isNullOrBlank()) {
-
-                                    getEmployeeComId()?.let { it1 ->
                                     val request = CreateTaskRequest(
                                         company_id = it1.toInt(),
                                         title = title,
@@ -324,10 +325,34 @@ class CreateTaskActivity : AppCompatActivity() {
                                         task_assign = assignEmpList.mapNotNull { it.id },
                                         files = emptyList()
                                     )
+                                    tmsViewModel.updateTask(
+                                        this@CreateTaskActivity, postTaskId, request, newFileUris
+                                    )
+                                }
 
-                                    val fileUris = attachmentList.mapNotNull { it.uri }
 
-                                    tmsViewModel.createTask(this@CreateTaskActivity, request, fileUris)
+                            } else {
+
+                                if (!selectedTaskStatus.isNullOrBlank()) {
+
+                                    getEmployeeComId()?.let { it1 ->
+                                        val request = CreateTaskRequest(
+                                            company_id = it1.toInt(),
+                                            title = title,
+                                            description = description,
+                                            start_date = currentDate,
+                                            end_date = selectedEndDate,
+                                            status = selectedTaskStatus,
+                                            priority = selectedPriority,
+                                            task_assign = assignEmpList.mapNotNull { it.id },
+                                            files = emptyList()
+                                        )
+
+                                        val fileUris = attachmentList.mapNotNull { it.uri }
+
+                                        tmsViewModel.createTask(
+                                            this@CreateTaskActivity, request, fileUris
+                                        )
                                     }
 
                                 } else CustomToast(
@@ -356,7 +381,6 @@ class CreateTaskActivity : AppCompatActivity() {
     }
 
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -368,8 +392,6 @@ class CreateTaskActivity : AppCompatActivity() {
             }
         }
     }
-
-
 
 
     private fun isValidation(): Boolean {
@@ -416,6 +438,16 @@ class CreateTaskActivity : AppCompatActivity() {
             } else CustomToast(this, it.message)
 
         }
+        tmsViewModel.mDeleteTaskResponse.observe(this) {
+            if (it.status) {
+                CustomToast(this, it.message)
+                removeAttachFile(removeId)
+                toDeleteIds.add(deleteAttachFileId)
+
+
+            } else CustomToast(this, it.message)
+
+        }
 
 
         settingsViewModel.getLoaderLiveData().observe(this) {
@@ -431,6 +463,28 @@ class CreateTaskActivity : AppCompatActivity() {
             else CustomToast(this, "No Employee Found")
         }
     }
+
+    private fun removeAttachFile(position: Int) {
+        tmsViewModel.mDeleteTaskResponse.observe(this) {
+            if (it.status) {
+                CustomToast(this, it.message)
+                toDeleteIds.add(deleteAttachFileId)
+                if (position in attachmentList.indices) {
+                    attachmentList.removeAt(position)
+                    attachmentAdapter.notifyItemRemoved(position)
+
+                    if (attachmentList.isEmpty()) {
+                        binding.rvAttachFiles.visibility = View.GONE
+                    }
+                }
+
+            } else CustomToast(this, it.message)
+
+        }
+    }
+
+
+
 
 
     private fun getSelectedPriority(): String {
@@ -582,7 +636,6 @@ class CreateTaskActivity : AppCompatActivity() {
             Intent.createChooser(intent, "Select a file"), FILE_PICKER_REQUEST_CODE
         )
     }
-
 
 
 }
