@@ -929,7 +929,7 @@ interface ApiStores {
     @Multipart
     @POST("api/task/file-uploads")
     suspend fun callAttachFile(
-        @Path("task_id") taskId: Int,
+        @Part("task_id") taskId: RequestBody,
         @Part files: List<MultipartBody.Part>,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<UpdateTaskStatusResponse>

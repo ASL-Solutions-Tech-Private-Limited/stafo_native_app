@@ -70,7 +70,7 @@ class TMSViewModel : BaseViewModel() {
         fileUris: List<Uri>
     ) {
         Log.e("tms", "Preparing request parts...")
-
+        val taskIdBody = taskId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
         val contentResolver = context.contentResolver
         val fileParts = mutableListOf<MultipartBody.Part>()
@@ -107,7 +107,7 @@ class TMSViewModel : BaseViewModel() {
                 Log.d("tms", "Calling API with ${fileParts.size} files...")
 
                 val response = ASLEmpMng.instance.apiStores()?.callAttachFile(
-                    taskId,
+                    taskIdBody,
                     fileParts
                 )
 
