@@ -7,6 +7,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Context.BATTERY_SERVICE
 import android.content.DialogInterface
@@ -37,6 +38,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.provider.Settings
 import android.provider.Settings.Secure
 import android.text.SpannableString
@@ -92,7 +94,9 @@ import org.xml.sax.InputSource
 import org.xml.sax.SAXException
 import tech.developingdeveloper.toaster.Toaster
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
 import java.io.StringReader
 import java.net.InetAddress
 import java.net.NetworkInterface
@@ -1968,6 +1972,40 @@ fun requestIgnoreBatteryOptimization(context: Context, onResult: (Boolean) -> Un
     } else {
         onResult(true)
     }
+}
+
+
+fun Context.uriToFile(uri: Uri): File? {
+    val contentResolver: ContentResolver = this.contentResolver
+    val file = File(cacheDir, getFileName(uri))
+
+    return try {
+        val inputStream: InputStream? = contentResolver.openInputStream(uri)
+        val outputStream = FileOutputStream(file)
+
+        inputStream?.copyTo(outputStream)
+        inputStream?.close()
+        outputStream.close()
+
+        file
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
+ fun Context.getFileName(uri: Uri): String {
+    var name = "temp_file"
+    val cursor = contentResolver.query(uri, null, null, null, null)
+    cursor?.use {
+        if (it.moveToFirst()) {
+            val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (nameIndex != -1) {
+                name = it.getString(nameIndex)
+            }
+        }
+    }
+    return name
 }
 
 

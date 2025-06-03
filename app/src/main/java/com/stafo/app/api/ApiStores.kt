@@ -18,7 +18,6 @@ import com.stafo.app.screens.auth.dataClass.OtpResponse
 import com.stafo.app.screens.auth.dataClass.OtpVerifyResponse
 import com.stafo.app.screens.auth.dataClass.SelfieAttendanceResponse
 import com.stafo.app.screens.auth.dataClass.StatesListResponse
-import com.stafo.app.screens.billpayment.dataClass.BbpsOperatorDetailsResponse
 import com.stafo.app.screens.billpayment.dataClass.CategoryMenuResponse
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorRequest
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorResponse
@@ -32,8 +31,6 @@ import com.stafo.app.screens.crm.dataClass.CreateFollowUpResponse
 import com.stafo.app.screens.crm.dataClass.FollowUpListResponse
 import com.stafo.app.screens.crm.dataClass.LeadCreateRequest
 import com.stafo.app.screens.crm.dataClass.LeadCreateResponse
-import com.stafo.app.screens.crm.dataClass.LeadDashboardRequest
-import com.stafo.app.screens.crm.dataClass.LeadListRequest
 import com.stafo.app.screens.crm.dataClass.LeadListResponse
 import com.stafo.app.screens.crm.dataClass.UpdateLeadResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
@@ -43,7 +40,6 @@ import com.stafo.app.screens.payroll.dataClass.SalarySlipRequest
 import com.stafo.app.screens.payroll.dataClass.SalarySlipResponse
 import com.stafo.app.screens.performance.dataClass.AddPerformanceRequest
 import com.stafo.app.screens.performance.dataClass.AddPerformanceResponse
-import com.stafo.app.screens.performance.dataClass.DeletePerformanceRequest
 import com.stafo.app.screens.performance.dataClass.DeletePerformanceResponse
 import com.stafo.app.screens.performance.dataClass.PerformanceAddRequest
 import com.stafo.app.screens.performance.dataClass.PerformanceAddResponse
@@ -61,7 +57,6 @@ import com.stafo.app.screens.settings.dataClass.AssignBranchRequest
 import com.stafo.app.screens.settings.dataClass.AssignBranchResponse
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentResponse
-import com.stafo.app.screens.settings.dataClass.AssignShiftRequest
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.stafo.app.screens.settings.dataClass.BannerResponse
 import com.stafo.app.screens.settings.dataClass.BranchListResponse
@@ -111,8 +106,6 @@ import com.stafo.app.screens.settings.dataClass.InActiveEmpResponse
 import com.stafo.app.screens.settings.dataClass.JobTitleResponse
 import com.stafo.app.screens.settings.dataClass.LeaveRequestBody
 import com.stafo.app.screens.settings.dataClass.LeaveResponse
-import com.stafo.app.screens.settings.dataClass.LocationLogRequest
-import com.stafo.app.screens.settings.dataClass.LocationLogResponse
 import com.stafo.app.screens.settings.dataClass.OnLeaveResponse
 import com.stafo.app.screens.settings.dataClass.PanVerifyRequestBody
 import com.stafo.app.screens.settings.dataClass.PanVerifyResponse
@@ -159,6 +152,11 @@ import com.stafo.app.screens.subscription.dataClass.MySubscriptionResponse
 import com.stafo.app.screens.subscription.dataClass.PackageResponse
 import com.stafo.app.screens.subscription.dataClass.PaymentUpdateRequest
 import com.stafo.app.screens.subscription.dataClass.PaymentUpdateResponse
+import com.stafo.app.screens.tripPlan.dataClass.AddVehicleResponse
+import com.stafo.app.screens.tripPlan.dataClass.CreateTripResponse
+import com.stafo.app.screens.tripPlan.dataClass.DriverListResponse
+import com.stafo.app.screens.tripPlan.dataClass.TripDashboardResponse
+import com.stafo.app.screens.tripPlan.dataClass.VehicleListResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -169,7 +167,6 @@ import retrofit2.http.Field
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.HeaderMap
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -500,8 +497,6 @@ interface ApiStores {
     ): Response<DeleteResponse>
 
 
-
-
     @DELETE("api/shifts/{id}")
     suspend fun callDeleteShift(
         @Path("id") id: Int, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
@@ -734,9 +729,6 @@ interface ApiStores {
     ): Response<AddPerformanceResponse>
 
 
-
-
-
     @DELETE("api/performancetype/delete/{id}")
     suspend fun callDeletePerformance(
         @Path("id") id: Int,
@@ -755,7 +747,6 @@ interface ApiStores {
         @Body request: PerformanceAddRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<PerformanceAddResponse>
-
 
 
     @POST("api/performance/rank-list")
@@ -854,6 +845,45 @@ interface ApiStores {
     ): Response<MySubscriptionResponse>
 
 
+    @POST("api/trips/dashboard")
+    suspend fun callTripDashboardInfo(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TripDashboardResponse>
+
+    @GET("api/vehicles/list")
+    suspend fun callVehicleList(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<VehicleListResponse>
 
 
+    @POST("api/trips/drivers/list")
+    suspend fun callDriverList(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DriverListResponse>
+
+    @POST("api/trips/create")
+    suspend fun callCreateTrip(
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<CreateTripResponse>
+
+    @Multipart
+    @POST("api/vehicles/create")
+    suspend fun callAddVehicle(
+        @PartMap map: HashMap<String, @JvmSuppressWildcards RequestBody>,
+        @Part filePart: MultipartBody.Part?,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AddVehicleResponse>
+
+    @POST("api/trips/check-vehicle-availability")
+    suspend fun callCheckVehicleAvailability(
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AddVehicleResponse>
+
+    @POST("api/trips/check-driver-availability")
+    suspend fun callCheckDriverAvailability(
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AddVehicleResponse>
 }
