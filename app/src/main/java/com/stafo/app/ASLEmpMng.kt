@@ -12,6 +12,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.android.libraries.places.api.Places
 import com.stafo.app.api.ApiClient
 import com.stafo.app.api.ApiStores
 import com.mmi.services.account.MapmyIndiaAccountManager
@@ -46,6 +47,10 @@ class ASLEmpMng : MultiDexApplication() {
 
         val networkHandler = NetworkConnectivityHandler(this)
         registerActivityLifecycleCallbacks(networkHandler)
+
+
+
+
 
         initMapMyIndia()
 
