@@ -49,6 +49,8 @@ import com.stafo.app.screens.settings.VerifyCompanyDetailsActivity
 import com.stafo.app.screens.settings.ViewAllEmployeeActivity
 import com.stafo.app.screens.settings.ViewDeviceRequestEmpActivity
 import com.stafo.app.screens.subscription.SubscriptionActivity
+import com.stafo.app.screens.tms.CreateTaskActivity
+import com.stafo.app.screens.tms.TaskMSDashboard
 import com.stafo.app.screens.tripPlan.TripDashboardActivity
 import com.stafo.app.screens.ui.EmplyeeyerProfile
 import com.stafo.app.screens.ui.WishListActivity
@@ -568,7 +570,7 @@ class EmployerDashboard : AppCompatActivity() {
 
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
-        
+
         stopLocationServiceIfRunning()
 
         settingsViewModel.getCompanyDetails(this@EmployerDashboard)

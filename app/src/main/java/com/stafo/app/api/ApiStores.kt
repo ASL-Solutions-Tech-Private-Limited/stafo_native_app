@@ -32,6 +32,7 @@ import com.stafo.app.screens.crm.dataClass.FollowUpListResponse
 import com.stafo.app.screens.crm.dataClass.LeadCreateRequest
 import com.stafo.app.screens.crm.dataClass.LeadCreateResponse
 import com.stafo.app.screens.crm.dataClass.LeadListResponse
+import com.stafo.app.screens.tms.dataClass.TaskListResponse
 import com.stafo.app.screens.crm.dataClass.UpdateLeadResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
 import com.stafo.app.screens.payroll.dataClass.SalaryRequest
@@ -157,9 +158,20 @@ import com.stafo.app.screens.tripPlan.dataClass.CreateTripResponse
 import com.stafo.app.screens.tripPlan.dataClass.DriverListResponse
 import com.stafo.app.screens.tripPlan.dataClass.TripDashboardResponse
 import com.stafo.app.screens.tripPlan.dataClass.VehicleListResponse
+import com.stafo.app.screens.tms.dataClass.AddCommentRequest
+import com.stafo.app.screens.tms.dataClass.AddCommentResponse
+import com.stafo.app.screens.tms.dataClass.CreateTaskRequest
+import com.stafo.app.screens.tms.dataClass.CreateTaskResponse
+import com.stafo.app.screens.tms.dataClass.DeleteTaskResponse
+import com.stafo.app.screens.tms.dataClass.TaskCommentListResponse
+import com.stafo.app.screens.tms.dataClass.TaskListRequest
+import com.stafo.app.screens.tms.dataClass.TaskStatusRequest
+import com.stafo.app.screens.tms.dataClass.UpdateTaskResponse
+import com.stafo.app.screens.tms.dataClass.UpdateTaskStatusResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -729,6 +741,9 @@ interface ApiStores {
     ): Response<AddPerformanceResponse>
 
 
+
+
+
     @DELETE("api/performancetype/delete/{id}")
     suspend fun callDeletePerformance(
         @Path("id") id: Int,
@@ -747,6 +762,7 @@ interface ApiStores {
         @Body request: PerformanceAddRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<PerformanceAddResponse>
+
 
 
     @POST("api/performance/rank-list")
@@ -886,4 +902,102 @@ interface ApiStores {
         @Body request: HashMap<String, Any>,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<AddVehicleResponse>
+    @GET("api/task/list")
+    suspend fun callTaskList(
+        @Query("company_id") companyId: String,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TaskListResponse>
+
+    @Multipart
+    @POST("api/task/create")
+    suspend fun createTask(
+        @Part("company_id") companyId: RequestBody,
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody,
+        @Part("start_date") startDate: RequestBody,
+        @Part("end_date") endDate: RequestBody,
+        @Part("status") status: RequestBody,
+        @Part("priority") priority: RequestBody,
+        @Part taskAssign: List<MultipartBody.Part>,
+        @Part files: List<MultipartBody.Part>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<CreateTaskResponse>
+
+
+    @Multipart
+    @POST("api/task/update/{id}")
+    suspend fun callUpdateTask(
+        @Path("id") taskId: Int,
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody,
+        @Part("start_date") startDate: RequestBody,
+        @Part("end_date") endDate: RequestBody,
+        @Part("status") status: RequestBody,
+        @Part("priority") priority: RequestBody,
+        @Part taskAssign: List<MultipartBody.Part>,
+        @Part files: List<MultipartBody.Part>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateTaskResponse>
+
+   /* @POST("api/task/update/{id}")
+    suspend fun callUpdateTask(
+        @Path ("id")taskId:Int,
+        @Body request:CreateTaskRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateTaskResponse>*/
+
+
+
+
+
+
+
+    @DELETE("api/task/delete/{id}")
+    suspend fun callDeleteTask(
+        @Path ("id")taskId:Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteTaskResponse>
+
+
+    @GET("api/task/comment-list")
+    suspend fun callCommentList(
+        @Query("task_id") taskId: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TaskCommentListResponse>
+
+    @POST("api/task/comment-create")
+    suspend fun callAddComment(
+        @Body request:AddCommentRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AddCommentResponse>
+
+    @DELETE("api/task/comment-delete/{id}")
+    suspend fun callDeleteComment(
+        @Path ("id")commentId:Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteTaskResponse>
+
+    @DELETE("api/task/file-delete/{id}")
+    suspend fun callDeleteAttachFile(
+        @Path ("id")fileId:Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteTaskResponse>
+
+    @POST("api/task/status-change/{id}")
+    suspend fun callTaskStatus(
+        @Path ("id")taskId:Int,
+        @Body request:TaskStatusRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateTaskStatusResponse>
+
+    @Multipart
+    @POST("api/task/file-uploads")
+    suspend fun callAttachFile(
+        @Part("task_id") taskId: RequestBody,
+        @Part files: List<MultipartBody.Part>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateTaskStatusResponse>
+
+
+
 }

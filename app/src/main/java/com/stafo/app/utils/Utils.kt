@@ -1594,6 +1594,22 @@ fun reportsFormatToMonthYear(dateString: String?): String {
         "N/A"
     }
 }
+
+
+fun showFormatDate(dateString: String?): String {
+    if (dateString.isNullOrEmpty()) return "N/A"
+
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        val date = inputFormat.parse(dateString)
+        if (date != null) outputFormat.format(date) else "N/A"
+    } catch (e: Exception) {
+        "N/A"
+    }
+}
+
+
 fun showCustomMonthYearPicker(
     context: Context,
     onSelected: (formattedDate: String, displayDate: String) -> Unit
@@ -2011,4 +2027,24 @@ fun Context.uriToFile(uri: Uri): File? {
 
 
 
+
+
+
+fun getTimeOnly12HrFormat(isoDateTime: String?): String {
+    if (isoDateTime.isNullOrBlank()) return "--"
+
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())
+        inputFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        outputFormat.timeZone = TimeZone.getDefault()
+
+        val date = inputFormat.parse(isoDateTime)
+        date?.let { outputFormat.format(it) } ?: "--"
+    } catch (e: Exception) {
+        e.printStackTrace()
+        "--"
+    }
+}
 
