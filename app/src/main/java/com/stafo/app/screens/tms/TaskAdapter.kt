@@ -68,9 +68,6 @@ class TaskAdapter(
 
             ivEdit.setOnClickListener { onEditClick(task) }
             ivDelete.setOnClickListener { onDeleteClick(task) }
-
-
-
             root.setOnClickListener {
                 itemClick(task)
             }

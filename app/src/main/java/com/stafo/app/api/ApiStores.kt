@@ -158,7 +158,9 @@ import com.stafo.app.screens.tms.dataClass.CreateTaskResponse
 import com.stafo.app.screens.tms.dataClass.DeleteTaskResponse
 import com.stafo.app.screens.tms.dataClass.TaskCommentListResponse
 import com.stafo.app.screens.tms.dataClass.TaskListRequest
+import com.stafo.app.screens.tms.dataClass.TaskStatusRequest
 import com.stafo.app.screens.tms.dataClass.UpdateTaskResponse
+import com.stafo.app.screens.tms.dataClass.UpdateTaskStatusResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -916,6 +918,21 @@ interface ApiStores {
         @Path ("id")fileId:Int,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeleteTaskResponse>
+
+    @POST("api/task/status-change/{id}")
+    suspend fun callTaskStatus(
+        @Path ("id")taskId:Int,
+        @Body request:TaskStatusRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateTaskStatusResponse>
+
+    @Multipart
+    @POST("api/task/file-uploads")
+    suspend fun callAttachFile(
+        @Path("task_id") taskId: Int,
+        @Part files: List<MultipartBody.Part>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateTaskStatusResponse>
 
 
 

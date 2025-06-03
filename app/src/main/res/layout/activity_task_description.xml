@@ -238,15 +238,46 @@
                         android:textSize="@dimen/_14ssp"
                         android:textStyle="bold" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvAttachFiles"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_4sdp"
-                        android:layout_marginTop="@dimen/_6sdp"
-                        android:visibility="visible"
-                        tools:itemCount="1"
-                        tools:listitem="@layout/item_attach_doc_lsit" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAttachFile"
+                            android:layout_width="40dp"
+                            android:layout_height="46dp"
+                            android:padding="@dimen/_6sdp"
+                            android:text="+"
+                            app:cornerRadius="@dimen/_6sdp" />
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvAttachFiles"
+                            android:layout_toRightOf="@+id/btnAttachFile"
+                            android:layout_toLeftOf="@+id/btnUpload"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_6sdp"
+                            android:layout_marginStart="@dimen/_4sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:visibility="visible"
+                            tools:itemCount="1"
+                            tools:listitem="@layout/item_attach_doc_lsit" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnUpload"
+                            android:layout_alignParentEnd="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/_6sdp"
+                            android:text="Upload"
+                            app:cornerRadius="@dimen/_6sdp" />
+
+                    </RelativeLayout>
+
+
+
+
 
                     <TextView
                         android:layout_width="wrap_content"

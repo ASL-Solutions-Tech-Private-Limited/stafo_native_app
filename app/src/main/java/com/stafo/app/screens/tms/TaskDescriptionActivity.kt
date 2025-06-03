@@ -1,21 +1,28 @@
 package com.stafo.app.screens.tms
 
+import android.app.Activity
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.PopupMenu
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityTaskDescriptionBinding
 import com.stafo.app.screens.tms.adapter.AdapterAssignEmployee
 import com.stafo.app.screens.tms.dataClass.AddCommentRequest
+import com.stafo.app.screens.tms.dataClass.TaskAttachment
 import com.stafo.app.screens.tms.dataClass.TaskData
+import com.stafo.app.screens.tms.dataClass.TaskStatusRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
@@ -41,6 +48,11 @@ class TaskDescriptionActivity : AppCompatActivity() {
     private val comments = mutableListOf<Comment>()
 
     private var taskId: String = ""
+    private var changeTaskStatus: String = ""
+    private val FILE_PICKER_REQUEST_CODE = 101
+
+    private lateinit var attachmentAdapter: AttachmentAdapter
+    val attachmentList = mutableListOf<TaskAttachment>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +62,7 @@ class TaskDescriptionActivity : AppCompatActivity() {
         setupData()
         setupAddCommentButton()
         observeViewModel()
+        setupRecyclerView()
     }
 
     private fun setupData() {
@@ -60,6 +73,41 @@ class TaskDescriptionActivity : AppCompatActivity() {
                 finish()
             }
 
+            btnAttachFile.setOnClickListener {
+                openFilePicker()
+            }
+
+            if (attachmentList.isNotEmpty()) btnUpload.visibility=View.VISIBLE else btnUpload.visibility=View.GONE
+
+
+            btnUpload.setOnClickListener {
+                if (attachmentList.isNotEmpty()) {
+                    val fileUris = attachmentList.mapNotNull { it.uri }
+                  tmsViewModel.attachFile(this@TaskDescriptionActivity,taskId.toInt(),fileUris)
+
+                }
+            }
+
+
+
+            taskStatus.setOnClickListener { view ->
+
+                val popup = PopupMenu(this@TaskDescriptionActivity, view)
+                popup.menuInflater.inflate(R.menu.status_menu, popup.menu)
+                popup.setOnMenuItemClickListener { menuItem ->
+                    changeTaskStatus= menuItem.title.toString()
+                    updateTaskStatus(taskId.toInt())
+                    true
+                }
+                popup.show()
+            }
+
+
+
+
+
+
+
 
             val task = intent.getSerializableExtra("task_data") as? TaskData
             if (task != null) {
@@ -69,6 +117,7 @@ class TaskDescriptionActivity : AppCompatActivity() {
                 taskTitle.text = task.title
                 taskDescription.text = task.description
                 taskStatus.text = task.status
+                Log.e("tms","status : ${task.status}")
                 taskPriority.text = task.priority
                 taskDueDate.text = showFormatDate(task.endDate)
 
@@ -114,40 +163,36 @@ class TaskDescriptionActivity : AppCompatActivity() {
 
 
                 val statusLower = task.status.lowercase(Locale.getDefault())
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                val today = dateFormat.parse(dateFormat.format(Date()))
-                val taskEndDate = try {
-                    dateFormat.parse(task.endDate)
-                } catch (e: Exception) {
-                    null
-                }
 
-                val isOverdue =
-                    taskEndDate != null && today != null && taskEndDate.before(today) && statusLower != "completed"
-
-                when {
-                    isOverdue -> {
+                when (statusLower) {
+                    "overdue" -> {
                         taskStatus.text = "Overdue"
                         taskStatus.backgroundTintList = ContextCompat.getColorStateList(
                             this@TaskDescriptionActivity, R.color.status_overdue
                         )
                     }
 
-                    statusLower == "pending" -> {
+                    "pending" -> {
                         taskStatus.backgroundTintList = ContextCompat.getColorStateList(
                             this@TaskDescriptionActivity, R.color.status_pending
                         )
                     }
 
-                    statusLower == "in progress" -> {
+                    "in progress" -> {
                         taskStatus.backgroundTintList = ContextCompat.getColorStateList(
                             this@TaskDescriptionActivity, R.color.status_in_progress
                         )
                     }
 
-                    statusLower == "completed" -> {
+                    "completed" -> {
                         taskStatus.backgroundTintList = ContextCompat.getColorStateList(
                             this@TaskDescriptionActivity, R.color.status_completed
+                        )
+                    }
+
+                    "active" -> {
+                        taskStatus.backgroundTintList = ContextCompat.getColorStateList(
+                            this@TaskDescriptionActivity, R.color.status_in_progress
                         )
                     }
 
@@ -158,11 +203,75 @@ class TaskDescriptionActivity : AppCompatActivity() {
                     }
                 }
 
+
             }
 
 
         }
     }
+
+    private fun setupRecyclerView() {
+        attachmentAdapter = AttachmentAdapter(attachmentList, onRemoveClick = { position ->
+                if (position in attachmentList.indices) {
+                    attachmentList.removeAt(position)
+                    attachmentAdapter.notifyItemRemoved(position)
+
+
+
+
+
+                    if (attachmentList.isEmpty()) {
+                        binding.rvAttachFiles.visibility = View.GONE
+                    }
+                }
+            })
+        binding.rvAttachFiles.apply {
+            layoutManager =
+                LinearLayoutManager(this@TaskDescriptionActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = attachmentAdapter
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+
+
+            data?.data?.let { uri ->
+                attachmentList.add(TaskAttachment(uri = uri, isLocal = true))
+                binding.rvAttachFiles.visibility = View.VISIBLE
+                attachmentAdapter.notifyItemInserted(attachmentList.size - 1)
+            }
+            if (attachmentList.isNotEmpty()) binding.btnUpload.visibility=View.VISIBLE else  binding.btnUpload.visibility=View.GONE
+        }
+    }
+    private fun openFilePicker() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            type = "*/*"
+            putExtra(
+                Intent.EXTRA_MIME_TYPES, arrayOf(
+                    "application/pdf",
+                    "application/msword",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                )
+            )
+        }
+        startActivityForResult(
+            Intent.createChooser(intent, "Select a file"), FILE_PICKER_REQUEST_CODE
+        )
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     private fun observeViewModel() {
 
@@ -216,6 +325,40 @@ class TaskDescriptionActivity : AppCompatActivity() {
             }
         }
 
+        tmsViewModel.mUpdateTaskStatusResponse.observe(this) {
+            if (it.success) {
+                Log.e("tms","get status : mUpdateTaskStatusResponse")
+                CustomToast(this, it.message)
+                val statusLower = binding.taskStatus.text.toString().lowercase(Locale.getDefault())
+
+                Log.e("tms","get status 5: $statusLower")
+
+                val colorRes = when (statusLower) {
+                    "overdue" -> R.color.status_overdue
+                    "pending" -> R.color.status_pending
+                    "in progress" -> R.color.status_in_progress
+                    "completed" -> R.color.status_completed
+                    "active" -> R.color.status_in_progress
+                    else -> R.color.grey_300
+                }
+
+                Log.e("tms","get status : $colorRes")
+
+                val color = ContextCompat.getColor(this, colorRes)
+                val background = binding.taskStatus.background.mutate()
+                background.setTint(color)
+                binding.taskStatus.background = background
+
+                binding.taskStatus.text = changeTaskStatus.replaceFirstChar { it.uppercase(Locale.getDefault()) }
+
+
+
+
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
+
 
     }
 
@@ -225,6 +368,31 @@ class TaskDescriptionActivity : AppCompatActivity() {
         } else if (status.equals("stop", ignoreCase = true)) {
             if (customLoader.isShowing) customLoader.dismiss()
         }
+    }
+
+
+    private fun updateTaskStatus(taskId: Int) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.app_name)
+        builder.setMessage("Are you sure? Update this task status.")
+
+        builder.setPositiveButton("Yes") { dialog, _ ->
+            binding.taskStatus.text = changeTaskStatus
+
+            val request= TaskStatusRequest(
+                status = changeTaskStatus
+            )
+            tmsViewModel.changeTaskStatus(this@TaskDescriptionActivity, taskId,request)
+
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
     }
 
 

@@ -50,7 +50,7 @@ import java.util.Locale
 
 class CreateTaskActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateTaskBinding
-    private lateinit var attachmentAdapter: AttachmentAdapter
+
     private lateinit var rvAssignEmpList: AdapterAssignTaskEmp
     private val assignEmpList = mutableListOf<AssignTaskEmp>()
 
@@ -69,7 +69,7 @@ class CreateTaskActivity : AppCompatActivity() {
     private val fileUrl: String = "https://stafo.in/uploads/task"
 
     private val FILE_PICKER_REQUEST_CODE = 101
-
+    private lateinit var attachmentAdapter: AttachmentAdapter
     val attachmentList = mutableListOf<TaskAttachment>()
     val toDeleteIds = mutableListOf<Int>()
 
@@ -600,24 +600,6 @@ class CreateTaskActivity : AppCompatActivity() {
             dialog.show()
         }
 
-
-        /* binding.btnAssign.setOnClickListener {
-             val dialog = SearchableDialog(this@CreateTaskActivity, empList, "Employee List")
-             dialog.setOnItemSelected(object : OnSearchItemSelected {
-                 override fun onClick(position: Int, searchListItem: SearchListItem) {
-                *//*     binding.btnAssign.visibility = View.GONE
-                    binding.civAssign.visibility = View.VISIBLE
-                    Glide.with(this@CreateTaskActivity)
-                        .load(R.drawable.demo_avatar)
-                        .into(binding.civAssign)
-                    //   binding.etEmployee.setText(searchListItem.title)*//*
-
-
-                    dialog.dismiss()
-                }
-            })
-            dialog.show()
-        }*/
     }
 
 

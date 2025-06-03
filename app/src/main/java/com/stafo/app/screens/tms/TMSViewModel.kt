@@ -23,7 +23,9 @@ import com.stafo.app.screens.tms.dataClass.DeleteTaskResponse
 import com.stafo.app.screens.tms.dataClass.TaskCommentListResponse
 import com.stafo.app.screens.tms.dataClass.TaskListRequest
 import com.stafo.app.screens.tms.dataClass.TaskListResponse
+import com.stafo.app.screens.tms.dataClass.TaskStatusRequest
 import com.stafo.app.screens.tms.dataClass.UpdateTaskResponse
+import com.stafo.app.screens.tms.dataClass.UpdateTaskStatusResponse
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.doLogout
 import kotlinx.coroutines.Dispatchers
@@ -57,34 +59,122 @@ class TMSViewModel : BaseViewModel() {
     val mAddCommentResponse: LiveData<AddCommentResponse> get() = mAddComment
 
 
+    private var mUpdateTaskStatus: MutableLiveData<UpdateTaskStatusResponse> = MutableLiveData()
+    val mUpdateTaskStatusResponse: LiveData<UpdateTaskStatusResponse> get() = mUpdateTaskStatus
 
-    fun removeFile(mContext: Context,id:Int) {
-        getLoaderLiveData().value = "load"
+
+
+    fun attachFile(
+        context: Context,
+        taskId: Int,
+        fileUris: List<Uri>
+    ) {
+        Log.e("tms", "Preparing request parts...")
+
+
+        val contentResolver = context.contentResolver
+        val fileParts = mutableListOf<MultipartBody.Part>()
+
+        fileUris.forEachIndexed { index, uri ->
+            Log.d("updateTask", "Processing file #$index: URI = $uri")
+
+            val fileName = getFileNameFromUri(contentResolver, uri)
+            Log.d("updateTask", "File name resolved: $fileName")
+
+            try {
+                val inputStream = contentResolver.openInputStream(uri)
+                val fileBytes = inputStream?.readBytes()
+                inputStream?.close()
+
+                if (fileBytes != null && fileName != null) {
+                    Log.d("updateTask", "File size: ${fileBytes.size} bytes")
+
+                    val requestFile = fileBytes.toRequestBody("application/octet-stream".toMediaTypeOrNull())
+                    val part = MultipartBody.Part.createFormData("files[$index]", fileName, requestFile)
+                    fileParts.add(part)
+                } else {
+                    Log.w("updateTask", "Skipping file #$index because fileBytes or fileName is null")
+                }
+            } catch (e: Exception) {
+                Log.e("updateTask", "Failed to read file #$index", e)
+            }
+        }
+
+        getLoaderLiveData().postValue("load")
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ASLEmpMng.instance.apiStores()?.callDeleteAttachFile(id)
-                Log.d("tms", "removeFile: ${response?.body().toString()}")
+                Log.d("tms", "Calling API with ${fileParts.size} files...")
+
+                val response = ASLEmpMng.instance.apiStores()?.callAttachFile(
+                    taskId,
+                    fileParts
+                )
+
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
-                    response?.let {
-                        if (it.isSuccessful) {
-                            mDeleteTask.postValue(it.body())
+
+                    if (response?.isSuccessful == true) {
+                        Log.d("tms", "API success! Response: ${response.body()}")
+                        mUpdateTaskStatus.postValue(response.body())
+                    } else {
+                        val errorMsg = response?.errorBody()?.string()
+                        Log.e("tms", "API failed. Code: ${response?.code()}, Error: $errorMsg")
+                        CustomToast(context, errorMsg ?: "Task update failed")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("tms", "Exception during API call", e)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    fun changeTaskStatus(mContext: Context, id: Int, request: TaskStatusRequest) {
+        getLoaderLiveData().postValue("load")
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callTaskStatus(id, request)
+                Log.d("TMS", "API Response changeTaskStatus: ${response?.body()}")
+
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+
+                    if (response != null) {
+                        if (response.isSuccessful) {
+                            mUpdateTaskStatus.postValue(response.body())
                         } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
+                            val errorMsg = try {
+                                val errorStream = response.errorBody()?.charStream()
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
+                                error?.message ?: mContext.getString(R.string.error_something_went_wrong)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                mContext.getString(R.string.error_something_went_wrong)
                             }
+
+                            Log.e("TMS", "API Error: $errorMsg")
+                            CustomToast(mContext, errorMsg)
                         }
-                    } ?: run {
-                        CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
-                        )
+                    } else {
+                        CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
                     }
                 }
             } catch (e: Exception) {
@@ -96,6 +186,10 @@ class TMSViewModel : BaseViewModel() {
             }
         }
     }
+
+
+
+
 
     fun deleteComment(mContext: Context,id:Int) {
         getLoaderLiveData().value = "load"
@@ -218,6 +312,7 @@ class TMSViewModel : BaseViewModel() {
             }
         }
     }
+
     fun deleteAttachFile(mContext: Context,id:Int) {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
