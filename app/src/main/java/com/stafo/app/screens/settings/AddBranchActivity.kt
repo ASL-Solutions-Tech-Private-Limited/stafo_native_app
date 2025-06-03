@@ -319,9 +319,12 @@ class AddBranchActivity : AppCompatActivity() {
                 "map" -> {
                     val lat = data.getDoubleExtra("latitude", 0.0)
                     val lng = data.getDoubleExtra("longitude", 0.0)
+                    val fullAddress = data.getStringExtra("fullAddress")
+                    binding.tieBranchAddress.setText(fullAddress)
                     latitude = lat ?: 0.0
                     longitude = lng ?: 0.0
-                    getAddressFromLocation(latitude!!, longitude!!)
+
+                    //getAddressFromLocation(latitude!!, longitude!!)
 
                     Log.d("MapTap", "main Location: Lat=${latitude}, Lng=${longitude}")
                 }
