@@ -36,6 +36,11 @@
             android:textSize="@dimen/_12ssp" />
     </LinearLayout>
 
+
+
+
+
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAddExpense"
         android:layout_width="@dimen/_38sdp"
@@ -63,32 +68,93 @@
         android:layout_width="match_parent"
         android:layout_height="0dp">
 
-        <TextView
-            android:id="@+id/tv_top_title"
+        <HorizontalScrollView
+            android:id="@+id/hsv_tap"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="@dimen/_12sdp"
-            android:layout_marginHorizontal="@dimen/_12sdp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
-            android:fontFamily="@font/gilroy_medium"
-            android:text="All Expense Categories"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginHorizontal="@dimen/_4sdp"
+            android:orientation="horizontal"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_all_tasks"
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_38sdp"
+                    android:layout_margin="@dimen/_2sdp"
+                    android:background="@drawable/card_rtl_bg_offer"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:gravity="center"
+                    android:text="All Expenses"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_11ssp"
+                   />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_pending"
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_34sdp"
+                    android:layout_margin="@dimen/_2sdp"
+                    android:background="@drawable/card_rtl_bg_offer"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:gravity="center"
+                    android:text="Pending"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_completed"
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_34sdp"
+                    android:layout_margin="@dimen/_2sdp"
+                    android:background="@drawable/card_rtl_bg_offer"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:gravity="center"
+                    android:text="Completed"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_rejected"
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_34sdp"
+                    android:layout_margin="@dimen/_2sdp"
+                    android:background="@drawable/card_rtl_bg_offer"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:gravity="center"
+                    android:text="Rejected"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_11ssp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_top_title"
+            app:layout_constraintTop_toBottomOf="@id/hsv_tap"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/_8sdp">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_show_branch_list"
+                android:id="@+id/rv_show_apply_expense"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/_10sdp"
@@ -102,15 +168,15 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_top_title"
+            app:layout_constraintTop_toBottomOf="@id/hsv_tap"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginHorizontal="@dimen/_12sdp"
             android:gravity="center"
             android:fontFamily="@font/gilroy_regular"
-            android:text="Expense categories are not configured."
+            android:text="No records under this status."
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

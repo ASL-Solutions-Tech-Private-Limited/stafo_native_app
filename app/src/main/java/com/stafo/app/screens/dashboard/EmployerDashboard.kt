@@ -57,6 +57,7 @@ import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.stafo.app.screens.chat.ChatWithCompanyActivity
 import com.stafo.app.screens.crm.CRMLeadDashboard
+import com.stafo.app.screens.expense.ExpenseDashboardActivity
 import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.recharge.RechargeActivity
 import com.stafo.app.screens.reports.ReportsActivity
@@ -308,6 +309,14 @@ class EmployerDashboard : AppCompatActivity() {
                                     Intent(
                                         this@EmployerDashboard,
                                         HolidayActivity::class.java
+                                    )
+                                )
+                            }
+                            "Expenses" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        ExpenseDashboardActivity::class.java
                                     )
                                 )
                             }
@@ -700,6 +709,7 @@ class EmployerDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
         mActionList.add(ActionModel("Request Device", R.drawable.ic_device_request))
+        mActionList.add(ActionModel("Expenses", R.drawable.ic_crm))
         return mActionList
     }
 

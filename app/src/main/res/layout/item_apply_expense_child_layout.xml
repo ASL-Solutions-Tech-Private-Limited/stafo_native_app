@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/_10sdp"
+    android:layout_marginVertical="@dimen/_6sdp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/tvCategoryTitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:fontFamily="@font/gilroy_regular"
+            android:text="Expense Type:"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/tvCategoryTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_toRightOf="@+id/tvCategoryTitle1"
+            android:fontFamily="@font/gilroy_medium"
+            android:text="Food"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+        <TextView
+            android:id="@+id/tvDate1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvCategoryTitle"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="@font/gilroy_regular"
+            android:text="Date:"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvCategoryTitle"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_toRightOf="@+id/tvCategoryTitle1"
+            android:fontFamily="@font/gilroy_medium"
+            android:text="12 jun 2025"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+        <TextView
+            android:id="@+id/tvAmount1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvDate"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="@font/gilroy_regular"
+            android:text="Amount:"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/tvAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvDate"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_toRightOf="@+id/tvCategoryTitle1"
+            android:fontFamily="@font/gilroy_medium"
+            android:text="₹500"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+        <TextView
+            android:id="@+id/tvStatus1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvAmount"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="@font/gilroy_regular"
+            android:text="Status:"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvAmount"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_toRightOf="@+id/tvCategoryTitle1"
+            android:fontFamily="@font/gilroy_medium"
+            android:text="Pending"
+            android:textColor="@color/pending_colour"
+            android:textSize="@dimen/_12ssp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvStatus"
+            android:layout_marginTop="@dimen/_6sdp">
+
+            <LinearLayout
+                android:id="@+id/contentLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <!-- Edit Button -->
+                <Button
+                    android:id="@+id/btnEdit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:layout_toStartOf="@+id/btnDelete"
+                    android:backgroundTint="@color/green"
+                    android:fontFamily="@font/gilroy_regular"
+                    android:text="Approve"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_12ssp" />
+
+                <!-- Delete Button -->
+                <Button
+                    android:id="@+id/btnDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:backgroundTint="@color/pastel_red"
+                    android:fontFamily="@font/gilroy_regular"
+                    android:text="Reject"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/_12ssp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="@dimen/_22sdp"
+                android:layout_height="@dimen/_22sdp"
+                android:src="@drawable/ic_eye"
+                app:layout_constraintBottom_toBottomOf="@+id/contentLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/contentLayout" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
