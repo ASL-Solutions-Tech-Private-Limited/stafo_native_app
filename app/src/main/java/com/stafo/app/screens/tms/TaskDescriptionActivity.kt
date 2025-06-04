@@ -215,14 +215,12 @@ class TaskDescriptionActivity : AppCompatActivity() {
                 if (position in attachmentList.indices) {
                     attachmentList.removeAt(position)
                     attachmentAdapter.notifyItemRemoved(position)
-
-
-
-
-
                     if (attachmentList.isEmpty()) {
                         binding.rvAttachFiles.visibility = View.GONE
-                    }
+                        binding.btnUpload.visibility=View.GONE
+                    } else binding.btnUpload.visibility=View.VISIBLE
+
+
                 }
             })
         binding.rvAttachFiles.apply {
@@ -246,6 +244,7 @@ class TaskDescriptionActivity : AppCompatActivity() {
             if (attachmentList.isNotEmpty()) binding.btnUpload.visibility=View.VISIBLE else  binding.btnUpload.visibility=View.GONE
         }
     }
+
     private fun openFilePicker() {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
             type = "*/*"
