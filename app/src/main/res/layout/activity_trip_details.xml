@@ -1,297 +1,295 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F2F6FF">
+    android:id="@+id/main"
+    android:background="#F5F6FA">
 
-    <!-- Google Map -->
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
+    <!-- Top Map View -->
+    <FrameLayout
+        android:id="@+id/mapContainer"
         android:layout_width="match_parent"
-        android:layout_height="300dp" />
+        android:layout_height="300dp">
 
-    <!-- Bottom Panel -->
-    <androidx.core.widget.NestedScrollView
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Back and Title -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/backBtn"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:backgroundTint="@android:color/white"
+                android:src="@drawable/ic_back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="Trip Details"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/startTripBtn"
+                    android:layout_width="@dimen/_74sdp"
+                    android:layout_marginBottom="@dimen/_4sdp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_status_badge_trip"
+                android:fontFamily="@font/gilroy_semi_bold"
+                    android:backgroundTint="@color/green"
+                    android:gravity="center"
+                    android:padding="@dimen/_6sdp"
+                    android:text="Start Trip"
+                    android:textColor="@color/white" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/pauseTripBtn"
+                    android:layout_width="@dimen/_74sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:background="@drawable/bg_status_badge_trip"
+                    android:fontFamily="@font/gilroy_semi_bold"
+                    android:gravity="center"
+                    android:padding="@dimen/_6sdp"
+                    android:text="Pause Trip"
+                    android:visibility="gone"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Details Scroll Section -->
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginTop="280dp"
         android:background="@drawable/top_rounded_bg"
-        android:padding="16dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="32dp">
+            android:orientation="vertical">
 
-            <!-- Trip Status -->
+            <!-- Trip ID & Date -->
             <TextView
-                android:id="@+id/tvTripStatus"
-                android:layout_width="wrap_content"
+                android:id="@+id/tripIdDate"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/bg_status_badge_trip"
-                android:backgroundTint="@color/pending_colour"
                 android:fontFamily="@font/gilroy_semi_bold"
-                android:padding="8dp"
-                android:text="Status: Ongoing"
-                android:textColor="#FFFFFF"
-                android:textSize="@dimen/_12ssp"
+                android:text="CTD0051140619  |  June 14, 2019"
+                android:textColor="#2C2C2C"
+                android:textSize="@dimen/_13ssp"
                 android:textStyle="bold" />
 
-            <!-- Trip Summary -->
-            <androidx.cardview.widget.CardView
+            <TextView
+                android:id="@+id/tripStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/gilroy_semi_bold"
+                android:text="Ongoing  •  5 hrs ago"
+                android:textColor="#666"
+                android:textSize="@dimen/_11ssp" />
+
+            <!-- Trip Step Progress -->
+            <LinearLayout
+                android:id="@+id/stepContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                android:layout_marginTop="16dp"
+                android:orientation="vertical" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+            <!-- Duration & Distance -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvDuration"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:fontFamily="@font/gilroy_medium"
+                    android:paddingStart="12dp"
+                    android:text="07h 05m"
+                    android:textColor="#000"
+                    android:textSize="@dimen/_10ssp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:text="🚗 Trip Summary"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:text="•"
+                    android:textColor="#999" />
 
-                        android:textColor="@color/app_theme_colour"
-                        android:textSize="@dimen/_14ssp"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gilroy_medium"
+                    android:text="450.2 Kms"
+                    android:textColor="#000"
+                    android:textSize="@dimen/_10ssp" />
+            </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/tvTripDuration"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:text="🕒 Duration: 3h 40m"
-                        android:textColor="#212121"
-                        android:textSize="@dimen/_12ssp" />
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="#DDD" />
 
-                    <TextView
-                        android:id="@+id/tvTripDistance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:text="📏 Distance: 158 km"
-                        android:textColor="#212121"
-                        android:textSize="@dimen/_12ssp" />
 
-                    <TextView
-                        android:id="@+id/tvTripHalt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:text="⛔ Halts: 2"
-                        android:textColor="#212121"
-                        android:textSize="@dimen/_12ssp" />
-
-                    <TextView
-                        android:id="@+id/tvExpenses"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:text="💸 Expenses: ₹860"
-                        android:textColor="#212121"
-                        android:textSize="@dimen/_12ssp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Driver Info -->
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                android:background="@color/green_400"
+                android:orientation="horizontal"
+                android:padding="@dimen/_4sdp"
+                android:weightSum="3">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_2sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_corner_white"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/_2sdp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="👨‍✈️ Driver Info"
-                        android:textColor="@color/app_theme_colour"
-                        android:textSize="@dimen/_14ssp"
-                        android:textStyle="bold" />
-
-                    <TextView
                         android:id="@+id/tvDriverName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:text="Name: Ravi Sharma"
-                        android:textColor="#212121"
-                        android:textSize="@dimen/_12ssp" />
+                        android:padding="@dimen/_2sdp"
+                        android:text="Driver Name:\nJohn Doe"
+                        android:textColor="#000"
+                        android:textSize="@dimen/_10ssp" />
 
                     <TextView
-                        android:id="@+id/tvDriverPhone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="Phone: +91-9876543210"
-                        android:textColor="#212121"
-                        android:textSize="@dimen/_12ssp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        android:id="@+id/tvDriverId"
+                        android:padding="@dimen/_2sdp"
+                        android:text="Phone: 1234567890"
+                        android:textColor="#000"
+                        android:textSize="@dimen/_10ssp" />
 
-            <!-- Vehicle Info -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_2sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_corner_white"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/_2sdp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="🚚 Vehicle Info"
-                        android:textColor="@color/app_theme_colour"
-                        android:textSize="@dimen/_14ssp"
-                        android:textStyle="bold" />
-
-                    <TextView
                         android:id="@+id/tvVehicleNumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/gilroy_medium"
-                        android:text="Number: MH12AB1234"
-                        android:textColor="#212121"
-                        android:textSize="@dimen/_12ssp" />
+                        android:padding="@dimen/_2sdp"
+                        android:text="Vehicle No: WB00AL0000"
+                        android:textColor="#000"
+                        android:textSize="@dimen/_10ssp" />
 
                     <TextView
-                        android:id="@+id/tvVehicleModel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="Model: Tata Ace"
-                        android:textColor="#212121"
-                        android:textSize="@dimen/_12ssp" />
+                        android:id="@+id/tvVehicleType"
+                        android:padding="@dimen/_2sdp"
+                        android:text="Vehicle Type: Sedan"
+                        android:textColor="#000"
+                        android:textSize="@dimen/_10ssp" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Odometer Details -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_2sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_corner_white"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/_2sdp">
 
                     <TextView
+                        android:id="@+id/tvCustomerName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
                         android:fontFamily="@font/gilroy_medium"
-                        android:text="🧭 Odometer Readings"
-                        android:textColor="@color/app_theme_colour"
-                        android:textSize="@dimen/_14ssp"
-                        android:textStyle="bold" />
+                        android:padding="@dimen/_2sdp"
+                        android:text="Client Name: John Doe"
+                        android:textColor="#000"
+                        android:textSize="@dimen/_10ssp" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/tvCustomerPhone"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
+                        android:fontFamily="@font/gilroy_medium"
+                        android:padding="@dimen/_2sdp"
+                        android:text="Phone: 1234567890"
+                        android:textColor="#000"
+                        android:textSize="@dimen/_10ssp" />
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/gilroy_medium"
-                                android:text="Start KM"
-                                android:textColor="#757575"
-                                android:textSize="@dimen/_12ssp" />
-
-                            <TextView
-                                android:id="@+id/tvOdometerStart"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/gilroy_medium"
-                                android:text="12345"
-                                android:textColor="#212121"
-                                android:textSize="@dimen/_12ssp"
-                                android:textStyle="bold" />
-
-                            <ImageView
-                                android:id="@+id/imgOdometerStart"
-                                android:layout_width="match_parent"
-                                android:layout_height="100dp"
-                                android:scaleType="centerCrop"
-                                android:src="@drawable/demo_avatar" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/gilroy_medium"
-                                android:text="End KM"
-                                android:textColor="#757575"
-                                android:textSize="@dimen/_12ssp" />
-
-                            <TextView
-                                android:id="@+id/tvOdometerEnd"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/gilroy_medium"
-                                android:text="12645"
-                                android:textColor="#212121"
-                                android:textSize="@dimen/_12ssp"
-                                android:textStyle="bold" />
-
-                            <ImageView
-                                android:id="@+id/imgOdometerEnd"
-                                android:layout_width="match_parent"
-                                android:layout_height="100dp"
-                                android:scaleType="centerCrop"
-                                android:src="@drawable/demo_avatar" />
-                        </LinearLayout>
-                    </LinearLayout>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+
+
+            </LinearLayout>
+            <!-- Notes -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Notes"
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/notesText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Some optional trip notes can go here."
+                android:textColor="#444"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="32dp" />
+
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/status_select"
+        android:title="Select Status"
+        android:enabled="false" />
+
+    <item android:id="@+id/status_active" android:title="Active" />
+    <item android:id="@+id/status_in_progress" android:title="In Progress" />
+    <item android:id="@+id/status_pending" android:title="Pending" />
+    <item android:id="@+id/status_completed" android:title="Completed" />
+    <item android:id="@+id/status_overdue" android:title="Overdue" />
+</menu>

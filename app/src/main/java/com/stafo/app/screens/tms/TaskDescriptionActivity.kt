@@ -2,7 +2,6 @@ package com.stafo.app.screens.tms
 
 import android.app.Activity
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,7 +12,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.stafo.app.R
@@ -30,9 +28,6 @@ import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getIsCOMPANYLogin
 import com.stafo.app.utils.showFormatDate
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -101,13 +96,6 @@ class TaskDescriptionActivity : AppCompatActivity() {
                 }
                 popup.show()
             }
-
-
-
-
-
-
-
 
             val task = intent.getSerializableExtra("task_data") as? TaskData
             if (task != null) {

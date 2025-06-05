@@ -51,12 +51,6 @@ class AddBranchActivity : AppCompatActivity() {
     private var actionType:String=""
     private var branchId:Int=0
 
-
-
-
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

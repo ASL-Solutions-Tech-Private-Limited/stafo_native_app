@@ -49,7 +49,6 @@ import com.stafo.app.screens.settings.VerifyCompanyDetailsActivity
 import com.stafo.app.screens.settings.ViewAllEmployeeActivity
 import com.stafo.app.screens.settings.ViewDeviceRequestEmpActivity
 import com.stafo.app.screens.subscription.SubscriptionActivity
-import com.stafo.app.screens.tms.CreateTaskActivity
 import com.stafo.app.screens.tms.TaskMSDashboard
 import com.stafo.app.screens.tripPlan.TripDashboardActivity
 import com.stafo.app.screens.ui.EmplyeeyerProfile
@@ -317,6 +316,14 @@ class EmployerDashboard : AppCompatActivity() {
                                     Intent(
                                         this@EmployerDashboard,
                                         TripDashboardActivity::class.java
+                                    )
+                                )
+                            }
+                            "Task" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        TaskMSDashboard::class.java
                                     )
                                 )
                             }
@@ -699,10 +706,11 @@ class EmployerDashboard : AppCompatActivity() {
     private fun actionList(): List<ActionModel> {
         mActionList.add(ActionModel("Employee", R.drawable.ic_employee))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
+        mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
+        mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
         mActionList.add(ActionModel("Location Track", R.drawable.ic_location))
         mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
-        mActionList.add(ActionModel("Trips", R.drawable.ic_bus_ongoing))
         mActionList.add(ActionModel("Performance Type", R.drawable.ic_performace))
         mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))

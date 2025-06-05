@@ -1,10 +1,11 @@
 package com.stafo.app.screens.tripPlan
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,8 +15,11 @@ import com.ajithvgiri.searchdialog.OnSearchItemSelected
 import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
 import com.google.android.material.textfield.TextInputEditText
+import com.google.gson.Gson
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityCreateTripBinding
+import com.stafo.app.screens.tripPlan.dataClass.dashboard.Trips
+import com.stafo.app.screens.ui.PlaceSearchActivity
 import com.stafo.app.utils.CustomLoader
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -27,6 +31,18 @@ class CreateTripActivity : AppCompatActivity() {
     private val mCustomLoader: CustomLoader by lazy { CustomLoader(this) }
     private var mSelectedVehicle: String? = ""
     private var mSelectedDriver: String? = ""
+    private val PLACE_SEARCH_REQUEST_CODE = 101
+    private var mLocationType = "Source"
+    private var mSourceLat = 0.0
+    private var mSourceLong = 0.0
+    private var mDestinationLat = 0.0
+    private var mDestinationLong = 0.0
+    private var mSourceAddress = ""
+    private var mDestinationAddress = ""
+
+    private var isEdit = false
+    private var mTripID = ""
+    private var mTrip: Trips? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,6 +55,15 @@ class CreateTripActivity : AppCompatActivity() {
             insets
         }
 
+        isEdit = intent.getBooleanExtra("isEdit", false)
+
+        if (isEdit) {
+            mTripID = intent.getStringExtra("tripId") ?: ""
+            val tripData = intent.getStringExtra("tripData") ?: ""
+            mTrip = Gson().fromJson(tripData, Trips::class.java)
+            setupEditData(mTrip!!)
+            binding.btnCreateTrip.text = "Update Trip"
+        }
         setupClickListeners()
     }
 
@@ -52,16 +77,22 @@ class CreateTripActivity : AppCompatActivity() {
         }
 
         binding.etStartLocation.setOnClickListener {
-            openMapForLocation(binding.etStartLocation)
+            mLocationType = "Source"
+            val intent = Intent(this@CreateTripActivity, PlaceSearchActivity::class.java)
+            startActivityForResult(intent, PLACE_SEARCH_REQUEST_CODE)
         }
 
         binding.etDestinationLocation.setOnClickListener {
-            openMapForLocation(binding.etDestinationLocation)
+            mLocationType = "Destination"
+            val intent = Intent(this@CreateTripActivity, PlaceSearchActivity::class.java)
+            startActivityForResult(intent, PLACE_SEARCH_REQUEST_CODE)
         }
 
         binding.btnCreateTrip.setOnClickListener {
             if (validateFields()) {
-                createTrip()
+                if (isEdit)
+                    updateTrip()
+                else createTrip()
             }
         }
 
@@ -89,6 +120,14 @@ class CreateTripActivity : AppCompatActivity() {
                                     id = employee.id ?: 0, title = employee.vehicleNo ?: "No Name"
                                 )
                             )
+
+                            if (isEdit) {
+                                if (employee.id == mTrip?.vehicleId) {
+                                    mSelectedVehicle = employee.id.toString()
+                                    binding.etVehicle.setText(employee.vehicleNo)
+                                }
+                            }
+
                         }
                     }
 
@@ -124,6 +163,12 @@ class CreateTripActivity : AppCompatActivity() {
                                     id = employee.id ?: 0, title = employee.name ?: "No Name"
                                 )
                             )
+                            if (isEdit) {
+                                if (employee.id == mTrip?.driverId) {
+                                    mSelectedDriver = employee.id.toString()
+                                    binding.etDriver.setText(employee.name)
+                                }
+                            }
                         }
                     }
 
@@ -159,7 +204,23 @@ class CreateTripActivity : AppCompatActivity() {
             }
         }
 
+        mTripViewModel.mDriverAvailableResponse.observe(this) { response ->
+            if (response.status == true && response.available == false) {
+                binding.tilDriver.error =
+                    "Selected Driver is not available.Please select another driver"
+            } else {
+                binding.tilDriver.error = null
+            }
+        }
 
+        mTripViewModel.mVehicleAvailableResponse.observe(this) { response ->
+            if (response.status == true && response.available == false) {
+                binding.tilVehicle.error =
+                    "Selected Vehicle is not available.Please select another vehicle"
+            } else {
+                binding.tilVehicle.error = null
+            }
+        }
     }
 
     private fun showDateTimePicker(editText: TextInputEditText) {
@@ -189,17 +250,6 @@ class CreateTripActivity : AppCompatActivity() {
             calendar.get(Calendar.DAY_OF_MONTH)
         )
         datePicker.show()
-    }
-
-    private fun openMapForLocation(editText: TextInputEditText) {
-        // Replace with real location picker logic if needed
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse("geo:0,0?q=Pick+Location")
-        }
-        startActivity(intent)
-
-        // For demo purposes, we simulate location name
-        editText.setText("Sample Location") // Replace with actual selected location
     }
 
     private fun validateFields(): Boolean {
@@ -238,6 +288,19 @@ class CreateTripActivity : AppCompatActivity() {
     }
 
 
+    private fun setupEditData(trip: Trips) {
+        binding.apply {
+            etTripName.setText(trip.title)
+            etTripDescription.setText(trip.notes)
+            etTripClientName.setText(trip.customerInfo?.customerName)
+            etTripClientNumber.setText(trip.customerInfo?.phone)
+            etStartLocation.setText(trip.fromAddress)
+            etDestinationLocation.setText(trip.toAddress)
+            etJourneyStart.setText(trip.startTime)
+            etEstimatedEnd.setText(trip.endTime)
+        }
+    }
+
     private fun createTrip() {
         val tripRequest = HashMap<String, Any>()
         tripRequest["customer_name"] = binding.etTripClientName.text.toString()
@@ -249,16 +312,68 @@ class CreateTripActivity : AppCompatActivity() {
         tripRequest["end_time"] = binding.etEstimatedEnd.text.toString()
         tripRequest["notes"] = binding.etTripDescription.text.toString()
         tripRequest["status"] = "pending"
-        tripRequest["start_latitude"] = "40.712776"
-        tripRequest["start_longitude"] = "-74.005974"
+        tripRequest["start_latitude"] = "$mSourceLat"
+        tripRequest["start_longitude"] = "$mSourceLong"
         tripRequest["from_address"] = binding.etStartLocation.text.toString()
-        tripRequest["end_latitude"] = "34.052235"
-        tripRequest["end_longitude"] = "-118.243683"
+        tripRequest["end_latitude"] = "$mDestinationLat"
+        tripRequest["end_longitude"] = "$mDestinationLong"
         tripRequest["to_address"] = binding.etDestinationLocation.text.toString()
         tripRequest["driver_id"] = mSelectedDriver ?: ""
         tripRequest["vehicle_id"] = mSelectedVehicle ?: ""
 
         mTripViewModel.createTrip(this, tripRequest)
+    }
+
+    private fun updateTrip() {
+        val tripRequest = HashMap<String, Any>()
+        tripRequest["customer_name"] = binding.etTripClientName.text.toString()
+        tripRequest["customer_email"] = " "
+        tripRequest["customer_phone"] = binding.etTripClientNumber.text.toString()
+        tripRequest["customer_address"] = " "
+        tripRequest["title"] = binding.etTripName.text.toString()
+        tripRequest["start_time"] = binding.etJourneyStart.text.toString()
+        tripRequest["end_time"] = binding.etEstimatedEnd.text.toString()
+        tripRequest["notes"] = binding.etTripDescription.text.toString()
+        tripRequest["status"] = "pending"
+        tripRequest["start_latitude"] = "$mSourceLat"
+        tripRequest["start_longitude"] = "$mSourceLong"
+        tripRequest["from_address"] = binding.etStartLocation.text.toString()
+        tripRequest["end_latitude"] = "$mDestinationLat"
+        tripRequest["end_longitude"] = "$mDestinationLong"
+        tripRequest["to_address"] = binding.etDestinationLocation.text.toString()
+        tripRequest["driver_id"] = mSelectedDriver ?: ""
+        tripRequest["vehicle_id"] = mSelectedVehicle ?: ""
+
+        mTripViewModel.updateTrip(this, tripRequest, mTripID)
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PLACE_SEARCH_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+
+            when (data?.getStringExtra("type")) {
+                "map" -> {
+                    val lat = data.getDoubleExtra("latitude", 0.0)
+                    val lng = data.getDoubleExtra("longitude", 0.0)
+                    val fullAddress = data.getStringExtra("fullAddress")
+
+                    if (mLocationType == "Source") {
+                        binding.etStartLocation.setText(fullAddress)
+                        mSourceLat = lat
+                        mSourceLong = lng
+                        mSourceAddress = fullAddress ?: ""
+                    } else {
+                        binding.etDestinationLocation.setText(fullAddress)
+                        mDestinationLat = lat
+                        mDestinationLong = lng
+                        mDestinationAddress = fullAddress ?: ""
+                    }
+                    Log.d("MapTap", "main Location: Lat=${lat}, Lng=${lng},Address=${fullAddress}")
+                }
+            }
+        }
     }
 
 }

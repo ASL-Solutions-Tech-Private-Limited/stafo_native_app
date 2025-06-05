@@ -97,11 +97,9 @@ class PlaceSearchActivity : AppCompatActivity(), OnMapReadyCallback {
                 override fun onQueryTextSubmit(query: String?): Boolean = false
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-
                     if (sessionToken == null) {
                         sessionToken = AutocompleteSessionToken.newInstance()
                     }
-
 
                     if (isSettingQueryProgrammatically) {
                         isSettingQueryProgrammatically = false
@@ -143,7 +141,6 @@ class PlaceSearchActivity : AppCompatActivity(), OnMapReadyCallback {
             .build()
 
         placesClient.findAutocompletePredictions(warmupRequest)
-
             .addOnSuccessListener {
                 Log.d("PlacesSearch", "Places SDK warmup complete")
             }

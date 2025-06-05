@@ -32,5 +32,7 @@ data class Vehicles(
     @SerializedName("vehicle_no")
     var vehicleNo: String?,
     @SerializedName("vehicle_type")
-    var vehicleType: String?
+    var vehicleType: String?,
+    @SerializedName("rc_number")
+    var rcNumber: String?
 )

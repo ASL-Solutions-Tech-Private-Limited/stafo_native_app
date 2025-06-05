@@ -45,7 +45,9 @@ class TripDashboardActivity : AppCompatActivity() {
     private fun setupListeners() {
         binding.ivBack.setOnClickListener { finish() }
         binding.btnCreateTrip.setOnClickListener {
-            startActivity(Intent(this, CreateTripActivity::class.java))
+            startActivity(Intent(this, CreateTripActivity::class.java).apply {
+                putExtra("isEdit", false)
+            })
         }
 
         binding.btnDrivers.setOnClickListener {
@@ -53,6 +55,9 @@ class TripDashboardActivity : AppCompatActivity() {
         }
         binding.btnVehicles.setOnClickListener {
             startActivity(Intent(this@TripDashboardActivity, VehicleListActivity::class.java))
+        }
+        binding.btnViewTrips.setOnClickListener {
+            startActivity(Intent(this@TripDashboardActivity, TripListActivity::class.java))
         }
     }
 
@@ -82,7 +87,13 @@ class TripDashboardActivity : AppCompatActivity() {
                     binding.rvTripList.adapter = DashboardTripListAdapter(mContext = this,
                         tripData = todayTrips,
                         onItemClickListener = {
-
+                            startActivity(
+                                Intent(
+                                    this@TripDashboardActivity,
+                                    TripDetailsActivity::class.java
+                                ).apply {
+                                    putExtra("tripId", it.id.toString())
+                                })
                         })
                     binding.rvTripList.visibility = View.VISIBLE
                     binding.tvMsg.visibility = View.GONE

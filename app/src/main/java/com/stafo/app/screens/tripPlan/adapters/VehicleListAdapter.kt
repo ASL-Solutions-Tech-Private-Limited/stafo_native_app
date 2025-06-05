@@ -2,17 +2,19 @@ package com.stafo.app.screens.tripPlan.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.databinding.ItemVehicleListBinding
 import com.stafo.app.screens.tripPlan.dataClass.Vehicles
 import com.stafo.app.utils.generateGradientDrawables
+import com.stafo.app.utils.getIsCOMPANYLogin
 
 
 class VehicleListAdapter(
     private var mContext: Context,
     private var mVehicleList: List<Vehicles>,
-    private val onItemClickListener: (Vehicles) -> Unit
+    private val onItemClickListener: (Vehicles, String) -> Unit
 ) : RecyclerView.Adapter<VehicleListAdapter.FollowUpViewHolder>() {
     private val gradientBackgrounds = generateGradientDrawables(4)
 
@@ -30,8 +32,17 @@ class VehicleListAdapter(
         binding.tvTypeFuel.text = "${item.vehicleType} • ${item.fuel}"
         binding.tvLoadSpeed.text = "Load: ${item.loadCapacity}kg • Odometer: ${item.speedometer}km"
         binding.tvKmTravelled.text = "Total Travelled: ${item.speedometer}km"
+        if (getIsCOMPANYLogin(mContext))
+            binding.llEditDelete.visibility = View.VISIBLE
+        else binding.llEditDelete.visibility = View.GONE
         binding.root.setOnClickListener {
-            onItemClickListener(item)
+            onItemClickListener(item, "All")
+        }
+        binding.ivEdit.setOnClickListener {
+            onItemClickListener(item, "Edit")
+        }
+        binding.ivDelete.setOnClickListener {
+            onItemClickListener(item, "Delete")
         }
     }
 

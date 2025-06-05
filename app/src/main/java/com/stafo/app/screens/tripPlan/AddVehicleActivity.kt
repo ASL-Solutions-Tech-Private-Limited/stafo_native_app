@@ -10,7 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.ajithvgiri.searchdialog.OnSearchItemSelected
 import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
+import com.google.gson.Gson
 import com.stafo.app.databinding.ActivityAddVehicleBinding
+import com.stafo.app.screens.tripPlan.dataClass.Vehicles
 import com.stafo.app.utils.CustomLoader
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -24,7 +26,10 @@ class AddVehicleActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddVehicleBinding
     private val RC_FILE_REQUEST_CODE = 101
     private var rcFileUri: Uri? = null
-
+    private var mVehicleId = 0
+    private var mVehicleData: Vehicles? = null
+    private var isEdit = false
+    private var isRCUploaded = false
     private val vehicleTypes = arrayListOf(
         SearchListItem(1, "Truck"), SearchListItem(2, "Tempo"),
         SearchListItem(3, "Van"), SearchListItem(4, "Bike"),
@@ -49,6 +54,15 @@ class AddVehicleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddVehicleBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        isEdit = intent.getBooleanExtra("isEdit", false)
+        if (isEdit) {
+            mVehicleId = intent.getIntExtra("vehicleId", 0)
+            mVehicleData = intent.getStringExtra("vehicleData")
+                ?.let { Gson().fromJson(it, Vehicles::class.java) }
+
+            setupEditView(mVehicleData!!)
+        }
         setupUI()
     }
 
@@ -98,6 +112,7 @@ class AddVehicleActivity : AppCompatActivity() {
     }
 
     private fun openFileChooser() {
+        isRCUploaded = true
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
         startActivityForResult(
@@ -111,6 +126,7 @@ class AddVehicleActivity : AppCompatActivity() {
         if (requestCode == RC_FILE_REQUEST_CODE && resultCode == RESULT_OK) {
             rcFileUri = data?.data
             rcFileUri?.let {
+                isRCUploaded = true
                 binding.etVehicleRC.setText(FileUtils.getFileName(this, it))
             }
         }
@@ -200,6 +216,19 @@ class AddVehicleActivity : AppCompatActivity() {
 
     }
 
+
+    private fun setupEditView(data: Vehicles) {
+        binding.apply {
+            etVehicleNumber.setText(data.vehicleNo)
+            etVehicleType.setText(data.vehicleType)
+            etFuelType.setText(data.fuel)
+            etRCNumber.setText(data.rcNumber)
+            etSpeedometer.setText(data.speedometer.toString())
+            etLoadCapacity.setText(data.loadCapacity)
+            etTotalKm.setText(data.kmTravelled.toString())
+            // etVehicleRC.setText(data.rcNumber)
+        }
+    }
     private fun String.toPlainText(): RequestBody =
         this.toRequestBody("text/plain".toMediaTypeOrNull())
 
@@ -220,5 +249,36 @@ class AddVehicleActivity : AppCompatActivity() {
             }
             return name
         }
+    }
+
+    private fun updateVehicleData() {
+        val vehicleNumber = binding.etVehicleNumber.text.toString()
+        val vehicleType = binding.etVehicleType.text.toString()
+        val fuelType = binding.etFuelType.text.toString()
+        val rcNumber = binding.etRCNumber.text.toString()
+        val speedometer = binding.etSpeedometer.text.toString()
+        val loadCapacity = binding.etLoadCapacity.text.toString()
+        val totalKm = binding.etTotalKm.text.toString()
+
+
+        val filePart = rcFileUri?.let {
+            val file = FileUtils.getFile(this, it)
+            val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
+            MultipartBody.Part.createFormData("rc_upload_path", file.name, requestBody)
+        }
+
+        val map = hashMapOf(
+            "vehicle_no" to vehicleNumber.toRequestBody(),
+            "vehicle_type" to vehicleType.toRequestBody(),
+            "fuel" to fuelType.toRequestBody(),
+            "rc_number" to rcNumber.toRequestBody(),
+            "speedometer" to speedometer.toRequestBody(),
+            "load_capacity" to loadCapacity.toRequestBody(),
+            "km_travelled" to totalKm.toRequestBody(),
+            "status" to "active".toRequestBody()
+        )
+
+        mTripViewModel.createVehicle(this, map, filePart)
+
     }
 }

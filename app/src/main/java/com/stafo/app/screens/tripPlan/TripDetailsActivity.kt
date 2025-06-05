@@ -1,21 +1,462 @@
 package com.stafo.app.screens.tripPlan
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.location.Address
+import android.location.Geocoder
+import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
+import android.view.LayoutInflater
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import com.stafo.app.R
+import com.stafo.app.databinding.ActivityTripDetailsBinding
+import com.stafo.app.databinding.ItemTripStepsBinding
+import com.stafo.app.screens.tripPlan.dataClass.TripDetailsResponse
+import com.stafo.app.utils.CustomLoader
+import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.formatDate
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
-class TripDetailsActivity : AppCompatActivity() {
+class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
+    private lateinit var binding: ActivityTripDetailsBinding
+    private val mTripViewModel: TripViewModel by lazy { TripViewModel() }
+    private val mCustomLoader: CustomLoader by lazy { CustomLoader(this) }
+    private var mTripID: String? = null
+    private lateinit var googleMap_: GoogleMap
+    private var mTripDetails: TripDetailsResponse.Trip? = null
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
+
+    private lateinit var imageUri: Uri
+    private lateinit var photoFile: File
+    private lateinit var tripActionBottomSheet: TripActionBottomSheet
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_trip_details)
+        //setContentView(R.layout.activity_trip_details)
+        binding = ActivityTripDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        mTripID = intent.getStringExtra("tripId") ?: ""
+
+        mTripViewModel.getTripDetails(this, mTripID ?: "")
+        observeTripDetails()
+
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
     }
+
+    private fun observeTripDetails() {
+        mTripViewModel.getLoaderLiveData().observe(this) {
+            if (it == "load") mCustomLoader.show()
+            else mCustomLoader.dismiss()
+        }
+        mTripViewModel.mTripDetailsResponse.observe(this) {
+            if (it.status) {
+                binding?.apply {
+                    mTripDetails = it.trip
+                    tripIdDate.text = "${it.trip.title} | ${formatDate(it.trip.start_time)}"
+                    tripStatus.text = it.trip.status
+                    tvDriverName.text = "Driver Name:\n${it.trip?.driver?.name}"
+                    tvDriverId.text = "Mobile:\n${it.trip?.driver?.emp_id}"
+
+                    tvVehicleNumber.text = "Vehicle Number:\n${it.trip?.vehicle?.vehicle_no}"
+                    tvVehicleType.text = "Vehicle Type:\n${it.trip?.vehicle?.vehicle_type}"
+
+                    tvCustomerName.text = "Client Name:\n${it.trip?.customer_info?.customer_name}"
+                    tvCustomerPhone.text = "Client Mobile:\n${it.trip?.customer_info?.phone}"
+
+                    tvDuration.text = "00h 00m"
+                    tvDistance.text = "${it.trip.distance}kms"
+                    notesText.text = it.trip?.notes
+
+
+                    // val (steps, lastStatus, totalHaltDurationMillis, haltCount) = processTripLogs(it.trip.trip_logs)
+                    val result = processTripLogs(it.trip.trip_logs)
+                    addTripSteps(result.steps)
+                    var mtripAction = if (result.tripStatusCode == 1) "end" else "start"
+                    var mhaltAction = if (result.lastStatus == "pause") "resume" else "pause"
+
+                    val tripDuration = formatMillisToReadableTime(result.totalTripDurationMillis)
+                    val haltDuration = formatMillisToReadableTime(result.totalHaltDurationMillis)
+                    val runDuration = formatMillisToReadableTime(result.totalRunningDurationMillis)
+
+                    binding.tvDuration.text = "Trip Duration: $tripDuration"
+
+                    when (result.tripStatusCode) {
+                        1 -> {
+                            binding.pauseTripBtn.visibility = View.VISIBLE
+                            binding.startTripBtn.text = "End Trip"
+                        }
+
+                        4 -> {
+                            binding.pauseTripBtn.visibility = View.GONE
+                            binding.startTripBtn.visibility = View.GONE
+                            binding.startTripBtn.text = "Trip Completed"
+                        }
+
+                        else -> {
+                            binding.pauseTripBtn.visibility = View.GONE
+                            binding.startTripBtn.text = "Start Trip"
+                        }
+                    }
+
+
+                    if (result.lastStatus == "pause") {
+                        binding.pauseTripBtn.text = "Resume"
+                    } else {
+                        binding.pauseTripBtn.text = "Pause"
+                    }
+
+                    binding.startTripBtn.setOnClickListener {
+                        showTripActionBottomSheet(mTripID ?: "", mTripViewModel, mtripAction)
+                    }
+
+                    binding.pauseTripBtn.setOnClickListener {
+                        showTripActionBottomSheet(mTripID ?: "", mTripViewModel, mhaltAction)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onMapReady(map: GoogleMap) {
+        googleMap_ = map
+
+        val startLatLng = LatLng(
+            mTripDetails?.start_latitude?.toDouble() ?: 00.00,
+            mTripDetails?.start_longitude?.toDouble() ?: 00.00
+        )
+        val endLatLng = LatLng(
+            mTripDetails?.end_latitude?.toDouble() ?: 00.00,
+            mTripDetails?.end_longitude?.toDouble() ?: 00.00
+        )
+
+        map.addMarker(MarkerOptions().position(startLatLng).title("Start"))
+        map.addMarker(MarkerOptions().position(endLatLng).title("End"))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(startLatLng, 5f))
+
+        val polylineOptions = PolylineOptions().add(startLatLng, endLatLng)
+            .color(ContextCompat.getColor(this, R.color.pending_colour)).width(8f)
+        map.addPolyline(polylineOptions)
+    }
+
+    data class StepData(val location: String, val timeRange: String)
+
+    private fun addTripSteps(steps: List<StepData>) {
+        binding.stepContainer.removeAllViews()
+
+        val inflater = LayoutInflater.from(this)
+
+        steps.forEachIndexed { index, step ->
+            val stepBinding = ItemTripStepsBinding.inflate(inflater, binding.stepContainer, false)
+            stepBinding.stepLocation.text = step.location
+            stepBinding.stepTime.text = step.timeRange
+
+            if (index == steps.size - 1) {
+                stepBinding.root.findViewById<View>(
+                    stepBinding.root.context.resources.getIdentifier(
+                        "verticalLine", "id", packageName
+                    )
+                )?.visibility = View.GONE
+            }
+            binding.stepContainer.addView(stepBinding.root)
+        }
+    }
+
+
+    private fun showTripActionBottomSheet(
+        tripId: String, tripViewModel: TripViewModel, tripStatus: String
+    ) {
+        tripActionBottomSheet = TripActionBottomSheet(context = this,
+            tripType = tripStatus,
+            tripID = tripId,
+            viewModel = tripViewModel,
+            onAssignSuccess = {
+
+            },
+            onCameraRequest = { openPicker(1101) })
+        tripActionBottomSheet.show()
+    }
+
+
+    private fun openPicker(req: Int) {
+        ImagePicker.with(this).crop().cameraOnly().compress(1024).maxResultSize(
+            1080, 1080
+        ).start(req)
+    }
+
+
+    private fun getFileFromUri(uri: Uri): File? {
+        val fileName = getFileName(uri) ?: return null
+        val file = File(cacheDir, fileName)
+
+        return try {
+            contentResolver.openInputStream(uri)?.use { inputStream ->
+                file.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+            file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    private fun getFileName(uri: Uri): String? {
+        var name: String? = null
+
+        if (uri.scheme == "content") {
+            contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    if (nameIndex != -1) {
+                        name = cursor.getString(nameIndex)
+                    }
+                }
+            }
+        }
+
+        if (name.isNullOrEmpty()) {
+            name = uri.path?.let { path ->
+                val cut = path.lastIndexOf('/')
+                if (cut != -1) {
+                    path.substring(cut + 1)
+                } else {
+                    path
+                }
+            }
+        }
+
+        return name ?: "unknown_file"
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && data?.data != null) {
+            val uri: Uri = data.data!!
+
+            val file = getFileFromUri(uri)
+
+            if (file != null) {
+                when (requestCode) {
+                    1101 -> {
+                        tripActionBottomSheet.setCapturedImagePath(file.path)
+                    }
+                }
+            } else {
+                CustomToast(this, "File selection failed")
+
+            }
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            CustomToast(this, ImagePicker.getError(data))
+
+        } else {
+            // CustomToast(this, "Task Cancelled")
+
+        }
+    }
+
+    fun processTripLogs(
+        tripLogs: List<TripDetailsResponse.Trip.TripLog>
+    ): TripProcessingResult {
+        val steps = mutableListOf<StepData>()
+        var lastStatus = ""
+        var haltStartTime: String? = null
+        var haltLocation: String? = null
+
+        var startLocation = ""
+        var startTime = ""
+        var endLocation = ""
+        var endTime = ""
+
+        var startMillis: Long? = null
+        var endMillis: Long? = null
+        var totalHaltDurationMillis = 0L
+        var haltCount = 0
+        var hasStart = false
+        var hasEnd = false
+
+        for (log in tripLogs.sortedBy { it.timestamp }) {
+            when (log.action_type) {
+                "start" -> {
+                    hasStart = true
+                    startLocation = getAddressFromLatLng(
+                        this, log.latitude.toDouble(), log.longitude.toDouble()
+                    ) ?: "${log.latitude},${log.longitude}"
+                    startTime = log.timestamp
+                    startMillis = parseTimestampFlexible(log.timestamp)
+                    lastStatus = "start"
+                }
+
+                "pause" -> {
+                    haltStartTime = log.timestamp
+                    haltLocation = getAddressFromLatLng(
+                        this, log.latitude.toDouble(), log.longitude.toDouble()
+                    ) ?: "${log.latitude},${log.longitude}"
+                    lastStatus = "pause"
+                }
+
+                "resume" -> {
+                    if (haltStartTime != null && haltLocation != null) {
+                        val haltStart = parseTimestampFlexible(haltStartTime)
+                        val haltEnd = parseTimestampFlexible(log.timestamp)
+                        val haltDuration = haltEnd - haltStart
+                        totalHaltDurationMillis += haltDuration
+                        haltCount++
+
+                        val timeRange =
+                            "${formatTime(haltStartTime)} - ${formatTime(log.timestamp)}"
+                        steps.add(
+                            StepData(
+                                location = haltLocation,
+                                timeRange = "Halt ${haltCount}:${timeRange}"
+                            )
+                        )
+                    }
+                    haltStartTime = null
+                    haltLocation = null
+                    lastStatus = "resume"
+                }
+
+                "end" -> {
+                    hasEnd = true
+                    endLocation = getAddressFromLatLng(
+                        this, log.latitude.toDouble(), log.longitude.toDouble()
+                    ) ?: "${log.latitude},${log.longitude}"
+                    endTime = log.timestamp
+                    endMillis = parseTimestampFlexible(log.timestamp)
+                    lastStatus = "end"
+                }
+            }
+        }
+
+        if (startLocation.isNotEmpty() && startTime.isNotEmpty()) {
+            steps.add(
+                0, StepData(
+                    location = startLocation, timeRange = "Started at ${formatTime(startTime)}"
+                )
+            )
+        }
+
+        if (endLocation.isNotEmpty() && endTime.isNotEmpty()) {
+            steps.add(
+                StepData(location = endLocation, timeRange = "Ended at ${formatTime(endTime)}")
+            )
+        }
+
+        val tripStatusCode = when {
+            hasStart && hasEnd -> 4
+            hasStart -> 1
+            hasEnd -> 3
+            else -> 0
+        }
+
+        val totalTripDurationMillis = if (startMillis != null && endMillis != null) {
+            endMillis - startMillis
+        } else {
+            0L
+        }
+
+        val runningDurationMillis = totalTripDurationMillis - totalHaltDurationMillis
+
+        return TripProcessingResult(
+            steps = steps,
+            lastStatus = lastStatus,
+            tripStatusCode = tripStatusCode,
+            haltCount = haltCount,
+            totalHaltDurationMillis = totalHaltDurationMillis,
+            totalTripDurationMillis = totalTripDurationMillis,
+            totalRunningDurationMillis = runningDurationMillis
+        )
+    }
+
+
+    data class TripProcessingResult(
+        val steps: List<StepData>,
+        val lastStatus: String,
+        val tripStatusCode: Int,
+        val haltCount: Int,
+        val totalHaltDurationMillis: Long,
+        val totalTripDurationMillis: Long,
+        val totalRunningDurationMillis: Long
+    )
+
+    fun parseTimestampFlexible(timestamp: String): Long {
+        val formats = listOf(
+            "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        )
+
+        for (pattern in formats) {
+            try {
+                val sdf = SimpleDateFormat(pattern, Locale.getDefault())
+                sdf.timeZone = TimeZone.getDefault()
+                return sdf.parse(timestamp)?.time ?: continue
+            } catch (_: Exception) {
+            }
+        }
+        throw IllegalArgumentException("Unparseable date: $timestamp")
+    }
+
+    fun parseTimestamp(timestamp: String): Long {
+        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        format.timeZone = TimeZone.getTimeZone("UTC") // Or use local if needed
+        return format.parse(timestamp)?.time ?: 0L
+    }
+
+
+    fun formatTime(timestamp: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val date = inputFormat.parse(timestamp)
+        return if (date != null) outputFormat.format(date) else timestamp
+    }
+
+    fun getAddressFromLatLng(context: Context, latitude: Double, longitude: Double): String? {
+        try {
+            val geocoder = Geocoder(context, Locale.getDefault())
+            val addresses: List<Address>? = geocoder.getFromLocation(latitude, longitude, 1)
+            if (addresses != null && addresses.isNotEmpty()) {
+                val address: Address = addresses[0]
+                return address.getAddressLine(0)  // Full address
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    fun formatMillisToReadableTime(millis: Long): String {
+        val totalMinutes = millis / (1000 * 60)
+        val hours = totalMinutes / 60
+        val minutes = totalMinutes % 60
+        return "${hours} hr ${minutes} min"
+    }
+
+
 }
