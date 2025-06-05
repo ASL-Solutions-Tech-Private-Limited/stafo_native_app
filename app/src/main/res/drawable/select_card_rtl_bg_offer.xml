@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Outer gradient stroke -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/_24sdp" />
+            <gradient
+                android:type="linear"
+                android:angle="45"
+                android:startColor="#FFF9C4"
+            android:endColor="#FBC02D"
+            />
+        </shape>
+    </item>
+
+    <!-- Inner background with visible fill -->
+    <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/_24sdp" />
+            <gradient
+                android:type="linear"
+                android:angle="45"
+                android:startColor="@color/plan_color_light1"
+                android:endColor="@color/plan_color1" />
+        </shape>
+    </item>
+
+</layer-list>

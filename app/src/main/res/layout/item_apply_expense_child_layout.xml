@@ -116,13 +116,13 @@
             android:textSize="@dimen/_12ssp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvStatus"
             android:layout_marginTop="@dimen/_6sdp">
 
             <LinearLayout
-                android:id="@+id/contentLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -132,7 +132,7 @@
 
                 <!-- Edit Button -->
                 <Button
-                    android:id="@+id/btnEdit"
+                    android:id="@+id/btnApprove"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -149,7 +149,7 @@
 
                 <!-- Delete Button -->
                 <Button
-                    android:id="@+id/btnDelete"
+                    android:id="@+id/btnReject"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -164,6 +164,7 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/iv_view"
                 android:layout_width="@dimen/_22sdp"
                 android:layout_height="@dimen/_22sdp"
                 android:src="@drawable/ic_eye"

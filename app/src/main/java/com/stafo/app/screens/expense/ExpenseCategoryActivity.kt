@@ -35,34 +35,40 @@ class ExpenseCategoryActivity : AppCompatActivity() {
 
     private fun setUpRecyclerView(){
 
+
+
         val expenseCategories = listOf(
             ExpenseCategory(
+                id = 1,
                 categoryName = "Travel",
                 requiredFields = listOf("From Location", "To Location", "Travel Date", "Mode of Transport"),
                 attachDocumentRequired = true
             ),
             ExpenseCategory(
+                id = 2,
                 categoryName = "Food",
                 requiredFields = listOf("Meal Type", "Number of People", "Date", "Restaurant Name"),
                 attachDocumentRequired = true
             ),
             ExpenseCategory(
+                id = 3,
                 categoryName = "Office Supplies",
                 requiredFields = listOf("Item Name", "Quantity", "Purchase Date"),
                 attachDocumentRequired = false
             ),
             ExpenseCategory(
+                id = 4,
                 categoryName = "Internet",
                 requiredFields = listOf("Provider Name", "Billing Period", "Amount"),
                 attachDocumentRequired = true
             ),
             ExpenseCategory(
+                id = 5,
                 categoryName = "Reimbursement",
                 requiredFields = listOf("Expense Description", "Amount", "Date", "Approval Status"),
                 attachDocumentRequired = false
             )
         )
-
         val adapter = AdapterExpenseCategory(expenseCategories, this)
         binding.rvShowExpenseCategory.adapter = adapter
         binding.rvShowExpenseCategory.layoutManager = LinearLayoutManager(this)
