@@ -20,6 +20,7 @@ import com.stafo.app.database.dao.LocationDao
 import com.stafo.app.database.dataClass.LocationEntity
 import com.stafo.app.screens.settings.dataClass.EmployeePostLocationRequest
 import com.stafo.app.screens.settings.dataClass.LocationLogRequest
+import com.stafo.app.screens.tripPlan.dataClass.TripGeoLocationRequest
 import com.stafo.app.utils.*
 import com.tanodxyz.gdownload.isNetworkAvailable
 import kotlinx.coroutines.*
@@ -39,6 +40,7 @@ class LocationForegroundService : Service() {
 
     private var lat: Double? = null
     private var longi: Double? = null
+    private var tripSource: Boolean = false
 
     private lateinit var locationDao: LocationDao
 
@@ -58,7 +60,7 @@ class LocationForegroundService : Service() {
         locationDao = AppDatabase.getDatabase(this).locationDao()
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    /*override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == "STOP_FOREGROUND_SERVICE") {
             stopForegroundService()
             return START_NOT_STICKY
@@ -75,7 +77,31 @@ class LocationForegroundService : Service() {
         }
 
         return START_STICKY
+    }*/
+
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent?.action == "STOP_FOREGROUND_SERVICE") {
+            stopForegroundService()
+            return START_NOT_STICKY
+        }
+
+        val isFromTripDetails = intent?.getBooleanExtra("FROM_TRIP_DETAILS", false) == true
+        tripSource = isFromTripDetails
+
+        if (hasLocationPermission()) {
+            startAsForegroundService()
+            startLocationUpdates()
+            startRecurringTimer()
+            scheduleServiceRestart()
+        } else {
+            Log.e(TAG, "Location permission not granted.")
+            Toast.makeText(this, "Location permission not granted.", Toast.LENGTH_SHORT).show()
+        }
+
+        return START_STICKY
     }
+
 
 
 
@@ -285,6 +311,13 @@ class LocationForegroundService : Service() {
                         val synced = syncLocationsToServer()
                         if (synced && lat != null && longi != null) {
                             postGeoLocation(lat.toString(), longi.toString())
+
+                            if (tripSource) {
+                                postTripGeoLocation(lat.toString(), longi.toString())
+                            } else {
+                                postGeoLocation(lat.toString(), longi.toString())
+                            }
+
                         }
                     } else {
                         saveLocationOffline(gpsOn)
@@ -365,6 +398,34 @@ class LocationForegroundService : Service() {
             false
         }
     }
+
+
+    private suspend fun postTripGeoLocation(lat: String, long: String): Boolean {
+        return try {
+            val request = TripGeoLocationRequest(
+                trip_id = "22",
+                latitude = lat,
+                longitude = long
+            )
+
+            val response = RetrofitInstance.getApiService(applicationContext).callTripGeoLocation(request)
+
+            if (response.isSuccessful) {
+                Log.d(TAG, "Trip Location updated successfully: ${response.body()}")
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "API error: ${e.message}")
+            false
+        }
+    }
+
+
+
+
+
 
     private suspend fun saveLocationOffline(gpsOn: Boolean) {
         val location = LocationEntity(

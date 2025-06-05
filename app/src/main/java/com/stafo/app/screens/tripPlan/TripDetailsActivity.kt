@@ -1,6 +1,8 @@
 package com.stafo.app.screens.tripPlan
 
 import android.app.Activity
+import android.app.ActivityManager
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.location.Address
@@ -24,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.stafo.app.R
+import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityTripDetailsBinding
 import com.stafo.app.databinding.ItemTripStepsBinding
 import com.stafo.app.screens.tripPlan.dataClass.TripDetailsResponse
@@ -101,6 +104,8 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                     var mtripAction = if (result.tripStatusCode == 1) "end" else "start"
                     var mhaltAction = if (result.lastStatus == "pause") "resume" else "pause"
 
+
+
                     val tripDuration = formatMillisToReadableTime(result.totalTripDurationMillis)
                     val haltDuration = formatMillisToReadableTime(result.totalHaltDurationMillis)
                     val runDuration = formatMillisToReadableTime(result.totalRunningDurationMillis)
@@ -135,14 +140,16 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.startTripBtn.setOnClickListener {
                         if (mtripAction == "end") {
                             //Stop Location Service
-                        } else //Start Location Service
+                            stopLocationServiceIfRunning()
+
+                        } else startLocationServiceIfNotRunning()
                         showTripActionBottomSheet(mTripID ?: "", mTripViewModel, mtripAction)
                     }
 
                     binding.pauseTripBtn.setOnClickListener {
                         if (mhaltAction == "resume") {
-                            //Start Location Service
-                        } else //Stop Location Service
+                            startLocationServiceIfNotRunning()
+                        } else   stopLocationServiceIfRunning()
 
                         showTripActionBottomSheet(mTripID ?: "", mTripViewModel, mhaltAction)
                     }
@@ -463,6 +470,33 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         val hours = totalMinutes / 60
         val minutes = totalMinutes % 60
         return "${hours} hr ${minutes} min"
+    }
+
+
+    private fun startLocationServiceIfNotRunning(fromTripDetails: Boolean = true) {
+        if (!isServiceRunning(LocationForegroundService::class.java)) {
+            val intent = Intent(this, LocationForegroundService::class.java)
+            intent.putExtra("FROM_TRIP_DETAILS", fromTripDetails)
+            ContextCompat.startForegroundService(this, intent)
+        }
+    }
+
+    private fun stopLocationServiceIfRunning() {
+        if (isServiceRunning(LocationForegroundService::class.java)) {
+            val stopIntent = Intent(this, LocationForegroundService::class.java)
+            stopIntent.action = "STOP_FOREGROUND_SERVICE"
+            ContextCompat.startForegroundService(this, stopIntent)
+        }
+    }
+
+    private fun isServiceRunning(serviceClass: Class<out Service>): Boolean {
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in activityManager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
     }
 
 
