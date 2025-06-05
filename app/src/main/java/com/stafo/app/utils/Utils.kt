@@ -2048,3 +2048,37 @@ fun getTimeOnly12HrFormat(isoDateTime: String?): String {
     }
 }
 
+fun getSmartShortAddress(fullAddress: String?): String {
+    if (fullAddress.isNullOrBlank()) return "Unknown"
+
+    val parts = fullAddress.split(",")
+        .map { it.trim() }
+        .filter { it.isNotEmpty() }
+
+    if (parts.size < 4) return parts.joinToString(", ") // Just return what’s available
+
+    // Grab the last 3 parts (e.g., "Kolkata, West Bengal, India")
+    val lastParts = parts.takeLast(3)
+
+    // Grab 1–2 location-specific parts before city
+    val localityParts = parts.dropLast(3).takeLast(2)
+
+    return (localityParts + lastParts).joinToString(", ")
+}
+
+
+fun getExpenseIcon(type: String): String {
+    return when (type.lowercase()) {
+        "parking" -> "🅿️"
+        "food" -> "🍽️"
+        "repair" -> "🔧"
+        "fuel" -> "⛽"
+        "toll" -> "🛣️"
+        "accommodation" -> "🏨"
+        else -> "💼"
+    }
+}
+
+
+
+

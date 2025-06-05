@@ -10,6 +10,7 @@ import com.stafo.app.databinding.ItemTripHistoryBinding
 import com.stafo.app.screens.tripPlan.dataClass.dashboard.Trips
 import com.stafo.app.utils.generateGradientDrawables
 import com.stafo.app.utils.getIsCOMPANYLogin
+import com.stafo.app.utils.getSmartShortAddress
 
 
 class TripListAdapter(
@@ -30,7 +31,8 @@ class TripListAdapter(
         val binding = holder.binding
 
         binding.tvTripDate.text = item.startTime
-        binding.tvTripFromTo.text = item.fromAddress + "-" + item.toAddress
+        binding.tvTripFromTo.text =
+            getSmartShortAddress(item.fromAddress) + " ➝ " + getSmartShortAddress(item.toAddress)
         binding.tvDistance.text = "Distance: " + item.distance + " km"
         binding.tvDuration.text = "Duration: 00:00"
         binding.tvOdometer.text = "Odometer:00000" + " ➝ " + "00000"

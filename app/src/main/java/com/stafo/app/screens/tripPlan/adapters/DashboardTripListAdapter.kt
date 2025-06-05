@@ -8,6 +8,7 @@ import com.stafo.app.R
 import com.stafo.app.databinding.ItemTripHistoryBinding
 import com.stafo.app.screens.tripPlan.dataClass.TripsData
 import com.stafo.app.utils.generateGradientDrawables
+import com.stafo.app.utils.getSmartShortAddress
 
 
 class DashboardTripListAdapter(
@@ -28,7 +29,7 @@ class DashboardTripListAdapter(
         val binding = holder.binding
 
         binding.tvTripDate.text = item.startTime
-        binding.tvTripFromTo.text = item.fromAddress + "-" + item.toAddress
+        binding.tvTripFromTo.text = getSmartShortAddress(item.fromAddress?:"") + " ➝ " + getSmartShortAddress(item.toAddress?:"")
         binding.tvDistance.text = "Distance: " + item.distance + " km"
         binding.tvDuration.text = "Duration: 00:00"
         binding.tvOdometer.text = "Odometer:00000" + " ➝ " + "00000"
@@ -58,4 +59,7 @@ class DashboardTripListAdapter(
 
     class FollowUpViewHolder(val binding: ItemTripHistoryBinding) :
         RecyclerView.ViewHolder(binding.root)
+
+
+
 }

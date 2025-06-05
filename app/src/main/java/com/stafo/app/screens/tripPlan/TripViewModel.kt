@@ -10,7 +10,6 @@ import com.stafo.app.ASLEmpMng
 import com.stafo.app.R
 import com.stafo.app.base.BaseViewModel
 import com.stafo.app.base.model.ErrorResponse
-import com.stafo.app.screens.auth.LoginActivity
 import com.stafo.app.screens.tripPlan.dataClass.AddVehicleResponse
 import com.stafo.app.screens.tripPlan.dataClass.CheckAvailabilityStatusResponse
 import com.stafo.app.screens.tripPlan.dataClass.CreateTripResponse
@@ -80,7 +79,7 @@ class TripViewModel : BaseViewModel() {
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                CustomToast(mContext, error?.message ?: "")
                             } ?: run {
                                 CustomToast(
                                     mContext,
@@ -120,7 +119,7 @@ class TripViewModel : BaseViewModel() {
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                CustomToast(mContext, error?.message ?: "")
                             } ?: run {
                                 CustomToast(
                                     mContext,
@@ -160,7 +159,7 @@ class TripViewModel : BaseViewModel() {
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                CustomToast(mContext, error?.message ?: "")
                             } ?: run {
                                 CustomToast(
                                     mContext,
@@ -200,7 +199,7 @@ class TripViewModel : BaseViewModel() {
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                CustomToast(mContext, error?.message ?: "")
                             } ?: run {
                                 CustomToast(
                                     mContext,
@@ -240,7 +239,7 @@ class TripViewModel : BaseViewModel() {
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                CustomToast(mContext, error?.message ?: "")
                             } ?: run {
                                 CustomToast(
                                     mContext,
@@ -284,7 +283,99 @@ class TripViewModel : BaseViewModel() {
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                CustomToast(mContext, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun updateVehicleWithRC(
+        mContext: Context,
+        vehicleId: String,
+        map: HashMap<String, RequestBody>,
+        filePart: MultipartBody.Part?
+    ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response =
+                    ASLEmpMng.instance.apiStores()?.callUpdateVehicle(vehicleId, map, filePart)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAddVehicle.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun updateVehicleWithoutRC(
+        mContext: Context,
+        vehicleId: String,
+        map: HashMap<String, RequestBody>,
+    ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response =
+                    ASLEmpMng.instance.apiStores()?.callUpdateVehicleWithOutRC(vehicleId, map)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAddVehicle.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext, error?.message ?: "")
                             } ?: run {
                                 CustomToast(
                                     mContext,
@@ -329,7 +420,7 @@ class TripViewModel : BaseViewModel() {
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                CustomToast(mContext, error?.message ?: "")
                             } ?: run {
                                 CustomToast(
                                     mContext,
@@ -375,7 +466,7 @@ class TripViewModel : BaseViewModel() {
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                CustomToast(mContext, error?.message ?: "")
                             } ?: run {
                                 CustomToast(
                                     mContext,
@@ -415,7 +506,7 @@ class TripViewModel : BaseViewModel() {
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                CustomToast(mContext, error?.message ?: "")
                             } ?: run {
                                 CustomToast(
                                     mContext,
@@ -458,7 +549,7 @@ class TripViewModel : BaseViewModel() {
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                CustomToast(mContext, error?.message ?: "")
                             } ?: run {
                                 CustomToast(
                                     mContext,
@@ -503,7 +594,7 @@ class TripViewModel : BaseViewModel() {
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                CustomToast(mContext, error?.message ?: "")
                             } ?: run {
                                 CustomToast(
                                     mContext,
@@ -546,7 +637,7 @@ class TripViewModel : BaseViewModel() {
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                CustomToast(mContext, error?.message ?: "")
                             } ?: run {
                                 CustomToast(
                                     mContext,
@@ -589,7 +680,7 @@ class TripViewModel : BaseViewModel() {
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                CustomToast(mContext, error?.message ?: "")
                             } ?: run {
                                 CustomToast(
                                     mContext,
@@ -614,5 +705,89 @@ class TripViewModel : BaseViewModel() {
 
     }
 
+    fun fetchTripExpenses(mContext: Context, tripID: String) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+                val request = HashMap<String, Any>()
+                request["trip_id"] = tripID
+                val response = ASLEmpMng.instance.apiStores()?.callTripExpensesList(request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mTripAction.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+
+    }
+
+    fun addExpenseForTrip(mContext: Context, request: HashMap<String, Any>) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callAddExpense(request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mTripAction.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+
+    }
 
 }

@@ -54,7 +54,7 @@
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:fontFamily="@font/gilroy_semi_bold"
-            android:maxLines="2"
+            android:maxLines="3"
             android:text="Mumbai ➝ Pune"
             android:textColor="@color/white"
             android:textSize="@dimen/_12ssp"

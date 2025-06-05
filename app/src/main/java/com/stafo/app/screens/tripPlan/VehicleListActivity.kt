@@ -42,10 +42,14 @@ class VehicleListActivity : AppCompatActivity() {
         binding.btnAddEmp.setOnClickListener {
               startActivity(Intent(this, AddVehicleActivity::class.java))
         }
-        mTripViewModel.getVehicleList(this)
         observeData()
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        mTripViewModel.getVehicleList(this)
+    }
 
     private fun observeData() {
         mTripViewModel.getLoaderLiveData().observe(this) {

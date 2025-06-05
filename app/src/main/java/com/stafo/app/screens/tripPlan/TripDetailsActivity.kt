@@ -116,16 +116,19 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                         1 -> {
                             binding.pauseTripBtn.visibility = View.VISIBLE
                             binding.startTripBtn.text = "End Trip"
+                            binding.btnAddExpenses.visibility = View.VISIBLE
                         }
 
                         4 -> {
                             binding.pauseTripBtn.visibility = View.GONE
                             binding.startTripBtn.visibility = View.GONE
                             binding.startTripBtn.text = "Trip Completed"
+                            binding.btnAddExpenses.visibility = View.GONE
                         }
 
                         else -> {
                             binding.pauseTripBtn.visibility = View.GONE
+                            binding.btnAddExpenses.visibility = View.GONE
                             binding.startTripBtn.text = "Start Trip"
                         }
                     }
@@ -153,8 +156,22 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                         showTripActionBottomSheet(mTripID ?: "", mTripViewModel, mhaltAction)
                     }
+                    binding.btnAddExpenses.setOnClickListener {
+                        startActivity(
+                            Intent(
+                                this@TripDetailsActivity,
+                                TripExpensesActivity::class.java
+                            ).putExtra("tripId", mTripID)
+                        )
+                    }
                 }
             }
+        }
+
+        mTripViewModel.mTripActionResponse.observe(this) {
+            if (it.status == true) {
+                mTripViewModel.getTripDetails(this, mTripID ?: "")
+            } else CustomToast(this, it.message ?: "")
         }
     }
 

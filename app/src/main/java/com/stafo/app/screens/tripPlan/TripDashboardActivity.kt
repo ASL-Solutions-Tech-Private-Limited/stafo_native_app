@@ -38,10 +38,15 @@ class TripDashboardActivity : AppCompatActivity() {
         setupListeners()
         setupRecyclerView()
 
-        mTripViewModel.getTripDashboardData(this)
+
         observeTripDashboardData()
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        mTripViewModel.getTripDashboardData(this)
+    }
     private fun setupListeners() {
         binding.ivBack.setOnClickListener { finish() }
         binding.btnCreateTrip.setOnClickListener {

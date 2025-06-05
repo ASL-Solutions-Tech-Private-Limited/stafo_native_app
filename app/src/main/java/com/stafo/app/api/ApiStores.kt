@@ -899,6 +899,23 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<AddVehicleResponse>
 
+    @Multipart
+    @POST("api/vehicles/update/{vehicle_id}")
+    suspend fun callUpdateVehicle(
+        @Path("vehicle_id") vehicleId: String,
+        @PartMap map: HashMap<String, @JvmSuppressWildcards RequestBody>,
+        @Part filePart: MultipartBody.Part?,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AddVehicleResponse>
+
+    @Multipart
+    @POST("api/vehicles/update/{vehicle_id}")
+    suspend fun callUpdateVehicleWithOutRC(
+        @Path("vehicle_id") vehicleId: String,
+        @PartMap map: HashMap<String, @JvmSuppressWildcards RequestBody>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AddVehicleResponse>
+
     @POST("api/trips/check-vehicle-availability")
     suspend fun callCheckVehicleAvailability(
         @Body request: HashMap<String, Any>,
@@ -943,6 +960,23 @@ interface ApiStores {
         @Body request: HashMap<String, Any>,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ):Response<TripActionResponse>
+
+    @POST("api/trips-expense/list")
+    suspend fun callTripExpensesList(
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TripActionResponse>
+
+
+    // @Multipart
+    @POST("api/trips-expense/create")
+    suspend fun callAddExpense(
+        // @PartMap map: HashMap<String, @JvmSuppressWildcards RequestBody>,
+        // @Part filePart: MultipartBody.Part?,
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TripActionResponse>
+
 
     @GET("api/task/list")
     suspend fun callTaskList(

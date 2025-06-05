@@ -35,8 +35,13 @@ class TripListActivity : AppCompatActivity() {
         binding.ivBack.setOnClickListener { finish() }
         binding.rvTripList.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        mTripViewModel.getTripList(this)
+
         observeData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mTripViewModel.getTripList(this)
     }
 
     private fun observeData() {
