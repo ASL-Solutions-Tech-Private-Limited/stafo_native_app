@@ -133,10 +133,17 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
 
                     binding.startTripBtn.setOnClickListener {
+                        if (mtripAction == "end") {
+                            //Stop Location Service
+                        } else //Start Location Service
                         showTripActionBottomSheet(mTripID ?: "", mTripViewModel, mtripAction)
                     }
 
                     binding.pauseTripBtn.setOnClickListener {
+                        if (mhaltAction == "resume") {
+                            //Start Location Service
+                        } else //Stop Location Service
+
                         showTripActionBottomSheet(mTripID ?: "", mTripViewModel, mhaltAction)
                     }
                 }
