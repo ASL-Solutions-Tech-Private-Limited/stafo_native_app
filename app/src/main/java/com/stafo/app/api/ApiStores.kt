@@ -169,6 +169,8 @@ import com.stafo.app.screens.tripPlan.dataClass.ExpensesListResponse
 import com.stafo.app.screens.tripPlan.dataClass.TripActionResponse
 import com.stafo.app.screens.tripPlan.dataClass.TripDashboardResponse
 import com.stafo.app.screens.tripPlan.dataClass.TripDetailsResponse
+import com.stafo.app.screens.tripPlan.dataClass.TripGeoLocationListReponse
+import com.stafo.app.screens.tripPlan.dataClass.TripGeoLocationListRequest
 import com.stafo.app.screens.tripPlan.dataClass.VehicleListResponse
 import com.stafo.app.screens.tripPlan.dataClass.dashboard.TripListResponse
 import okhttp3.MultipartBody
@@ -1030,6 +1032,16 @@ interface ApiStores {
         @Query("task_id") taskId: Int,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<TaskCommentListResponse>
+
+
+    @POST("api/trips-geolocation/get")
+    suspend fun callGetTripGeoLocation(
+        @Body request: TripGeoLocationListRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TripGeoLocationListReponse>
+
+
+
 
     @POST("api/task/comment-create")
     suspend fun callAddComment(

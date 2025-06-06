@@ -10,6 +10,7 @@ import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -32,9 +33,14 @@ import com.stafo.app.databinding.ItemTripStepsBinding
 import com.stafo.app.screens.tripPlan.dataClass.TripDetailsResponse
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.checkExactAlarmPermission
 import com.stafo.app.utils.formatDate
+import com.stafo.app.utils.requestIgnoreBatteryOptimization
+import com.stafo.app.utils.setTripId
+import com.stafo.app.utils.setTripServiceAction
 import java.io.File
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
@@ -64,6 +70,7 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             insets
         }
         mTripID = intent.getStringExtra("tripId") ?: ""
+        setTripId(mTripID!!)
 
         mTripViewModel.getTripDetails(this, mTripID ?: "")
         observeTripDetails()
@@ -103,6 +110,19 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                     addTripSteps(result.steps)
                     var mtripAction = if (result.tripStatusCode == 1) "end" else "start"
                     var mhaltAction = if (result.lastStatus == "pause") "resume" else "pause"
+
+                    Log.e("tripe","get value both : $mtripAction $mhaltAction")
+
+
+                    if (mtripAction == "end") {
+                        stopLocationServiceIfRunning()
+
+                    } else startLocationServiceIfNotRunning()
+
+
+                    if (mhaltAction == "resume") {
+                        startLocationServiceIfNotRunning()
+                    } else   stopLocationServiceIfRunning()
 
 
 
@@ -491,11 +511,27 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     private fun startLocationServiceIfNotRunning(fromTripDetails: Boolean = true) {
-        if (!isServiceRunning(LocationForegroundService::class.java)) {
-            val intent = Intent(this, LocationForegroundService::class.java)
-            intent.putExtra("FROM_TRIP_DETAILS", fromTripDetails)
-            ContextCompat.startForegroundService(this, intent)
+
+        checkExactAlarmPermission(this) { exactAlarmGranted ->
+            if (exactAlarmGranted) {
+                requestIgnoreBatteryOptimization(this) { batteryOptGranted ->
+                    if (batteryOptGranted) {
+
+                        if (!isServiceRunning(LocationForegroundService::class.java)) {
+                            setTripServiceAction(this,true)
+                            val intent = Intent(this, LocationForegroundService::class.java)
+                            intent.putExtra("FROM_TRIP_DETAILS", fromTripDetails)
+                            ContextCompat.startForegroundService(this, intent)
+                        }
+
+                    }
+                }
+            }
         }
+
+
+
+
     }
 
     private fun stopLocationServiceIfRunning() {

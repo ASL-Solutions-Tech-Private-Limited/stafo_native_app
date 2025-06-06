@@ -21,6 +21,17 @@ private val isLockSet = "is_lock_set"
 private val isLockUserSet = "is_lock_user_set"
 private val fbToken = "fb_token"
 private val deviceId = "device_id"
+private val tripServiceAction = "trip_service_action"
+private val TRIP_ID = "trip_id"
+
+
+fun setTripServiceAction(context: Context, isLogin: Boolean) {
+    getPrefs(context).edit().putBoolean(tripServiceAction, isLogin).apply()
+}
+fun getTripServiceAction(context: Context): Boolean {
+    return getPrefs(context).getBoolean(tripServiceAction, false)
+}
+
 
 
 
@@ -193,6 +204,16 @@ fun setEmployeeComId(com_id: String) {
 
 fun getEmployeeComId(): String? {
     return Hawk.get(COM_ID, null)
+}
+
+
+
+fun setTripId(com_id: String) {
+    Hawk.put(TRIP_ID, com_id)
+}
+
+fun getTripId(): String? {
+    return Hawk.get(TRIP_ID, null)
 }
 fun setEmployeeBranchId(emp_branch_id: String) {
     Hawk.put(EMP_BRANCH_ID, emp_branch_id)

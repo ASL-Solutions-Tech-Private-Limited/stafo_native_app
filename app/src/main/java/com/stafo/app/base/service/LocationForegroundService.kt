@@ -43,6 +43,7 @@ class LocationForegroundService : Service() {
     private var tripSource: Boolean = false
 
     private lateinit var locationDao: LocationDao
+    private var tripLocationCounter = 0
 
     inner class LocalBinder : Binder() {
         fun getService(): LocationForegroundService = this@LocationForegroundService
@@ -301,34 +302,80 @@ class LocationForegroundService : Service() {
         if (handler != null) return
 
         handler = Handler(Looper.getMainLooper())
+
         runnable = object : Runnable {
             override fun run() {
                 val gpsOn = isGpsEnabled(applicationContext)
                 val networkOn = isNetworkAvailable()
+                val isTrip = getTripServiceAction(applicationContext)
+
+                var delayMillis = 20_000L // default delay
 
                 CoroutineScope(Dispatchers.IO).launch {
                     if (networkOn) {
                         val synced = syncLocationsToServer()
                         if (synced && lat != null && longi != null) {
-                            postGeoLocation(lat.toString(), longi.toString())
-
-                            if (tripSource) {
+                            if (isTrip) {
                                 postTripGeoLocation(lat.toString(), longi.toString())
+                                // Set delay to 5 minutes for trip
+                                delayMillis = 300_000L
                             } else {
                                 postGeoLocation(lat.toString(), longi.toString())
                             }
-
                         }
                     } else {
                         saveLocationOffline(gpsOn)
                     }
-                }
 
-                handler?.postDelayed(this, 20_000)
+                    // Post next run with calculated delay
+                    handler?.postDelayed(runnable!!, delayMillis)
+                }
             }
         }
+
         handler?.post(runnable!!)
     }
+
+
+
+
+
+    /*   private fun startRecurringTimer() {
+           if (handler != null) return
+
+           handler = Handler(Looper.getMainLooper())
+           runnable = object : Runnable {
+               override fun run() {
+                   val gpsOn = isGpsEnabled(applicationContext)
+                   val networkOn = isNetworkAvailable()
+
+                   CoroutineScope(Dispatchers.IO).launch {
+                       if (networkOn) {
+                           val synced = syncLocationsToServer()
+                           if (synced && lat != null && longi != null) {
+                               postGeoLocation(lat.toString(), longi.toString())
+                               Log.e("tripe","get value both : ${getTripServiceAction(applicationContext)}")
+                               if (getTripServiceAction(applicationContext)) {
+                                   tripLocationCounter++
+                                   if (tripLocationCounter >= 15) { // 15 * 20 seconds = 5 minutes
+                                       postTripGeoLocation(lat.toString(), longi.toString())
+                                       tripLocationCounter = 0
+                                   }
+                               } else {
+                                   postGeoLocation(lat.toString(), longi.toString())
+                               }
+
+                           }
+                       } else {
+                           saveLocationOffline(gpsOn)
+                       }
+                   }
+
+                   handler?.postDelayed(this, 20_000)
+               }
+           }
+           handler?.post(runnable!!)
+       }*/
 
     private fun stopRecurringTimer() {
         handler?.removeCallbacksAndMessages(null)
@@ -402,8 +449,10 @@ class LocationForegroundService : Service() {
 
     private suspend fun postTripGeoLocation(lat: String, long: String): Boolean {
         return try {
+
+
             val request = TripGeoLocationRequest(
-                trip_id = "22",
+                trip_id = getTripId().toString(),
                 latitude = lat,
                 longitude = long
             )

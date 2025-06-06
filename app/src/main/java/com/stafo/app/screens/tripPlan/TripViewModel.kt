@@ -18,6 +18,8 @@ import com.stafo.app.screens.tripPlan.dataClass.ExpensesListResponse
 import com.stafo.app.screens.tripPlan.dataClass.TripActionResponse
 import com.stafo.app.screens.tripPlan.dataClass.TripDashboardResponse
 import com.stafo.app.screens.tripPlan.dataClass.TripDetailsResponse
+import com.stafo.app.screens.tripPlan.dataClass.TripGeoLocationListReponse
+import com.stafo.app.screens.tripPlan.dataClass.TripGeoLocationListRequest
 import com.stafo.app.screens.tripPlan.dataClass.VehicleListResponse
 import com.stafo.app.screens.tripPlan.dataClass.dashboard.TripListResponse
 import com.stafo.app.utils.CustomToast
@@ -75,6 +77,51 @@ class TripViewModel : BaseViewModel() {
 
     private var mTripExpensesList: MutableLiveData<ExpensesListResponse> = MutableLiveData()
     val mTripExpensesListResponse: LiveData<ExpensesListResponse> get() = mTripExpensesList
+
+
+
+    private var mTripGeoLocationList: MutableLiveData<TripGeoLocationListReponse> = MutableLiveData()
+    val mTripGeoLocationListResponse: LiveData<TripGeoLocationListReponse> get() = mTripGeoLocationList
+
+    fun getTripGeoLocation(mContext: Context,request: TripGeoLocationListRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callGetTripGeoLocation(request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mTripGeoLocationList.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
     fun getVehicleList(mContext: Context) {
         if (!isNetworkAvailable(mContext)) {
