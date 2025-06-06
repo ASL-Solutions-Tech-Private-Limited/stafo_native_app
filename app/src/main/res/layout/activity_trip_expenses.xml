@@ -72,6 +72,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/_12sdp"
+            android:id="@+id/llTotal"
+            android:visibility="gone"
             android:orientation="horizontal"
             android:background="@drawable/edit_text_background"
             android:padding="@dimen/_6sdp">

@@ -79,12 +79,12 @@ class TripExpensesBottomSheet(
         }
 
         viewModel.mTripActionResponse.observe(context as TripExpensesActivity) {
-            if (it.status == true) {
+           /* if (it.status == true) {
                 onAssignSuccess()
                 dialog.dismiss()
             } else {
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-            }
+            }*/
         }
         dialog.setContentView(view)
         dialog.show()

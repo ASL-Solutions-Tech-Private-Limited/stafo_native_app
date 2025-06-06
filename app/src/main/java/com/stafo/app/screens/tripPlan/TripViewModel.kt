@@ -14,6 +14,7 @@ import com.stafo.app.screens.tripPlan.dataClass.AddVehicleResponse
 import com.stafo.app.screens.tripPlan.dataClass.CheckAvailabilityStatusResponse
 import com.stafo.app.screens.tripPlan.dataClass.CreateTripResponse
 import com.stafo.app.screens.tripPlan.dataClass.DriverListResponse
+import com.stafo.app.screens.tripPlan.dataClass.ExpensesListResponse
 import com.stafo.app.screens.tripPlan.dataClass.TripActionResponse
 import com.stafo.app.screens.tripPlan.dataClass.TripDashboardResponse
 import com.stafo.app.screens.tripPlan.dataClass.TripDetailsResponse
@@ -62,6 +63,18 @@ class TripViewModel : BaseViewModel() {
 
     private var mTripAction: MutableLiveData<TripActionResponse> = MutableLiveData()
     val mTripActionResponse: LiveData<TripActionResponse> get() = mTripAction
+
+    private var mTripAddExpenses: MutableLiveData<ExpensesListResponse> = MutableLiveData()
+    val mTripAddExpensesResponse: LiveData<ExpensesListResponse> get() = mTripAddExpenses
+
+    private var mTripUpdateExpenses: MutableLiveData<ExpensesListResponse> = MutableLiveData()
+    val mTripUpdateExpensesResponse: LiveData<ExpensesListResponse> get() = mTripUpdateExpenses
+
+    private var mTripDeleteExpenses: MutableLiveData<ExpensesListResponse> = MutableLiveData()
+    val mTripDeleteExpensesResponse: LiveData<ExpensesListResponse> get() = mTripDeleteExpenses
+
+    private var mTripExpensesList: MutableLiveData<ExpensesListResponse> = MutableLiveData()
+    val mTripExpensesListResponse: LiveData<ExpensesListResponse> get() = mTripExpensesList
 
     fun getVehicleList(mContext: Context) {
         if (!isNetworkAvailable(mContext)) {
@@ -720,7 +733,7 @@ class TripViewModel : BaseViewModel() {
                     getLoaderLiveData().value = "stop"
                     response?.let {
                         if (it.isSuccessful) {
-                            mTripAction.postValue(it.body())
+                            mTripExpensesList.postValue(it.body())
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
@@ -761,7 +774,7 @@ class TripViewModel : BaseViewModel() {
                     getLoaderLiveData().value = "stop"
                     response?.let {
                         if (it.isSuccessful) {
-                            mTripAction.postValue(it.body())
+                            mTripAddExpenses.postValue(it.body())
                         } else {
                             it.errorBody()?.charStream()?.let { errorStream ->
                                 val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
