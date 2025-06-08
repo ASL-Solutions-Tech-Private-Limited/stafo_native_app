@@ -14,6 +14,9 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.stafo.app.databinding.BottomSheetTripActionBinding
+import com.stafo.app.utils.getEmployeeComId
+import com.stafo.app.utils.getEmployeeDetails
+import com.stafo.app.utils.getIsCOMPANYLogin
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -60,6 +63,8 @@ class TripActionBottomSheet(
             }
 
             btnNext.setOnClickListener {
+                var comID = if (getIsCOMPANYLogin(context)) getEmployeeComId()
+                    ?: "" else getEmployeeDetails()?.company_id.toString() ?: ""
                 if (!tieOdometer.text.isNullOrEmpty()) {
                     if (!imagePath.isNullOrEmpty()) {
                         val file = File(imagePath!!)
@@ -67,14 +72,14 @@ class TripActionBottomSheet(
                         val body = MultipartBody.Part.createFormData(
                             "image", file.name, requestFile
                         )
-
                         val odometer = binding.tieOdometer.text.toString()
                         val map = hashMapOf(
                             "odometer" to odometer.toRequestBody(),
                             "type" to tripType.toRequestBody(),
                             "lat" to latitude.toString().toRequestBody(),
                             "long" to longitude.toString().toRequestBody(),
-                            "trip_id" to tripID.toRequestBody()
+                            "trip_id" to tripID.toRequestBody(),
+                            "company_id" to comID.toRequestBody()
                         )
 
                         viewModel.sendTripAction(context, map, body)

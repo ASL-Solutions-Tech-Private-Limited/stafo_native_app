@@ -18,7 +18,9 @@ import com.ajithvgiri.searchdialog.SearchableDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.stafo.app.databinding.BottomSheetTripExpensesBinding
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
@@ -67,7 +69,22 @@ class TripExpensesBottomSheet(
 
             btnNext.setOnClickListener {
                 if (validate()) {
-                    viewModel.addExpenseForTrip(context, getAddExpensesRequest())
+                    val file = File(imagePath!!)
+                    val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+                    val body = MultipartBody.Part.createFormData(
+                        "bill_receipt", file.name, requestFile
+                    )
+                    val map = hashMapOf(
+                        "note" to binding.tieTripExpenseComment.text.toString().toRequestBody(),
+                        "amount" to binding.tieTripExpensesAmount.text.toString()
+                            .toRequestBody(),
+                        "expense_type" to binding.tieTripExpenseType.text.toString()
+                            .toRequestBody(),
+                        "trip_id" to tripID.toRequestBody(),
+
+                        )
+                    viewModel.addExpenseForTrip(context, map, body)
+                    // viewModel.addExpenseForTrip(context, getAddExpensesRequest())
                 }
             }
 
@@ -78,13 +95,13 @@ class TripExpensesBottomSheet(
             }
         }
 
-        viewModel.mTripActionResponse.observe(context as TripExpensesActivity) {
-           /* if (it.status == true) {
+        viewModel.mTripAddExpensesResponse.observe(context as TripExpensesActivity) {
+            if (it.success == true) {
                 onAssignSuccess()
                 dialog.dismiss()
             } else {
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-            }*/
+            }
         }
         dialog.setContentView(view)
         dialog.show()
@@ -130,13 +147,36 @@ class TripExpensesBottomSheet(
             } else if (tieTripExpensesAmount.text.isNullOrBlank()) {
                 tilTripExpensesAmount.error = "Amount is required"
                 return false
+            } else if (tieTripExpensesAmountBill.text.isNullOrBlank()) {
+                tilTripExpensesAmountBill.error = "Bill/Receipt is required"
+                return false
             }
             return true
         }
     }
 
-    private fun getAddExpensesRequest(): HashMap<String, Any> {
-        val expensesList = listOf(
+    private fun getAddExpensesRequest(): HashMap<String, Any>? {
+
+        if (!imagePath.isNullOrEmpty()) {
+            val file = File(imagePath!!)
+            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+            val body = MultipartBody.Part.createFormData(
+                "bill_receipt", file.name, requestFile
+            )
+            val map = hashMapOf(
+
+                "note" to binding.tieTripExpenseComment.text.toString().toRequestBody(),
+                "amount" to binding.tieTripExpensesAmount.text.toString().toRequestBody(),
+                "expense_type" to binding.tieTripExpenseType.text.toString().toRequestBody(),
+                "trip_id" to tripID.toRequestBody(),
+
+                )
+
+            viewModel.sendTripAction(context, map, body)
+        } else {
+            binding.tilTripExpensesAmountBill.error = "Please upload Bill/Receipt"
+        }
+        /*val expensesList = listOf(
             mapOf(
                 "trip_id" to tripID,
                 "expense_type" to "${binding.tieTripExpenseType.text}",
@@ -146,8 +186,9 @@ class TripExpensesBottomSheet(
         )
         val requestMap = hashMapOf<String, Any>(
             "expenses" to expensesList
-        )
-        return requestMap
+        )*/
+        // return requestMap
+        return null
     }
 
     private fun getLocation() {

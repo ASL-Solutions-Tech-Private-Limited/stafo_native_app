@@ -18,7 +18,7 @@ class TripListAdapter(
     private var tripData: List<Trips>,
     private val onItemClickListener: (Trips, String) -> Unit
 ) : RecyclerView.Adapter<TripListAdapter.FollowUpViewHolder>() {
-    private val gradientBackgrounds = generateGradientDrawables(4)
+    private val gradientBackgrounds = generateGradientDrawables(tripData.size ?: 10)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FollowUpViewHolder {
         val binding =

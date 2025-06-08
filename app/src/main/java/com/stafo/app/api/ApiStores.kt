@@ -161,6 +161,7 @@ import com.stafo.app.screens.tms.dataClass.TaskListResponse
 import com.stafo.app.screens.tms.dataClass.TaskStatusRequest
 import com.stafo.app.screens.tms.dataClass.UpdateTaskResponse
 import com.stafo.app.screens.tms.dataClass.UpdateTaskStatusResponse
+import com.stafo.app.screens.tripPlan.dataClass.AddExpensesResponse
 import com.stafo.app.screens.tripPlan.dataClass.AddVehicleResponse
 import com.stafo.app.screens.tripPlan.dataClass.CheckAvailabilityStatusResponse
 import com.stafo.app.screens.tripPlan.dataClass.CreateTripResponse
@@ -971,14 +972,14 @@ interface ApiStores {
     ): Response<ExpensesListResponse>
 
 
-    // @Multipart
+    @Multipart
     @POST("api/trips-expense/create")
     suspend fun callAddExpense(
-        // @PartMap map: HashMap<String, @JvmSuppressWildcards RequestBody>,
-        // @Part filePart: MultipartBody.Part?,
-        @Body request: HashMap<String, Any>,
+        @PartMap map: HashMap<String, @JvmSuppressWildcards RequestBody>,
+        @Part filePart: MultipartBody.Part?,
+        // @Body request: HashMap<String, Any>,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
-    ): Response<ExpensesListResponse>
+    ): Response<AddExpensesResponse>
 
 
     @GET("api/task/list")

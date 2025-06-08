@@ -10,6 +10,7 @@ import com.stafo.app.ASLEmpMng
 import com.stafo.app.R
 import com.stafo.app.base.BaseViewModel
 import com.stafo.app.base.model.ErrorResponse
+import com.stafo.app.screens.tripPlan.dataClass.AddExpensesResponse
 import com.stafo.app.screens.tripPlan.dataClass.AddVehicleResponse
 import com.stafo.app.screens.tripPlan.dataClass.CheckAvailabilityStatusResponse
 import com.stafo.app.screens.tripPlan.dataClass.CreateTripResponse
@@ -66,8 +67,8 @@ class TripViewModel : BaseViewModel() {
     private var mTripAction: MutableLiveData<TripActionResponse> = MutableLiveData()
     val mTripActionResponse: LiveData<TripActionResponse> get() = mTripAction
 
-    private var mTripAddExpenses: MutableLiveData<ExpensesListResponse> = MutableLiveData()
-    val mTripAddExpensesResponse: LiveData<ExpensesListResponse> get() = mTripAddExpenses
+    private var mTripAddExpenses: MutableLiveData<AddExpensesResponse> = MutableLiveData()
+    val mTripAddExpensesResponse: LiveData<AddExpensesResponse> get() = mTripAddExpenses
 
     private var mTripUpdateExpenses: MutableLiveData<ExpensesListResponse> = MutableLiveData()
     val mTripUpdateExpensesResponse: LiveData<ExpensesListResponse> get() = mTripUpdateExpenses
@@ -809,14 +810,18 @@ class TripViewModel : BaseViewModel() {
 
     }
 
-    fun addExpenseForTrip(mContext: Context, request: HashMap<String, Any>) {
+    fun addExpenseForTrip(
+        mContext: Activity,
+        map: HashMap<String, RequestBody>,
+        body: MultipartBody.Part
+    ) {
         if (!isNetworkAvailable(mContext)) {
             return
         }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ASLEmpMng.instance.apiStores()?.callAddExpense(request)
+                val response = ASLEmpMng.instance.apiStores()?.callAddExpense(map, body)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {

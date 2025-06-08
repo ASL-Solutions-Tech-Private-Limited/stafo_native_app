@@ -23,7 +23,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.stafo.app.R
@@ -31,6 +33,7 @@ import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityTripDetailsBinding
 import com.stafo.app.databinding.ItemTripStepsBinding
 import com.stafo.app.screens.tripPlan.dataClass.TripDetailsResponse
+import com.stafo.app.screens.tripPlan.dataClass.TripGeoLocationListRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.checkExactAlarmPermission
@@ -40,7 +43,6 @@ import com.stafo.app.utils.setTripId
 import com.stafo.app.utils.setTripServiceAction
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
@@ -57,6 +59,7 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var imageUri: Uri
     private lateinit var photoFile: File
     private lateinit var tripActionBottomSheet: TripActionBottomSheet
+    private var haltList: List<HaltInfo> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,6 +128,7 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                     } else   stopLocationServiceIfRunning()
 
 
+                    updateMapWithTripStatus(result)
 
                     val tripDuration = formatMillisToReadableTime(result.totalTripDurationMillis)
                     val haltDuration = formatMillisToReadableTime(result.totalHaltDurationMillis)
@@ -143,7 +147,8 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                             binding.pauseTripBtn.visibility = View.GONE
                             binding.startTripBtn.visibility = View.GONE
                             binding.startTripBtn.text = "Trip Completed"
-                            binding.btnAddExpenses.visibility = View.GONE
+                            binding.btnAddExpenses.visibility = View.VISIBLE
+                            binding.btnAddExpenses.text = "Expenses"
                         }
 
                         else -> {
@@ -182,6 +187,7 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                                 this@TripDetailsActivity,
                                 TripExpensesActivity::class.java
                             ).putExtra("tripId", mTripID)
+                                .putExtra("isEnd", result.tripStatusCode)
                         )
                     }
                 }
@@ -198,22 +204,22 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(map: GoogleMap) {
         googleMap_ = map
 
-        val startLatLng = LatLng(
-            mTripDetails?.start_latitude?.toDouble() ?: 00.00,
-            mTripDetails?.start_longitude?.toDouble() ?: 00.00
-        )
-        val endLatLng = LatLng(
-            mTripDetails?.end_latitude?.toDouble() ?: 00.00,
-            mTripDetails?.end_longitude?.toDouble() ?: 00.00
-        )
+        /* val startLatLng = LatLng(
+             mTripDetails?.start_latitude?.toDouble() ?: 00.00,
+             mTripDetails?.start_longitude?.toDouble() ?: 00.00
+         )
+         val endLatLng = LatLng(
+             mTripDetails?.end_latitude?.toDouble() ?: 00.00,
+             mTripDetails?.end_longitude?.toDouble() ?: 00.00
+         )
 
-        map.addMarker(MarkerOptions().position(startLatLng).title("Start"))
-        map.addMarker(MarkerOptions().position(endLatLng).title("End"))
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(startLatLng, 5f))
+         map.addMarker(MarkerOptions().position(startLatLng).title("Start"))
+         map.addMarker(MarkerOptions().position(endLatLng).title("End"))
+         map.moveCamera(CameraUpdateFactory.newLatLngZoom(startLatLng, 5f))
 
-        val polylineOptions = PolylineOptions().add(startLatLng, endLatLng)
-            .color(ContextCompat.getColor(this, R.color.pending_colour)).width(8f)
-        map.addPolyline(polylineOptions)
+         val polylineOptions = PolylineOptions().add(startLatLng, endLatLng)
+             .color(ContextCompat.getColor(this, R.color.pending_colour)).width(8f)
+         map.addPolyline(polylineOptions)*/
     }
 
     data class StepData(val location: String, val timeRange: String)
@@ -353,6 +359,8 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         var hasStart = false
         var hasEnd = false
 
+        val halts = mutableListOf<HaltInfo>()
+
         for (log in tripLogs.sortedBy { it.timestamp }) {
             when (log.action_type) {
                 "start" -> {
@@ -387,6 +395,15 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                             StepData(
                                 location = haltLocation,
                                 timeRange = "Halt ${haltCount}:${timeRange}"
+                            )
+                        )
+
+                        halts.add(
+                            HaltInfo(
+                                lat = log.latitude.toDouble(),
+                                lng = log.longitude.toDouble(),
+                                haltNumber = haltCount,
+                                durationMillis = haltDuration
                             )
                         )
                     }
@@ -455,7 +472,8 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         val haltCount: Int,
         val totalHaltDurationMillis: Long,
         val totalTripDurationMillis: Long,
-        val totalRunningDurationMillis: Long
+        val totalRunningDurationMillis: Long,
+        val halts: List<HaltInfo> = emptyList()
     )
 
     fun parseTimestampFlexible(timestamp: String): Long {
@@ -552,5 +570,101 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         return false
     }
 
+
+    private fun updateMapWithTripStatus(result: TripProcessingResult) {
+        googleMap_.clear()
+
+        val startLatLng = LatLng(
+            mTripDetails?.start_latitude?.toDoubleOrNull() ?: 0.0,
+            mTripDetails?.start_longitude?.toDoubleOrNull() ?: 0.0
+        )
+
+        if (result.tripStatusCode == 0) {
+            // Trip not started, show only start marker
+            googleMap_.addMarker(MarkerOptions().position(startLatLng).title("Start Location"))
+            googleMap_.moveCamera(CameraUpdateFactory.newLatLngZoom(startLatLng, 15f))
+            return
+        }
+
+        if (result.tripStatusCode == 1 || result.tripStatusCode == 4) {
+            // Trip started or ended
+            mTripViewModel.getTripGeoLocation(this, TripGeoLocationListRequest(mTripID ?: ""))
+            haltList = result.halts
+
+            mTripViewModel.mTripGeoLocationListResponse.observe(this) { geoResponse ->
+                if (geoResponse.status && geoResponse.data.isNotEmpty()) {
+                    val latLngList = geoResponse.data.map {
+                        LatLng(it.latitude.toDouble(), it.longitude.toDouble())
+                    }
+
+                    val polylineOptions = PolylineOptions()
+                        .addAll(latLngList)
+                        .color(ContextCompat.getColor(this, R.color.pending_colour))
+                        .width(8f)
+
+                    googleMap_.addPolyline(polylineOptions)
+                    //  googleMap_.addMarker(MarkerOptions().position(latLngList.first()).title("Start"))
+                    //  googleMap_.addMarker(MarkerOptions().position(latLngList.last()).title("End"))
+                    //  googleMap_.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngList.first(), 15f))
+                    googleMap_.addMarker(
+                        MarkerOptions()
+                            .position(
+                                LatLng(
+                                    mTripDetails?.start_latitude?.toDouble() ?: 0.0,
+                                    mTripDetails?.start_longitude?.toDouble() ?: 0.0
+                                )
+                            )
+                            .title("Start")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                    )
+
+                    googleMap_.addMarker(
+                        MarkerOptions()
+                            .position(
+                                LatLng(
+                                    mTripDetails?.end_latitude?.toDouble() ?: 0.0,
+                                    mTripDetails?.end_longitude?.toDouble() ?: 0.0
+                                )
+                            )
+                            .title("End")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                    )
+
+                    googleMap_.moveCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                            LatLng(
+                                mTripDetails?.start_latitude?.toDouble() ?: 0.0,
+                                mTripDetails?.start_longitude?.toDouble() ?: 0.0
+                            ), 13f
+                        )
+                    )
+
+                    // Halt markers
+                    haltList.forEach { halt ->
+                        val durationReadable = formatMillisToReadableTime(halt.durationMillis)
+                        googleMap_.addMarker(
+                            MarkerOptions()
+                                .position(LatLng(halt.lat, halt.lng))
+                                .title("Halt ${halt.haltNumber}")
+                                .snippet("Duration: $durationReadable")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                        )
+                    }
+
+                    googleMap_.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
+                        override fun getInfoContents(marker: Marker): View? = null
+                        override fun getInfoWindow(marker: Marker): View? = null
+                    })
+                }
+            }
+        }
+    }
+
+    data class HaltInfo(
+        val lat: Double,
+        val lng: Double,
+        val haltNumber: Int,
+        val durationMillis: Long
+    )
 
 }
