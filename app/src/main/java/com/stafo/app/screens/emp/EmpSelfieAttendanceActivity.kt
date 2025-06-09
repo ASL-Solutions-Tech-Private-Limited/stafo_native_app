@@ -362,43 +362,41 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         isFetchingLocation = true
 
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                isFetchingLocation = false
-                callback(location.latitude, location.longitude)
-            } else {
-                val locationRequest = LocationRequest.create().apply {
-                    priority = Priority.PRIORITY_HIGH_ACCURACY
-                    interval = 1000
-                    numUpdates = 1
-                }
-
-                fusedLocationClient.requestLocationUpdates(
-                    locationRequest, object : LocationCallback() {
-                        override fun onLocationResult(locationResult: LocationResult) {
-                            fusedLocationClient.removeLocationUpdates(this)
-                            isFetchingLocation = false
-
-                            val freshLocation = locationResult.lastLocation
-                            if (freshLocation != null) {
-                                callback(freshLocation.latitude, freshLocation.longitude)
-                            } else {
-                                CustomToast(
-                                    this@EmpSelfieAttendanceActivity,
-                                    "Unable to fetch accurate location."
-                                )
-                                isSubmitting = false
-                            }
-                        }
-                    }, Looper.getMainLooper()
-                )
-            }
-        }.addOnFailureListener {
-            isFetchingLocation = false
-            isSubmitting = false
-            CustomToast(this@EmpSelfieAttendanceActivity, "Failed to get location.")
+        val locationRequest = LocationRequest.create().apply {
+            priority = Priority.PRIORITY_HIGH_ACCURACY
+            interval = 2000           // 2 seconds
+            fastestInterval = 1000    // 1 second
+            numUpdates = 1
         }
+
+        val locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                fusedLocationClient.removeLocationUpdates(this)
+                isFetchingLocation = false
+
+                val location = locationResult.lastLocation
+                if (location != null) {
+                    callback(location.latitude, location.longitude)
+                } else {
+                    CustomToast(this@EmpSelfieAttendanceActivity, "Unable to get location.")
+                    isSubmitting = false
+                }
+            }
+        }
+
+        // Set a timeout in case GPS takes too long
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (isFetchingLocation) {
+                fusedLocationClient.removeLocationUpdates(locationCallback)
+                isFetchingLocation = false
+                isSubmitting = false
+                CustomToast(this@EmpSelfieAttendanceActivity, "Location request timed out.")
+            }
+        }, 10_000) // 10 sec timeout
+
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
+
 
 
     fun calculateDistance(

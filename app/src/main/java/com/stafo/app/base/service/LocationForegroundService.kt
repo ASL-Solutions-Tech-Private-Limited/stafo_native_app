@@ -243,9 +243,27 @@ class LocationForegroundService : Service() {
         )
     }*/
 
-
-
     private fun startAsForegroundService() {
+        if (!hasNotificationShown) {
+            val notification = NotificationsHelper.buildNotification(this)
+            ServiceCompat.startForeground(
+                this,
+                NOTIFICATION_ID,
+                notification,
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+                } else {
+                    0
+                }
+            )
+            hasNotificationShown = true
+        } else {
+            Log.d(TAG, "Notification already shown — skipping foreground start.")
+        }
+    }
+
+
+/*    private fun startAsForegroundService() {
         val notification = NotificationsHelper.buildNotification(this)
         ServiceCompat.startForeground(
             this,
@@ -257,7 +275,7 @@ class LocationForegroundService : Service() {
                 0
             }
         )
-    }
+    }*/
 
     private fun hasLocationPermission(): Boolean =
         ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
@@ -337,45 +355,6 @@ class LocationForegroundService : Service() {
     }
 
 
-
-
-
-    /*   private fun startRecurringTimer() {
-           if (handler != null) return
-
-           handler = Handler(Looper.getMainLooper())
-           runnable = object : Runnable {
-               override fun run() {
-                   val gpsOn = isGpsEnabled(applicationContext)
-                   val networkOn = isNetworkAvailable()
-
-                   CoroutineScope(Dispatchers.IO).launch {
-                       if (networkOn) {
-                           val synced = syncLocationsToServer()
-                           if (synced && lat != null && longi != null) {
-                               postGeoLocation(lat.toString(), longi.toString())
-                               Log.e("tripe","get value both : ${getTripServiceAction(applicationContext)}")
-                               if (getTripServiceAction(applicationContext)) {
-                                   tripLocationCounter++
-                                   if (tripLocationCounter >= 15) { // 15 * 20 seconds = 5 minutes
-                                       postTripGeoLocation(lat.toString(), longi.toString())
-                                       tripLocationCounter = 0
-                                   }
-                               } else {
-                                   postGeoLocation(lat.toString(), longi.toString())
-                               }
-
-                           }
-                       } else {
-                           saveLocationOffline(gpsOn)
-                       }
-                   }
-
-                   handler?.postDelayed(this, 20_000)
-               }
-           }
-           handler?.post(runnable!!)
-       }*/
 
     private fun stopRecurringTimer() {
         handler?.removeCallbacksAndMessages(null)
@@ -506,6 +485,7 @@ class LocationForegroundService : Service() {
         private const val TAG = "LocationForegroundService"
         private const val NOTIFICATION_ID = 1
         private val LOCATION_UPDATES_INTERVAL_MS = 1.seconds.inWholeMilliseconds
+        private var hasNotificationShown = false
     }
 }
 

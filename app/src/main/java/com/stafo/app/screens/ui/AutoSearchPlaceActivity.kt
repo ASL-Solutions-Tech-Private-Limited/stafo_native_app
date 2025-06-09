@@ -38,11 +38,10 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityAutoSearchPlaceBinding
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
-    private val tripViewModel: TripViewModel by viewModels()
+
 
     private lateinit var mEMPID: String
     private var mSelectedDate = ""
-    private var mTripID = "22"
     private val calendar = Calendar.getInstance()
 
     private lateinit var googleMap: GoogleMap
@@ -71,31 +70,14 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun fetchLocationData() {
 
-        Log.e("trip", "TripID: $mTripID, Date: $mSelectedDate")
-
-        if (mTripID.isNullOrBlank()) {
-            Log.e("trip", "Fetching employee history")
-            // ...
-
-            val request = GeoLocationHistResquest(
-                employee_id = mEMPID, date = mSelectedDate
-            )
-            settingsViewModel.getGeoLocationHist(this, request)
-        } else {
-            Log.e("trip", "Fetching trip location")
-            // ...
-
-            val request = TripGeoLocationListRequest(
-                trip_id = mTripID
-
-            )
-            tripViewModel.getTripGeoLocation(this, request)
-        }
-
-
+        val request = GeoLocationHistResquest(
+            employee_id = mEMPID, date = mSelectedDate
+        )
+        settingsViewModel.getGeoLocationHist(this, request)
 
 
     }
+
     private fun initUI() {
         binding.apply {
             txtDate.text = SimpleDateFormat("dd MMM yy", Locale.getDefault()).format(calendar.time)
@@ -121,9 +103,8 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-
     private fun observeViewModel() {
-        tripViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
@@ -146,25 +127,6 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
                 //CustomToast(this, it.message)
             }
         }
-        tripViewModel.mTripGeoLocationListResponse.observe(this) {
-            if (it.status && it.data.isNotEmpty()) {
-                binding.llMap.visibility = View.VISIBLE
-                binding.layoutNotView.visibility = View.GONE
-                val geoPoints = it.data.map { point ->
-                    TimedGeoPoint(
-                        latitude = point.latitude.toDouble(),
-                        longitude = point.longitude.toDouble(),
-                        timestamp = parseTimestamp(point.created_at)
-                    )
-                }
-                drawRouteWithHalts(geoPoints)
-            } else {
-                binding.llMap.visibility = View.GONE
-                binding.layoutNotView.visibility = View.VISIBLE
-                //CustomToast(this, it.message)
-            }
-        }
-
 
 
     }

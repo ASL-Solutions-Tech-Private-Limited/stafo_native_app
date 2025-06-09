@@ -114,18 +114,26 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                     var mtripAction = if (result.tripStatusCode == 1) "end" else "start"
                     var mhaltAction = if (result.lastStatus == "pause") "resume" else "pause"
 
-                    Log.e("tripe","get value both : $mtripAction $mhaltAction")
+                    Log.e("tripe", "get status  : ${it.trip.status}")
 
+                    Log.e("tripe", "get value both : ${result.tripStatusCode}")
+                    Log.e("tripe", "get value both : $mtripAction $mhaltAction")
 
-                    if (mtripAction == "end") {
+                    if (it.trip.status == "pending") {
                         stopLocationServiceIfRunning()
-
-                    } else startLocationServiceIfNotRunning()
-
-
-                    if (mhaltAction == "resume") {
+                    } else if (it.trip.status == "ongoing") {
                         startLocationServiceIfNotRunning()
-                    } else   stopLocationServiceIfRunning()
+                    } else if (it.trip.status == "pause") {
+                        stopLocationServiceIfRunning()
+                    } else if (it.trip.status == "resume")
+                        startLocationServiceIfNotRunning()
+                    else {
+                        stopLocationServiceIfRunning()
+                    }
+
+
+
+
 
 
                     updateMapWithTripStatus(result)
@@ -161,8 +169,11 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     if (result.lastStatus == "pause") {
                         binding.pauseTripBtn.text = "Resume"
+                       // stopLocationServiceIfRunning()
+
                     } else {
                         binding.pauseTripBtn.text = "Pause"
+                        //startLocationServiceIfNotRunning()
                     }
 
                     binding.startTripBtn.setOnClickListener {
@@ -177,10 +188,12 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.pauseTripBtn.setOnClickListener {
                         if (mhaltAction == "resume") {
                             startLocationServiceIfNotRunning()
-                        } else   stopLocationServiceIfRunning()
+                        } else stopLocationServiceIfRunning()
 
                         showTripActionBottomSheet(mTripID ?: "", mTripViewModel, mhaltAction)
                     }
+
+
                     binding.btnAddExpenses.setOnClickListener {
                         startActivity(
                             Intent(
@@ -536,7 +549,7 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                     if (batteryOptGranted) {
 
                         if (!isServiceRunning(LocationForegroundService::class.java)) {
-                            setTripServiceAction(this,true)
+                            setTripServiceAction(this, true)
                             val intent = Intent(this, LocationForegroundService::class.java)
                             intent.putExtra("FROM_TRIP_DETAILS", fromTripDetails)
                             ContextCompat.startForegroundService(this, intent)
@@ -548,11 +561,11 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
 
-
-
     }
 
     private fun stopLocationServiceIfRunning() {
+        setTripServiceAction(this, false)
+
         if (isServiceRunning(LocationForegroundService::class.java)) {
             val stopIntent = Intent(this, LocationForegroundService::class.java)
             stopIntent.action = "STOP_FOREGROUND_SERVICE"
