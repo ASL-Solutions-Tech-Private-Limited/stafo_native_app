@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.R
 import com.stafo.app.databinding.ItemTripHistoryBinding
 import com.stafo.app.screens.tripPlan.dataClass.dashboard.Trips
+import com.stafo.app.utils.formatAmount
 import com.stafo.app.utils.generateGradientDrawables
 import com.stafo.app.utils.getIsCOMPANYLogin
 import com.stafo.app.utils.getSmartShortAddress
+import java.util.Locale
 
 
 class TripListAdapter(
@@ -34,24 +36,34 @@ class TripListAdapter(
         binding.tvTripFromTo.text =
             getSmartShortAddress(item.fromAddress) + " ➝ " + getSmartShortAddress(item.toAddress)
         binding.tvDistance.text = "Distance: " + item.distance + " km"
-        binding.tvDuration.text = "Duration: 00:00"
-        binding.tvOdometer.text = "Odometer:00000" + " ➝ " + "00000"
-        binding.tvExpenses.text = "Expenses: ₹000"
+        binding.tvDuration.text = "Duration: ${item.duration ?: "00:00"}"
+        binding.tvOdometer.text =
+            "Odometer:${item.odometer_start ?: "000000"}" + " ➝ " + "${item.odometer_latest ?: "000000"}"
+        binding.tvExpenses.text =
+            "Expenses: ${formatAmount(item.total_expenses?.toDouble() ?: 0.0)}"
         binding.cardRide.background = gradientBackgrounds[position]
         binding.tvStatus.text = item.status ?: "Pending"
-        if (item.status == "Completed") {
-            binding.tvStatus.backgroundTintList =
-                holder.itemView.resources.getColorStateList(R.color.green)
-        } else if (item.status == "Pending") {
-            binding.tvStatus.backgroundTintList =
-                holder.itemView.resources.getColorStateList(R.color.pending_colour)
+        when (item.status?.toLowerCase(Locale.ROOT)) {
+            "completed" -> {
+                binding.tvStatus.backgroundTintList =
+                    holder.itemView.resources.getColorStateList(R.color.green)
+            }
 
-        } else if (item.status == "Cancelled") {
-            binding.tvStatus.backgroundTintList =
-                holder.itemView.resources.getColorStateList(R.color.pastel_red)
-        } else if (item.status == "Ongoing") {
-            binding.tvStatus.backgroundTintList =
-                holder.itemView.resources.getColorStateList(R.color.xp_blue)
+            "pending" -> {
+                binding.tvStatus.backgroundTintList =
+                    holder.itemView.resources.getColorStateList(R.color.pending_colour)
+
+            }
+
+            "cancelled" -> {
+                binding.tvStatus.backgroundTintList =
+                    holder.itemView.resources.getColorStateList(R.color.pastel_red)
+            }
+
+            "ongoing" -> {
+                binding.tvStatus.backgroundTintList =
+                    holder.itemView.resources.getColorStateList(R.color.xp_blue)
+            }
         }
 
 

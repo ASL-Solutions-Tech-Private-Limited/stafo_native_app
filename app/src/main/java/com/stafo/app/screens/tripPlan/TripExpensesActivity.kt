@@ -95,7 +95,9 @@ class TripExpensesActivity : AppCompatActivity() {
         tripExpensesBottomSheet = TripExpensesBottomSheet(context = this,
             tripID = tripId,
             viewModel = tripViewModel,
-            onAssignSuccess = { },
+            onAssignSuccess = {
+                mTripViewModel.fetchTripExpenses(this, tripId)
+            },
             onCameraRequest = {
                 openPicker(1101)
             })

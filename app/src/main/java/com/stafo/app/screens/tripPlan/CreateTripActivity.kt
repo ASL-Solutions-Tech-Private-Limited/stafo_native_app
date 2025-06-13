@@ -21,6 +21,8 @@ import com.stafo.app.databinding.ActivityCreateTripBinding
 import com.stafo.app.screens.tripPlan.dataClass.dashboard.Trips
 import com.stafo.app.screens.ui.PlaceSearchActivity
 import com.stafo.app.utils.CustomLoader
+import com.stafo.app.utils.getEmployeeDetails
+import com.stafo.app.utils.getIsCOMPANYLogin
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -65,6 +67,8 @@ class CreateTripActivity : AppCompatActivity() {
             binding.btnCreateTrip.text = "Update Trip"
         }
         setupClickListeners()
+
+
     }
 
     private fun setupClickListeners() {
@@ -96,8 +100,15 @@ class CreateTripActivity : AppCompatActivity() {
             }
         }
 
-        mTripViewModel.getVehicleList(this)
-        mTripViewModel.getDriverList(this)
+        if (getIsCOMPANYLogin(this)) {
+            binding.tilDriver.visibility = TextInputEditText.VISIBLE
+            mTripViewModel.getVehicleList(this)
+            mTripViewModel.getDriverList(this)
+        } else {
+            mTripViewModel.getVehicleList(this)
+            binding.tilDriver.visibility = TextInputEditText.GONE
+            mSelectedDriver = "${getEmployeeDetails()?.id ?: ""}"
+        }
         observeViewModel()
     }
 
@@ -253,7 +264,8 @@ class CreateTripActivity : AppCompatActivity() {
     }
 
     private fun validateFields(): Boolean {
-        val requiredFields = listOf(
+        val requiredFields =
+            if (getIsCOMPANYLogin(this)) listOf(
             binding.etTripName,
             binding.etTripDescription,
             binding.etTripClientName,
@@ -263,7 +275,19 @@ class CreateTripActivity : AppCompatActivity() {
             binding.etJourneyStart,
             binding.etEstimatedEnd,
             binding.etDriver,
-            binding.etVehicle
+                binding.etVehicle
+            )
+            else listOf(
+                binding.etTripName,
+                binding.etTripDescription,
+                binding.etTripClientName,
+                binding.etTripClientNumber,
+                binding.etStartLocation,
+                binding.etDestinationLocation,
+                binding.etJourneyStart,
+                binding.etEstimatedEnd,
+              //  binding.etDriver,
+                binding.etVehicle
         )
 
         var isValid = true

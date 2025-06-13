@@ -50,8 +50,13 @@ class DriverListActivity : AppCompatActivity() {
         }
         mTripViewModel.mDriverListResponse.observe(this) {
             if (!it.driversList.isNullOrEmpty()) {
+                binding.rvDriverList.visibility = android.view.View.VISIBLE
+                binding.llNoData.visibility = android.view.View.GONE
                 binding.rvDriverList.adapter =
                     DriverListAdapter(this, it.driversList ?: emptyList(), {})
+            } else {
+                binding.rvDriverList.visibility = android.view.View.GONE
+                binding.llNoData.visibility = android.view.View.VISIBLE
             }
         }
     }

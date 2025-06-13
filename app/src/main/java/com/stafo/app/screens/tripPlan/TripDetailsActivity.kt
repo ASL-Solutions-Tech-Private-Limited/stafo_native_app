@@ -25,9 +25,11 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.gson.Gson
 import com.stafo.app.R
 import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityTripDetailsBinding
@@ -110,6 +112,7 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     // val (steps, lastStatus, totalHaltDurationMillis, haltCount) = processTripLogs(it.trip.trip_logs)
                     val result = processTripLogs(it.trip.trip_logs)
+                    Log.e("tripe", "get value both : ${result.lastStatus}")
                     addTripSteps(result.steps)
                     var mtripAction = if (result.tripStatusCode == 1) "end" else "start"
                     var mhaltAction = if (result.lastStatus == "pause") "resume" else "pause"
@@ -119,20 +122,21 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                     Log.e("tripe", "get value both : ${result.tripStatusCode}")
                     Log.e("tripe", "get value both : $mtripAction $mhaltAction")
 
-                    if (it.trip.status == "pending") {
-                        stopLocationServiceIfRunning()
-                    } else if (it.trip.status == "ongoing") {
-                        startLocationServiceIfNotRunning()
-                    } else if (it.trip.status == "pause") {
-                        stopLocationServiceIfRunning()
-                    } else if (it.trip.status == "resume")
-                        startLocationServiceIfNotRunning()
-                    else {
-                        stopLocationServiceIfRunning()
+                    when (it.trip.status) {
+                        "pending" -> {
+                            stopLocationServiceIfRunning()
+                        }
+                        "ongoing" -> {
+                            startLocationServiceIfNotRunning()
+                        }
+                        "pause" -> {
+                            stopLocationServiceIfRunning()
+                        }
+                        "resume" -> startLocationServiceIfNotRunning()
+                        else -> {
+                            stopLocationServiceIfRunning()
+                        }
                     }
-
-
-
 
 
 
@@ -369,45 +373,43 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         var endMillis: Long? = null
         var totalHaltDurationMillis = 0L
         var haltCount = 0
+
         var hasStart = false
         var hasEnd = false
 
         val halts = mutableListOf<HaltInfo>()
 
-        for (log in tripLogs.sortedBy { it.timestamp }) {
+        val sortedLogs = tripLogs.sortedBy { it.timestamp }
+
+        for (log in sortedLogs) {
             when (log.action_type) {
                 "start" -> {
                     hasStart = true
-                    startLocation = getAddressFromLatLng(
-                        this, log.latitude.toDouble(), log.longitude.toDouble()
-                    ) ?: "${log.latitude},${log.longitude}"
+                    startLocation = getAddressFromLatLng(this, log.latitude.toDouble(), log.longitude.toDouble()) ?: "${log.latitude},${log.longitude}"
                     startTime = log.timestamp
                     startMillis = parseTimestampFlexible(log.timestamp)
                     lastStatus = "start"
                 }
-
                 "pause" -> {
+                    // Begin a halt
                     haltStartTime = log.timestamp
-                    haltLocation = getAddressFromLatLng(
-                        this, log.latitude.toDouble(), log.longitude.toDouble()
-                    ) ?: "${log.latitude},${log.longitude}"
+                    haltLocation = getAddressFromLatLng(this, log.latitude.toDouble(), log.longitude.toDouble()) ?: "${log.latitude},${log.longitude}"
                     lastStatus = "pause"
                 }
-
                 "resume" -> {
+                    // End a halt
                     if (haltStartTime != null && haltLocation != null) {
                         val haltStart = parseTimestampFlexible(haltStartTime)
                         val haltEnd = parseTimestampFlexible(log.timestamp)
                         val haltDuration = haltEnd - haltStart
                         totalHaltDurationMillis += haltDuration
                         haltCount++
-
-                        val timeRange =
-                            "${formatTime(haltStartTime)} - ${formatTime(log.timestamp)}"
+                        lastStatus = "resume"
+                        val timeRange = "${formatTime(haltStartTime)} - ${formatTime(log.timestamp)}"
                         steps.add(
                             StepData(
                                 location = haltLocation,
-                                timeRange = "Halt ${haltCount}:${timeRange}"
+                                timeRange = "Halt ${haltCount}: ${timeRange}"
                             )
                         )
 
@@ -419,38 +421,68 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                                 durationMillis = haltDuration
                             )
                         )
-                    }
-                    haltStartTime = null
-                    haltLocation = null
-                    lastStatus = "resume"
-                }
 
+                        // Reset halt info
+                        haltStartTime = null
+                        haltLocation = null
+                    }
+                }
                 "end" -> {
+                    // If halt is ongoing, finalize it
+                    if (haltStartTime != null && haltLocation != null) {
+                        val haltStart = parseTimestampFlexible(haltStartTime)
+                        val haltEnd = parseTimestampFlexible(log.timestamp)
+                        val haltDuration = haltEnd - haltStart
+                        totalHaltDurationMillis += haltDuration
+                        haltCount++
+                        lastStatus = "end"
+                        val timeRange = "${formatTime(haltStartTime)} - ${formatTime(log.timestamp)}"
+                        steps.add(
+                            StepData(
+                                location = haltLocation,
+                                timeRange = "Halt ${haltCount}: ${timeRange}"
+                            )
+                        )
+
+                        halts.add(
+                            HaltInfo(
+                                lat = log.latitude.toDouble(),
+                                lng = log.longitude.toDouble(),
+                                haltNumber = haltCount,
+                                durationMillis = haltDuration
+                            )
+                        )
+                        // Reset halt info
+                        haltStartTime = null
+                        haltLocation = null
+                    }
+                    // Set trip end info
                     hasEnd = true
-                    endLocation = getAddressFromLatLng(
-                        this, log.latitude.toDouble(), log.longitude.toDouble()
-                    ) ?: "${log.latitude},${log.longitude}"
+                    endLocation = getAddressFromLatLng(this, log.latitude.toDouble(), log.longitude.toDouble()) ?: "${log.latitude},${log.longitude}"
                     endTime = log.timestamp
                     endMillis = parseTimestampFlexible(log.timestamp)
-                    lastStatus = "end"
                 }
             }
         }
 
+        // Add starting point to steps
         if (startLocation.isNotEmpty() && startTime.isNotEmpty()) {
+            steps.add(0, StepData(
+                location = startLocation,
+                timeRange = "Started at ${formatTime(startTime)}"
+            ))
+        }
+        // Add end point
+        if (endLocation.isNotEmpty() && endTime.isNotEmpty()) {
             steps.add(
-                0, StepData(
-                    location = startLocation, timeRange = "Started at ${formatTime(startTime)}"
+                StepData(
+                    location = endLocation,
+                    timeRange = "Ended at ${formatTime(endTime)}"
                 )
             )
         }
 
-        if (endLocation.isNotEmpty() && endTime.isNotEmpty()) {
-            steps.add(
-                StepData(location = endLocation, timeRange = "Ended at ${formatTime(endTime)}")
-            )
-        }
-
+        // Determine trip status
         val tripStatusCode = when {
             hasStart && hasEnd -> 4
             hasStart -> 1
@@ -458,6 +490,7 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             else -> 0
         }
 
+        // Calculate total trip duration
         val totalTripDurationMillis = if (startMillis != null && endMillis != null) {
             endMillis - startMillis
         } else {
@@ -473,7 +506,8 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             haltCount = haltCount,
             totalHaltDurationMillis = totalHaltDurationMillis,
             totalTripDurationMillis = totalTripDurationMillis,
-            totalRunningDurationMillis = runningDurationMillis
+            totalRunningDurationMillis = runningDurationMillis,
+            halts = halts
         )
     }
 
@@ -503,12 +537,6 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
         throw IllegalArgumentException("Unparseable date: $timestamp")
-    }
-
-    fun parseTimestamp(timestamp: String): Long {
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        format.timeZone = TimeZone.getTimeZone("UTC") // Or use local if needed
-        return format.parse(timestamp)?.time ?: 0L
     }
 
 
@@ -600,15 +628,15 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         if (result.tripStatusCode == 1 || result.tripStatusCode == 4) {
-            // Trip started or ended
             mTripViewModel.getTripGeoLocation(this, TripGeoLocationListRequest(mTripID ?: ""))
             haltList = result.halts
-
             mTripViewModel.mTripGeoLocationListResponse.observe(this) { geoResponse ->
                 if (geoResponse.status && geoResponse.data.isNotEmpty()) {
                     val latLngList = geoResponse.data.map {
                         LatLng(it.latitude.toDouble(), it.longitude.toDouble())
                     }
+
+                    googleMap_.clear()
 
                     val polylineOptions = PolylineOptions()
                         .addAll(latLngList)
@@ -616,43 +644,25 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                         .width(8f)
 
                     googleMap_.addPolyline(polylineOptions)
-                    //  googleMap_.addMarker(MarkerOptions().position(latLngList.first()).title("Start"))
-                    //  googleMap_.addMarker(MarkerOptions().position(latLngList.last()).title("End"))
-                    //  googleMap_.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngList.first(), 15f))
+
+                    // Set start marker at first point
                     googleMap_.addMarker(
                         MarkerOptions()
-                            .position(
-                                LatLng(
-                                    mTripDetails?.start_latitude?.toDouble() ?: 0.0,
-                                    mTripDetails?.start_longitude?.toDouble() ?: 0.0
-                                )
-                            )
+                            .position(latLngList.first())
                             .title("Start")
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                     )
 
+                    // Set end marker at last point
                     googleMap_.addMarker(
                         MarkerOptions()
-                            .position(
-                                LatLng(
-                                    mTripDetails?.end_latitude?.toDouble() ?: 0.0,
-                                    mTripDetails?.end_longitude?.toDouble() ?: 0.0
-                                )
-                            )
+                            .position(latLngList.last())
                             .title("End")
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                     )
 
-                    googleMap_.moveCamera(
-                        CameraUpdateFactory.newLatLngZoom(
-                            LatLng(
-                                mTripDetails?.start_latitude?.toDouble() ?: 0.0,
-                                mTripDetails?.start_longitude?.toDouble() ?: 0.0
-                            ), 13f
-                        )
-                    )
-
-                    // Halt markers
+                    Log.e("TAG", "updateMapWithTripStatus: ${Gson().toJson(result.halts)}", )
+                    // Add halts from haltList if available
                     haltList.forEach { halt ->
                         val durationReadable = formatMillisToReadableTime(halt.durationMillis)
                         googleMap_.addMarker(
@@ -663,6 +673,16 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                         )
                     }
+
+                    // Optionally: If haltList is empty or incomplete, detect halts from geoResponse.data similarly as your second function
+
+                    // Adjust camera to show entire route with padding
+                    val boundsBuilder = LatLngBounds.builder()
+                    latLngList.forEach { boundsBuilder.include(it) }
+                    haltList.forEach { boundsBuilder.include(LatLng(it.lat, it.lng)) }
+                    val bounds = boundsBuilder.build()
+
+                    googleMap_.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
 
                     googleMap_.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
                         override fun getInfoContents(marker: Marker): View? = null

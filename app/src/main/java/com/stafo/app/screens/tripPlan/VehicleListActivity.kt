@@ -2,11 +2,16 @@ package com.stafo.app.screens.tripPlan
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ajithvgiri.searchdialog.OnSearchItemSelected
+import com.ajithvgiri.searchdialog.SearchListItem
+import com.ajithvgiri.searchdialog.SearchableDialog
 import com.google.gson.Gson
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityVehicleListBinding
@@ -21,6 +26,12 @@ class VehicleListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityVehicleListBinding
     private val mTripViewModel: TripViewModel by lazy { TripViewModel() }
     private val mCustomLoader: CustomLoader by lazy { CustomLoader(this) }
+    private val filterType = listOf(
+        SearchListItem(1, "All"), SearchListItem(2, "Active"), SearchListItem(3, "Inactive")
+
+    )
+    private var mFlag = "all"
+    private lateinit var mAdapter: VehicleListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -42,6 +53,31 @@ class VehicleListActivity : AppCompatActivity() {
         binding.btnAddEmp.setOnClickListener {
               startActivity(Intent(this, AddVehicleActivity::class.java))
         }
+
+        binding.btnFilter.setOnClickListener {
+            showSearchDialog(filterType, "Select Filter Type") {
+                mFlag = it.title.toLowerCase().replace(" ", "").trim()
+                mTripViewModel.getVehicleList(this)
+            }
+        }
+
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!s.isNullOrEmpty()) {
+                    if (::mAdapter.isInitialized) {
+                        mAdapter.filter.filter(s)
+                    }
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
         observeData()
     }
 
@@ -55,12 +91,19 @@ class VehicleListActivity : AppCompatActivity() {
         mTripViewModel.getLoaderLiveData().observe(this) {
             if (it == "load") mCustomLoader.show() else mCustomLoader.dismiss()
         }
-
-
         mTripViewModel.mVehicleListResponse.observe(this) {
             if (!it.vehiclesList.isNullOrEmpty()) {
-                binding.rvVehicleList.adapter =
-                    VehicleListAdapter(this, it.vehiclesList ?: emptyList(), { vehicle, type ->
+                val filterVehicleList =
+                    if (mFlag == "all") it.vehiclesList else it.vehiclesList?.filter { it.status == mFlag }
+                if (filterVehicleList.isNullOrEmpty()) {
+                    binding.llNoData.visibility = android.view.View.VISIBLE
+                    binding.rvVehicleList.visibility = android.view.View.GONE
+                } else {
+                    binding.rvVehicleList.visibility = android.view.View.VISIBLE
+                    binding.llNoData.visibility = android.view.View.GONE
+                }
+                mAdapter =
+                    VehicleListAdapter(this, filterVehicleList ?: emptyList(), { vehicle, type ->
                         when (type) {
                             "Edit" -> {
                                 startActivity(Intent(this, AddVehicleActivity::class.java).apply {
@@ -90,6 +133,10 @@ class VehicleListActivity : AppCompatActivity() {
                             }
                         }
                     })
+                binding.rvVehicleList.adapter = mAdapter
+            } else {
+                binding.rvVehicleList.visibility = android.view.View.GONE
+                binding.llNoData.visibility = android.view.View.VISIBLE
             }
         }
 
@@ -102,4 +149,21 @@ class VehicleListActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun showSearchDialog(
+        list: List<SearchListItem>,
+        title: String,
+        onSelected: (SearchListItem) -> Unit
+    ) {
+        val dialog = SearchableDialog(this, ArrayList(list), title)
+        dialog.setOnItemSelected(object : OnSearchItemSelected {
+            override fun onClick(position: Int, item: SearchListItem) {
+                onSelected(item)
+                dialog.dismiss()
+            }
+        })
+        dialog.show()
+    }
+
+
 }

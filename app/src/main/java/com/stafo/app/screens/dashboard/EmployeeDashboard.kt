@@ -60,6 +60,7 @@ import com.stafo.app.screens.settings.PolicyActivity
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.SubMenuActivity
 import com.stafo.app.screens.tms.TaskMSDashboard
+import com.stafo.app.screens.tripPlan.TripDashboardActivity
 import com.stafo.app.screens.ui.EmplyeeyerProfile
 import com.stafo.app.screens.ui.WishListActivity
 import com.stafo.app.utils.CustomToast
@@ -238,6 +239,14 @@ class EmployeeDashboard : AppCompatActivity() {
                                 Intent(
                                     this@EmployeeDashboard,
                                     TaskMSDashboard::class.java
+                                )
+                            )
+                        }
+                        "Trip" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard,
+                                    TripDashboardActivity::class.java
                                 )
                             )
                         }

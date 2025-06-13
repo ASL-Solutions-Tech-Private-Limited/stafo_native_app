@@ -3,6 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="12dp"
     android:backgroundTint="#FFFFFF"
     card_view:cardCornerRadius="16dp"
@@ -33,15 +34,31 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
             <TextView
                 android:id="@+id/tvVehicleNo"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gilroy_bold"
-                android:text="WB66AL4091"
+                tools:text="WB66AL4091"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14ssp"
                 android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gilroy_medium"
+                    tools:text="Active"
+                    android:id="@+id/tvStatus"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/_12ssp" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvTypeFuel"
@@ -49,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:fontFamily="@font/gilroy_medium"
-                android:text="Car • Petrol"
+                tools:text="Car • Petrol"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12ssp" />
 
@@ -59,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:fontFamily="@font/gilroy_medium"
-                android:text="Load: 100.00kg • Odometer: 40000km"
+                tools:text="Load: 100.00kg • Odometer: 40000km"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12ssp" />
 
@@ -69,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:fontFamily="@font/gilroy_medium"
-                android:text="Total Travelled: 40000km"
+                tools:text="Total Travelled: 40000km"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12ssp" />
 

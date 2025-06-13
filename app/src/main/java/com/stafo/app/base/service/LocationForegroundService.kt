@@ -336,7 +336,9 @@ class LocationForegroundService : Service() {
                             if (isTrip) {
                                 postTripGeoLocation(lat.toString(), longi.toString())
                                 // Set delay to 5 minutes for trip
-                                delayMillis = 300_000L
+                                //180_000L for 3Min
+                                //300_000L for 5min
+                                delayMillis = 180_000L
                             } else {
                                 postGeoLocation(lat.toString(), longi.toString())
                             }

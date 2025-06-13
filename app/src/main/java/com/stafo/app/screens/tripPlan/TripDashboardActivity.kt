@@ -12,6 +12,7 @@ import com.stafo.app.R
 import com.stafo.app.databinding.ActivityTripDashboardBinding
 import com.stafo.app.screens.tripPlan.adapters.DashboardTripListAdapter
 import com.stafo.app.utils.CustomLoader
+import com.stafo.app.utils.getIsCOMPANYLogin
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -39,6 +40,16 @@ class TripDashboardActivity : AppCompatActivity() {
         setupRecyclerView()
 
 
+        if (getIsCOMPANYLogin(this)) {
+            binding.btnDrivers.visibility = View.VISIBLE
+            binding.btnVehicles.visibility = View.VISIBLE
+        } else {
+            binding.btnDrivers.visibility = View.GONE
+            binding.btnVehicles.visibility = View.GONE
+        }
+
+
+
         observeTripDashboardData()
     }
 
@@ -49,6 +60,11 @@ class TripDashboardActivity : AppCompatActivity() {
     }
     private fun setupListeners() {
         binding.ivBack.setOnClickListener { finish() }
+        binding.ivBack.setOnClickListener {
+            startActivity(Intent(this, TripListActivity::class.java).apply {
+                putExtra("flag", "ongoing")
+            })
+        }
         binding.btnCreateTrip.setOnClickListener {
             startActivity(Intent(this, CreateTripActivity::class.java).apply {
                 putExtra("isEdit", false)

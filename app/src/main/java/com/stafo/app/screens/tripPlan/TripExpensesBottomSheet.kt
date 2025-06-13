@@ -17,6 +17,7 @@ import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.stafo.app.databinding.BottomSheetTripExpensesBinding
+import com.stafo.app.utils.CustomToast
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -97,10 +98,11 @@ class TripExpensesBottomSheet(
 
         viewModel.mTripAddExpensesResponse.observe(context as TripExpensesActivity) {
             if (it.success == true) {
+                CustomToast(context, it.message)
                 onAssignSuccess()
                 dialog.dismiss()
             } else {
-                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+               CustomToast(context, it.message)
             }
         }
         dialog.setContentView(view)

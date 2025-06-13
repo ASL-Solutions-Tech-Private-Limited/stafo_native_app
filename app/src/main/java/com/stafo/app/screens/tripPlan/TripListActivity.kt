@@ -2,11 +2,15 @@ package com.stafo.app.screens.tripPlan
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ajithvgiri.searchdialog.OnSearchItemSelected
+import com.ajithvgiri.searchdialog.SearchListItem
+import com.ajithvgiri.searchdialog.SearchableDialog
 import com.google.gson.Gson
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityTripListBinding
@@ -20,6 +24,13 @@ class TripListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTripListBinding
     private val mTripViewModel: TripViewModel by lazy { TripViewModel() }
     private val mCustomLoader: CustomLoader by lazy { CustomLoader(this) }
+    private var mFlag = "all"
+
+    private val filterType = listOf(
+        SearchListItem(1, "All"), SearchListItem(2, "Pending"), SearchListItem(3, "On Going"),
+        SearchListItem(4, "Pause"), SearchListItem(5, "Completed"),
+
+        )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -32,9 +43,17 @@ class TripListActivity : AppCompatActivity() {
             insets
         }
 
+        mFlag = intent.getStringExtra("flag") ?: "all"
         binding.ivBack.setOnClickListener { finish() }
         binding.rvTripList.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        binding.btnFilter.setOnClickListener {
+            showSearchDialog(filterType, "Select Filter Type") {
+                mFlag = it.title.toLowerCase().replace(" ", "").trim()
+                mTripViewModel.getTripList(this)
+            }
+        }
 
         observeData()
     }
@@ -57,8 +76,19 @@ class TripListActivity : AppCompatActivity() {
 
         mTripViewModel.mTripListResponse.observe(this) {
             if (!it.tripsList.isNullOrEmpty()) {
+                binding.rvTripList.visibility = View.VISIBLE
+                binding.llNoData.visibility = View.GONE
+                val filterData =
+                    if (mFlag == "all") it.tripsList else it.tripsList?.filter { it.status == mFlag }
+                if (filterData.isNullOrEmpty()) {
+                    binding.llNoData.visibility = View.VISIBLE
+                    binding.rvTripList.visibility = View.GONE
+                } else {
+                    binding.llNoData.visibility = View.GONE
+                    binding.rvTripList.visibility = View.VISIBLE
+                }
                 binding.rvTripList.adapter =
-                    TripListAdapter(this, it.tripsList ?: emptyList(), { trip, type ->
+                    TripListAdapter(this, filterData ?: emptyList(), { trip, type ->
                         when (type) {
                             "All" -> {
                                 startActivity(
@@ -102,6 +132,9 @@ class TripListActivity : AppCompatActivity() {
                             }
                         }
                     })
+            } else {
+                binding.rvTripList.visibility = View.GONE
+                binding.llNoData.visibility = View.VISIBLE
             }
         }
 
@@ -113,5 +146,20 @@ class TripListActivity : AppCompatActivity() {
             } else CustomToast(this, it.message ?: "")
 
         }
+    }
+
+    private fun showSearchDialog(
+        list: List<SearchListItem>,
+        title: String,
+        onSelected: (SearchListItem) -> Unit
+    ) {
+        val dialog = SearchableDialog(this, ArrayList(list), title)
+        dialog.setOnItemSelected(object : OnSearchItemSelected {
+            override fun onClick(position: Int, item: SearchListItem) {
+                onSelected(item)
+                dialog.dismiss()
+            }
+        })
+        dialog.show()
     }
 }

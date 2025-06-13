@@ -49,5 +49,13 @@ data class Trips(
     @SerializedName("to_address")
     var toAddress: String?,
     @SerializedName("vehicle_id")
-    var vehicleId: Int?
+    var vehicleId: Int?,
+    @SerializedName("odometer_start")
+    var odometer_start: String?,
+    @SerializedName("odometer_latest")
+    var odometer_latest: String?,
+    @SerializedName("total_expenses")
+    var total_expenses: String?,
+    @SerializedName("duration")
+    var duration: String? = "0"
 )
