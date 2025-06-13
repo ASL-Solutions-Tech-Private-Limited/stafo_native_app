@@ -57,6 +57,7 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mTripDetails: TripDetailsResponse.Trip? = null
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
+    private val markerMap = mutableMapOf<LatLng, Marker>()
 
     private lateinit var imageUri: Uri
     private lateinit var photoFile: File
@@ -112,15 +113,9 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     // val (steps, lastStatus, totalHaltDurationMillis, haltCount) = processTripLogs(it.trip.trip_logs)
                     val result = processTripLogs(it.trip.trip_logs)
-                    Log.e("tripe", "get value both : ${result.lastStatus}")
                     addTripSteps(result.steps)
-                    var mtripAction = if (result.tripStatusCode == 1) "end" else "start"
-                    var mhaltAction = if (result.lastStatus == "pause") "resume" else "pause"
-
-                    Log.e("tripe", "get status  : ${it.trip.status}")
-
-                    Log.e("tripe", "get value both : ${result.tripStatusCode}")
-                    Log.e("tripe", "get value both : $mtripAction $mhaltAction")
+                    val mtripAction = if (result.tripStatusCode == 1) "end" else "start"
+                    val mhaltAction = if (result.lastStatus == "pause") "resume" else "pause"
 
                     when (it.trip.status) {
                         "pending" -> {
@@ -240,7 +235,10 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
          map.addPolyline(polylineOptions)*/
     }
 
-    data class StepData(val location: String, val timeRange: String)
+    data class StepData(
+        val location: String, val timeRange: String, val flag: String, val latitude: Double,
+        val longitude: Double
+    )
 
     private fun addTripSteps(steps: List<StepData>) {
         binding.stepContainer.removeAllViews()
@@ -260,6 +258,12 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                 )?.visibility = View.GONE
             }
             binding.stepContainer.addView(stepBinding.root)
+            stepBinding.stepItem.setOnClickListener {
+
+                val stepLatLng = LatLng(step.latitude, step.longitude)
+                googleMap_.animateCamera(CameraUpdateFactory.newLatLngZoom(stepLatLng, 16f))
+              //  markerMap[stepLatLng]?.showInfoWindow()
+            }
         }
     }
 
@@ -410,7 +414,10 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                         steps.add(
                             StepData(
                                 location = haltLocation,
-                                timeRange = "Halt ${haltCount}: ${timeRange}"
+                                timeRange = "Halt ${haltCount}: ${timeRange}",
+                                flag = "Halt ${haltCount}",
+                                latitude = log.latitude.toDouble(),
+                                longitude = log.longitude.toDouble()
                             )
                         )
 
@@ -441,7 +448,10 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                         steps.add(
                             StepData(
                                 location = haltLocation,
-                                timeRange = "Halt ${haltCount}: ${timeRange}"
+                                timeRange = "Halt ${haltCount}: ${timeRange}",
+                                flag = "Halt ${haltCount}",
+                                latitude = log.latitude.toDouble(),
+                                longitude = log.longitude.toDouble()
                             )
                         )
 
@@ -470,7 +480,10 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         if (startLocation.isNotEmpty() && startTime.isNotEmpty()) {
             steps.add(0, StepData(
                 location = startLocation,
-                timeRange = "Started at ${formatTime(startTime)}"
+                timeRange = "Started at ${formatTime(startTime)}",
+                flag = "Start",
+                latitude = tripLogs[0].latitude.toDouble(),
+                longitude = tripLogs[0].longitude.toDouble()
             ))
         }
         // Add end point
@@ -478,7 +491,9 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             steps.add(
                 StepData(
                     location = endLocation,
-                    timeRange = "Ended at ${formatTime(endTime)}"
+                    timeRange = "Ended at ${formatTime(endTime)}",
+                    flag = "End", latitude = tripLogs[tripLogs.size - 1].latitude.toDouble(),
+                    longitude = tripLogs[tripLogs.size - 1].longitude.toDouble()
                 )
             )
         }
@@ -640,7 +655,7 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                     val polylineOptions = PolylineOptions()
                         .addAll(latLngList)
-                        .color(ContextCompat.getColor(this, R.color.pending_colour))
+                        .color(ContextCompat.getColor(this, R.color.app_theme_colour))
                         .width(8f)
 
                     googleMap_.addPolyline(polylineOptions)
