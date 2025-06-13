@@ -453,12 +453,7 @@
         <meta-data
             android:name="org.osmdroid.config"
             android:value="osm_config" />
-        <!--
- <service
-            android:name=".base.service.LocationForegroundService"
-            android:foregroundServiceType="location"
-            android:permission="android.permission.FOREGROUND_SERVICE" />
-        -->
+
         <service
             android:name=".base.service.LocationForegroundService"
             android:enabled="true"
