@@ -92,62 +92,6 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeViewModel() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-        /*  settingsViewModel.mAttendanceHistoryResponse.observe(this) {
-              if (it.status) {
-                  if (it.data != null) {
-                      binding.txtMsg.visibility = View.GONE
-                  val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-                      var mPresentCount = 0
-                      var mTotalWorkingHour = 0
-                      val mMonth = getAllDatesFromMonth(mSelectedDate)
-                      for (month in mMonth.indices) {
-                          for (item in it.data.indices) {
-                              if (mMonth[month].date == it.data[item].date) {
-                                  mMonth[month].isPresent = it.data[item].attendance
-                                  mMonth[month].punchIn = it.data[item].in_time.toString()
-                                  mMonth[month].punchOut = it.data[item].out_time.toString()
-                                  if (it.data[item].attendance == "Present") {
-                                      mPresentCount++
-                                  }
-                                  if (!it.data[item].in_time.isNullOrEmpty()) {
-                                      mTotalWorkingHour += calculateMinutes(
-                                          it.data[item].in_time.toString(),
-                                          it.data[item].out_time.toString()
-                                      ).toInt()
-                                  }
-                              }
-                          }
-                      }
-                      Log.e(TAG, "observeViewModel: $mPresentCount")
-                      val totalHours = mTotalWorkingHour / 60
-                      val totalMinutes = mTotalWorkingHour % 60
-
-  // Display the total time in "hh:mm" format
-                      val totalWorkingTime = String.format("%02d:%02d", totalHours, totalMinutes)
-
-                     // Calculate the average working hours per day
-
-                      val officeHoursPerDay = 8.0
-                      val totalWorkingHours = mTotalWorkingHour / 60.0
-                      avgWork = calculateAverageHours(totalWorkingHours, mPresentCount)
-                      Log.d("res", "get avg: $avgWork")
-                      avgWork?.let {
-                          val progress = ((it / officeHoursPerDay) * 100).toFloat()
-                          binding.cpb.updateProgress(progress.coerceIn(0f, 100f))
-                      }
-
-                      binding.txtTotalPresent.text = mPresentCount.toString() ?: "0"
-                      binding.txtTotalWorking.text = totalWorkingTime ?: "00:00"
-                  binding.rvEmpAttendList.setLayoutManager(layoutManager)
-                      val rvAdapter = AdapterEmployeeRecord(mMonth, this)
-                  binding.rvEmpAttendList.adapter = rvAdapter
-                  rvAdapter.notifyDataSetChanged()
-              } else {
-                  binding.txtMsg.visibility = View.VISIBLE
-              }
-              }
-          }*/
-
         settingsViewModel.mAttendanceHistoryResponse.observe(this) { response ->
             if (response.status && response.data != null) {
 

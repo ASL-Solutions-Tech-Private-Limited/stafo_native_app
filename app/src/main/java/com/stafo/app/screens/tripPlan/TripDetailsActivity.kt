@@ -170,32 +170,33 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                         }
                     }
 
-
-                    if (result.lastStatus == "pause") {
-                        binding.pauseTripBtn.text = "Resume"
-                       // stopLocationServiceIfRunning()
-
-                    } else {
-                        binding.pauseTripBtn.text = "Pause"
-                        //startLocationServiceIfNotRunning()
-                    }
-
                     binding.startTripBtn.setOnClickListener {
-                        if (mtripAction == "end") {
+                    /*    if (mtripAction == "end") {
                             //Stop Location Service
                             stopLocationServiceIfRunning()
 
-                        } else startLocationServiceIfNotRunning()
+                        } else startLocationServiceIfNotRunning()*/
                         showTripActionBottomSheet(mTripID ?: "", mTripViewModel, mtripAction)
                     }
 
                     binding.pauseTripBtn.setOnClickListener {
-                        if (mhaltAction == "resume") {
+                      /*  if (mhaltAction == "resume") {
                             startLocationServiceIfNotRunning()
-                        } else stopLocationServiceIfRunning()
+                        } else stopLocationServiceIfRunning()*/
 
                         showTripActionBottomSheet(mTripID ?: "", mTripViewModel, mhaltAction)
                     }
+
+
+
+                    if (result.lastStatus == "pause") {
+                        binding.pauseTripBtn.text = "Resume"
+
+                    } else {
+                        binding.pauseTripBtn.text = "Pause"
+                    }
+
+
 
 
                     binding.btnAddExpenses.setOnClickListener {
