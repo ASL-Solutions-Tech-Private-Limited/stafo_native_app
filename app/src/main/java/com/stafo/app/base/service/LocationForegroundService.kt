@@ -9,10 +9,12 @@ import android.content.pm.ServiceInfo
 import android.os.*
 import android.util.Log
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
 import com.google.gson.Gson
+import com.stafo.app.R
 import com.stafo.app.base.network.RetrofitInstance
 import com.stafo.app.base.notification.NotificationsHelper
 import com.stafo.app.database.AppDatabase
@@ -61,25 +63,6 @@ class LocationForegroundService : Service() {
         locationDao = AppDatabase.getDatabase(this).locationDao()
     }
 
-    /*override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent?.action == "STOP_FOREGROUND_SERVICE") {
-            stopForegroundService()
-            return START_NOT_STICKY
-        }
-
-        if (hasLocationPermission()) {
-            startAsForegroundService()
-            startLocationUpdates()
-            startRecurringTimer()
-            scheduleServiceRestart()
-        } else {
-            Log.e(TAG, "Location permission not granted.")
-            Toast.makeText(this, "Location permission not granted.", Toast.LENGTH_SHORT).show()
-        }
-
-        return START_STICKY
-    }*/
-
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == "STOP_FOREGROUND_SERVICE") {
@@ -102,8 +85,6 @@ class LocationForegroundService : Service() {
 
         return START_STICKY
     }
-
-
 
 
     override fun onTaskRemoved(rootIntent: Intent?) {
@@ -133,7 +114,10 @@ class LocationForegroundService : Service() {
                     )
                     Log.d(TAG, "Exact alarm scheduled")
                 } else {
-                    Log.w(TAG, "Exact alarm permission not granted. Redirect user to settings if necessary.")
+                    Log.w(
+                        TAG,
+                        "Exact alarm permission not granted. Redirect user to settings if necessary."
+                    )
                     // Optionally, guide the user to Settings to grant this permission
                 }
             } else {
@@ -147,8 +131,6 @@ class LocationForegroundService : Service() {
             Log.e(TAG, "SecurityException while scheduling alarm: ${e.message}")
         }
     }
-
-
 
 
     fun stopForegroundService() {
@@ -175,10 +157,7 @@ class LocationForegroundService : Service() {
     private fun cancelServiceRestartAlarm() {
         val intent = Intent(applicationContext, LocationForegroundService::class.java)
         val pendingIntent = PendingIntent.getService(
-            applicationContext,
-            0,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE
+            applicationContext, 0, intent, PendingIntent.FLAG_IMMUTABLE
         )
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -230,41 +209,22 @@ class LocationForegroundService : Service() {
     }
 
 
- /*   private fun scheduleServiceRestart() {
-        val intent = Intent(applicationContext, LocationForegroundService::class.java)
-        val pendingIntent = PendingIntent.getService(applicationContext, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setRepeating(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            SystemClock.elapsedRealtime() + 5000,
-            5000,
-            pendingIntent
-        )
-    }*/
-
     private fun startAsForegroundService() {
-        if (!hasNotificationShown) {
-            val notification = NotificationsHelper.buildNotification(this)
-            ServiceCompat.startForeground(
-                this,
-                NOTIFICATION_ID,
-                notification,
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
-                } else {
-                    0
-                }
-            )
-            hasNotificationShown = true
-        } else {
-            Log.d(TAG, "Notification already shown — skipping foreground start.")
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val existingNotification = notificationManager.activeNotifications.find {
+            it.id == NOTIFICATION_ID
         }
-    }
 
 
-/*    private fun startAsForegroundService() {
-        val notification = NotificationsHelper.buildNotification(this)
+        val notification = if (existingNotification == null) {
+            NotificationsHelper.buildNotification(this)
+        } else {
+            NotificationCompat.Builder(this, NotificationsHelper.NOTIFICATION_CHANNEL_ID)
+                .setContentTitle("").setContentText("").setSmallIcon(R.drawable.ic_notification)
+                .build()
+        }
+
         ServiceCompat.startForeground(
             this,
             NOTIFICATION_ID,
@@ -275,18 +235,21 @@ class LocationForegroundService : Service() {
                 0
             }
         )
-    }*/
+    }
 
-    private fun hasLocationPermission(): Boolean =
-        ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+    private fun hasLocationPermission(): Boolean = ContextCompat.checkSelfPermission(
+        this, Manifest.permission.ACCESS_FINE_LOCATION
+    ) == PackageManager.PERMISSION_GRANTED
 
     private fun startLocationUpdates() {
         try {
             val locationRequest = LocationRequest.Builder(LOCATION_UPDATES_INTERVAL_MS)
-                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-                .build()
+                .setPriority(Priority.PRIORITY_HIGH_ACCURACY).build()
 
-            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest, locationCallback, Looper.getMainLooper()
+            )
         } catch (e: SecurityException) {
             Log.e(TAG, "Location permission not granted", e)
             Toast.makeText(this, "Location permission is required.", Toast.LENGTH_SHORT).show()
@@ -316,46 +279,53 @@ class LocationForegroundService : Service() {
         }
     }
 
+
     private fun startRecurringTimer() {
-        if (handler != null) return
+        if (timerJob != null) return
 
-        handler = Handler(Looper.getMainLooper())
+        timerJob = CoroutineScope(Dispatchers.IO).launch {
+            var firstTripSent = false
 
-        runnable = object : Runnable {
-            override fun run() {
+            //  Wait until location is available
+            while (lat == null || longi == null) {
+                delay(500)
+            }
+
+            while (isActive) {
                 val gpsOn = isGpsEnabled(applicationContext)
                 val networkOn = isNetworkAvailable()
                 val isTrip = getTripServiceAction(applicationContext)
 
-                var delayMillis = 20_000L // default delay
+                val defaultDelayMillis = 20_000L
+                val tripDelayMillis = 300_000L
+                var delayMillis = defaultDelayMillis
 
-                CoroutineScope(Dispatchers.IO).launch {
-                    if (networkOn) {
-                        val synced = syncLocationsToServer()
-                        if (synced && lat != null && longi != null) {
-                            if (isTrip) {
+                if (networkOn) {
+                    val synced = syncLocationsToServer()
+                    if (synced) {
+                        if (isTrip) {
+                            if (!firstTripSent) {
                                 postTripGeoLocation(lat.toString(), longi.toString())
-                                // Set delay to 5 minutes for trip
-                                //180_000L for 3Min
-                                //300_000L for 5min
-                                delayMillis = 180_000L
+                                firstTripSent = true
+                                delayMillis = tripDelayMillis
                             } else {
-                                postGeoLocation(lat.toString(), longi.toString())
+                                postTripGeoLocation(lat.toString(), longi.toString())
+                                delayMillis = tripDelayMillis
                             }
+                        } else {
+                            postGeoLocation(lat.toString(), longi.toString())
+                            delayMillis = defaultDelayMillis
                         }
-                    } else {
-                        saveLocationOffline(gpsOn)
                     }
-
-                    // Post next run with calculated delay
-                    handler?.postDelayed(runnable!!, delayMillis)
+                } else {
+                    saveLocationOffline(gpsOn)
+                    delayMillis = defaultDelayMillis
                 }
+
+                delay(delayMillis)
             }
         }
-
-        handler?.post(runnable!!)
     }
-
 
 
     private fun stopRecurringTimer() {
@@ -406,14 +376,13 @@ class LocationForegroundService : Service() {
     private suspend fun postGeoLocation(lat: String, long: String): Boolean {
         return try {
             val request = EmployeePostLocationRequest(
-                employee_id = getEmployeeDetails()?.id.toString(),
-                latitude = lat,
-                longitude = long
+                employee_id = getEmployeeDetails()?.id.toString(), latitude = lat, longitude = long
             )
 
             val token = getUserAccessToken() ?: return false
 
-            val response = RetrofitInstance.getApiService(applicationContext).callPostGeoLocation("Bearer $token", request)
+            val response = RetrofitInstance.getApiService(applicationContext)
+                .callPostGeoLocation("Bearer $token", request)
 
             if (response.isSuccessful) {
                 Log.d(TAG, "Location updated successfully: ${response.body()}")
@@ -433,12 +402,11 @@ class LocationForegroundService : Service() {
 
 
             val request = TripGeoLocationRequest(
-                trip_id = getTripId().toString(),
-                latitude = lat,
-                longitude = long
+                trip_id = getTripId().toString(), latitude = lat, longitude = long
             )
 
-            val response = RetrofitInstance.getApiService(applicationContext).callTripGeoLocation(request)
+            val response =
+                RetrofitInstance.getApiService(applicationContext).callTripGeoLocation(request)
 
             if (response.isSuccessful) {
                 Log.d(TAG, "Trip Location updated successfully: ${response.body()}")
@@ -453,10 +421,6 @@ class LocationForegroundService : Service() {
     }
 
 
-
-
-
-
     private suspend fun saveLocationOffline(gpsOn: Boolean) {
         val location = LocationEntity(
             latitude = lat?.toString() ?: "N/A",
@@ -469,7 +433,10 @@ class LocationForegroundService : Service() {
             androidVersion = getAndroidVersion()
         )
         locationDao.insertLocation(location)
-        Log.d(TAG, if (gpsOn) "Offline location stored." else "GPS off - fallback location stored once.")
+        Log.d(
+            TAG,
+            if (gpsOn) "Offline location stored." else "GPS off - fallback location stored once."
+        )
 
         if (!gpsOn) {
             stopRecurringTimer()
@@ -477,10 +444,10 @@ class LocationForegroundService : Service() {
     }
 
 
-
     private fun isServiceRunning(serviceClass: Class<out Service>): Boolean {
         val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        return manager.getRunningServices(Int.MAX_VALUE).any { it.service.className == serviceClass.name }
+        return manager.getRunningServices(Int.MAX_VALUE)
+            .any { it.service.className == serviceClass.name }
     }
 
     companion object {
