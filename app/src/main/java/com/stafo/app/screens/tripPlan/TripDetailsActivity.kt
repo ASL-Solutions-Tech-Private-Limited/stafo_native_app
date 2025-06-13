@@ -570,7 +570,6 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     private fun startLocationServiceIfNotRunning(fromTripDetails: Boolean = true) {
-
         checkExactAlarmPermission(this) { exactAlarmGranted ->
             if (exactAlarmGranted) {
                 requestIgnoreBatteryOptimization(this) { batteryOptGranted ->

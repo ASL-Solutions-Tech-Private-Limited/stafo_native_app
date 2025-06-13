@@ -47,22 +47,27 @@ class TripListAdapter(
             "completed" -> {
                 binding.tvStatus.backgroundTintList =
                     holder.itemView.resources.getColorStateList(R.color.green)
+                binding.ivEdit.visibility = View.GONE
+                binding.ivDelete.visibility = View.GONE
             }
-
             "pending" -> {
                 binding.tvStatus.backgroundTintList =
                     holder.itemView.resources.getColorStateList(R.color.pending_colour)
+                binding.ivEdit.visibility = View.VISIBLE
+                binding.ivDelete.visibility = View.VISIBLE
 
             }
-
             "cancelled" -> {
                 binding.tvStatus.backgroundTintList =
                     holder.itemView.resources.getColorStateList(R.color.pastel_red)
+                binding.ivEdit.visibility = View.GONE
+                binding.ivDelete.visibility = View.GONE
             }
-
             "ongoing" -> {
                 binding.tvStatus.backgroundTintList =
                     holder.itemView.resources.getColorStateList(R.color.xp_blue)
+                binding.ivEdit.visibility = View.GONE
+                binding.ivDelete.visibility = View.GONE
             }
         }
 
