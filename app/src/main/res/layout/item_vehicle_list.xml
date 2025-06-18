@@ -54,6 +54,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/gilroy_medium"
                     tools:text="Active"
+                    android:visibility="visible"
                     android:id="@+id/tvStatus"
                     android:textColor="@color/green"
                     android:textSize="@dimen/_12ssp" />
