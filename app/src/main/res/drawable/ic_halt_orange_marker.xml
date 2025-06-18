@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="36dp"
+    android:viewportWidth="24"
+    android:viewportHeight="36">
+
+    <!-- Pin shape -->
+    <path
+        android:fillColor="#FF9800"
+        android:pathData="M12,0
+                          C7,0 3,4 3,9
+                          C3,16 12,36 12,36
+                          C12,36 21,16 21,9a
+                          C21,4 17,0 12,0 Z" />
+
+    <!-- Smaller White H, centered -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="
+            M9,14 L9,22 L10.5,22 L10.5,18 L13.5,18 L13.5,22 L15,22 L15,14 L13.5,14 L13.5,17 L10.5,17 L10.5,14 Z" />
+</vector>

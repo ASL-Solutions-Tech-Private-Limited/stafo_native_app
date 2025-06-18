@@ -2,11 +2,14 @@ package com.stafo.app.utils
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.ContentResolver
 import android.content.Context
+import android.content.Context.BATTERY_SERVICE
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -22,15 +25,21 @@ import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.net.wifi.WifiManager
+import android.os.BatteryManager
+import android.os.Build
 import android.os.CountDownTimer
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.provider.MediaStore
+import android.provider.OpenableColumns
+import android.provider.Settings
 import android.provider.Settings.Secure
 import android.text.SpannableString
 import android.text.Spanned
@@ -52,10 +61,15 @@ import android.widget.NumberPicker
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
 import com.stafo.app.screens.auth.LoginWithOTPActivity
@@ -69,6 +83,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.orhanobut.hawk.Hawk
 import com.stafo.app.R
+import com.stafo.app.base.EndOfDaySyncWorker
 import com.stafo.app.screens.ui.SplashActivity
 import com.trackier.sdk.TrackierEvent
 import com.trackier.sdk.TrackierSDK.trackEvent
@@ -79,7 +94,9 @@ import org.xml.sax.InputSource
 import org.xml.sax.SAXException
 import tech.developingdeveloper.toaster.Toaster
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
 import java.io.StringReader
 import java.net.InetAddress
 import java.net.NetworkInterface
@@ -1412,6 +1429,7 @@ fun getFormattedDate2(date: String, possibleFormats: List<String>, returnDateFor
     return "Invalid Date"
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun extractDayNameDateAndMonth(inputDate: String): Triple<String, Int, Int> {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val date = LocalDate.parse(inputDate, formatter)
@@ -1420,6 +1438,24 @@ fun extractDayNameDateAndMonth(inputDate: String): Triple<String, Int, Int> {
     val month = date.monthValue
     return Triple(dayName, day, month)
 }
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun extractDayNameDateAndMonth2(dateStr: String?): Pair<String, String> {
+    if (dateStr.isNullOrBlank()) {
+        return Pair("N/A", "--")
+    }
+
+    return try {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val date = LocalDate.parse(dateStr, formatter)
+        val dayName = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+        val dayOfMonth = date.dayOfMonth.toString()
+        Pair(dayName, dayOfMonth)
+    } catch (e: Exception) {
+        Pair("Invalid", "--")
+    }
+}
+
 
 fun calculateHours(inTime: String, outTime: String): String {
     val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
@@ -1560,7 +1596,95 @@ fun reportsFormatToMonthYear(dateString: String?): String {
 }
 
 
+fun showFormatDate(dateString: String?): String {
+    if (dateString.isNullOrEmpty()) return "N/A"
+
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        val date = inputFormat.parse(dateString)
+        if (date != null) outputFormat.format(date) else "N/A"
+    } catch (e: Exception) {
+        "N/A"
+    }
+}
+
+
 fun showCustomMonthYearPicker(
+    context: Context,
+    onSelected: (formattedDate: String, displayDate: String) -> Unit
+) {
+    val dialog = Dialog(context)
+    dialog.setContentView(R.layout.dialog_month_year_picker)
+    dialog.setTitle("Select Month and Year")
+    dialog.setCancelable(false)
+
+    val window = dialog.window
+    window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+    val layoutParams = WindowManager.LayoutParams()
+    layoutParams.copyFrom(window?.attributes)
+    layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+    layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+
+    // Set dialog margins
+    val marginHorizontal = context.resources.getDimensionPixelSize(R.dimen.dialog_margin)
+    window?.decorView?.setPadding(marginHorizontal, 0, marginHorizontal, 0)
+    window?.attributes = layoutParams
+
+    val monthPicker = dialog.findViewById<NumberPicker>(R.id.month_picker)
+    val yearPicker = dialog.findViewById<NumberPicker>(R.id.year_picker)
+    val btnOk = dialog.findViewById<AppCompatTextView>(R.id.btn_ok)
+    val btnCancel = dialog.findViewById<AppCompatTextView>(R.id.btn_cancel)
+
+    // Month values
+    val months = arrayOf(
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    )
+
+    monthPicker.minValue = 0
+    monthPicker.maxValue = months.size - 1
+    monthPicker.displayedValues = months
+
+    // Get current month and year
+    val calendar = Calendar.getInstance()
+    val currentYear = calendar.get(Calendar.YEAR)
+    val currentMonth = calendar.get(Calendar.MONTH)
+
+    // Set pickers to current values
+    monthPicker.value = currentMonth
+    yearPicker.minValue = 2000
+    yearPicker.maxValue = currentYear + 20
+    yearPicker.value = currentYear
+
+    btnOk.setOnClickListener {
+        val selectedMonth = monthPicker.value
+        val selectedYear = yearPicker.value
+
+        val selectedCalendar = Calendar.getInstance()
+        selectedCalendar.set(Calendar.MONTH, selectedMonth)
+        selectedCalendar.set(Calendar.YEAR, selectedYear)
+
+        val postFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault()) // e.g. 2025-05
+        val displayFormat = SimpleDateFormat("MMM yy", Locale.getDefault()) // e.g. May 25
+
+        val formattedDate = postFormat.format(selectedCalendar.time)
+        val displayDate = displayFormat.format(selectedCalendar.time)
+
+        onSelected(formattedDate, displayDate)
+        dialog.dismiss()
+    }
+
+    btnCancel.setOnClickListener {
+        dialog.dismiss()
+    }
+
+    dialog.show()
+}
+
+
+/*fun showCustomMonthYearPicker(
     context: Context,
     onSelected: (formattedDate: String, displayDate: String) -> Unit
 ) {
@@ -1621,7 +1745,7 @@ fun showCustomMonthYearPicker(
     }
 
     dialog.show()
-}
+}*/
 
 
 
@@ -1739,3 +1863,222 @@ fun generateGradientDrawables(count: Int): List<GradientDrawable> {
 
     return gradientList
 }
+
+
+fun convertTo12HourFormat2(dateTime: String?): String {
+    if (dateTime.isNullOrEmpty()) return "--"
+
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+    return try {
+        val date = inputFormat.parse(dateTime)
+        outputFormat.format(date!!)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        "--"
+    }
+}
+
+
+fun convertTo12HourFormat3(dateTime: String?): String {
+    if (dateTime.isNullOrEmpty()) return "--"
+
+    val inputFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+    return try {
+        val date = inputFormat.parse(dateTime)
+        outputFormat.format(date!!)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        "--"
+    }
+}
+
+fun convertTo12Hour(time: String?): String {
+    if (time.isNullOrEmpty()) return "--"
+    return try {
+        val sdf24 = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+        val sdf12 = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val date = sdf24.parse(time)
+        date?.let { sdf12.format(it) } ?: "--"
+    } catch (e: Exception) {
+        "--"
+    }
+}
+
+fun isNetworkAvailable(context: Context): Boolean {
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    val activeNetwork = connectivityManager.activeNetwork ?: return false
+    val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+
+    return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+}
+fun isGpsEnabled(context: Context): Boolean {
+    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+}
+
+
+
+
+fun getBatteryPercentage(context: Context): Int {
+    val bm = context.getSystemService(BATTERY_SERVICE) as BatteryManager
+    return bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+}
+ fun getDeviceName(): String {
+    return "${Build.MANUFACTURER} ${Build.MODEL}"
+}
+
+fun getAndroidVersion(): String {
+    return Build.VERSION.RELEASE ?: "Unknown"
+}
+
+fun scheduleDailyEndOfDaySync(context: Context) {
+    val currentDate = Calendar.getInstance()
+    val dueDate = Calendar.getInstance()
+
+    dueDate.set(Calendar.HOUR_OF_DAY, 19)
+    dueDate.set(Calendar.MINUTE, 46)
+    dueDate.set(Calendar.SECOND, 0)
+
+    if (dueDate.before(currentDate)) {
+        dueDate.add(Calendar.HOUR_OF_DAY, 24)
+    }
+
+    val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
+
+    val dailyWorkRequest = PeriodicWorkRequestBuilder<EndOfDaySyncWorker>(24,TimeUnit.HOURS)
+        .setInitialDelay(timeDiff,TimeUnit.MILLISECONDS)
+        .build()
+
+    WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+        "endOfDaySyncWork",
+        ExistingPeriodicWorkPolicy.REPLACE,
+        dailyWorkRequest
+    )
+}
+
+fun checkExactAlarmPermission(context: Context, onResult: (Boolean) -> Unit) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val alarmManager = context.getSystemService(AlarmManager::class.java)
+        if (!alarmManager.canScheduleExactAlarms()) {
+            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+            intent.data = Uri.parse("package:${context.packageName}")
+            (context as Activity).startActivityForResult(intent, 1001)
+            onResult(false)
+        } else {
+            onResult(true)
+        }
+    } else {
+        onResult(true)
+    }
+}
+
+fun requestIgnoreBatteryOptimization(context: Context, onResult: (Boolean) -> Unit) {
+    val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+    if (!pm.isIgnoringBatteryOptimizations(context.packageName)) {
+        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+        intent.data = Uri.parse("package:${context.packageName}")
+        (context as Activity).startActivityForResult(intent, 1002)
+        onResult(false)
+    } else {
+        onResult(true)
+    }
+}
+
+
+fun Context.uriToFile(uri: Uri): File? {
+    val contentResolver: ContentResolver = this.contentResolver
+    val file = File(cacheDir, getFileName(uri))
+
+    return try {
+        val inputStream: InputStream? = contentResolver.openInputStream(uri)
+        val outputStream = FileOutputStream(file)
+
+        inputStream?.copyTo(outputStream)
+        inputStream?.close()
+        outputStream.close()
+
+        file
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
+ fun Context.getFileName(uri: Uri): String {
+    var name = "temp_file"
+    val cursor = contentResolver.query(uri, null, null, null, null)
+    cursor?.use {
+        if (it.moveToFirst()) {
+            val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (nameIndex != -1) {
+                name = it.getString(nameIndex)
+            }
+        }
+    }
+    return name
+}
+
+
+
+
+
+
+
+fun getTimeOnly12HrFormat(isoDateTime: String?): String {
+    if (isoDateTime.isNullOrBlank()) return "--"
+
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())
+        inputFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        outputFormat.timeZone = TimeZone.getDefault()
+
+        val date = inputFormat.parse(isoDateTime)
+        date?.let { outputFormat.format(it) } ?: "--"
+    } catch (e: Exception) {
+        e.printStackTrace()
+        "--"
+    }
+}
+
+fun getSmartShortAddress(fullAddress: String?): String {
+    if (fullAddress.isNullOrBlank()) return "Unknown"
+
+    val parts = fullAddress.split(",")
+        .map { it.trim() }
+        .filter { it.isNotEmpty() }
+
+    if (parts.size < 4) return parts.joinToString(", ") // Just return what’s available
+
+    // Grab the last 3 parts (e.g., "Kolkata, West Bengal, India")
+    val lastParts = parts.takeLast(3)
+
+    // Grab 1–2 location-specific parts before city
+    val localityParts = parts.dropLast(3).takeLast(2)
+
+    return (localityParts + lastParts).joinToString(", ")
+}
+
+
+fun getExpenseIcon(type: String): String {
+    return when (type.lowercase()) {
+        "parking" -> "🅿️"
+        "food" -> "🍽️"
+        "repair" -> "🔧"
+        "fuel" -> "⛽"
+        "toll" -> "🛣️"
+        "accommodation" -> "🏨"
+        else -> "💼"
+    }
+}
+
+
+
+

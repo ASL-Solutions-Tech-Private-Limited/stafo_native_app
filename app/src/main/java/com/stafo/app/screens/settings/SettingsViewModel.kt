@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.caverock.androidsvg.SVG
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.stafo.app.ASLEmpMng
 import com.stafo.app.R
 import com.stafo.app.base.BaseViewModel
@@ -55,6 +56,7 @@ import com.stafo.app.screens.settings.dataClass.DeleteResponse
 import com.stafo.app.screens.settings.dataClass.DepartmentCreateRequest
 import com.stafo.app.screens.settings.dataClass.DepartmentCreateResponse
 import com.stafo.app.screens.settings.dataClass.DepartmentResponse
+import com.stafo.app.screens.settings.dataClass.EditBranchResponse
 import com.stafo.app.screens.settings.dataClass.EmployeeDocumentUploadResponse
 import com.stafo.app.screens.settings.dataClass.EmployeeLeaveRequestBody
 import com.stafo.app.screens.settings.dataClass.EmployeeLeaveResponse
@@ -82,6 +84,8 @@ import com.stafo.app.screens.settings.dataClass.InActiveEmpResponse
 import com.stafo.app.screens.settings.dataClass.JobTitleResponse
 import com.stafo.app.screens.settings.dataClass.LeaveRequestBody
 import com.stafo.app.screens.settings.dataClass.LeaveResponse
+import com.stafo.app.screens.settings.dataClass.LocationLogRequest
+import com.stafo.app.screens.settings.dataClass.LocationLogResponse
 import com.stafo.app.screens.settings.dataClass.OnLeaveResponse
 import com.stafo.app.screens.settings.dataClass.PanVerifyRequestBody
 import com.stafo.app.screens.settings.dataClass.PanVerifyResponse
@@ -117,12 +121,15 @@ import com.stafo.app.screens.settings.dataClass.UpdateCompanyProfile
 import com.stafo.app.screens.settings.dataClass.UpdateCompanyProfileResponse
 import com.stafo.app.screens.settings.dataClass.UpdateEmployeeProfile
 import com.stafo.app.screens.settings.dataClass.UpdateEmployeeProfileResponse
+import com.stafo.app.screens.settings.dataClass.UpdateShiftResponse
 import com.stafo.app.screens.settings.dataClass.UpgradePackageResponse
 import com.stafo.app.screens.settings.dataClass.VerifyGSTNumberResponse
 import com.stafo.app.screens.settings.dataClass.VerifyRegisterNumberResponse
 import com.stafo.app.screens.settings.dataClass.ViewBranchResponse
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.doLogout
 import com.stafo.app.utils.getUserAccessToken
+import com.stafo.app.utils.isNetworkAvailable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -483,8 +490,161 @@ class SettingsViewModel : BaseViewModel() {
 
     val mAllReportsListResponse: LiveData<AllReportsListResponse> get() = mAllReportsList
 
+    private var mEditBranch: MutableLiveData<EditBranchResponse> = MutableLiveData()
+
+    val mEditBranchResponse: LiveData<EditBranchResponse> get() = mEditBranch
+
+    private var mUpdateShift: MutableLiveData<UpdateShiftResponse> = MutableLiveData()
+
+    val mUpdateShiftResponse: LiveData<UpdateShiftResponse> get() = mUpdateShift
 
 
+
+
+    /*fun locationLog(mContext: Context,request: LocationLogRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callDeviceLog(request)
+                Log.d("res", "Location Log " + response?.body())
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mLocationLog.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }*/
+
+
+
+
+    fun updateShift(mContext: Context, id:Int,request: ShiftCreateRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callUpdateShift(id,request)
+                Log.d("res", "shift Edit " + response?.body())
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mUpdateShift.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+    fun editBranch(mContext: Context, id:Int,request: AddBranchRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+
+
+                val response = ASLEmpMng.instance.apiStores()?.callEditBranch(id,request)
+                Log.d("res", "branch Edit " + response?.body())
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mEditBranch.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
 
@@ -496,6 +656,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         id: String
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -541,6 +704,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: SalarySlipRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -585,6 +751,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: SalaryRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -631,6 +800,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: SalaryGeneratedRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -676,6 +848,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: SalaryTypeDeleteRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -720,6 +895,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: SalaryTypeListRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -765,6 +943,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: SalaryTypeRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -810,6 +991,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: ReportsEmployeeListRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -854,6 +1038,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: ReportsEmployeeListRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -899,6 +1086,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: ReportsEmployeeListRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -944,6 +1134,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: AssignBranchRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -986,6 +1179,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: AssignDepartmentRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1029,6 +1225,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: GetAttendanceBranchRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1072,6 +1271,11 @@ class SettingsViewModel : BaseViewModel() {
     fun getBannerImage(
         mContext: Context
     ) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1119,6 +1323,10 @@ class SettingsViewModel : BaseViewModel() {
     fun upgradePackage(
         mContext: Context
     ) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1167,6 +1375,10 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: RemoveSelfieRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1215,6 +1427,10 @@ class SettingsViewModel : BaseViewModel() {
         employeeId: String,
         file: File?
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1279,6 +1495,10 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: InActiveEmpRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1326,6 +1546,12 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: CreateLeavePolicyRequest
     ) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1370,6 +1596,10 @@ class SettingsViewModel : BaseViewModel() {
     fun deleteAccount(
         mContext: Context
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1413,6 +1643,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: SendFeedbackRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1464,6 +1697,9 @@ class SettingsViewModel : BaseViewModel() {
         request: GenerateQCodeRequest
 
         ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1537,6 +1773,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: QRAttendanceMarkRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1581,6 +1820,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: SetAttendanceTypeRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1631,6 +1873,10 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: DayPunchINRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1680,6 +1926,9 @@ class SettingsViewModel : BaseViewModel() {
         employeeId: Int,
         file: File?
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().postValue("load")
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1743,6 +1992,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: CompanyViewRequestDevice
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1789,6 +2041,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: CompanyAcceptDeviceRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1835,6 +2090,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: ChangeDeviceRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1878,6 +2136,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: EmployeeViewDocumentRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1927,6 +2188,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         id:Int
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1969,6 +2233,11 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         id:Int
     ) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -2012,6 +2281,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         id:Int
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -2055,6 +2327,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: PanVerifyRequestBody
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -2097,6 +2372,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: PanVerifyRequestBody
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -2140,6 +2418,10 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: PanVerifyRequestBody
     ) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -2183,6 +2465,10 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: PanVerifyRequestBody
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -2227,6 +2513,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         file: File?
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -2293,6 +2582,9 @@ class SettingsViewModel : BaseViewModel() {
         employeeId: Int,
         file: File?
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -2357,6 +2649,9 @@ class SettingsViewModel : BaseViewModel() {
         mContext: Context,
         request: DepartmentCreateRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -2402,6 +2697,10 @@ class SettingsViewModel : BaseViewModel() {
         employeeId: String,
         documents: List<Triple<String, String, File>>
     ) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -2481,6 +2780,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun uploadPolicy(mContext: Context, title: String, description: String, file: File) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -2529,6 +2832,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun fetchPolicy(mContext: Context,id:Int) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -2573,6 +2880,9 @@ class SettingsViewModel : BaseViewModel() {
         imageUris: List<Uri>,
         documentTypeIds: List<Int>
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -2661,6 +2971,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getGeoLocationHist(mContext: Context, request: GeoLocationHistResquest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -2701,6 +3015,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getJobTitleList(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -2741,6 +3059,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getEmployeeLeaveHist(mContext: Context, request: GetEmployeeLeaveHistRequestBody) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -2782,6 +3104,11 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun getAllLeaveList(mContext: Context, request: LeaveRequestBody) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -2824,6 +3151,11 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun assignShift(mContext: Context, employeeId: String, selectedShiftIds: List<String>) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -2866,6 +3198,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun punchInRequest(mContext: Context, request: PunchInRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -2908,6 +3244,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun updateEmployeeDetails(mContext: Context, id: String, request: UpdateEmployeeProfile) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -2950,6 +3290,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun fetchEmployeeDetails(mContext: Context, id: String) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -2963,14 +3307,21 @@ class SettingsViewModel : BaseViewModel() {
                         if (it.isSuccessful) {
                             mFetchEmployeeDetails.postValue(it.body())
                         } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
+                            when (it.code()) {
+                                401 -> {
+                                    doLogout(mContext)
+                                }
+                                else -> {
+                                    it.errorBody()?.charStream()?.let { errorStream ->
+                                        val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                        CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                    } ?: run {
+                                        CustomToast(
+                                            mContext,
+                                            mContext.getString(R.string.error_something_went_wrong)
+                                        )
+                                    }
+                                }
                             }
                         }
                     } ?: run {
@@ -2992,6 +3343,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun updateCompanyProfile(mContext: Context, request: UpdateCompanyProfile) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3034,6 +3389,12 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getEmployeeAttendRecord(mContext: Context, id: String, date: String) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3076,6 +3437,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getAllEmployeeList(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3115,6 +3480,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun getOnLeaveList(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3155,6 +3524,11 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun postPendingLeave(mContext: Context, request: ApproveLeaveRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3194,6 +3568,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun getPendingLeaveList(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3233,6 +3611,11 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun getHolidayList(mContext: Context, id: String) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3271,8 +3654,60 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-
     fun getCompanyDetails(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callCompanyProfile()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mCompanyProfile.postValue(it.body())
+                        } else {
+                            when (it.code()) {
+                                401 -> {
+                                   doLogout(mContext)
+                                }
+                                else -> {
+                                    it.errorBody()?.charStream()?.let { errorStream ->
+                                        val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                        CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                    } ?: run {
+                                        CustomToast(
+                                            mContext,
+                                            mContext.getString(R.string.error_something_went_wrong)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+  /*  fun getCompanyDetails(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3308,10 +3743,14 @@ class SettingsViewModel : BaseViewModel() {
                 }
             }
         }
-    }
+    }*/
 
 
     fun requestLeaveEmp(mContext: Context, request: EmployeeLeaveRequestBody) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3354,6 +3793,9 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun addHoliday(mContext: Context, request: CreateHolidayRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3394,6 +3836,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getCompanyDashboard(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3405,14 +3851,21 @@ class SettingsViewModel : BaseViewModel() {
                         if (it.isSuccessful) {
                             mAttendanceSummary.postValue(it.body())
                         } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
+                            when (it.code()) {
+                                401 -> {
+                                    doLogout(mContext)
+                                }
+                                else -> {
+                                    it.errorBody()?.charStream()?.let { errorStream ->
+                                        val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                        CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                    } ?: run {
+                                        CustomToast(
+                                            mContext,
+                                            mContext.getString(R.string.error_something_went_wrong)
+                                        )
+                                    }
+                                }
                             }
                         }
                     } ?: run {
@@ -3434,6 +3887,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getEmpList(mContext: Context, date: String) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3476,6 +3933,11 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun getViewBranchList(mContext: Context, id: String) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3520,6 +3982,11 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getShiftList(mContext: Context, id: String) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3559,6 +4026,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getBranchList(mContext: Context, id: String) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3600,6 +4071,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun getDepartmentList(mContext: Context, id: String) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3642,6 +4117,11 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun createBranch(mContext: Context, request: AddBranchRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3682,56 +4162,58 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun addEmployee(mContext: Context, request: AddEmpRequestBody) {
+
+
+
+
+
+
+
+    fun addEmployee(
+        mContext: Context,
+        request: AddEmpRequestBody
+    ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
+                Log.d("add_emp", "Request Body: $request")
+
                 val response = ASLEmpMng.instance.apiStores()?.callAddEmp(request)
-                Log.d("res", "res first  data ${request.toString()} : ${response?.body()}")
+
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
-                    response?.let {
-
-                        if (it.isSuccessful) {
-
-                            mAddEmp.postValue(response.body())
-                        } else {
-
-
-                            if (response.code()==422){
-                                CustomToast(mContext, response.body()?.message?:"")
-                            }else{
-                                it.errorBody()?.charStream()?.let { errorStream ->
-                                    val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                    CustomToast(mContext as LoginActivity, error?.message ?: "")
-                                } ?: run {
-                                    CustomToast(
-                                        mContext,
-                                        mContext.getString(R.string.error_something_went_wrong)
-                                    )
-                                }
-                            }
-
-                        }
-                    } ?: run {
-                        CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
-                        )
+                    if (response != null && response.isSuccessful) {
+                        mAddEmp.postValue(response.body())
+                    } else {
+                        // Handle errors here if needed
+                        CustomToast(mContext, "Error: ${response?.message() ?: "Unknown error"}")
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
-                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                    CustomToast(mContext, "Something went wrong.")
                 }
             }
         }
     }
 
+
+
+
     fun createNewShift(mContext: Context, request: ShiftCreateRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3775,6 +4257,11 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun sendGeoLocationRequest(mContext: Context, empID: String, permission: String) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3822,6 +4309,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getEmployeDashboard(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3833,14 +4324,21 @@ class SettingsViewModel : BaseViewModel() {
                         if (it.isSuccessful) {
                             mEmployeeDashoard.postValue(it.body())
                         } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
+                            when (it.code()) {
+                                401 -> {
+                                    doLogout(mContext)
+                                }
+                                else -> {
+                                    it.errorBody()?.charStream()?.let { errorStream ->
+                                        val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                        CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                    } ?: run {
+                                        CustomToast(
+                                            mContext,
+                                            mContext.getString(R.string.error_something_went_wrong)
+                                        )
+                                    }
+                                }
                             }
                         }
                     } ?: run {
@@ -3862,6 +4360,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getMonthlyAttendance(mContext: Context, date: String, emp: String) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {

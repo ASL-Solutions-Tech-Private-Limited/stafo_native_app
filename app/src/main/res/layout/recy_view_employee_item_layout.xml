@@ -27,7 +27,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="@dimen/_6sdp"
-            android:layout_toLeftOf="@+id/iv_edit">
+            android:layout_toLeftOf="@+id/iv_punch">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/approve_lv_emp_image"
@@ -35,8 +35,8 @@
                 android:layout_height="@dimen/_28sdp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:scaleType="fitXY"
                 android:background="@color/white"
+                android:scaleType="fitXY"
                 android:src="@drawable/ic_user_img"
                 app:shapeAppearanceOverlay="@style/Circular" />
 
@@ -48,21 +48,36 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_toRightOf="@+id/approve_lv_emp_image"
+                android:ellipsize="end"
                 android:fontFamily="@font/gilroy_regular"
-                android:singleLine="true"
+                android:maxLines="2"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12ssp" />
         </RelativeLayout>
 
         <ImageView
             android:id="@+id/iv_edit"
-            android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
+            android:layout_width="@dimen/_23sdp"
+            android:layout_height="@dimen/_23sdp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:background="@drawable/custom_emp_item_bg2"
-            android:padding="@dimen/_6sdp"
+            android:padding="6dp"
             android:src="@drawable/ic_editing" />
+
+        <ImageView
+            android:id="@+id/iv_punch"
+            android:layout_width="@dimen/_23sdp"
+            android:layout_height="@dimen/_23sdp"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:layout_toLeftOf="@+id/iv_edit"
+            android:background="@drawable/custom_set_punch_bg"
+            android:padding="4dp"
+            android:visibility="gone"
+            android:tint="@color/white"
+            android:src="@drawable/set_attendance"
+            tools:ignore="UseAppTint" />
 
 
         <TextView
@@ -88,6 +103,7 @@
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_toRightOf="@+id/txt_mobile1"
             android:fontFamily="@font/gilroy_regular"
+            android:gravity="end"
             android:singleLine="true"
             android:text=""
             android:textColor="@color/black"
@@ -116,13 +132,14 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_regular"
+            android:gravity="end"
             android:singleLine="true"
             android:text=""
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
 
-       <!-- <TextView
+        <TextView
             android:id="@+id/txt_job_title1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -131,7 +148,7 @@
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_medium"
             android:singleLine="true"
-            android:text="Position"
+            android:text="Department"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
@@ -144,19 +161,49 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/gilroy_regular"
+            android:gravity="end"
             android:singleLine="true"
             android:text=""
             android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp" />-->
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/txt_salary_title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_job_title1"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:singleLine="true"
+            android:text="Basic Salary"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/txt_salary_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_job_title"
+            android:layout_alignStart="@+id/txt_mobile"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:fontFamily="@font/gilroy_regular"
+            android:gravity="end"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
 
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_email"
+            android:layout_below="@+id/txt_salary_title"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/_12sdp"
             android:orientation="horizontal">
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/llc_remove_selfie"
                 android:layout_width="wrap_content"
@@ -220,15 +267,15 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-               <!-- <ImageView
-                    android:layout_width="@dimen/_18sdp"
-                    android:layout_height="@dimen/_18sdp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/_12sdp"
-                    android:paddingVertical="@dimen/_4sdp"
-                    android:src="@drawable/remove_user"
-                    android:tint="@color/black"
-                    tools:ignore="UseAppTint" />-->
+                <!-- <ImageView
+                     android:layout_width="@dimen/_18sdp"
+                     android:layout_height="@dimen/_18sdp"
+                     android:layout_gravity="center_vertical"
+                     android:layout_marginStart="@dimen/_12sdp"
+                     android:paddingVertical="@dimen/_4sdp"
+                     android:src="@drawable/remove_user"
+                     android:tint="@color/black"
+                     tools:ignore="UseAppTint" />-->
 
                 <TextView
 
@@ -256,15 +303,15 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-              <!--  <ImageView
-                    android:layout_width="@dimen/_18sdp"
-                    android:layout_height="@dimen/_18sdp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/_12sdp"
-                    android:paddingVertical="@dimen/_3sdp"
-                    android:src="@drawable/add_user"
-                    android:tint="@color/black"
-                    tools:ignore="UseAppTint" />-->
+                <!--  <ImageView
+                      android:layout_width="@dimen/_18sdp"
+                      android:layout_height="@dimen/_18sdp"
+                      android:layout_gravity="center_vertical"
+                      android:layout_marginStart="@dimen/_12sdp"
+                      android:paddingVertical="@dimen/_3sdp"
+                      android:src="@drawable/add_user"
+                      android:tint="@color/black"
+                      tools:ignore="UseAppTint" />-->
 
                 <TextView
 
@@ -279,11 +326,6 @@
                     android:textSize="@dimen/_10ssp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
-
-
 
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -321,10 +363,6 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-
-
-
-
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/llc_req_location"
                 android:layout_width="wrap_content"
@@ -335,14 +373,14 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-           <!--     <ImageView
-                    android:layout_width="@dimen/_18sdp"
-                    android:layout_height="@dimen/_18sdp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/_12sdp"
-                    android:src="@drawable/ic_location"
-                    android:tint="@color/black"
-                    tools:ignore="UseAppTint" />-->
+                <!--     <ImageView
+                         android:layout_width="@dimen/_18sdp"
+                         android:layout_height="@dimen/_18sdp"
+                         android:layout_gravity="center_vertical"
+                         android:layout_marginStart="@dimen/_12sdp"
+                         android:src="@drawable/ic_location"
+                         android:tint="@color/black"
+                         tools:ignore="UseAppTint" />-->
 
                 <TextView
                     android:id="@+id/txt_req_location"

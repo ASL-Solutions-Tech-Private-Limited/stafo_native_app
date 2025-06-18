@@ -54,18 +54,24 @@ import com.stafo.app.screens.emp.EmployeeProfileDetails
 import com.stafo.app.screens.emp.EmployeePunchInActivity
 import com.stafo.app.screens.emp.QRCodeAttendanceEmpActivity
 import com.stafo.app.screens.notification.NotificationActivity
+import com.stafo.app.screens.settings.HolidayActivity
 import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
 import com.stafo.app.screens.settings.PolicyActivity
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.SubMenuActivity
+import com.stafo.app.screens.tms.TaskMSDashboard
+import com.stafo.app.screens.tripPlan.TripDashboardActivity
 import com.stafo.app.screens.ui.EmplyeeyerProfile
 import com.stafo.app.screens.ui.WishListActivity
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.checkExactAlarmPermission
 import com.stafo.app.utils.convertTo12HourFormat
 import com.stafo.app.utils.doLogout
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getFormattedDate2
 import com.stafo.app.utils.getGreetingBasedOnTime
+import com.stafo.app.utils.requestIgnoreBatteryOptimization
+import com.stafo.app.utils.setEMPDevice
 import com.stafo.app.utils.setEmployeeBranchId
 import com.stafo.app.utils.setEmployeeComId
 import com.stafo.app.utils.setIsLock
@@ -112,31 +118,12 @@ class EmployeeDashboard : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         // reviewManager = ReviewManagerFactory.create(this)
         reviewManager = FakeReviewManager(this)
-
-
-        /* if (getIsLockUser() ==true){
-             if (getIsLock() ==true){
-                 val delayMillis = 100L
-                 Handler(Looper.getMainLooper()).postDelayed({
-                     showLockScreen()
-                 }, delayMillis)
-
-             }
-         }else{
-             showScreenLockDialog()
-         }*/
-
-
-
-
-
-
-
-
         setupViews()
         onClickListener()
-        //setupImageSlider()
+
     }
+
+
 
     private fun setupViews() {
         binding?.apply {
@@ -225,6 +212,41 @@ class EmployeeDashboard : AppCompatActivity() {
                                 Intent(
                                     this@EmployeeDashboard,
                                     CRMLeadDashboard::class.java
+                                )
+                            )
+                        }
+
+                        "Holidays" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard,
+                                    HolidayActivity::class.java
+                                )
+                            )
+                        }
+
+                        "CRM" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard,
+                                    CRMLeadDashboard::class.java
+                                )
+                            )
+                        }
+
+                        "Task" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard,
+                                    TaskMSDashboard::class.java
+                                )
+                            )
+                        }
+                        "Trip" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard,
+                                    TripDashboardActivity::class.java
                                 )
                             )
                         }
@@ -444,12 +466,7 @@ class EmployeeDashboard : AppCompatActivity() {
                 mEmplyeeInfo = it.employeeInfo
                 setEmployeeComId(it.employeeInfo.companyId.toString())
                 setEmployeeBranchId(it.employeeInfo.branchId.toString())
-               /* it.employeeInfo.shift?.let { shift ->
-                    val startTime12Hr = convertTo12HourFormat(shift.startTime)
-                    val endTime12Hr = convertTo12HourFormat(shift.endTime)
-                    binding.tvOfficeTiming.text =
-                        "Your Office timing is $startTime12Hr to $endTime12Hr"
-                }*/
+
 
                 it.employeeInfo.shifts.firstOrNull()?.let { shift ->
                     val startTime12Hr = convertTo12HourFormat(shift.startTime)
@@ -498,152 +515,136 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
                 if (!it.employeeInfo.punches.isNullOrEmpty()) {
-                    Log.d("res", "true ")
-
+                    val todayDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                     val punchesToday = it.employeeInfo.punches.filter { punch ->
-                        val punchDate = punch.punchIn?.let {
-                            SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(it)
-                        }?.let {
-                            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
-                        }
-                        punchDate == SimpleDateFormat(
-                            "yyyy-MM-dd",
-                            Locale.getDefault()
-                        ).format(Date())
+                        punch.punchIn?.startsWith(todayDate) == true
                     }
 
+                    Log.e("punchinDAta", "response: $punchesToday")
+
+                    val geoStatus = it.employeeInfo.geoStatus
+                    val shiftEndTime = it.employeeInfo.shifts.firstOrNull()?.endTime
+                    val now = Calendar.getInstance()
+
                     if (punchesToday.isNotEmpty()) {
-                        val lastPunch = punchesToday.first()
-                        val punchInTime = lastPunch.punchIn
-                        val punchOutTime = lastPunch.punchOut
-                        val geoStatus = it.employeeInfo.geoStatus
-                        val shiftEndTime = it.employeeInfo.shifts.firstOrNull()?.endTime
-
-                        if (punchInTime != null && geoStatus == "1") {
-
-                            if (!isServiceRunning(LocationForegroundService::class.java)) {
-                                startService(Intent(this, LocationForegroundService::class.java))
-                            }
-                        }
-
-                        if (punchInTime != null && punchOutTime != null) {
-
-                            if (isServiceRunning(LocationForegroundService::class.java)) {
-
-                                val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                startService(stopIntent)
-
-                                /*val serviceIntent = Intent(this, LocationForegroundService::class.java)
-                                stopService(serviceIntent)*/
-                                Log.d("res", "Stopped service after punch out.")
-                            }
-
-                            // If last punch has both In and Out, allow another Punch In
-                            binding.btnPunchIn.text = "Punch In"
-                            binding.btnPunchIn.isEnabled = true
-                            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-                            binding.tvOfficeTiming.text = "Punched Out At ${
-                                getFormattedDate2(
-                                    punchOutTime,
-                                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
-                                    "hh:mm a dd MMM yyyy"
-                                )
-                            }"
-
-                        } else if (punchInTime != null) {
-                            // If last punch only has In, allow Punch Out
-                            binding.btnPunchIn.text = "Punch Out"
-                            binding.btnPunchIn.isEnabled = true
-                            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-                            binding.tvOfficeTiming.text = "Punched In At ${
-                                getFormattedDate2(
-                                    punchInTime,
-                                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
-                                    "hh:mm a dd MMM yyyy"
-                                )
-                            }"
-                        }
-                       /* val currentDateTime = Calendar.getInstance()
-                        if (shiftEndTime != null) {
+                        val ongoingPunch = punchesToday.lastOrNull { punch -> punch.punchIn != null && punch.punchOut == null }
 
 
-                            val shiftEndCalendar = Calendar.getInstance()
-                            val shiftEndTimeDate =
-                                SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
+                        if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo") {
+                            if (ongoingPunch != null){
+                                checkExactAlarmPermission(this) { exactAlarmGranted ->
+                                    if (exactAlarmGranted) {
+                                        requestIgnoreBatteryOptimization(this) { batteryOptGranted ->
+                                            if (batteryOptGranted) {
+                                                startLocationServiceIfNotRunning()
 
-                            shiftEndTimeDate?.let {
-                                shiftEndCalendar.set(Calendar.HOUR_OF_DAY, it.hours)
-                                shiftEndCalendar.set(Calendar.MINUTE, it.minutes)
-                                shiftEndCalendar.set(Calendar.SECOND, 0)
-                            }
+                                                val shiftEndReached = shiftEndTime?.let { endTime ->
+                                                    val shiftEndCal = Calendar.getInstance()
+                                                    val end = SimpleDateFormat("HH:mm", Locale.getDefault()).parse(endTime)
+                                                    shiftEndCal.set(Calendar.HOUR_OF_DAY, end.hours)
+                                                    shiftEndCal.set(Calendar.MINUTE, end.minutes)
+                                                    shiftEndCal.set(Calendar.SECOND, 0)
+                                                    now.after(shiftEndCal)
+                                                } ?: false
 
-                            if (shiftEndTime != null && currentDateTime.after(shiftEndCalendar)) {
+                                                if (shiftEndReached) {
+                                                    stopLocationServiceIfRunning()
+                                                    Log.d("res", "Stopped service after shift end.")
+                                                }
 
-                                Log.d("res", "end time service")
-
-
-                                if (isServiceRunning(LocationForegroundService::class.java)) {
-
-                                    val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                    stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                    startService(stopIntent)
-                                    *//*val serviceIntent = Intent(this, LocationForegroundService::class.java)
-                                    stopService(serviceIntent)*//*
-                                    Log.d("res", "Stopped service after shift end.")
+                                                if (shiftEndTime.isNullOrEmpty()) {
+                                                    if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(Calendar.MINUTE) == 0) {
+                                                        stopLocationServiceIfRunning()
+                                                        Log.d("res", "Stopped service at 9 PM, no shift end.")
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
+
+
                         }else{
-                            if (isServiceRunning(LocationForegroundService::class.java)) {
 
-                                val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                startService(stopIntent)
-                                Log.d("res", "Stopped service not find shift time.")
+                            if (ongoingPunch != null) {
+                                updateUIForPunchIn(ongoingPunch.punchIn!!)
+                                if (geoStatus == "1") {
+                                    checkExactAlarmPermission(this) { exactAlarmGranted ->
+                                        if (exactAlarmGranted) {
+                                            requestIgnoreBatteryOptimization(this) { batteryOptGranted ->
+                                                if (batteryOptGranted) {
+                                                    startLocationServiceIfNotRunning()
+
+                                                    val shiftEndReached = shiftEndTime?.let { endTime ->
+                                                        val shiftEndCal = Calendar.getInstance()
+                                                        val end = SimpleDateFormat("HH:mm", Locale.getDefault()).parse(endTime)
+                                                        shiftEndCal.set(Calendar.HOUR_OF_DAY, end.hours)
+                                                        shiftEndCal.set(Calendar.MINUTE, end.minutes)
+                                                        shiftEndCal.set(Calendar.SECOND, 0)
+                                                        now.after(shiftEndCal)
+                                                    } ?: false
+
+                                                    if (shiftEndReached) {
+                                                        stopLocationServiceIfRunning()
+                                                        Log.d("res", "Stopped service after shift end.")
+                                                    }
+
+                                                    if (shiftEndTime.isNullOrEmpty()) {
+                                                        if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(Calendar.MINUTE) == 0) {
+                                                            stopLocationServiceIfRunning()
+                                                            Log.d("res", "Stopped service at 9 PM, no shift end.")
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                else {
+                                    stopLocationServiceIfRunning()
+                                }
+
                             }
+                            else {
+                                val lastPunch = punchesToday.lastOrNull()
+                                val punchOutTime = lastPunch?.punchOut
 
-                        }*/
+                                if (punchOutTime != null) {
+                                    updateUIForPunchOut(punchOutTime)
+                                    stopLocationServiceIfRunning()
+                                } else {
+                                    binding.btnPunchIn.text = "Punch In"
+                                    binding.btnPunchIn.isEnabled = true
+                                    binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
 
-                        val currentDateTime = Calendar.getInstance()
+                                    val shiftEndReached = shiftEndTime?.let { endTime ->
+                                        val shiftEndCal = Calendar.getInstance()
+                                        val end = SimpleDateFormat("HH:mm", Locale.getDefault()).parse(endTime)
+                                        shiftEndCal.set(Calendar.HOUR_OF_DAY, end.hours)
+                                        shiftEndCal.set(Calendar.MINUTE, end.minutes)
+                                        shiftEndCal.set(Calendar.SECOND, 0)
+                                        now.after(shiftEndCal)
+                                    } ?: false
 
-                        if (!shiftEndTime.isNullOrEmpty()) {
-                            val shiftEndCalendar = Calendar.getInstance()
-                            val shiftEndTimeDate =
-                                SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
-
-                            shiftEndTimeDate?.let {
-                                shiftEndCalendar.set(Calendar.HOUR_OF_DAY, it.hours)
-                                shiftEndCalendar.set(Calendar.MINUTE, it.minutes)
-                                shiftEndCalendar.set(Calendar.SECOND, 0)
-                            }
-
-                            if (currentDateTime.after(shiftEndCalendar)) {
-                                Log.d("res", "End time reached, stopping service.")
-
-                                if (isServiceRunning(LocationForegroundService::class.java)) {
-                                    val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                    stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                    startService(stopIntent)
-                                    Log.d("res", "Stopped service after shift end.")
+                                    if (shiftEndReached) {
+                                        stopLocationServiceIfRunning()
+                                        Log.d("res", "Stopped service after shift end.")
+                                    } else if (shiftEndTime.isNullOrEmpty()) {
+                                        if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(Calendar.MINUTE) == 0) {
+                                            stopLocationServiceIfRunning()
+                                            Log.d("res", "Stopped service at 9 PM, no shift end.")
+                                        }
+                                    }
                                 }
                             }
-                        } else {
 
-                            val currentHour = currentDateTime.get(Calendar.HOUR_OF_DAY)
-                            val currentMinute = currentDateTime.get(Calendar.MINUTE)
-
-                            if (currentHour == 20 && currentMinute == 0) {
-
-                                Log.d("res", "Shift time is empty, checking 8:00 PM condition.")
-
-                                if (isServiceRunning(LocationForegroundService::class.java)) {
-                                    val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                    stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                    startService(stopIntent)
-                                    Log.d("res", "Stopped service at 8:00 PM as shift time was empty.")
-                                }
-                            }
                         }
+
+
+
+
 
 
 
@@ -651,7 +652,13 @@ class EmployeeDashboard : AppCompatActivity() {
                         binding.btnPunchIn.text = "Punch In"
                         binding.btnPunchIn.isEnabled = true
                         binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+                        stopLocationServiceIfRunning()
                     }
+                } else {
+                    binding.btnPunchIn.text = "Punch In"
+                    binding.btnPunchIn.isEnabled = true
+                    binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+                    stopLocationServiceIfRunning()
                 }
 
 
@@ -734,6 +741,9 @@ class EmployeeDashboard : AppCompatActivity() {
 
         settingsViewModel.mFetchEmployeeDetailsResponse.observe(this) {
             if (it.status) {
+
+                it.data?.deviceId?.takeIf { it.isNotEmpty() }?.let { setEMPDevice(this, it) }
+
                 if (!it.imageUrl.isNullOrEmpty()) {
 
                     binding.ivHeaderProfilePic.visibility = View.VISIBLE
@@ -775,6 +785,60 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
     }
+
+
+    private fun startLocationServiceIfNotRunning() {
+        if (!isServiceRunning(LocationForegroundService::class.java)) {
+            startService(Intent(this, LocationForegroundService::class.java))
+        }
+    }
+
+    private fun stopLocationServiceIfRunning() {
+        if (isServiceRunning(LocationForegroundService::class.java)) {
+            val stopIntent = Intent(this, LocationForegroundService::class.java)
+            stopIntent.action = "STOP_FOREGROUND_SERVICE"
+            ContextCompat.startForegroundService(this, stopIntent)
+        }
+    }
+
+
+
+    private fun updateUIForPunchIn(punchInTime: String) {
+        runOnUiThread {
+            binding.btnPunchIn.text = "Punch Out"
+            binding.btnPunchIn.isEnabled = true
+            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+            binding.tvOfficeTiming.text = "Punched In At ${
+                getFormattedDate2(
+                    punchInTime,
+                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
+                    "hh:mm a dd MMM yyyy"
+                )
+            }"
+        }
+    }
+
+    private fun updateUIForPunchOut(punchOutTime: String) {
+        runOnUiThread {
+            binding.btnPunchIn.text = "Punch In"
+            binding.btnPunchIn.isEnabled = true
+            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+            binding.tvOfficeTiming.text = "Punched Out At ${
+                getFormattedDate2(
+                    punchOutTime,
+                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
+                    "hh:mm a dd MMM yyyy"
+                )
+            }"
+        }
+    }
+
+
+
+
+
+
+
 
 
     override fun onBackPressed() {
@@ -1113,8 +1177,11 @@ class EmployeeDashboard : AppCompatActivity() {
     private fun actionList(): List<ActionModel> {
         mActionList.add(ActionModel("Attendance", R.drawable.ic_employee))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
+        mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
+        mActionList.add(ActionModel("Trip", R.drawable.ic_trip))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
+        mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
         return mActionList
     }
@@ -1133,4 +1200,15 @@ class EmployeeDashboard : AppCompatActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("NetworkHandler", " onDestroy called on activity")
+    }
+
+
+
+
+
 }

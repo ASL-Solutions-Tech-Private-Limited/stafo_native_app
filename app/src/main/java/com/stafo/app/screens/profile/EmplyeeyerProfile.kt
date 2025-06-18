@@ -37,6 +37,7 @@ import com.stafo.app.screens.settings.AssignBranchActivity
 import com.stafo.app.screens.settings.BranchActivity
 import com.stafo.app.screens.settings.FeedbackActivity
 import com.stafo.app.screens.settings.GenerateQRActivity
+import com.stafo.app.screens.settings.HolidayActivity
 import com.stafo.app.screens.settings.LeaveManagementActivity
 import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
 import com.stafo.app.screens.settings.PolicyActivity
@@ -583,6 +584,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
             ProfileListItem.SectionHeader("Account Settings"),
             ProfileListItem.SettingItem("Branch", R.drawable.ic_branches),
             ProfileListItem.SettingItem("Department", R.drawable.ic_department),
+            ProfileListItem.SettingItem("Holiday", R.drawable.ic_department),
             ProfileListItem.SettingItem("Reports", R.drawable.ic_reports),
             ProfileListItem.SettingItem("Generate QR Code", R.drawable.ic_qr),
             ProfileListItem.SettingItem("Performance Type", R.drawable.ic_performace),
@@ -617,6 +619,11 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
                 "Department" -> {
                     val intent = Intent(this, AddDepartmentActivity::class.java)
+                    startActivity(intent)
+                }
+
+                "Holiday" -> {
+                    val intent = Intent(this, HolidayActivity::class.java)
                     startActivity(intent)
                 }
 

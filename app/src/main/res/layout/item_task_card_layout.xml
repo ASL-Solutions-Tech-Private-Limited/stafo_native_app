@@ -1,0 +1,110 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_6sdp"
+    android:layout_marginBottom="12dp"
+    android:elevation="@dimen/_4sdp"
+    android:radius="@dimen/_8sdp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/taskTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/gilroy_bold"
+            android:maxLines="2"
+            android:text="Prepare quarterly report"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14ssp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/taskDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Aug 15 ·"
+                android:textColor="@color/gray_colour"
+                android:textSize="@dimen/_12sdp" />
+
+            <TextView
+                android:id="@+id/taskPriority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="High Priority"
+                android:textColor="@color/gray_colour"
+                android:textSize="@dimen/_12sdp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/taskStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_status_in_progress"
+                android:backgroundTint="@color/priority_high"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:text="In Progress"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+
+
+            <TextView
+                android:id="@+id/taskAssign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:backgroundTint="@color/priority_high"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:text="Hamid"
+                android:textColor="@color/app_theme_colour"
+                android:textSize="@dimen/_12ssp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/ivEdit"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_margin="@dimen/_2sdp"
+                android:background="@drawable/edit_pen"
+                android:backgroundTint="@color/app_theme_colour"
+                android:padding="@dimen/_4sdp" />
+
+            <ImageView
+                android:id="@+id/ivDelete"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_margin="@dimen/_2sdp"
+                android:background="@drawable/delete"
+                android:backgroundTint="@color/red"
+                android:padding="@dimen/_4sdp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

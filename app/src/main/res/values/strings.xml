@@ -33,7 +33,7 @@
     <string name="report">Report</string>
     <string name="profile_details">Profile details</string>
     <string name="gender">Gender</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="what_is_your_age">What is your age?</string>
     <string name="upload_your_profile_picture">Upload your Profile Picture</string>
     <string name="from_gallery">From Gallery</string>
@@ -55,7 +55,7 @@
     <string name="error_something_went_wrong">Something went wrong</string>
     <string name="cash_withdrawal">Cash Withdrawal</string>
     <string name="balance_enq">Balance Enquiry</string>
-    <string name="mini_statement">Mini Statment</string>
+    <string name="mini_statement">Mini Statement</string>
     <string name="aadhaar">Aadhaar Number</string>
     <string name="enter_aadhaar_no">Enter Aadhaar Number</string>
     <string name="customer_number">Customer Mobile Number</string>
@@ -215,8 +215,8 @@
 
 
     <string name="foreground_service_sample_notification_channel_general_name">General notification</string>
-    <string name="foreground_service_sample_notification_title">Foreground Service</string>
-    <string name="foreground_service_sample_notification_description">STAFO app is running in the background.</string>
+    <string name="foreground_service_sample_notification_title">Stafo is Running</string>
+    <string name="foreground_service_sample_notification_description"> We’re tracking for your attendance—don\'t force stop the app.</string>
 
     <string name="foreground_service_sample_description">This sample app demonstrates how to use the foreground service on Android 14.\n\nIt will start a foreground service to fetch last known location and to observe any updates to the location.\n\nIt also shows how to bind to a service to update UI.</string>
 

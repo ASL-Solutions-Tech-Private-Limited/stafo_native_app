@@ -20,6 +20,31 @@ private val EMP_BRANCH_ID = "emp_branch_id"
 private val isLockSet = "is_lock_set"
 private val isLockUserSet = "is_lock_user_set"
 private val fbToken = "fb_token"
+private val deviceId = "device_id"
+private val tripServiceAction = "trip_service_action"
+private val TRIP_ID = "trip_id"
+
+
+fun setTripServiceAction(context: Context, isLogin: Boolean) {
+    getPrefs(context).edit().putBoolean(tripServiceAction, isLogin).apply()
+}
+fun getTripServiceAction(context: Context): Boolean {
+    return getPrefs(context).getBoolean(tripServiceAction, false)
+}
+
+
+
+
+fun setEMPDevice(context: Context, loginDevice: String) {
+    Hawk.put(deviceId, loginDevice)
+}
+fun getEMPDevice(context: Context): String? {
+    return Hawk.get(deviceId, null)
+}
+
+
+
+
 
 
 // SharedPreferences Helper
@@ -58,6 +83,8 @@ fun setIsCOMPANYLogin(context: Context, isLogin: Boolean) {
 fun getIsCOMPANYLogin(context: Context): Boolean {
     return getPrefs(context).getBoolean(isCOMPANYLogin, Hawk.get(isCOMPANYLogin, false))
 }*/
+
+
 private fun getPrefs(context: Context): SharedPreferences {
     return context.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
 }
@@ -74,12 +101,16 @@ fun setIsOnBoardingScreenShown(context: Context, isShown: Boolean) {
 fun isOnBoardingScreenShown(context: Context): Boolean {
     return getOnBoardingPrefs(context).getBoolean(isOnBoardingShown, false)
 }
+
+
 fun setIsEMPLogin(context: Context, isLogin: Boolean) {
     getPrefs(context).edit().putBoolean(isEMPLogin, isLogin).apply()
 }
 fun getIsEMPLogin(context: Context): Boolean {
     return getPrefs(context).getBoolean(isEMPLogin, false)
 }
+
+
 fun setIsCOMPANYLogin(context: Context, isLogin: Boolean) {
     getPrefs(context).edit().putBoolean(isCOMPANYLogin, isLogin).apply()
 }
@@ -173,6 +204,16 @@ fun setEmployeeComId(com_id: String) {
 
 fun getEmployeeComId(): String? {
     return Hawk.get(COM_ID, null)
+}
+
+
+
+fun setTripId(com_id: String) {
+    Hawk.put(TRIP_ID, com_id)
+}
+
+fun getTripId(): String? {
+    return Hawk.get(TRIP_ID, null)
 }
 fun setEmployeeBranchId(emp_branch_id: String) {
     Hawk.put(EMP_BRANCH_ID, emp_branch_id)

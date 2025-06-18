@@ -1,6 +1,8 @@
 package com.stafo.app.screens.dashboard
 
+import android.app.ActivityManager
 import android.app.KeyguardManager
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,6 +17,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.stafo.app.R
 import com.stafo.app.base.adapter.ActionsListAdapter
 import com.stafo.app.base.adapter.AdapterOnLeave
@@ -25,21 +29,28 @@ import com.stafo.app.base.model.DashboardType
 import com.stafo.app.base.model.DashboardWish
 import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmployerDashboardBinding
+import com.stafo.app.screens.crm.CRMLeadDashboard
 import com.stafo.app.screens.emp.EmplyeeAttendaceListActivity
 import com.stafo.app.screens.emp.ViewEmpLocationTrackActivity
+import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.performance.PerformanceActivity
 import com.stafo.app.screens.profile.CompanyProfileActivity
 import com.stafo.app.screens.rank.RankListActivity
+import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.screens.settings.AddEmployeeActivity
 import com.stafo.app.screens.settings.BranchActivity
+import com.stafo.app.screens.settings.HolidayActivity
 import com.stafo.app.screens.settings.LeaveManagementActivity
 import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
 import com.stafo.app.screens.settings.PolicyActivity
 import com.stafo.app.screens.settings.SettingsViewModel
+import com.stafo.app.screens.settings.SubMenuActivity
 import com.stafo.app.screens.settings.VerifyCompanyDetailsActivity
 import com.stafo.app.screens.settings.ViewAllEmployeeActivity
 import com.stafo.app.screens.settings.ViewDeviceRequestEmpActivity
 import com.stafo.app.screens.subscription.SubscriptionActivity
+import com.stafo.app.screens.tms.TaskMSDashboard
+import com.stafo.app.screens.tripPlan.TripDashboardActivity
 import com.stafo.app.screens.ui.EmplyeeyerProfile
 import com.stafo.app.screens.ui.WishListActivity
 import com.stafo.app.utils.CustomLoader
@@ -51,14 +62,6 @@ import com.stafo.app.utils.getTodayDate
 import com.stafo.app.utils.setEmployeeComId
 import com.stafo.app.utils.setIsLock
 import com.stafo.app.utils.setIsLockUser
-import com.bumptech.glide.Glide
-import com.google.gson.Gson
-import com.stafo.app.screens.chat.ChatWithCompanyActivity
-import com.stafo.app.screens.crm.CRMLeadDashboard
-import com.stafo.app.screens.notification.NotificationActivity
-import com.stafo.app.screens.recharge.RechargeActivity
-import com.stafo.app.screens.reports.ReportsActivity
-import com.stafo.app.screens.settings.SubMenuActivity
 
 class EmployerDashboard : AppCompatActivity() {
 
@@ -83,18 +86,6 @@ class EmployerDashboard : AppCompatActivity() {
             insets
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
-
-
-        /*  if (getIsLockUser()==true){
-              if (getIsLock()==true){
-                  val delayMillis = 100L
-                  Handler(Looper.getMainLooper()).postDelayed({
-                      showLockScreen()
-                  }, delayMillis)
-              }
-          }else{
-              showScreenLockDialog()
-          }*/
 
 
         initViews()
@@ -311,6 +302,31 @@ class EmployerDashboard : AppCompatActivity() {
 
                             }
 
+                            "Holidays" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        HolidayActivity::class.java
+                                    )
+                                )
+                            }
+
+                            "Trips" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        TripDashboardActivity::class.java
+                                    )
+                                )
+                            }
+                            "Task" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        TaskMSDashboard::class.java
+                                    )
+                                )
+                            }
                         }
                     }
 
@@ -330,7 +346,7 @@ class EmployerDashboard : AppCompatActivity() {
             if (it.status) {
                 setEmployeeComId(it.companyId.toString())
 
-                maxEmployeeAdd = it.maxEmployeeAdd
+                maxEmployeeAdd = it.companyInfo?.maxEmployeeAdd.toString()
 
 
 
@@ -507,6 +523,7 @@ class EmployerDashboard : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
         settingsViewModel.getCompanyDashboard(this@EmployerDashboard)
         settingsViewModel.getCompanyDetails(this@EmployerDashboard)
     }
@@ -519,10 +536,25 @@ class EmployerDashboard : AppCompatActivity() {
         }
     }
 
-    private fun stopLocationService() {
-        val intent = Intent(this, LocationForegroundService::class.java)
-        stopService(intent)
+    private fun stopLocationServiceIfRunning() {
+        if (isServiceRunning(LocationForegroundService::class.java)) {
+            val stopIntent = Intent(this, LocationForegroundService::class.java)
+            stopIntent.action = "STOP_FOREGROUND_SERVICE"
+            ContextCompat.startForegroundService(this, stopIntent)
+        }
     }
+
+
+    private fun isServiceRunning(serviceClass: Class<out Service>): Boolean {
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in activityManager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
 
     private fun setOnClickEvents() {
 
@@ -546,24 +578,13 @@ class EmployerDashboard : AppCompatActivity() {
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
 
-
-
-       /* binding.llcRecharge.setOnClickListener {
-            startActivity(Intent(this, DashboardActivity::class.java))
-        }
-
-        binding.llcLoan.setOnClickListener {
-            startActivity(Intent(this, ChatWithCompanyActivity::class.java))
-            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
-        }*/
-
-
-
-        stopLocationService()
+        stopLocationServiceIfRunning()
 
         settingsViewModel.getCompanyDetails(this@EmployerDashboard)
 
         settingsViewModel.getBannerImage(this@EmployerDashboard)
+
+
 
         binding.tvHeaderSetting.setOnClickListener {
 
@@ -685,12 +706,15 @@ class EmployerDashboard : AppCompatActivity() {
     private fun actionList(): List<ActionModel> {
         mActionList.add(ActionModel("Employee", R.drawable.ic_employee))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
+        mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
+        mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
         mActionList.add(ActionModel("Location Track", R.drawable.ic_location))
         mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Performance Type", R.drawable.ic_performace))
         mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
+        mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
         mActionList.add(ActionModel("Request Device", R.drawable.ic_device_request))
         return mActionList

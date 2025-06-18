@@ -1,5 +1,7 @@
 package com.stafo.app.screens.settings.dataClass
 
+import java.io.Serializable
+
 data class ViewBranchResponse(
     val message: String,
     val data: List<BranchItem>
@@ -16,7 +18,7 @@ data class BranchItem(
     val status: Int,
     val created_at: String,
     val updated_at: String
-)
+):Serializable
 
 
 

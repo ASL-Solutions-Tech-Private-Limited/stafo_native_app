@@ -324,18 +324,20 @@
                         android:id="@+id/til_company_address"
                         android:layout_width="match_parent"
                         android:layout_marginBottom="@dimen/_12sdp"
-                        android:layout_height="@dimen/_126sdp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_12sdp">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/tie_company_address"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_126sdp"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/edit_text_background"
                             android:fontFamily="@font/gilroy_medium"
                             android:gravity="start|top"
                             android:hint="@string/office_address"
-                            android:inputType="textImeMultiLine"
+                            android:minLines="2"
+                            android:maxLines="5"
+                            android:inputType="textMultiLine"
                             android:textAlignment="viewStart" />
 
                     </com.google.android.material.textfield.TextInputLayout>

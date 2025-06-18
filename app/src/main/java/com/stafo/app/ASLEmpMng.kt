@@ -1,14 +1,25 @@
 package com.stafo.app
 
 import android.content.Context
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.StrictMode
 import android.util.Log
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.google.android.libraries.places.api.Places
 import com.stafo.app.api.ApiClient
 import com.stafo.app.api.ApiStores
 import com.mmi.services.account.MapmyIndiaAccountManager
 import com.orhanobut.hawk.Hawk
+import com.stafo.app.base.NetworkConnectivityHandler
+import com.stafo.app.base.NetworkMonitor
+import com.stafo.app.utils.scheduleDailyEndOfDaySync
 
 class ASLEmpMng : MultiDexApplication() {
     init {
@@ -34,7 +45,17 @@ class ASLEmpMng : MultiDexApplication() {
         StrictMode.setVmPolicy(builder.build())
       //  FirebaseApp.initializeApp(this)
 
+        val networkHandler = NetworkConnectivityHandler(this)
+        registerActivityLifecycleCallbacks(networkHandler)
+
+
+
+
+
         initMapMyIndia()
+
+
+
 
     }
 
@@ -52,6 +73,5 @@ class ASLEmpMng : MultiDexApplication() {
         MapmyIndiaAccountManager.getInstance().setAtlasGrantType("client_credentials")
         MapmyIndiaAccountManager.getInstance().setAtlasClientId("96dHZVzsAuveHJyb4fsrVuXD0YNPrFaochM2cB-f7hG7DijsK6wuIGwWgAo7ksFFxTVpPm2mORP_XLz9OkWc1Q==")
         MapmyIndiaAccountManager.getInstance().setAtlasClientSecret("lrFxI-iSEg9UFw9ZECaYSUPOvunPyH3qtIQyBP0lo-8yMBn9fNnEUP8xU44RbKPf-yq4d7x-H1T6fo1qyZRdt7x6r4gib2ys")
-
     }
 }

@@ -59,21 +59,7 @@ class EmployeeAttendance : AppCompatActivity() {
 
     }
 
-    private fun showDatePicker() {
-        val datePickerDialog = DatePickerDialog(
-            this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
-                val selectedDate = Calendar.getInstance()
-                selectedDate.set(year, monthOfYear, dayOfMonth)
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                val formattedDate = dateFormat.format(selectedDate.time)
-                //binding.tieDateJoining.setText("$formattedDate")
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
-        datePickerDialog.show()
-    }
+
 
     private fun onClickListener() {
         binding.apply {
@@ -115,14 +101,22 @@ class EmployeeAttendance : AppCompatActivity() {
             if (it.status) {
                 binding.txtMsg.visibility = View.GONE
                 Log.d("res", it.data.toString())
-                val layoutManager: RecyclerView.LayoutManager =
-                    LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-                binding.rvEmpAttendList.setLayoutManager(layoutManager)
-                rvAdapter = EmployeeAttendanceAdapter(it.data, this)
-                binding.rvEmpAttendList.adapter = rvAdapter
-                rvAdapter.notifyDataSetChanged()
+
+                if (it.data.isNotEmpty()){
+                    val layoutManager: RecyclerView.LayoutManager =
+                        LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                    binding.rvEmpAttendList.setLayoutManager(layoutManager)
+                    rvAdapter = EmployeeAttendanceAdapter(it.data, this)
+                    binding.rvEmpAttendList.adapter = rvAdapter
+                    rvAdapter.notifyDataSetChanged()
+                } else {
+                    binding.rvEmpAttendList.visibility = View.GONE
+                    binding.txtMsg.visibility = View.VISIBLE
+                }
+
 
             } else {
+                binding.rvEmpAttendList.visibility = View.GONE
                 binding.txtMsg.visibility = View.VISIBLE
             }
         }

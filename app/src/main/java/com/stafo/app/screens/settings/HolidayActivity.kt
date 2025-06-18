@@ -18,6 +18,7 @@ import com.stafo.app.databinding.ActivityHolidayBinding
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
+import com.stafo.app.utils.getIsEMPLogin
 
 class HolidayActivity : AppCompatActivity() {
 
@@ -43,8 +44,13 @@ class HolidayActivity : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
         onClickListener()
         observeViewModel()
+        handleUI()
+    }
 
-
+    private fun handleUI() {
+        if (getIsEMPLogin(this)) {
+            binding.llcAddHoliday.visibility = View.GONE
+        }
     }
 
     override fun onResume() {
@@ -70,7 +76,6 @@ class HolidayActivity : AppCompatActivity() {
 
             imageBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
             binding.llcAddHoliday.setOnClickListener {
-
                 startActivity(Intent(this@HolidayActivity, AddHolidayActivity::class.java))
             }
 
@@ -98,7 +103,7 @@ class HolidayActivity : AppCompatActivity() {
                     binding.txtMsg.visibility = View.GONE
                     val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
                     binding.rvHolidayList.setLayoutManager(layoutManager)
-                    rvAdapter = AdapterHoliday(it.data, this@HolidayActivity)
+                    rvAdapter = AdapterHoliday(it.data, this@HolidayActivity, getIsEMPLogin(this))
                     binding.rvHolidayList.adapter = rvAdapter
                     rvAdapter.notifyDataSetChanged()
                 }else {

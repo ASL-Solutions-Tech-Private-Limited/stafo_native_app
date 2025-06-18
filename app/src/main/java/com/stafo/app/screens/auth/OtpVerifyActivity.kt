@@ -17,12 +17,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.stafo.app.R
+import com.stafo.app.base.request.VerifyOtpRequestBody
 import com.stafo.app.databinding.ActivityOtpVerifyBinding
 import com.stafo.app.screens.dashboard.EmployeeDashboard
 import com.stafo.app.screens.dashboard.EmployerDashboard
 import com.stafo.app.screens.emp.NewDeviceRegisterActivity
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.getAndroidVersion
+import com.stafo.app.utils.getDeviceName
 import com.stafo.app.utils.getFBToken
 import com.stafo.app.utils.setCompanyDetails
 import com.stafo.app.utils.setEmployeeDetails
@@ -58,7 +61,8 @@ class OtpVerifyActivity : AppCompatActivity() {
 
         deviceID = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
 
-      //  binding.llOtp.setText(otp)
+
+
         onClickListener()
         observeViewModel()
         binding.llOtp.requestFocus()
@@ -66,8 +70,16 @@ class OtpVerifyActivity : AppCompatActivity() {
 
     private fun onClickListener() {
         startTimer()
-        binding?.apply {
+        binding.apply {
+
+            binding.btnOtpVerify.isEnabled = false
+            binding.btnOtpVerify.alpha = 0.3f
+
+
             tvOtpMobileNo.text = "+91${mobile}"
+
+
+
             llOtp.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence?,
@@ -92,12 +104,28 @@ class OtpVerifyActivity : AppCompatActivity() {
 
                 }
             })
+
+
+
             btnOtpVerify.setOnClickListener {
 
                 if (!llOtp.text.toString().isNullOrEmpty()){
 
                     val getOtp=llOtp.text.toString()
-                    authViewModel.verifyOTP(this@OtpVerifyActivity, mobile, getOtp,deviceID)
+
+                    val request = VerifyOtpRequestBody(
+                        mobile_number = mobile,
+                        otp = getOtp,
+                        device_id = deviceID,
+                        firebase_token = getFBToken() ?: "",
+                        device_name = getDeviceName(),
+                        android_version = getAndroidVersion()
+                    )
+
+
+
+
+                    authViewModel.verifyOTP(this@OtpVerifyActivity, request)
 
                 }else CustomToast(this@OtpVerifyActivity,"Please enter your OTP!")
 

@@ -62,33 +62,48 @@ class ViewDeviceRequestEmpActivity : AppCompatActivity() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
         settingsViewModel.mGetCompanyViewRequestDeviceResponse.observe(this) {
-              if (it.success){
-                  if (it.data.isNotEmpty()){
+            if (it.success) {
+                if (it.data.isNotEmpty()) {
 
-                      binding.etDirSearch.isFocusable = true
-                      binding.etDirSearch.isFocusableInTouchMode = true
+                    val pendingList = it.data.filter { device -> device.device_status == "pending" }
 
-                      empList=it.data
-                      filteredList=empList
+                    if (pendingList.isNotEmpty()) {
+                        binding.etDirSearch.isFocusable = true
+                        binding.etDirSearch.isFocusableInTouchMode = true
 
-                      val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
-                      binding.rvRequestDeviceList.setLayoutManager(layoutManager)
-                      rvAdapter=AdapterDeviceRequest(empList,this)
-                      binding.rvRequestDeviceList.adapter = rvAdapter
-                      rvAdapter.notifyDataSetChanged()
+                        empList = pendingList
+                        filteredList = empList
 
-                  }else{
-                      binding.etDirSearch.isFocusable = false
-                      binding.etDirSearch.isFocusableInTouchMode = false
-                      binding.txtMsg.visibility = View.VISIBLE
-                  }
-              }else{
-                  binding.etDirSearch.isFocusable = false
-                  binding.etDirSearch.isFocusableInTouchMode = false
-                  binding.txtMsg.visibility = View.VISIBLE
-              }
+                        val layoutManager: RecyclerView.LayoutManager =
+                            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                        binding.rvRequestDeviceList.layoutManager = layoutManager
+                        rvAdapter = AdapterDeviceRequest(empList, this)
+                        binding.rvRequestDeviceList.adapter = rvAdapter
+                        rvAdapter.notifyDataSetChanged()
+                    } else {
 
+                        binding.etDirSearch.isFocusable = false
+                        binding.etDirSearch.isFocusableInTouchMode = false
+                        binding.rvRequestDeviceList.visibility = View.GONE
+                        binding.txtMsg.visibility = View.VISIBLE
+                    }
+
+                } else {
+
+                    binding.etDirSearch.isFocusable = false
+                    binding.etDirSearch.isFocusableInTouchMode = false
+                    binding.rvRequestDeviceList.visibility = View.GONE
+                    binding.txtMsg.visibility = View.VISIBLE
+                }
+            } else {
+
+                binding.etDirSearch.isFocusable = false
+                binding.etDirSearch.isFocusableInTouchMode = false
+                binding.rvRequestDeviceList.visibility = View.GONE
+                binding.txtMsg.visibility = View.VISIBLE
+            }
         }
+
 
         settingsViewModel.mChangeDeviceResponse.observe(this) {
            if (it.success){

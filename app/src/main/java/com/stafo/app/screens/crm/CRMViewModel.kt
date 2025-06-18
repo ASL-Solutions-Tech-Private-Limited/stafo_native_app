@@ -22,6 +22,7 @@ import com.stafo.app.screens.crm.dataClass.LeadListRequest
 import com.stafo.app.screens.crm.dataClass.LeadListResponse
 import com.stafo.app.screens.crm.dataClass.UpdateLeadResponse
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.isNetworkAvailable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -60,6 +61,9 @@ class CRMViewModel: BaseViewModel() {
     val mUpdateLeadResponse: LiveData<UpdateLeadResponse> get() = mUpdateLead
 
     fun updateLead(mContext: Context, id: Int,request:LeadCreateRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -103,6 +107,9 @@ class CRMViewModel: BaseViewModel() {
 
 
     fun getFollowUpList(mContext: Context, id: String) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -145,6 +152,9 @@ class CRMViewModel: BaseViewModel() {
 
 
     fun createNewFollowUp(mContext: Context, request: CreateFollowUpRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -187,6 +197,9 @@ class CRMViewModel: BaseViewModel() {
 
 
     fun createNewLead(mContext: Context, request: LeadCreateRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -229,6 +242,9 @@ class CRMViewModel: BaseViewModel() {
 
 
     fun getAllLeadList(mContext: Context, isCompanyLogin:Boolean,id:String) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -271,36 +287,47 @@ class CRMViewModel: BaseViewModel() {
         }
     }
 
-    fun getLeadDashboard(mContext: Context,isCompanyLogin:Boolean,id:String) {
-        getLoaderLiveData().value = "load"
+    fun getLeadDashboard(mContext: Context, isCompanyLogin: Boolean, id: String) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().postValue("load")
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
-
                 val response = ASLEmpMng.instance.apiStores()?.callCRMDashboard(
                     employeeId = if (isCompanyLogin) null else id,
                     companyId = if (isCompanyLogin) id else null
                 )
+
                 Log.d("crm", "crm dashboard: ${response?.body().toString()}")
+
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
-                    response?.let {
-                        if (it.isSuccessful) {
-                            mCRMDashboard.postValue(it.body())
-                        } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
-                            }
-                        }
-                    } ?: run {
+
+                    if (response == null) {
                         CustomToast(
                             mContext,
                             mContext.getString(R.string.error_something_went_wrong)
+                        )
+                        return@withContext
+                    }
+
+                    if (response.isSuccessful) {
+                        mCRMDashboard.postValue(response.body())
+                    } else {
+                        val error = try {
+                            response.errorBody()?.charStream()?.let { errorStream ->
+                                Gson().fromJson(errorStream, ErrorResponse::class.java)
+                            }
+                        } catch (e: Exception) {
+                            null
+                        }
+
+                        CustomToast(
+                            mContext,
+                            error?.message ?: mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -308,11 +335,14 @@ class CRMViewModel: BaseViewModel() {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
-                    CustomToast(mContext,"hhf "+mContext.getString(R.string.error_something_went_wrong))
+                    Log.e("crm", "Exception: ${e.localizedMessage}")
+                    Log.e("crm", "Context Class: ${mContext::class.java.name}")
+                    Log.e("crm", "apiStores is null? ${ASLEmpMng.instance.apiStores() == null}")
                 }
             }
         }
     }
+
 
 
 }

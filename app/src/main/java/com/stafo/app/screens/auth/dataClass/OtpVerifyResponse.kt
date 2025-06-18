@@ -12,6 +12,8 @@ data class OtpData (
     val company: CompanyData? = null,
     val employee: Employee? = null,
     val device_id: String?,
+    val device_name: String?,
+    val device_version: String?,
     val device_change: String?
 )
 

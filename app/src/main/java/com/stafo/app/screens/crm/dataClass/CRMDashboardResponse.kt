@@ -32,7 +32,7 @@ data class TotalFollowupsToday(
     val name: String?,
     val next_date: String?,
     val notes: String?,
-    val phone: Int?,
+    val phone: String?,
     val start_date: Any?,
     val status: String?,
     val updated_at: String?

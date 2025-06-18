@@ -68,7 +68,6 @@
                             android:layout_height="@dimen/_70sdp"
                             android:padding="4dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/demo_avatar"
                             app:civ_border_color="@color/app_theme_colour"
                             app:civ_border_width="@dimen/_1sdp" />
 

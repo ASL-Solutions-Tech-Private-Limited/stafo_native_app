@@ -55,5 +55,10 @@
         <item name="android:textColor">#0A47B3</item>
     </style>
 
+    <style name="CustomCheckboxBrand" parent="@style/Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/checkbox_selector</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:padding">@dimen/_6sdp</item>
+    </style>
 
 </resources>

@@ -19,9 +19,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.textfield.TextInputLayout
 import com.stafo.app.R
 import com.stafo.app.base.request.AddBranchRequest
 import com.stafo.app.databinding.ActivityAddBranchBinding
+import com.stafo.app.screens.settings.dataClass.BranchItem
 import com.stafo.app.screens.ui.PlaceSearchActivity
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
@@ -46,6 +48,8 @@ class AddBranchActivity : AppCompatActivity() {
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
 
+    private var actionType:String=""
+    private var branchId:Int=0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +82,11 @@ class AddBranchActivity : AppCompatActivity() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
         settingsViewModel.mCreateBranchResponse.observe(this) {
+            CustomToast(this, it.message)
+            onBackPressedDispatcher.onBackPressed()
+            finish()
+        }
+        settingsViewModel.mEditBranchResponse.observe(this) {
             CustomToast(this, it.message)
             onBackPressedDispatcher.onBackPressed()
             finish()
@@ -197,32 +206,90 @@ class AddBranchActivity : AppCompatActivity() {
     }
 
     private fun onClickListener() {
-        binding?.apply {
+        binding.apply {
+
+            actionType = intent.getStringExtra("branch_type")?:""
+
+            val branchData = intent.getSerializableExtra("branch_data") as? BranchItem
+
+            if (actionType == "Edit") tvBranchTitle.text = "Edit Branch" else tvBranchTitle.text = "Add Branch"
+
+
+
+            if (branchData != null) {
+                branchId=branchData.id
+                latitude=branchData.latitude
+                longitude=branchData.longitude
+
+                binding.tieBranchName.setText(branchData.branch_name)
+                binding.tieBranchAddress.setText(branchData.branch_address)
+                binding.tieBranchRadius.setText(branchData.radar.toString())
+
+                binding.tieBranchAddress.isFocusable=true
+                binding.tieBranchAddress.isFocusableInTouchMode=true
+                binding.tilBranchAddress.endIconMode = TextInputLayout.END_ICON_NONE
+
+            } else{
+                binding.tieBranchAddress.isFocusable=false
+                binding.tieBranchAddress.isFocusableInTouchMode=false
+                binding.tilBranchAddress.endIconMode = TextInputLayout.END_ICON_CUSTOM
+                binding.tilBranchAddress.setEndIconDrawable(R.drawable.ic_add_location)
+                tieBranchAddress.setOnClickListener {
+                    getLocation()
+                }
+            }
+
+
+
+
 
 
             btnAddBranch.setOnClickListener {
                 if (isValidate()) {
-                     getEmployeeComId()?.let { it1 ->
-                         val request =  AddBranchRequest(
-                            company_id = it1.toInt(),
-                            branch_name = binding.tieBranchName.text.toString(),
-                            branch_address = binding.tieBranchAddress.text.toString(),
-                            latitude = latitude.toString(),
-                            longitude = longitude.toString(),
-                            radar = binding.tieBranchRadius.text.toString()
-                        )
 
-                         Log.d("MapTap", "main Location: Lat=${latitude}, Lng=${longitude}")
 
-                       settingsViewModel.createBranch(this@AddBranchActivity, request)
+                    if (actionType=="Edit"){
+
+                        getEmployeeComId()?.let { it1 ->
+                            val request =  AddBranchRequest(
+                                company_id = it1.toInt(),
+                                branch_name = binding.tieBranchName.text.toString(),
+                                branch_address = binding.tieBranchAddress.text.toString(),
+                                latitude = latitude.toString(),
+                                longitude = longitude.toString(),
+                                radar = binding.tieBranchRadius.text.toString()
+                            )
+
+                            Log.d("MapTap", "main Location: Lat=${latitude}, Lng=${longitude}")
+
+                            settingsViewModel.editBranch(this@AddBranchActivity,branchId, request)
+                        }
+
+
+
+                    }else{
+                        getEmployeeComId()?.let { it1 ->
+                            val request =  AddBranchRequest(
+                                company_id = it1.toInt(),
+                                branch_name = binding.tieBranchName.text.toString(),
+                                branch_address = binding.tieBranchAddress.text.toString(),
+                                latitude = latitude.toString(),
+                                longitude = longitude.toString(),
+                                radar = binding.tieBranchRadius.text.toString()
+                            )
+
+                            Log.d("MapTap", "main Location: Lat=${latitude}, Lng=${longitude}")
+
+                            settingsViewModel.createBranch(this@AddBranchActivity, request)
+                        }
                     }
+
+
 
                 }
             }
 
-            tieBranchAddress.setOnClickListener {
-                getLocation()
-            }
+
 
             ivBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
@@ -246,9 +313,12 @@ class AddBranchActivity : AppCompatActivity() {
                 "map" -> {
                     val lat = data.getDoubleExtra("latitude", 0.0)
                     val lng = data.getDoubleExtra("longitude", 0.0)
+                    val fullAddress = data.getStringExtra("fullAddress")
+                    binding.tieBranchAddress.setText(fullAddress)
                     latitude = lat ?: 0.0
                     longitude = lng ?: 0.0
-                    getAddressFromLocation(latitude!!, longitude!!)
+
+                    //getAddressFromLocation(latitude!!, longitude!!)
 
                     Log.d("MapTap", "main Location: Lat=${latitude}, Lng=${longitude}")
                 }

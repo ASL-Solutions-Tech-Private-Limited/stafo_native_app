@@ -193,18 +193,16 @@
         </LinearLayout>
 
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_otp_verify"
             android:layout_width="0dp"
             android:layout_height="@dimen/_37sdp"
             android:layout_marginBottom="@dimen/_50sdp"
             android:layout_weight="1"
-            android:alpha=".5"
             android:outlineProvider="none"
             android:background="@drawable/button_background"
             android:backgroundTint="@color/colorTextPrimary"
             android:clickable="false"
-            android:enabled="false"
             android:fontFamily="@font/gilroy_semi_bold"
             android:text="Verify OTP"
             android:textAllCaps="false"

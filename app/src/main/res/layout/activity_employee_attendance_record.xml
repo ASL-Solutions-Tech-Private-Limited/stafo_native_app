@@ -91,9 +91,9 @@
                 android:gravity="center"
                 android:paddingVertical="@dimen/_5sdp"
                 android:text="Present"
-                android:textColor="#565656"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_11ssp"
-                app:drawableTint="@color/black" />
+                />
 
             <View
                 android:layout_width="1dp"
@@ -110,9 +110,8 @@
                 android:gravity="center"
                 android:paddingVertical="@dimen/_5sdp"
                 android:text="Working"
-                android:textColor="#565656"
-                android:textSize="@dimen/_11ssp"
-                app:drawableTint="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp" />
 
             <View
                 android:layout_width="1dp"
@@ -150,9 +149,8 @@
                 android:gravity="center"
                 android:paddingVertical="@dimen/_5sdp"
                 android:text="Avg.Work"
-                android:textColor="#565656"
-                android:textSize="@dimen/_11ssp"
-                app:drawableTint="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -169,10 +167,8 @@
                 android:fontFamily="@font/gilroy_medium"
                 android:gravity="center"
                 android:id="@+id/txt_total_present"
-                tools:text="10 days"
-                android:textColor="#565656"
-                android:textSize="@dimen/_11ssp"
-                app:drawableTint="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp" />
 
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -183,10 +179,8 @@
                 android:fontFamily="@font/gilroy_medium"
                 android:gravity="center"
                 android:id="@+id/txt_total_working"
-                android:text="20hrs"
-                android:textColor="#565656"
-                android:textSize="@dimen/_11ssp"
-                app:drawableTint="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp" />
 
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -228,19 +222,31 @@
         app:layout_constraintTop_toBottomOf="@id/llc_top_parent">
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_punchin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_weight="1"
-            android:fontFamily="@font/gilroy_semi_bold"
-            android:text="Attendance Record"
+            android:fontFamily="@font/gilroy_regular"
+            android:text="Last Punch-"
             android:textAlignment="center"
-            android:textColor="#565656"
-            android:textSize="@dimen/_13ssp"
-            app:drawableTint="@color/black" />
-
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_today_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           android:layout_toRightOf="@+id/tv_punchin"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_weight="1"
+            android:fontFamily="@font/gilroy_medium"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
         <LinearLayout
             android:id="@+id/ll_calendar"
             android:layout_width="wrap_content"
@@ -269,10 +275,9 @@
                 android:layout_weight="1"
                 android:id="@+id/txt_date"
                 android:fontFamily="@font/gilroy_semi_bold"
-                android:text="14-02-2025"
-                android:textColor="#565656"
-                android:textSize="@dimen/_12ssp"
-                app:drawableTint="@color/black" />
+                android:text="May 2025"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
         </LinearLayout>
 
 
@@ -282,11 +287,11 @@
         android:id="@+id/llc_item_title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_37sdp"
-        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginHorizontal="@dimen/_8sdp"
         android:layout_marginTop="@dimen/_12sdp"
         android:background="@drawable/emp_list_item_top_bg"
         android:orientation="horizontal"
-        android:weightSum="4"
+        android:weightSum="7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rl_top">
@@ -299,15 +304,14 @@
             android:layout_weight="1"
             android:fontFamily="@font/gilroy_medium"
             android:gravity="center"
-            android:text="Date"
-            android:textColor="#565656"
-            android:textSize="@dimen/_11ssp"
-            app:drawableTint="@color/black" />
+            android:text="Sun"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_11ssp" />
 
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_marginVertical="@dimen/_8sdp"
+            android:layout_marginVertical="@dimen/_12sdp"
             android:background="@color/gray_colour" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -319,15 +323,14 @@
             android:fontFamily="@font/gilroy_medium"
             android:gravity="center"
             android:maxLines="3"
-            android:text="Check In"
-            android:textColor="#565656"
-            android:textSize="@dimen/_11ssp"
-            app:drawableTint="@color/black" />
+            android:text="Mon"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_11ssp" />
 
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_marginVertical="@dimen/_8sdp"
+            android:layout_marginVertical="@dimen/_12sdp"
             android:background="@color/gray_colour" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -338,15 +341,14 @@
             android:layout_weight="1"
             android:fontFamily="@font/gilroy_medium"
             android:gravity="center"
-            android:text="Check Out"
-            android:textColor="#565656"
-            android:textSize="@dimen/_11ssp"
-            app:drawableTint="@color/black" />
+            android:text="Tue"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_11ssp" />
 
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_marginVertical="@dimen/_8sdp"
+            android:layout_marginVertical="@dimen/_12sdp"
             android:background="@color/gray_colour" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -357,35 +359,184 @@
             android:layout_weight="1"
             android:fontFamily="@font/gilroy_medium"
             android:gravity="center"
-            android:text="Working Hrs"
-            android:textColor="#565656"
+            android:text="Wed"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_11ssp" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="@dimen/_12sdp"
+            android:background="@color/gray_colour" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ng_header"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:fontFamily="@font/gilroy_medium"
+            android:gravity="center"
+            android:text="Thu"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_11ssp" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="@dimen/_12sdp"
+            android:background="@color/gray_colour" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ng_header"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:fontFamily="@font/gilroy_medium"
+            android:gravity="center"
+            android:text="Fri"
+            android:textColor="@color/black"
             android:textSize="@dimen/_11ssp"
-            app:drawableTint="@color/black" />
+            />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="@dimen/_12sdp"
+            android:background="@color/gray_colour" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ng_header"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:fontFamily="@font/gilroy_medium"
+            android:gravity="center"
+            android:text="Sat"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_11ssp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginHorizontal="@dimen/_8sdp"
         android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_attend_list_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llc_item_title"
-        app:layout_constraintVertical_bias="0.0">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_emp_attend_list"
+        app:layout_constraintVertical_bias="0.0"
+        >
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/rtl_description"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@drawable/custom_attend_list_bg"
-            tools:listitem="@layout/recy_emp_attendance_child_layout" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            android:layout_height="0dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_emp_attend_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="@dimen/_7sdp"
+                tools:itemCount="2"
+                tools:listitem="@layout/recy_emp_attendance_child_layout" />
+
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+        <LinearLayout
+            android:id="@+id/rtl_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:paddingHorizontal="@dimen/_6sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <View
+                    android:layout_width="@dimen/_3sdp"
+                    android:background="@color/mint_green"
+                    android:layout_height="@dimen/_14sdp"/>
+                <TextView
+                    android:text="Present"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    android:fontFamily="@font/gilroy_regular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <View
+                    android:layout_width="@dimen/_3sdp"
+                    android:background="@color/pastel_red"
+                    android:layout_height="@dimen/_14sdp"/>
+                <TextView
+                    android:text="Absent"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    android:fontFamily="@font/gilroy_regular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <View
+                    android:layout_width="@dimen/_3sdp"
+                    android:background="@color/steel_blue"
+                    android:layout_height="@dimen/_14sdp"/>
+                <TextView
+                    android:text="Holiday"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    android:fontFamily="@font/gilroy_regular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
 
     <TextView
         android:id="@+id/txt_msg"

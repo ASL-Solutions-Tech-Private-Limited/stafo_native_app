@@ -1,24 +1,29 @@
 package com.stafo.app.screens.emp
 
+import android.Manifest
 import android.annotation.SuppressLint
-import android.app.ProgressDialog
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
-import android.provider.MediaStore
 import android.util.Log
+import android.view.Surface
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.gms.location.LocationCallback
@@ -33,17 +38,15 @@ import com.stafo.app.screens.settings.dataClass.GetAttendanceBranchRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeDetails
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.Response
+import com.stafo.app.utils.getIsCOMPANYLogin
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import kotlin.math.acos
+import kotlin.math.cos
+import kotlin.math.sin
 
 class EmpSelfieAttendanceActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmpSelfieAttendanceBinding
@@ -53,10 +56,16 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
 
     private var selfieImage: File? = null
-    private var branchLat:Double = 0.0
-    private var branchLong :Double = 0.0
-    private var radar  :Float = 0.0f
-    private var checkBranch  :Boolean = false
+    private var branchLat: Double = 0.0
+    private var branchLong: Double = 0.0
+    private var radar: Float = 0.0f
+    private var checkBranch: Boolean = false
+
+    private var isSubmitting = false
+    private var isFetchingLocation = false
+
+    private var imageCapture: ImageCapture? = null
+    private var mEmpID = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,128 +79,107 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
+        if (getIsCOMPANYLogin(this@EmpSelfieAttendanceActivity)){
+            mEmpID = intent.getStringExtra("EMP_ID").toString()
+        } else mEmpID=getEmployeeDetails()?.id.toString()
 
 
-        if (ContextCompat.checkSelfPermission(
-                this@EmpSelfieAttendanceActivity,
-                android.Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_DENIED
-        ) {
-            ActivityCompat.requestPermissions(
-                this@EmpSelfieAttendanceActivity,
-                arrayOf(android.Manifest.permission.CAMERA),
-                100
-            )
-        } else {
-     /*       val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            cameraIntent.putExtra("android.intent.extras.CAMERA_FACING", 1)
-            startActivityForResult(cameraIntent, 123)*/
-
-            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            cameraIntent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1)
-            startActivityForResult(cameraIntent, 123)
-        }
-
-        onClickListener()
         observeViewModel()
-
-
+        onClickListener()
     }
 
     private fun onClickListener() {
         binding.apply {
-
             imageBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
                 finish()
             }
 
-            val employeeId = getEmployeeDetails()?.id
 
-            employeeId?.let { empId ->
 
-                val request= GetAttendanceBranchRequest(
-                    employee_id =empId.toString()
+
+            mEmpID.let { empId ->
+
+                val request = GetAttendanceBranchRequest(
+                    employee_id = empId
                 )
 
                 settingsViewModel.getEmpAttendanceBranch(this@EmpSelfieAttendanceActivity, request)
             }
 
-
-
-            tvTakeSelfie.setOnClickListener {
-
-                if (ContextCompat.checkSelfPermission(
-                        this@EmpSelfieAttendanceActivity,
-                        android.Manifest.permission.CAMERA
-                    ) == PackageManager.PERMISSION_DENIED
-                ) {
-                    ActivityCompat.requestPermissions(
-                        this@EmpSelfieAttendanceActivity,
-                        arrayOf(android.Manifest.permission.CAMERA),
-                        100
-                    )
-                } else {
-                    val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                    cameraIntent.putExtra("android.intent.extras.CAMERA_FACING", 1)
-                    startActivityForResult(cameraIntent, 123)
-                }
+            if (ContextCompat.checkSelfPermission(
+                    this@EmpSelfieAttendanceActivity, Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this@EmpSelfieAttendanceActivity, arrayOf(Manifest.permission.CAMERA), 100
+                )
+            } else {
+                startCamera()
             }
 
-            btnPunchIn.setOnClickListener {
-                if (selfieImage == null) {
-                    CustomToast(this@EmpSelfieAttendanceActivity, "Please upload a selfie first")
-                } else {
+            /*  tvTakeSelfie.setOnClickListener {
 
+                  if (ContextCompat.checkSelfPermission(
+                          this@EmpSelfieAttendanceActivity,
+                          android.Manifest.permission.CAMERA
+                      ) == PackageManager.PERMISSION_DENIED
+                  ) {
+                      ActivityCompat.requestPermissions(
+                          this@EmpSelfieAttendanceActivity,
+                          arrayOf(android.Manifest.permission.CAMERA),
+                          100
+                      )
+                  } else {
+                      val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                      cameraIntent.putExtra("android.intent.extras.CAMERA_FACING", 1)
+                      startActivityForResult(cameraIntent, 123)
+                  }
+              }*/
 
-                    if (checkBranch){
-                        getCurrentLocation { userLat, userLong ->
+            /* btnPunchIn.setOnClickListener {
+                 if (isSubmitting) return@setOnClickListener
 
+                 if (selfieImage == null) {
+                     CustomToast(this@EmpSelfieAttendanceActivity, "Please upload a selfie first")
+                 } else {
+                     isSubmitting = true
+                     btnPunchIn.isEnabled = false
 
-                            Log.d("res","punch distance: $userLat $userLong")
-                            Log.d("res","branch distance: $branchLat $branchLong")
+                     if (checkBranch) {
+                         getCurrentLocation { userLat, userLong ->
+                             val distance = getDistance(userLat, userLong, branchLat, branchLong)
+                             val tolerance = 1.0f
 
+                             if (distance <= radar + tolerance) {
+                                 getEmployeeDetails()?.id?.let { empId ->
+                                     settingsViewModel.selfieAttendanceEmpolyee(
+                                         this@EmpSelfieAttendanceActivity,
+                                         empId,
+                                         selfieImage
+                                     )
+                                 }
+                             } else {
+                                 CustomToast(this@EmpSelfieAttendanceActivity, "You are outside the allowed area. Move closer.")
+                             }
 
-                            val distance = getDistance(userLat, userLong, branchLat, branchLong)
+                             isSubmitting = false
+                             btnPunchIn.isEnabled = true
+                         }
+                     } else {
+                         getEmployeeDetails()?.id?.let { empId ->
+                             settingsViewModel.selfieAttendanceEmpolyee(
+                                 this@EmpSelfieAttendanceActivity,
+                                 empId,
+                                 selfieImage
+                             )
+                         }
 
-                            Log.d("res"," distance: $distance $radar")
-
-                            val tolerance = 1.0f
-
-                            if (distance <= radar + tolerance) {
-
-                                val employeeId = getEmployeeDetails()?.id
-
-                                employeeId?.let { empId ->
-                                    settingsViewModel.selfieAttendanceEmpolyee(
-                                        this@EmpSelfieAttendanceActivity,
-                                        empId,
-                                        selfieImage
-                                    )
-                                }
-                            } else {
-                                CustomToast(this@EmpSelfieAttendanceActivity, "You are outside the allowed area. Move closer.")
-                            }
-                        }
-                    }else{
-                        val employeeId = getEmployeeDetails()?.id
-
-                        employeeId?.let { empId ->
-                            settingsViewModel.selfieAttendanceEmpolyee(
-                                this@EmpSelfieAttendanceActivity,
-                                empId,
-                                selfieImage
-                            )
-                        }
-                    }
-
-
-
-
-                }
-
-
-            }
+                         isSubmitting = false
+                         btnPunchIn.isEnabled = true
+                     }
+                 }
+             }*/
 
 
         }
@@ -200,86 +188,227 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     }
 
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 100 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startCamera()
+        } else {
+            CustomToast(this, "Camera permission denied")
+        }
+    }
+
+    private fun startCamera() {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+        cameraProviderFuture.addListener({
+            val cameraProvider = cameraProviderFuture.get()
+            val preview = Preview.Builder().build().also {
+                it.setSurfaceProvider(binding.previewView.surfaceProvider)
+            }
+
+            val rotation =
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                    display?.rotation ?: Surface.ROTATION_0
+                } else {
+                    @Suppress("DEPRECATION") windowManager.defaultDisplay.rotation
+                }
+
+            imageCapture = ImageCapture.Builder().setTargetRotation(rotation).build()
+
+            val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+
+            try {
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
+
+            } catch (e: Exception) {
+                Log.e("TAG", "startCamera: ${e.localizedMessage}")
+            }
+
+        }, ContextCompat.getMainExecutor(this))
+    }
 
 
+    private fun takePhoto() {
+        val imageCapture = imageCapture ?: return
+        val outputFile = File(externalCacheDir, "selfie.jpg")
+
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(outputFile).build()
+        imageCapture.takePicture(
+            outputOptions,
+            ContextCompat.getMainExecutor(this),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    selfieImage = outputFile
+                    selfieImage?.let {
+                        if (checkBranch) {
+
+                            if (branchLat == 0.0 || branchLong == 0.0) {
+                                Log.e("LocationDebug", "Branch Lat/Long not initialized properly.")
+                                CustomToast(this@EmpSelfieAttendanceActivity, "Please try again.")
+                                onBackPressedDispatcher.onBackPressed()
+                                finish()
+                                return
+                            }
+
+                            getCurrentLocation { currentLat, currentLong ->
+
+                                val distance = calculateDistance(
+                                    currentLat, currentLong, branchLat, branchLong
+                                )
+
+                                Log.e("LocationDebug", "Current Location: Lat=$currentLat, Lon=$currentLong")
+                                Log.e("LocationDebug", "Branch Location: Lat=$branchLat, Lon=$branchLong, Radar=$radar")
+                                Log.e("LocationDebug", "Calculated distance: $distance meters")
+
+                                if (distance <= radar) {
+                                    Log.e("LocationDebug", "User is WITHIN radar. Taking photo.")
+                                    settingsViewModel.selfieAttendanceEmpolyee(
+                                        this@EmpSelfieAttendanceActivity, mEmpID.toInt(), selfieImage
+                                    )
+                                } else {
+                                    onApiResponseError()
+                                    CustomToast(
+                                        this@EmpSelfieAttendanceActivity,
+                                        "Please move closer to the branch area to punch attendance."
+                                    )
+                                    isSubmitting = false
+                                    onBackPressedDispatcher.onBackPressed()
+                                    finish()
+                                }
+                            }
+
+                        } else {
+                            Log.e("LocationDebug", "Branch details not available for location check.")
+                            isSubmitting = false
+                            settingsViewModel.selfieAttendanceEmpolyee(
+                                this@EmpSelfieAttendanceActivity, mEmpID.toInt(), selfieImage
+                            )
+                        }
+                    }
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                    CustomToast(this@EmpSelfieAttendanceActivity, "Capture failed! try again.")
+                }
+            })
+    }
+
+
+    fun onApiResponseSuccess() {
+        binding.cameraOverlayView.setStrokeColor(Color.GREEN)
+    }
+
+    fun onApiResponseError() {
+        binding.cameraOverlayView.setStrokeColor(Color.RED)
+    }
 
     private fun observeViewModel() {
-
-
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-
-
-
         settingsViewModel.mSelfieAttendanceEmpResponse.observe(this) {
-
             if (it.status) {
-
-
-
-                Log.d("res","${it.similarity}")
-                CustomToast(this, it.message)
-                onBackPressedDispatcher.onBackPressed()
-                finish()
+                binding.rtlAttendanceMsg.visibility = View.VISIBLE
+                val currentTime = Calendar.getInstance().time
+                val formatter = SimpleDateFormat("dd MMM yyyy hh:mm a", Locale.getDefault())
+                val formattedDateTime = formatter.format(currentTime)
+                binding.tvPunchTime.text = formattedDateTime
+                binding.tvPunchUser.text = "Punched by ${getEmployeeDetails()?.name ?: ""}"
+                val bitmap = BitmapFactory.decodeFile(selfieImage?.absolutePath)
+                binding.civPunchSelfie.setImageBitmap(bitmap)
+                onApiResponseSuccess()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    onBackPressedDispatcher.onBackPressed()
+                    finish()
+                }, 1000)
             } else {
-                CustomToast(this, it.message)
+                CustomToast(this,it.message)
+                onApiResponseError()
+                binding.rtlAttendanceMsg.visibility = View.GONE
             }
 
 
         }
 
         settingsViewModel.mGetAttendanceBranchResponse.observe(this) { response ->
-
             if (response?.status == true) {
+
+                Log.e("LocationDebug", "observeViewModel: ${response.data}")
                 val branchData = response.data
                 if (branchData != null && branchData.latitude != null && branchData.longitude != null) {
-                    Log.d("res","check branch")
                     checkBranch = true
                     branchLat = branchData.latitude.toDouble()
                     branchLong = branchData.longitude.toDouble()
                     radar = branchData.radar.toFloat()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        takePhoto()
+                    }, 3000)
                 } else {
                     checkBranch = false
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        takePhoto()
+                    }, 3000)
                 }
             } else {
                 checkBranch = false
 
             }
         }
-
-
-
-
     }
 
     @SuppressLint("MissingPermission")
     fun getCurrentLocation(callback: (Double, Double) -> Unit) {
-        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        if (isFetchingLocation) return
+        isFetchingLocation = true
 
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         val locationRequest = LocationRequest.create().apply {
             priority = Priority.PRIORITY_HIGH_ACCURACY
-            interval = 1000
+            interval = 2000           // 2 seconds
+            fastestInterval = 1000    // 1 second
             numUpdates = 1
         }
 
-        fusedLocationClient.requestLocationUpdates(locationRequest, object : LocationCallback() {
+        val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
+                fusedLocationClient.removeLocationUpdates(this)
+                isFetchingLocation = false
+
                 val location = locationResult.lastLocation
                 if (location != null) {
                     callback(location.latitude, location.longitude)
                 } else {
-                    CustomToast(this@EmpSelfieAttendanceActivity, "Unable to fetch accurate location.")
+                    CustomToast(this@EmpSelfieAttendanceActivity, "Unable to get location.")
+                    isSubmitting = false
                 }
-                fusedLocationClient.removeLocationUpdates(this)
             }
-        }, Looper.getMainLooper())
+        }
+
+        // Set a timeout in case GPS takes too long
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (isFetchingLocation) {
+                fusedLocationClient.removeLocationUpdates(locationCallback)
+                isFetchingLocation = false
+                isSubmitting = false
+                CustomToast(this@EmpSelfieAttendanceActivity, "Location request timed out.")
+            }
+        }, 10_000) // 10 sec timeout
+
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
 
 
-    fun getDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float {
+
+    fun calculateDistance(
+        lat1: Double, lon1: Double, lat2: Double, lon2: Double
+    ): Float {
         val results = FloatArray(1)
         Location.distanceBetween(lat1, lon1, lat2, lon2, results)
         return results[0]
     }
+
+
+
 
     private fun handleLoader(status: String) {
         if (status.equals("load", ignoreCase = true)) {
@@ -289,55 +418,9 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 123 && resultCode == RESULT_OK) {
-            val imageBitmap: Bitmap? = data?.extras?.get("data") as? Bitmap
-
-            if (imageBitmap != null) {
-                binding.sivEmpPunch.visibility = View.VISIBLE
-                binding.sivEmpPunch.setImageBitmap(imageBitmap)
-
-                val imageFile = bitmapToFile(imageBitmap, this@EmpSelfieAttendanceActivity)
-
-                if (imageFile != null) {
-
-                    selfieImage=imageFile
-                }
-
-                } else {
-
-                    CustomToast(this, "Failed to process image.")
-
-                }
 
 
 
-            } else {
-                CustomToast(this, "Failed to capture image. Try again.")
-            }
-        }
-
-
-    private fun bitmapToFile(bitmap: Bitmap, context: Context): File? {
-        return try {
-
-            val fileName = "selfie_${System.currentTimeMillis()}.jpg"
-            val file = File(context.cacheDir, fileName)
-            file.createNewFile()
-
-            val outputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-            outputStream.flush()
-            outputStream.close()
-            file
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-
-    }
+}
 
 

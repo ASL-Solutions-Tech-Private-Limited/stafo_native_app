@@ -22,6 +22,8 @@ import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 
 class BranchActivity : AppCompatActivity() {
+
+
     private lateinit var binding: ActivityBranchBinding
 
 
@@ -170,4 +172,6 @@ class BranchActivity : AppCompatActivity() {
         settingsViewModel.companyDeleteBranch(this@BranchActivity, id)
 
     }
+
+
 }

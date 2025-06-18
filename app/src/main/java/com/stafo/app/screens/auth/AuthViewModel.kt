@@ -27,6 +27,7 @@ import com.stafo.app.screens.auth.dataClass.OtpVerifyResponse
 import com.stafo.app.screens.auth.dataClass.StatesListResponse
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getFBToken
+import com.stafo.app.utils.isNetworkAvailable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -70,16 +71,18 @@ class AuthViewModel() : BaseViewModel() {
 
 
 
-    fun verifyOTP(mContext: Context, mobileNumber: String,otp:String,deviceId:String) {
+    fun verifyOTP(mContext: Context, request:VerifyOtpRequestBody) {
+
+        if (!isNetworkAvailable(mContext)) {
+            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
+            return
+        }
+
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val request = VerifyOtpRequestBody(
-                    mobile_number = mobileNumber,
-                    otp = otp,
-                    device_id = deviceId,
-                    firebase_token = getFBToken() ?: ""
-                )
+
                 val response = ASLEmpMng.instance.apiStores()?.verifyUserOtp(request)
 
                 withContext(Dispatchers.Main) {
@@ -108,6 +111,10 @@ class AuthViewModel() : BaseViewModel() {
     }
 
     fun sendOTP(mContext: Context, mobileNumber: String) {
+        if (!isNetworkAvailable(mContext)) {
+            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -142,6 +149,14 @@ class AuthViewModel() : BaseViewModel() {
 
 
     fun getCompanyType(mContext: Context) {
+
+        if (!isNetworkAvailable(mContext)) {
+            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
+            return
+        }
+
+
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -185,6 +200,11 @@ class AuthViewModel() : BaseViewModel() {
 
 
     fun registerUser(mContext: Context, request: RegisterRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
+            return
+        }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -232,6 +252,12 @@ class AuthViewModel() : BaseViewModel() {
     }
 
     fun userLogin(mContext: Context, email: String, password: String) {
+        if (!isNetworkAvailable(mContext)) {
+            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
+            return
+        }
+
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -271,6 +297,11 @@ class AuthViewModel() : BaseViewModel() {
 
 
     fun getBusinessType(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -309,6 +340,11 @@ class AuthViewModel() : BaseViewModel() {
     }
 
     fun getCountryList(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -348,6 +384,11 @@ class AuthViewModel() : BaseViewModel() {
     }
 
     fun getStateList(mContext: Context, countryId: String) {
+        if (!isNetworkAvailable(mContext)) {
+            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -387,6 +428,11 @@ class AuthViewModel() : BaseViewModel() {
     }
 
     fun getCityList(mContext: Context, stateId: String) {
+        if (!isNetworkAvailable(mContext)) {
+            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {

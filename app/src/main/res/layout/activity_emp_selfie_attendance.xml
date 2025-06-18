@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".screens.emp.EmpSelfieAttendanceActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -54,56 +54,136 @@
     <RelativeLayout
         android:id="@+id/rl_selfie_punch_in"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_270sdp"
+        android:layout_height="0dp"
         android:background="@color/tea_green"
-        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout">
 
-        <ImageView
-            android:id="@+id/tv_take_selfie"
-            android:layout_width="@dimen/_28sdp"
-            android:layout_height="@dimen/_28sdp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/ic_take_selfie" />
+        <androidx.camera.view.PreviewView
+            android:id="@+id/previewView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_take_selfie"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="@dimen/_6sdp"
-            android:fontFamily="@font/poppins_regular"
-            android:text="Take Selfie"
-            android:textColor="@color/blue"
-            android:textSize="@dimen/_12ssp" />
-
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/siv_emp_punch"
-            android:layout_width="@dimen/_200sdp"
-            android:layout_height="@dimen/_200sdp"
-            android:layout_centerInParent="true"
-            android:background="@color/white"
-            android:scaleType="fitXY"
-            android:visibility="gone"
-            app:shapeAppearanceOverlay="@style/Circular" />
-
+        <!-- Overlay -->
+        <com.stafo.app.screens.CameraOverlayView
+            android:id="@+id/cameraOverlayView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </RelativeLayout>
 
-
-    <Button
-        android:id="@+id/btn_punch_in"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rtl_attendance_msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_12sdp"
-        android:layout_marginTop="@dimen/_24sdp"
-        android:layout_marginBottom="@dimen/_80sdp"
-        android:background="@drawable/button_background"
-        android:text="Submit"
+        android:background="@drawable/custom_punch_details_bg"
+        android:elevation="@dimen/_4sdp"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:paddingVertical="@dimen/_13sdp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rl_selfie_punch_in" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/tv_punch_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/gilroy_bold"
+            android:paddingBottom="@dimen/_14sdp"
+            android:text="Punch Details"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civ_punch_selfie"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:src="@drawable/ic_user_img"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_punch_details" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/civ_punch_selfie"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/civ_punch_selfie"
+            app:layout_constraintTop_toBottomOf="@+id/tv_punch_details">
+
+            <ImageView
+                android:id="@+id/iv_time"
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_time"
+                android:tint="@color/gray_colour"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="UseAppTint" />
+
+            <TextView
+                android:id="@+id/tv_punch_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:fontFamily="@font/gilroy_regular"
+                android:text="10.00am"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_time"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_time"
+                app:layout_constraintTop_toTopOf="@+id/iv_time" />
+
+            <ImageView
+                android:id="@+id/iv_location"
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/user"
+                android:tint="@color/gray_colour"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_time"
+                tools:ignore="UseAppTint" />
+
+            <TextView
+                android:id="@+id/tv_punch_user"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:fontFamily="@font/gilroy_regular"
+                android:text="address"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_location"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iv_time"
+                app:layout_constraintTop_toTopOf="@+id/iv_location" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--    <Button
+            android:id="@+id/btn_punch_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_24sdp"
+            android:layout_marginBottom="@dimen/_80sdp"
+            android:background="@drawable/button_background"
+            android:text="Submit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rl_selfie_punch_in" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -41,6 +41,7 @@ import com.stafo.app.screens.subscription.dataClass.PackageResponse
 import com.stafo.app.screens.subscription.dataClass.PaymentUpdateRequest
 import com.stafo.app.screens.subscription.dataClass.PaymentUpdateResponse
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.isNetworkAvailable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -136,6 +137,9 @@ class BillPaymentsViewModel : BaseViewModel() {
     fun getSubscriptionInfo(
         mContext: Context
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -182,6 +186,9 @@ class BillPaymentsViewModel : BaseViewModel() {
         mContext: Context,
         request: PaymentUpdateRequest
     ) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -235,6 +242,10 @@ class BillPaymentsViewModel : BaseViewModel() {
         mContext: Context,
         request: HashGenerateRequest
     ) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -284,6 +295,9 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     fun getPackagePlanList(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -325,6 +339,9 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     fun getReferList(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -366,6 +383,9 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     fun getOperatorDetails(mContext: Context, operatorCode: String) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -419,6 +439,9 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     fun viewPointsDetails(mContext: Context,request: PointsRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -460,6 +483,9 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     fun viewRankList(mContext: Context,request: RankListRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -500,6 +526,9 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     fun savePerformance(mContext: Context,request: PerformanceAddRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -540,6 +569,9 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     fun updatePerformanceType(mContext: Context, id:Int,request:AddPerformanceRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -580,6 +612,9 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     fun deletePerformanceType(mContext: Context, id:Int) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -620,6 +655,9 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     fun sendChatRequest(mContext: Context, request: SendChatRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -660,6 +698,9 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     fun createPerformance(mContext: Context, request: AddPerformanceRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -699,6 +740,9 @@ class BillPaymentsViewModel : BaseViewModel() {
     }
 
     fun getPerformanceTypeList(mContext: Context, request: ChatRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -738,6 +782,9 @@ class BillPaymentsViewModel : BaseViewModel() {
     }
 
     fun getChatList(mContext: Context, request: ChatRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -778,6 +825,9 @@ class BillPaymentsViewModel : BaseViewModel() {
 
 
     fun getMenuList(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -817,6 +867,9 @@ class BillPaymentsViewModel : BaseViewModel() {
     }
 
     fun getElectricityOperator(mContext: Context, request: ElectricityOperatorRequest) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {

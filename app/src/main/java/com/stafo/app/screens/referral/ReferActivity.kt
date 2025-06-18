@@ -59,7 +59,19 @@ class ReferActivity : AppCompatActivity() {
                 val code = binding.tvCode.text.toString()
 
                 if (code.isNotEmpty()) {
-                    val message = "Hey! Use my referral code: ⭐ *$code* ⭐ to join the app."
+                    val appLink = "https://play.google.com/store/apps/details?id=com.stafo.app"
+                    val message = """
+            Hey! 👋
+            
+            I recommend STAFO for boosting productivity and team tracking. Join using my referral code below.
+
+            Use my referral code: ⭐ *$code* ⭐ to sign up.
+
+            Download the app here:
+            ⬇️ $appLink
+
+            Cheers! 🚀
+        """.trimIndent()
 
                     val intent = Intent(Intent.ACTION_SEND).apply {
                         type = "text/plain"
@@ -70,10 +82,13 @@ class ReferActivity : AppCompatActivity() {
                     try {
                         startActivity(intent)
                     } catch (e: Exception) {
-                        CustomToast(this@ReferActivity,"WhatsApp is not installed.")
+                        CustomToast(this@ReferActivity, "WhatsApp is not installed.")
                     }
-                }else  CustomToast(this@ReferActivity,"Not available any referral code!")
+                } else {
+                    CustomToast(this@ReferActivity, "Referral code is not available!")
+                }
             }
+
 
         }
 

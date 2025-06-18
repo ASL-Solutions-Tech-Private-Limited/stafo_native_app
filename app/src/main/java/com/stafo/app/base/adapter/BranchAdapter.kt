@@ -1,11 +1,13 @@
 package com.stafo.app.base.adapter
 
 import android.app.Activity
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.R
 import com.stafo.app.databinding.RecyBranchItemLayoutBinding
+import com.stafo.app.screens.settings.AddBranchActivity
 import com.stafo.app.screens.settings.BranchActivity
 import com.stafo.app.screens.settings.dataClass.BranchItem
 
@@ -35,6 +37,15 @@ class BranchAdapter (
                 binding.itemDelete.setOnClickListener {
                     showCompanyDeleteDialog(this.id)
                 }
+
+
+                binding.itemEdit.setOnClickListener {
+                    val intent = Intent(context, AddBranchActivity::class.java)
+                    intent.putExtra("branch_type", "Edit")
+                    intent.putExtra("branch_data", this)
+                    context.startActivity(intent)
+                }
+
             }
         }
     }
@@ -48,7 +59,7 @@ class BranchAdapter (
     }
 
 
-   private fun showCompanyDeleteDialog(itemId:Int) {
+    private fun showCompanyDeleteDialog(itemId:Int) {
         val builder = androidx.appcompat.app.AlertDialog.Builder(context)
         builder.setTitle(R.string.app_name)
         builder.setMessage("Are you sure? Delete this.")

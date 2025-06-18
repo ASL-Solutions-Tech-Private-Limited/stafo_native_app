@@ -18,7 +18,6 @@ import com.stafo.app.screens.auth.dataClass.OtpResponse
 import com.stafo.app.screens.auth.dataClass.OtpVerifyResponse
 import com.stafo.app.screens.auth.dataClass.SelfieAttendanceResponse
 import com.stafo.app.screens.auth.dataClass.StatesListResponse
-import com.stafo.app.screens.billpayment.dataClass.BbpsOperatorDetailsResponse
 import com.stafo.app.screens.billpayment.dataClass.CategoryMenuResponse
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorRequest
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorResponse
@@ -32,8 +31,6 @@ import com.stafo.app.screens.crm.dataClass.CreateFollowUpResponse
 import com.stafo.app.screens.crm.dataClass.FollowUpListResponse
 import com.stafo.app.screens.crm.dataClass.LeadCreateRequest
 import com.stafo.app.screens.crm.dataClass.LeadCreateResponse
-import com.stafo.app.screens.crm.dataClass.LeadDashboardRequest
-import com.stafo.app.screens.crm.dataClass.LeadListRequest
 import com.stafo.app.screens.crm.dataClass.LeadListResponse
 import com.stafo.app.screens.crm.dataClass.UpdateLeadResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
@@ -43,7 +40,6 @@ import com.stafo.app.screens.payroll.dataClass.SalarySlipRequest
 import com.stafo.app.screens.payroll.dataClass.SalarySlipResponse
 import com.stafo.app.screens.performance.dataClass.AddPerformanceRequest
 import com.stafo.app.screens.performance.dataClass.AddPerformanceResponse
-import com.stafo.app.screens.performance.dataClass.DeletePerformanceRequest
 import com.stafo.app.screens.performance.dataClass.DeletePerformanceResponse
 import com.stafo.app.screens.performance.dataClass.PerformanceAddRequest
 import com.stafo.app.screens.performance.dataClass.PerformanceAddResponse
@@ -61,7 +57,6 @@ import com.stafo.app.screens.settings.dataClass.AssignBranchRequest
 import com.stafo.app.screens.settings.dataClass.AssignBranchResponse
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentResponse
-import com.stafo.app.screens.settings.dataClass.AssignShiftRequest
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.stafo.app.screens.settings.dataClass.BannerResponse
 import com.stafo.app.screens.settings.dataClass.BranchListResponse
@@ -83,6 +78,7 @@ import com.stafo.app.screens.settings.dataClass.DeleteResponse
 import com.stafo.app.screens.settings.dataClass.DepartmentCreateRequest
 import com.stafo.app.screens.settings.dataClass.DepartmentCreateResponse
 import com.stafo.app.screens.settings.dataClass.DepartmentResponse
+import com.stafo.app.screens.settings.dataClass.EditBranchResponse
 import com.stafo.app.screens.settings.dataClass.EmployeeDocumentUploadResponse
 import com.stafo.app.screens.settings.dataClass.EmployeeLeaveRequestBody
 import com.stafo.app.screens.settings.dataClass.EmployeeLeaveResponse
@@ -145,6 +141,7 @@ import com.stafo.app.screens.settings.dataClass.UpdateCompanyProfile
 import com.stafo.app.screens.settings.dataClass.UpdateCompanyProfileResponse
 import com.stafo.app.screens.settings.dataClass.UpdateEmployeeProfile
 import com.stafo.app.screens.settings.dataClass.UpdateEmployeeProfileResponse
+import com.stafo.app.screens.settings.dataClass.UpdateShiftResponse
 import com.stafo.app.screens.settings.dataClass.UpgradePackageResponse
 import com.stafo.app.screens.settings.dataClass.VerifyGSTNumberResponse
 import com.stafo.app.screens.settings.dataClass.VerifyRegisterNumberResponse
@@ -155,6 +152,28 @@ import com.stafo.app.screens.subscription.dataClass.MySubscriptionResponse
 import com.stafo.app.screens.subscription.dataClass.PackageResponse
 import com.stafo.app.screens.subscription.dataClass.PaymentUpdateRequest
 import com.stafo.app.screens.subscription.dataClass.PaymentUpdateResponse
+import com.stafo.app.screens.tms.dataClass.AddCommentRequest
+import com.stafo.app.screens.tms.dataClass.AddCommentResponse
+import com.stafo.app.screens.tms.dataClass.CreateTaskResponse
+import com.stafo.app.screens.tms.dataClass.DeleteTaskResponse
+import com.stafo.app.screens.tms.dataClass.TaskCommentListResponse
+import com.stafo.app.screens.tms.dataClass.TaskListResponse
+import com.stafo.app.screens.tms.dataClass.TaskStatusRequest
+import com.stafo.app.screens.tms.dataClass.UpdateTaskResponse
+import com.stafo.app.screens.tms.dataClass.UpdateTaskStatusResponse
+import com.stafo.app.screens.tripPlan.dataClass.AddExpensesResponse
+import com.stafo.app.screens.tripPlan.dataClass.AddVehicleResponse
+import com.stafo.app.screens.tripPlan.dataClass.CheckAvailabilityStatusResponse
+import com.stafo.app.screens.tripPlan.dataClass.CreateTripResponse
+import com.stafo.app.screens.tripPlan.dataClass.DriverListResponse
+import com.stafo.app.screens.tripPlan.dataClass.ExpensesListResponse
+import com.stafo.app.screens.tripPlan.dataClass.TripActionResponse
+import com.stafo.app.screens.tripPlan.dataClass.TripDashboardResponse
+import com.stafo.app.screens.tripPlan.dataClass.TripDetailsResponse
+import com.stafo.app.screens.tripPlan.dataClass.TripGeoLocationListReponse
+import com.stafo.app.screens.tripPlan.dataClass.TripGeoLocationListRequest
+import com.stafo.app.screens.tripPlan.dataClass.VehicleListResponse
+import com.stafo.app.screens.tripPlan.dataClass.dashboard.TripListResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -165,10 +184,10 @@ import retrofit2.http.Field
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.HeaderMap
 import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.PartMap
 import retrofit2.http.Path
@@ -220,7 +239,7 @@ interface ApiStores {
 
     @POST("api/employees-create")
     suspend fun callAddEmp(
-        @Body addEmpRequest: AddEmpRequestBody,
+        @Body body: AddEmpRequestBody,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<AddEmpResponse>
 
@@ -229,6 +248,14 @@ interface ApiStores {
         @Body request: ShiftCreateRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<ShiftCreateResponse>
+
+
+    @PUT("api/shifts/{id}")
+    suspend fun callUpdateShift(
+        @Path("id") id: Int,
+        @Body request: ShiftCreateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateShiftResponse>
 
     @GET("api/shifts")
     suspend fun callShiftList(
@@ -808,6 +835,13 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<UpdateLeadResponse>
 
+    @POST("api/branch/update/{id}")
+    suspend fun callEditBranch(
+        @Path("id") id: Int,
+        @Body addBranchRequest: AddBranchRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EditBranchResponse>
+
 
     @GET("api/package")
     suspend fun callPackage(
@@ -830,6 +864,218 @@ interface ApiStores {
     suspend fun callSubscriptionInfo(
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<MySubscriptionResponse>
+
+
+    @POST("api/trips/dashboard")
+    suspend fun callTripDashboardInfo(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TripDashboardResponse>
+
+    @GET("api/vehicles/list")
+    suspend fun callVehicleList(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<VehicleListResponse>
+
+
+    @POST("api/trips/drivers/list")
+    suspend fun callDriverList(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DriverListResponse>
+
+    @POST("api/trips/create")
+    suspend fun callCreateTrip(
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<CreateTripResponse>
+
+    @POST("api/trips/update/{id}")
+    suspend fun callUpdateTrip(
+        @Path("id") id: String,
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<CreateTripResponse>
+
+    @Multipart
+    @POST("api/vehicles/create")
+    suspend fun callAddVehicle(
+        @PartMap map: HashMap<String, @JvmSuppressWildcards RequestBody>,
+        @Part filePart: MultipartBody.Part?,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AddVehicleResponse>
+
+    @Multipart
+    @POST("api/vehicles/update/{vehicle_id}")
+    suspend fun callUpdateVehicle(
+        @Path("vehicle_id") vehicleId: String,
+        @PartMap map: HashMap<String, @JvmSuppressWildcards RequestBody>,
+        @Part filePart: MultipartBody.Part?,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AddVehicleResponse>
+
+    @Multipart
+    @POST("api/vehicles/update/{vehicle_id}")
+    suspend fun callUpdateVehicleWithOutRC(
+        @Path("vehicle_id") vehicleId: String,
+        @PartMap map: HashMap<String, @JvmSuppressWildcards RequestBody>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AddVehicleResponse>
+
+    @POST("api/trips/check-vehicle-availability")
+    suspend fun callCheckVehicleAvailability(
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<CheckAvailabilityStatusResponse>
+
+    @POST("api/trips/check-driver-availability")
+    suspend fun callCheckDriverAvailability(
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<CheckAvailabilityStatusResponse>
+
+    @GET("api/trips/list")
+    suspend fun callTripList(
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TripListResponse>
+
+
+    @POST("api/trips/details")
+    suspend fun callTripDetails(
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TripDetailsResponse>
+
+    @Multipart
+    @POST("api/trips/trip-start-end")
+    suspend fun callTripAction(
+        @PartMap map: HashMap<String, @JvmSuppressWildcards RequestBody>,
+        @Part filePart: MultipartBody.Part?,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TripActionResponse>
+
+    @POST("api/trips/delete")
+    suspend fun callTripDelete(
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ):Response<TripActionResponse>
+
+
+    @POST("api/vehicles/delete")
+    suspend fun callVehicleDelete(
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ):Response<TripActionResponse>
+
+    @POST("api/trips-expense/list")
+    suspend fun callTripExpensesList(
+        @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ExpensesListResponse>
+
+
+    @Multipart
+    @POST("api/trips-expense/create")
+    suspend fun callAddExpense(
+        @PartMap map: HashMap<String, @JvmSuppressWildcards RequestBody>,
+        @Part filePart: MultipartBody.Part?,
+        // @Body request: HashMap<String, Any>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AddExpensesResponse>
+
+
+    @GET("api/task/list")
+    suspend fun callTaskList(
+        @Query("company_id") companyId: String,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TaskListResponse>
+
+
+    @Multipart
+    @POST("api/task/create")
+    suspend fun createTask(
+        @Part("company_id") companyId: RequestBody,
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody,
+        @Part("start_date") startDate: RequestBody,
+        @Part("end_date") endDate: RequestBody,
+        @Part("status") status: RequestBody,
+        @Part("priority") priority: RequestBody,
+        @Part taskAssign: List<MultipartBody.Part>,
+        @Part files: List<MultipartBody.Part>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<CreateTaskResponse>
+
+
+    @Multipart
+    @POST("api/task/update/{id}")
+    suspend fun callUpdateTask(
+        @Path("id") taskId: Int,
+        @Part("title") title: RequestBody,
+        @Part("description") description: RequestBody,
+        @Part("start_date") startDate: RequestBody,
+        @Part("end_date") endDate: RequestBody,
+        @Part("status") status: RequestBody,
+        @Part("priority") priority: RequestBody,
+        @Part taskAssign: List<MultipartBody.Part>,
+        @Part files: List<MultipartBody.Part>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateTaskResponse>
+
+
+    @DELETE("api/task/delete/{id}")
+    suspend fun callDeleteTask(
+        @Path ("id")taskId:Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteTaskResponse>
+
+
+    @GET("api/task/comment-list")
+    suspend fun callCommentList(
+        @Query("task_id") taskId: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TaskCommentListResponse>
+
+
+    @POST("api/trips-geolocation/get")
+    suspend fun callGetTripGeoLocation(
+        @Body request: TripGeoLocationListRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<TripGeoLocationListReponse>
+
+
+
+
+    @POST("api/task/comment-create")
+    suspend fun callAddComment(
+        @Body request:AddCommentRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AddCommentResponse>
+
+    @DELETE("api/task/comment-delete/{id}")
+    suspend fun callDeleteComment(
+        @Path ("id")commentId:Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteTaskResponse>
+
+    @DELETE("api/task/file-delete/{id}")
+    suspend fun callDeleteAttachFile(
+        @Path ("id")fileId:Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteTaskResponse>
+
+    @POST("api/task/status-change/{id}")
+    suspend fun callTaskStatus(
+        @Path ("id")taskId:Int,
+        @Body request:TaskStatusRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateTaskStatusResponse>
+
+    @Multipart
+    @POST("api/task/file-uploads")
+    suspend fun callAttachFile(
+        @Part("task_id") taskId: RequestBody,
+        @Part files: List<MultipartBody.Part>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateTaskStatusResponse>
 
 
 }
