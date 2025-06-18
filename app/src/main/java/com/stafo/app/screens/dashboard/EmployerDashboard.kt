@@ -707,7 +707,7 @@ class EmployerDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("Employee", R.drawable.ic_employee))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
-        mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
+      //  mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
         mActionList.add(ActionModel("Location Track", R.drawable.ic_location))
         mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
