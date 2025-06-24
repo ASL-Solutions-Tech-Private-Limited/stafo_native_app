@@ -3,8 +3,10 @@ package com.stafo.app.screens.expense
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
@@ -16,14 +18,22 @@ import com.stafo.app.R
 import com.stafo.app.databinding.ActivityExpenseDashboardBinding
 import com.stafo.app.screens.expense.adapter.AdapterApplyExpenseList
 import com.stafo.app.screens.expense.adapter.AdapterExpenseCategory
+import com.stafo.app.screens.expense.dataClass.ApplyExpenseData
 import com.stafo.app.screens.expense.dataClass.ExpenseCategory
 import com.stafo.app.screens.expense.dataClass.GetExpenseList
+import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.getEmployeeComId
+import com.stafo.app.utils.getEmployeeDetails
+import com.stafo.app.utils.getIsCOMPANYLogin
 
 class ExpenseDashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityExpenseDashboardBinding
     private lateinit var rvAdapter: AdapterApplyExpenseList
-    private lateinit var expenseList: List<GetExpenseList>
+    private lateinit var expenseList: List<ApplyExpenseData>
+
+    private val expenseViewModel: ExpenseViewModel by viewModels()
+    private val customLoader: CustomLoader by lazy { CustomLoader(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,19 +48,57 @@ class ExpenseDashboardActivity : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
         onClickListener()
-        setUpRecyclerView()
+        observeViewModel()
     }
 
 
     private fun onClickListener() {
         binding.apply {
 
+            if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)){
+                getEmployeeComId()?.let {
+                    expenseViewModel.getApplyExpenseList(
+                        this@ExpenseDashboardActivity,
+                       companyId =  it
+                    )
+                }
+            }else{
+                expenseViewModel.getApplyExpenseList(
+                    this@ExpenseDashboardActivity,
+                    employeeId = getEmployeeDetails()?.id.toString()
+                )
+            }
+
+
+
+
+
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing=false
+                if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)){
+                    getEmployeeComId()?.let {
+                        expenseViewModel.getApplyExpenseList(
+                            this@ExpenseDashboardActivity,
+                            companyId = it
+                        )
+                    }
+                }else{
+                    expenseViewModel.getApplyExpenseList(
+                        this@ExpenseDashboardActivity,
+                        employeeId = getEmployeeDetails()?.id.toString()
+                    )
+                }
             }
 
             btnAddExpense.setOnClickListener {
-                startActivity(Intent(this@ExpenseDashboardActivity,CreateExpenseActivity::class.java))
+
+                if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)){
+                    startActivity(Intent(this@ExpenseDashboardActivity,CreateExpenseActivity::class.java))
+                }else{
+                    startActivity(Intent(this@ExpenseDashboardActivity,EmployeeApplyExpenseActivity::class.java))
+                }
+
+
             }
 
 
@@ -69,8 +117,12 @@ class ExpenseDashboardActivity : AppCompatActivity() {
             filterMap.forEach { (textView, status) ->
                 textView.setOnClickListener {
                     if (::rvAdapter.isInitialized) {
+                        txtMsg.visibility=View.GONE
                         updateTabUI(textView)
                         filterByStatus(status)
+                    } else{
+                        updateTabUI(textView)
+                        txtMsg.visibility=View.VISIBLE
                     }
                 }
             }
@@ -83,7 +135,64 @@ class ExpenseDashboardActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpRecyclerView(){
+
+
+    private fun observeViewModel() {
+        expenseViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
+        expenseViewModel.mViewApplyExpenseResponse.observe(this) { it ->
+            if (it.success) {
+                if (!it.data.isNullOrEmpty()) {
+                    binding.rvShowApplyExpense.visibility=View.VISIBLE
+                    binding.txtMsg.visibility=View.GONE
+
+
+                    expenseList=it.data
+
+                    rvAdapter = AdapterApplyExpenseList(
+                        context = this,
+                        expenseList,
+                        onApproveClick = { position ->
+                            Log.d("exp", "setUpRecyclerView: $position")
+
+                        },
+                        onRejectClick = { position ->
+                            Log.e("exp", "setUpRecyclerView: $position")
+                        }
+                    )
+                    binding.rvShowApplyExpense.adapter = rvAdapter
+                    binding.rvShowApplyExpense.layoutManager = LinearLayoutManager(this)
+                    rvAdapter.notifyDataSetChanged()
+                }else{
+                    binding.rvShowApplyExpense.visibility=View.GONE
+                    binding.txtMsg.visibility=View.VISIBLE
+                }
+            }
+        }
+
+    }
+
+
+    private fun handleLoader(status: String) {
+        if (status.equals("load", ignoreCase = true)) {
+            if (!customLoader.isShowing) customLoader.show()
+        } else if (status.equals("stop", ignoreCase = true)) {
+            if (customLoader.isShowing) customLoader.dismiss()
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+   /* private fun setUpRecyclerView(){
          expenseList = listOf(
             GetExpenseList(
                 id = 1,
@@ -130,7 +239,7 @@ class ExpenseDashboardActivity : AppCompatActivity() {
         )
         binding.rvShowApplyExpense.adapter = rvAdapter
         binding.rvShowApplyExpense.layoutManager = LinearLayoutManager(this)
-    }
+    }*/
     private fun filterByStatus(status: String) {
         val filteredList = if (status == "All") {
             expenseList

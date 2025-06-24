@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textfield.TextInputEditText
 import com.stafo.app.R
 import com.stafo.app.screens.expense.dataClass.DynamicExpenseField
@@ -14,6 +15,8 @@ class DynamicExpenseAdapter (private val fields: MutableList<DynamicExpenseField
 
     inner class DynamicViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val editText: TextInputEditText = view.findViewById(R.id.tie_expense_field)
+        val editText2: TextInputEditText = view.findViewById(R.id.tie_expense_input_type)
+        val removeItem: ShapeableImageView = view.findViewById(R.id.img_remove)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DynamicViewHolder {
@@ -25,6 +28,7 @@ class DynamicExpenseAdapter (private val fields: MutableList<DynamicExpenseField
     override fun onBindViewHolder(holder: DynamicViewHolder, position: Int) {
         val field = fields[position]
         holder.editText.setText(field.userInput)
+        holder.editText2.setText(field.inputType)
 
 
 
@@ -32,6 +36,16 @@ class DynamicExpenseAdapter (private val fields: MutableList<DynamicExpenseField
         holder.editText.addTextChangedListener {
             field.userInput = it.toString()
         }
+
+        holder.editText2.addTextChangedListener {
+            field.inputType = it.toString()
+        }
+
+        holder.removeItem.setOnClickListener {
+            removeField(position)
+        }
+
+
 
 
     }
@@ -68,6 +82,10 @@ class DynamicExpenseAdapter (private val fields: MutableList<DynamicExpenseField
 
         for (field in fields) {
             if (field.userInput.isBlank()) {
+                isValid = false
+                break
+            }
+            if (field.inputType.isBlank()) {
                 isValid = false
                 break
             }

@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.databinding.RecyPlanViewChildLayoutBinding
+import com.stafo.app.screens.expense.dataClass.ExpenseFormList
 
 
 class AdapterExpenseCategoryFields(
-    private var list: List<String>,
+    private var list: List<ExpenseFormList>,
     var context: Activity,
 ) : RecyclerView.Adapter<AdapterExpenseCategoryFields.ViewHolder>() {
     inner class ViewHolder(val binding: RecyPlanViewChildLayoutBinding) :
@@ -29,7 +30,7 @@ class AdapterExpenseCategoryFields(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             with(list[position]) {
-                binding.tvItem.text = this
+                binding.tvItem.text = this.field_name
             }
 
 

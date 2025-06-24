@@ -1,15 +1,19 @@
 package com.stafo.app.screens.expense.adapter
 
 import android.app.Activity
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.databinding.ItemExpenseCategoryBinding
+import com.stafo.app.screens.expense.CreateExpenseActivity
+import com.stafo.app.screens.expense.ExpenseCategoryActivity
 import com.stafo.app.screens.expense.dataClass.ExpenseCategory
+import com.stafo.app.screens.expense.dataClass.ExpenseFormTypeList
 
 class AdapterExpenseCategory (
-    private var list: List<ExpenseCategory>,
+    private var list: List<ExpenseFormTypeList>,
     var context: Activity,
 ) : RecyclerView.Adapter<AdapterExpenseCategory.ViewHolder>() {
     inner class ViewHolder(val binding: ItemExpenseCategoryBinding) :
@@ -30,13 +34,27 @@ class AdapterExpenseCategory (
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             with(list[position]) {
-                binding.tvCategoryTitle.text = this.categoryName
-                binding.tvAttachRequired.text = if (this.attachDocumentRequired) "Yes" else "No"
+                binding.tvCategoryTitle.text = this.name
+                binding.tvAttachRequired.text = this.is_document_req?:""
 
-                val adapter = AdapterExpenseCategoryFields(this.requiredFields,context)
-                binding.rvRequiredFields.adapter = adapter
-                binding.rvRequiredFields.layoutManager = LinearLayoutManager(context)
-                adapter.notifyDataSetChanged()
+                if (!this.expense_forms.isNullOrEmpty()){
+                    val adapter = AdapterExpenseCategoryFields(this.expense_forms,context)
+                    binding.rvRequiredFields.adapter = adapter
+                    binding.rvRequiredFields.layoutManager = LinearLayoutManager(context)
+                    adapter.notifyDataSetChanged()
+                }
+
+                binding.btnEdit.setOnClickListener {
+                    val intent = Intent(context, CreateExpenseActivity::class.java)
+                    intent.putExtra("expense_form_data", this)
+                    context.startActivity(intent)
+                }
+
+                binding.btnDelete.setOnClickListener {
+                    (context as ExpenseCategoryActivity).deleteExpense(this.id)
+                }
+
+
 
             }
 

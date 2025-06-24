@@ -18,7 +18,6 @@ import com.stafo.app.screens.auth.dataClass.OtpResponse
 import com.stafo.app.screens.auth.dataClass.OtpVerifyResponse
 import com.stafo.app.screens.auth.dataClass.SelfieAttendanceResponse
 import com.stafo.app.screens.auth.dataClass.StatesListResponse
-import com.stafo.app.screens.billpayment.dataClass.BbpsOperatorDetailsResponse
 import com.stafo.app.screens.billpayment.dataClass.CategoryMenuResponse
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorRequest
 import com.stafo.app.screens.billpayment.dataClass.ElectricityOperatorResponse
@@ -30,12 +29,16 @@ import com.stafo.app.screens.crm.dataClass.CRMDashboardResponse
 import com.stafo.app.screens.crm.dataClass.CreateFollowUpRequest
 import com.stafo.app.screens.crm.dataClass.CreateFollowUpResponse
 import com.stafo.app.screens.crm.dataClass.FollowUpListResponse
+import com.stafo.app.screens.expense.dataClass.GetAllExpenseFormList
 import com.stafo.app.screens.crm.dataClass.LeadCreateRequest
 import com.stafo.app.screens.crm.dataClass.LeadCreateResponse
-import com.stafo.app.screens.crm.dataClass.LeadDashboardRequest
-import com.stafo.app.screens.crm.dataClass.LeadListRequest
 import com.stafo.app.screens.crm.dataClass.LeadListResponse
 import com.stafo.app.screens.crm.dataClass.UpdateLeadResponse
+import com.stafo.app.screens.expense.dataClass.DeleteExpenseFormResponse
+import com.stafo.app.screens.expense.dataClass.EmpApplyExpenseResponse
+import com.stafo.app.screens.expense.dataClass.ExpenseFormCreateRequest
+import com.stafo.app.screens.expense.dataClass.ExpenseFormCreateResponse
+import com.stafo.app.screens.expense.dataClass.ViewApplyExpenseResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
 import com.stafo.app.screens.payroll.dataClass.SalaryRequest
 import com.stafo.app.screens.payroll.dataClass.SalaryResponse
@@ -43,7 +46,6 @@ import com.stafo.app.screens.payroll.dataClass.SalarySlipRequest
 import com.stafo.app.screens.payroll.dataClass.SalarySlipResponse
 import com.stafo.app.screens.performance.dataClass.AddPerformanceRequest
 import com.stafo.app.screens.performance.dataClass.AddPerformanceResponse
-import com.stafo.app.screens.performance.dataClass.DeletePerformanceRequest
 import com.stafo.app.screens.performance.dataClass.DeletePerformanceResponse
 import com.stafo.app.screens.performance.dataClass.PerformanceAddRequest
 import com.stafo.app.screens.performance.dataClass.PerformanceAddResponse
@@ -61,7 +63,6 @@ import com.stafo.app.screens.settings.dataClass.AssignBranchRequest
 import com.stafo.app.screens.settings.dataClass.AssignBranchResponse
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentResponse
-import com.stafo.app.screens.settings.dataClass.AssignShiftRequest
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.stafo.app.screens.settings.dataClass.BannerResponse
 import com.stafo.app.screens.settings.dataClass.BranchListResponse
@@ -111,8 +112,6 @@ import com.stafo.app.screens.settings.dataClass.InActiveEmpResponse
 import com.stafo.app.screens.settings.dataClass.JobTitleResponse
 import com.stafo.app.screens.settings.dataClass.LeaveRequestBody
 import com.stafo.app.screens.settings.dataClass.LeaveResponse
-import com.stafo.app.screens.settings.dataClass.LocationLogRequest
-import com.stafo.app.screens.settings.dataClass.LocationLogResponse
 import com.stafo.app.screens.settings.dataClass.OnLeaveResponse
 import com.stafo.app.screens.settings.dataClass.PanVerifyRequestBody
 import com.stafo.app.screens.settings.dataClass.PanVerifyResponse
@@ -162,6 +161,7 @@ import com.stafo.app.screens.subscription.dataClass.PaymentUpdateResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -169,7 +169,6 @@ import retrofit2.http.Field
 import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.HeaderMap
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -853,7 +852,49 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<MySubscriptionResponse>
 
+    @POST("api/expenseform/create")
+    suspend fun callExpenseFormCreate(
+        @Body request: ExpenseFormCreateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ExpenseFormCreateResponse>
 
+    @GET("api/expenseform/list")
+    suspend fun callGetAllExpenseFormList(
+        @Query("company_id") companyId: String,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<GetAllExpenseFormList>
+    @POST("api/expenseform/update/{id}")
+    suspend fun callExpenseFormUpdate(
+        @Path("id") id: Int,
+        @Body request: ExpenseFormCreateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ExpenseFormCreateResponse>
+
+
+    @DELETE("api/expenseform/delete/{id}")
+    suspend fun callExpenseFormDelete(
+        @Path("id") id: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteExpenseFormResponse>
+
+    @GET("api/expense/list")
+    suspend fun callGetApplyExpenseList(
+        @Query("company_id") companyId: String? = null,
+        @Query("employee_id") employeeId: String? = null,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ViewApplyExpenseResponse>
+
+    @Multipart
+    @POST("api/expense/create")
+    suspend fun callApplyExpense(
+        @Part("company_id") companyId: RequestBody,
+        @Part("employee_id") employeeId: RequestBody,
+        @Part("amount") amount: RequestBody,
+        @Part("expensetype_id") expenseTypeId: RequestBody,
+        @Part("expense_details") expenseDetails: RequestBody,  // JSON
+        @Part attachment: MultipartBody.Part?,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EmpApplyExpenseResponse>
 
 
 }

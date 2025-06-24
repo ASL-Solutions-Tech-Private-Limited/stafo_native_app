@@ -9,13 +9,14 @@ import com.stafo.app.R
 import com.stafo.app.databinding.ItemApplyExpenseChildLayoutBinding
 import com.stafo.app.screens.expense.EmployeeApplyExpenseActivity
 import com.stafo.app.screens.expense.ViewDetailsApplyExpenseActivity
+import com.stafo.app.screens.expense.dataClass.ApplyExpenseData
 import com.stafo.app.screens.expense.dataClass.GetExpenseList
 
 class AdapterApplyExpenseList(
     var context: Activity,
-    private var list:List<GetExpenseList>,
-    private val onApproveClick: (GetExpenseList) -> Unit,
-    private val onRejectClick: (GetExpenseList) -> Unit
+    private var list:List<ApplyExpenseData>,
+    private val onApproveClick: (ApplyExpenseData) -> Unit,
+    private val onRejectClick: (ApplyExpenseData) -> Unit
 ) : RecyclerView.Adapter<AdapterApplyExpenseList.ViewHolder>() {
     inner class ViewHolder(val binding: ItemApplyExpenseChildLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -34,10 +35,10 @@ class AdapterApplyExpenseList(
          with(holder) {
              with(list[position]) {
 
-                 binding.tvCategoryTitle.text = expenseType
-                 binding.tvDate.text = date
-                 binding.tvAmount.text = amount.toDoubleOrNull()?.toInt()?.let { "₹ $it" } ?: "₹ 0"
-                 binding.tvStatus.text = status
+                // binding.tvCategoryTitle.text = this.status
+                // binding.tvDate.text = date
+                 binding.tvAmount.text = this.amount.toDoubleOrNull()?.toInt()?.let { "₹ $it" } ?: "₹ 0"
+                 binding.tvStatus.text = this.status
 
                  if (this.status=="Pending"){
                      binding.tvStatus.setTextColor(context.resources.getColor(R.color.pending_colour))
@@ -76,7 +77,7 @@ class AdapterApplyExpenseList(
 
          }
     }
-    fun updateList(newList: List<GetExpenseList>) {
+    fun updateList(newList: List<ApplyExpenseData>) {
         this.list = newList
         notifyDataSetChanged()
     }

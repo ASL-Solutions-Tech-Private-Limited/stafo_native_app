@@ -76,7 +76,7 @@
             android:layout_marginHorizontal="@dimen/_12sdp"
             android:gravity="center"
             android:fontFamily="@font/gilroy_regular"
-            android:text="No records under this status."
+            android:text="No records found"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp"
             android:visibility="gone" />
