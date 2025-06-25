@@ -24,6 +24,7 @@
             android:src="@drawable/ic_back" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_title_page_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_12sdp"
@@ -113,21 +114,42 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
-                <TextView
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_attach_file"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/dynamicFieldContainer"
-                    android:id="@+id/btnAttach"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Attach Document"
+                    android:layout_width="0dp"
                     android:visibility="gone"
-                    android:layout_marginTop="16dp" />
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_arrow_down">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_attach_file"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edit_text_background"
+                        android:fontFamily="@font/gilroy_medium"
+                        android:hint="Attach File"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:inputType="textPersonName"
+                        android:textSize="@dimen/_12ssp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
 
                 <Button
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btnAttach"
+                    app:layout_constraintTop_toBottomOf="@+id/til_attach_file"
                     android:id="@+id/btnSubmit"
                     android:visibility="gone"
                     android:layout_marginHorizontal="@dimen/_12sdp"
@@ -135,7 +157,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Submit"
-                    android:layout_marginTop="16dp" />
+                    android:layout_marginTop="@dimen/_18sdp" />
 
 
 

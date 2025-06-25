@@ -20,6 +20,7 @@ import com.stafo.app.screens.expense.adapter.AdapterApplyExpenseList
 import com.stafo.app.screens.expense.adapter.AdapterExpenseCategory
 import com.stafo.app.screens.expense.dataClass.ApplyExpenseData
 import com.stafo.app.screens.expense.dataClass.ExpenseCategory
+import com.stafo.app.screens.expense.dataClass.ExpenseChangeStatusRequest
 import com.stafo.app.screens.expense.dataClass.GetExpenseList
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
@@ -31,6 +32,8 @@ class ExpenseDashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityExpenseDashboardBinding
     private lateinit var rvAdapter: AdapterApplyExpenseList
     private lateinit var expenseList: List<ApplyExpenseData>
+
+    private var userType:String=""
 
     private val expenseViewModel: ExpenseViewModel by viewModels()
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
@@ -56,6 +59,7 @@ class ExpenseDashboardActivity : AppCompatActivity() {
         binding.apply {
 
             if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)){
+                userType="company"
                 getEmployeeComId()?.let {
                     expenseViewModel.getApplyExpenseList(
                         this@ExpenseDashboardActivity,
@@ -63,8 +67,10 @@ class ExpenseDashboardActivity : AppCompatActivity() {
                     )
                 }
             }else{
+                userType="employee"
                 expenseViewModel.getApplyExpenseList(
                     this@ExpenseDashboardActivity,
+                    companyId = getEmployeeComId().toString(),
                     employeeId = getEmployeeDetails()?.id.toString()
                 )
             }
@@ -76,15 +82,18 @@ class ExpenseDashboardActivity : AppCompatActivity() {
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing=false
                 if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)){
+                    userType="company"
                     getEmployeeComId()?.let {
                         expenseViewModel.getApplyExpenseList(
                             this@ExpenseDashboardActivity,
-                            companyId = it
+                            companyId =  it
                         )
                     }
                 }else{
+                    userType="employee"
                     expenseViewModel.getApplyExpenseList(
                         this@ExpenseDashboardActivity,
+                        companyId = getEmployeeComId().toString(),
                         employeeId = getEmployeeDetails()?.id.toString()
                     )
                 }
@@ -152,13 +161,21 @@ class ExpenseDashboardActivity : AppCompatActivity() {
                     rvAdapter = AdapterApplyExpenseList(
                         context = this,
                         expenseList,
-                        onApproveClick = { position ->
-                            Log.d("exp", "setUpRecyclerView: $position")
+                        userType,
+                        onApproveClick = { expense ->
+                            companyAlertDialog("Approved",expense.id)
 
                         },
-                        onRejectClick = { position ->
-                            Log.e("exp", "setUpRecyclerView: $position")
+                        onRejectClick = { expense ->
+                            companyAlertDialog("Rejected",expense.id)
+                        },
+                        onEditClick = { expense ->
+
+                        },
+                        onDeleteClick = { expense ->
+                            employeeAlertDialog(expense.id)
                         }
+
                     )
                     binding.rvShowApplyExpense.adapter = rvAdapter
                     binding.rvShowApplyExpense.layoutManager = LinearLayoutManager(this)
@@ -168,6 +185,43 @@ class ExpenseDashboardActivity : AppCompatActivity() {
                     binding.txtMsg.visibility=View.VISIBLE
                 }
             }
+        }
+
+        expenseViewModel.mExpenseChangeStatusResponse.observe(this) { it ->
+            if (it.status) {
+              CustomToast(this,it.message)
+
+                if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)){
+                    userType="company"
+                    getEmployeeComId()?.let {
+                        expenseViewModel.getApplyExpenseList(
+                            this@ExpenseDashboardActivity,
+                            companyId =  it
+                        )
+                    }
+                }else{
+                    userType="employee"
+                    expenseViewModel.getApplyExpenseList(
+                        this@ExpenseDashboardActivity,
+                        companyId = getEmployeeComId().toString(),
+                        employeeId = getEmployeeDetails()?.id.toString()
+                    )
+                }
+            } else   CustomToast(this,it.message)
+        }
+
+        expenseViewModel.mEmployeeDeleteExpenseResponse.observe(this) { it ->
+            if (it.status) {
+                CustomToast(this,it.message)
+                userType="employee"
+
+                expenseViewModel.getApplyExpenseList(
+                    this@ExpenseDashboardActivity,
+                    companyId = getEmployeeComId().toString(),
+                    employeeId = getEmployeeDetails()?.id.toString()
+                )
+
+            } else   CustomToast(this,it.message)
         }
 
     }
@@ -181,65 +235,6 @@ class ExpenseDashboardActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-   /* private fun setUpRecyclerView(){
-         expenseList = listOf(
-            GetExpenseList(
-                id = 1,
-                employee_id = 101,
-                employee = "John Doe",
-                expenseType = "Travel",
-                date = "2025-06-01",
-                amount = "1200.00",
-                status = "Pending"
-            ),
-            GetExpenseList(
-                id = 2,
-                employee_id = 102,
-                employee ="Jane Smith",
-                expenseType = "Meal",
-                date = "2025-06-03",
-                amount = "450.00",
-                status = "Approved"
-            ),
-            GetExpenseList(
-                id = 3,
-                employee_id = 103,
-                employee = "Alice Brown",
-                expenseType = "Lodging",
-                date = "2025-06-04",
-                amount = "2300.00",
-                status = "Rejected"
-            )
-        )
-
-
-
-
-        rvAdapter = AdapterApplyExpenseList(
-            context = this,
-            expenseList,
-            onApproveClick = { position ->
-                Log.d("exp", "setUpRecyclerView: $position")
-
-            },
-            onRejectClick = { position ->
-                Log.e("exp", "setUpRecyclerView: $position")
-            }
-        )
-        binding.rvShowApplyExpense.adapter = rvAdapter
-        binding.rvShowApplyExpense.layoutManager = LinearLayoutManager(this)
-    }*/
     private fun filterByStatus(status: String) {
         val filteredList = if (status == "All") {
             expenseList
@@ -273,17 +268,40 @@ class ExpenseDashboardActivity : AppCompatActivity() {
     }
 
 
-    private fun companyAlertDialog(msg:String,expId:Int){
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Alert")
-        builder.setMessage(msg)
-        builder.setPositiveButton("OK") { dialog, _ ->
-            dialog.dismiss()
-        }
-        val dialog = builder.create()
-        dialog.show()
+
+    private fun companyAlertDialog(status:String, expId: Int) {
+        AlertDialog.Builder(this)
+            .setTitle("Alert")
+            .setMessage("Are you sure? You want to change status this item?")
+            .setPositiveButton("Yes") { dialog, _ ->
+
+                val request= ExpenseChangeStatusRequest(
+                    id = expId,
+                    status=status
+                )
+
+                expenseViewModel.approveRejectExpense(this, request)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
+    private fun employeeAlertDialog(expId: Int) {
+        AlertDialog.Builder(this)
+            .setTitle("Alert")
+            .setMessage("Are you sure? You want to delete this item?")
+            .setPositiveButton("Yes") { dialog, _ ->
+                expenseViewModel.deleteApplyExpense(this, expId)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
 
 
 }

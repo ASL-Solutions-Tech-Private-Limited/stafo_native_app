@@ -8,14 +8,16 @@ data class ViewApplyExpenseResponse(
     val data: List<ApplyExpenseData>
 )
 data class ApplyExpenseData(
-    val id: Int,
-    val company_id: Int,
-    val employee_id: Int,
-    val amount: String,
-    val status: String,
-    val created_at: String,
-    val updated_at: String,
-    val expense_details: List<ApplyExpenseDetail>
+   val id: Int,
+   val company_id: Int,
+   val employee_id: Int,
+   val expensetype_id: Int,
+   val amount: String,
+   val status: String,
+   val created_at: String,
+   val updated_at: String,
+   val expense_type: ApplyExpenseType,
+   val expense_details: List<ApplyExpenseDetail>
 ):Serializable
 data class ApplyExpenseDetail(
     val id: Int,
@@ -25,3 +27,10 @@ data class ApplyExpenseDetail(
     val created_at: String,
     val updated_at: String
 ):Serializable
+
+data class ApplyExpenseType(
+    val id: Int,
+    val name: String,
+    val description: String?
+):Serializable
+

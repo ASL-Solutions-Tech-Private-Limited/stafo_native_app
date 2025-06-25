@@ -49,10 +49,12 @@
 
     </com.google.android.material.appbar.AppBarLayout>
     <RelativeLayout
+        android:id="@+id/rtl_expense"
         app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/_12sdp"
+        android:visibility="visible"
         android:background="@drawable/custom_card_bg2"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:layout_width="match_parent"
@@ -78,7 +80,7 @@
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_toRightOf="@+id/tvCategoryTitle1"
             android:fontFamily="@font/gilroy_medium"
-            android:text="Food"
+            android:text=""
             android:textColor="@android:color/black"
             android:textSize="@dimen/_12ssp" />
 
@@ -104,7 +106,7 @@
             android:layout_marginTop="@dimen/_6sdp"
             android:layout_toRightOf="@+id/tvCategoryTitle1"
             android:fontFamily="@font/gilroy_medium"
-            android:text="12 jun 2025"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
@@ -130,7 +132,7 @@
             android:layout_marginTop="@dimen/_6sdp"
             android:layout_toRightOf="@+id/tvCategoryTitle1"
             android:fontFamily="@font/gilroy_medium"
-            android:text="₹500"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
@@ -156,7 +158,7 @@
             android:layout_marginTop="@dimen/_6sdp"
             android:layout_toRightOf="@+id/tvCategoryTitle1"
             android:fontFamily="@font/gilroy_medium"
-            android:text="Pending"
+            android:text=""
             android:textColor="@color/pending_colour"
             android:textSize="@dimen/_12ssp" />
 
@@ -170,29 +172,36 @@
             android:layout_below="@+id/tvStatus"
             android:layout_marginTop="@dimen/_6sdp"
             android:fontFamily="@font/gilroy_semi_bold"
-            android:text="Details:"
+            android:text="Expense Details:"
             android:textColor="@android:color/black"
             android:textSize="@dimen/_12ssp" />
 
-
-
-
-
+        <LinearLayout
+            android:id="@+id/llExpenseFields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toRightOf="@+id/tvdetails"
+            android:layout_below="@+id/tvdetails"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"/>
 
 
 
         <LinearLayout
-            android:id="@+id/contentLayout"
+            android:id="@+id/llc_company_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_below="@+id/llExpenseFields"
+            android:layout_marginTop="@dimen/_6sdp"
             android:orientation="horizontal"
-            android:layout_below="@+id/tvdetails"
-            android:layout_marginTop="@dimen/_6sdp">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <!-- Edit Button -->
             <Button
-                android:id="@+id/btnEdit"
+                android:id="@+id/btnApprove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -209,7 +218,7 @@
 
             <!-- Delete Button -->
             <Button
-                android:id="@+id/btnDelete"
+                android:id="@+id/btnReject"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -223,9 +232,70 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/llc_employee_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/llExpenseFields"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!-- Edit Button -->
+            <Button
+                android:id="@+id/btnEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:layout_toStartOf="@+id/btnDelete"
+                android:backgroundTint="@color/green"
+                android:fontFamily="@font/gilroy_regular"
+                android:text="Edit"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_12ssp" />
+
+            <!-- Delete Button -->
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:backgroundTint="@color/pastel_red"
+                android:fontFamily="@font/gilroy_regular"
+                android:text="Delete"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_12ssp" />
+
+        </LinearLayout>
+
+
+
 
     </RelativeLayout>
-
+    <TextView
+        android:id="@+id/txt_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:gravity="center"
+        android:fontFamily="@font/gilroy_regular"
+        android:text="Not found any details!"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12ssp"
+        android:visibility="visible" />
 
 
 

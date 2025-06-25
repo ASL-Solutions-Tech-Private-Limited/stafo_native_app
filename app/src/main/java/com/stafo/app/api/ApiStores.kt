@@ -36,9 +36,14 @@ import com.stafo.app.screens.crm.dataClass.LeadListResponse
 import com.stafo.app.screens.crm.dataClass.UpdateLeadResponse
 import com.stafo.app.screens.expense.dataClass.DeleteExpenseFormResponse
 import com.stafo.app.screens.expense.dataClass.EmpApplyExpenseResponse
+import com.stafo.app.screens.expense.dataClass.EmployeeDeleteExpenseResponse
+import com.stafo.app.screens.expense.dataClass.ExpenseApplyRequest
+import com.stafo.app.screens.expense.dataClass.ExpenseChangeStatusRequest
+import com.stafo.app.screens.expense.dataClass.ExpenseChangeStatusResponse
 import com.stafo.app.screens.expense.dataClass.ExpenseFormCreateRequest
 import com.stafo.app.screens.expense.dataClass.ExpenseFormCreateResponse
 import com.stafo.app.screens.expense.dataClass.ViewApplyExpenseResponse
+import com.stafo.app.screens.expense.dataClass.ViewExpenseDetailsResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
 import com.stafo.app.screens.payroll.dataClass.SalaryRequest
 import com.stafo.app.screens.payroll.dataClass.SalaryResponse
@@ -884,17 +889,50 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<ViewApplyExpenseResponse>
 
-    @Multipart
+ /*   @Multipart
     @POST("api/expense/create")
     suspend fun callApplyExpense(
         @Part("company_id") companyId: RequestBody,
         @Part("employee_id") employeeId: RequestBody,
         @Part("amount") amount: RequestBody,
         @Part("expensetype_id") expenseTypeId: RequestBody,
-        @Part("expense_details") expenseDetails: RequestBody,  // JSON
-        @Part attachment: MultipartBody.Part?,
+        @Part("expense_details") expenseDetails: RequestBody,
+        @Part attachment: List<MultipartBody.Part>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EmpApplyExpenseResponse>*/
+
+    @Multipart
+    @POST("api/expense/create")
+    suspend fun callApplyExpense(
+        @PartMap data: Map<String, @JvmSuppressWildcards RequestBody>,
+        @Part attachments: List<MultipartBody.Part>,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<EmpApplyExpenseResponse>
 
 
+    @POST("api/expense/create")
+    suspend fun callApplyExpenseWithoutAttach(
+        @Body request: ExpenseApplyRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EmpApplyExpenseResponse>
+
+    @POST("api/expense/status-change")
+    suspend fun callApproveRejectApplyExpense(
+        @Body request: ExpenseChangeStatusRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ExpenseChangeStatusResponse>
+
+
+    @GET("api/expense/details")
+    suspend fun callExpenseDetails(
+        @Query("expense_id") expenseId: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ViewExpenseDetailsResponse>
+
+
+    @DELETE("api/expense/delete/{id}")
+    suspend fun callDeleteApplyExpense(
+        @Path("id") id: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EmployeeDeleteExpenseResponse>
 }
