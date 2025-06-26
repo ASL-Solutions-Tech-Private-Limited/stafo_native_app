@@ -42,6 +42,8 @@ import com.stafo.app.screens.expense.dataClass.ExpenseChangeStatusRequest
 import com.stafo.app.screens.expense.dataClass.ExpenseChangeStatusResponse
 import com.stafo.app.screens.expense.dataClass.ExpenseFormCreateRequest
 import com.stafo.app.screens.expense.dataClass.ExpenseFormCreateResponse
+import com.stafo.app.screens.expense.dataClass.UpdateExpenseEmployeeRequest
+import com.stafo.app.screens.expense.dataClass.UpdateExpenseResponse
 import com.stafo.app.screens.expense.dataClass.ViewApplyExpenseResponse
 import com.stafo.app.screens.expense.dataClass.ViewExpenseDetailsResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
@@ -935,4 +937,12 @@ interface ApiStores {
         @Path("id") id: Int,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<EmployeeDeleteExpenseResponse>
+
+
+    @POST("api/expense/update/{id}")
+    suspend fun callUpdateExpenseEmployee(
+        @Path("id") id: Int,
+        @Body request: UpdateExpenseEmployeeRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateExpenseResponse>
 }

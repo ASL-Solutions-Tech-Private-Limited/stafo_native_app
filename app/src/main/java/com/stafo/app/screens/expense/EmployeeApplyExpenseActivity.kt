@@ -33,11 +33,15 @@ import com.jakewharton.rxbinding2.widget.text
 import com.rajat.pdfviewer.util.FileUtils
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityEmployeeApplyExpenseBinding
+import com.stafo.app.screens.billpayment.dataClass.Category
 import com.stafo.app.screens.expense.adapter.AdapterExpenseCategory
 import com.stafo.app.screens.expense.dataClass.ApplyExpenseDetailRequest
 import com.stafo.app.screens.expense.dataClass.ExpenseApplyRequest
 import com.stafo.app.screens.expense.dataClass.ExpenseCategory
+import com.stafo.app.screens.expense.dataClass.ExpenseDetail
 import com.stafo.app.screens.expense.dataClass.ExpenseFormTypeList
+import com.stafo.app.screens.expense.dataClass.UpdateExpenseDetailRequest
+import com.stafo.app.screens.expense.dataClass.UpdateExpenseEmployeeRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.formatCreatedAtDate
@@ -57,7 +61,7 @@ class EmployeeApplyExpenseActivity : AppCompatActivity() {
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
 
     private var expenseTypeId: String = ""
-    private var selectedCategory: ExpenseFormTypeList? = null
+
     private var selectedFile: File? = null
     private var attachFile: Boolean = false
 
@@ -66,9 +70,9 @@ class EmployeeApplyExpenseActivity : AppCompatActivity() {
     private var expenseId: Int = 0
 
     private val inputFieldMap = mutableMapOf<String, EditText>()
+    private var selectedCategory: ExpenseFormTypeList? = null
 
 
-    private var expenseCategories: List<ExpenseFormTypeList> = emptyList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -92,11 +96,12 @@ class EmployeeApplyExpenseActivity : AppCompatActivity() {
         binding.apply {
 
             if (expenseId != 0) {
-
+                Log.e("res", " get expense type ")
                 tvTitlePageName.text = "Edit Expense"
                 expenseViewModel.viewExpenseDetails(this@EmployeeApplyExpenseActivity, expenseId)
 
             } else {
+                Log.e("res", " get expense type list ")
                 getEmployeeComId()?.let {
                     expenseViewModel.getAllExpenseFormList(
                         this@EmployeeApplyExpenseActivity,
@@ -170,6 +175,7 @@ class EmployeeApplyExpenseActivity : AppCompatActivity() {
                     }
 
                     else -> {
+
                         if (attachFile) {
                             expenseViewModel.empApplyExpense(
                                 mContext = this@EmployeeApplyExpenseActivity,
@@ -195,8 +201,52 @@ class EmployeeApplyExpenseActivity : AppCompatActivity() {
                                 request
                             )
                         }
+
+
                     }
                 }
+            }
+
+            binding.btnEditExpense.setOnClickListener {
+
+                val inputs = inputFieldMap.mapValues { it.value.text.toString().trim() }
+
+                val hasEmptyField = inputs.any { it.value.isEmpty() }
+                if (hasEmptyField) {
+                    CustomToast(
+                        this@EmployeeApplyExpenseActivity,
+                        "Please fill in all required fields"
+                    )
+                    return@setOnClickListener
+                }
+
+                val expenseDetails = inputFieldMap.map {
+                    UpdateExpenseDetailRequest(
+                        expense_id = expenseId,
+                        expenseform_id = it.key.toInt(),
+                        expense_value = it.value.text.toString().trim()
+                    )
+                }
+
+                val amount = binding.tieExpenseAmount.text.toString().trim()
+                if (amount.isEmpty()) {
+                    CustomToast(this@EmployeeApplyExpenseActivity, "Please enter expense amount")
+                    return@setOnClickListener
+                }
+
+                val request = UpdateExpenseEmployeeRequest(
+                    company_id = getEmployeeComId()?.toInt() ?: 0,
+                    employee_id = getEmployeeDetails()?.id ?: 0,
+                    amount = amount,
+                    status = "Pending",
+                    expense_details = expenseDetails
+                )
+
+                expenseViewModel.employeeUpdateExpense(
+                    this@EmployeeApplyExpenseActivity,
+                    expenseId,
+                    request
+                )
             }
 
 
@@ -208,7 +258,9 @@ class EmployeeApplyExpenseActivity : AppCompatActivity() {
         expenseViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
         expenseViewModel.mGetAllExpenseFormListResponse.observe(this) { it ->
-            if (it.success) {
+            if (it.status) {
+
+                Log.e("res", " get expense success")
                 if (!it.data.isNullOrEmpty()) {
 
                     val expenseCategories = it.data
@@ -223,6 +275,8 @@ class EmployeeApplyExpenseActivity : AppCompatActivity() {
                             )
                         }
                     }
+
+                    Log.e("res", " get expense type list ${expenseTypeList}")
 
                     binding.tieExpenseType.setOnClickListener {
                         val dialog = SearchableDialog(
@@ -249,43 +303,49 @@ class EmployeeApplyExpenseActivity : AppCompatActivity() {
                         }
                     }
                 }
+            } else Log.e("res", " get expense else")
+        }
+
+
+
+
+        expenseViewModel.mViewExpenseDetailsResponse.observe(this) { it ->
+            if (it.success) {
+
+
+                val expense = it.data
+
+
+
+                binding.tieExpenseAmount.setText(expense.amount)
+                binding.tieExpenseType.setText(expense.expense_type.name)
+                expenseTypeId = expense.expensetype_id.toString()
+
+                if (expense.attachments.isNotEmpty()) {
+                    val filename = expense.attachments.first().filename
+                    binding.tieAttachFile.setText(filename)
+                }
+
+                renderFieldsFromExpenseDetails(
+                    details = expense.expense_details,
+                    hasAttachment = expense.attachments.isNotEmpty()
+                )
+            } else {
+                CustomToast(this, it.message)
             }
         }
 
-        /* expenseViewModel.mViewExpenseDetailsResponse.observe(this) { it ->
-             if (it.success) {
-                 val expense = it.data
 
-                 binding.tieExpenseAmount.setText(expense.amount)
-                 binding.tieExpenseType.setText(expense.expense_type.name)
-                 expenseTypeId = expense.expensetype_id.toString()
 
-                 selectedCategory = expenseCategories.find { cat -> cat.id == expense.expensetype_id }
 
-                 selectedCategory?.let { category ->
-                     renderFields(category)
+        expenseViewModel.mUpdateExpenseResponse.observe(this) { it ->
+            if (it.success) {
+                CustomToast(this, it.message)
+                startActivity(Intent(this,ExpenseDashboardActivity::class.java))
+                finish()
+            } else CustomToast(this, it.message)
+        }
 
-                     Handler(Looper.getMainLooper()).postDelayed({
-                         Log.e("SetFieldValues", "Trying to set ${expense.expense_details.size} dynamic fields")
-                         expense.expense_details.forEach { detail ->
-                             val formId = detail.expenseform_id
-                             val fieldName = detail.expense_form?.field_name
-                             val value = detail.expense_value
-
-                             val editText = inputFieldMap[formId]
-                             if (editText != null) {
-                                 editText.setText(value)
-                                 Log.e("SetFieldValues", "Set field [$fieldName] with ID=$formId -> $value")
-                             } else {
-                                 Log.e("SetFieldValues", "No field found for ID=$formId [$fieldName], value=$value")
-                             }
-                         }
-                     }, 300)
-                 }
-             } else {
-                 CustomToast(this, it.message)
-             }
-         }*/
 
 
 
@@ -301,12 +361,88 @@ class EmployeeApplyExpenseActivity : AppCompatActivity() {
 
     }
 
+
     private fun handleLoader(status: String) {
         if (status.equals("load", ignoreCase = true)) {
             if (!customLoader.isShowing) customLoader.show()
         } else if (status.equals("stop", ignoreCase = true)) {
             if (customLoader.isShowing) customLoader.dismiss()
         }
+    }
+
+
+    @SuppressLint("MissingInflatedId")
+    private fun renderFieldsFromExpenseDetails(
+        details: List<ExpenseDetail>,
+        hasAttachment: Boolean
+    ) {
+
+
+        binding.dynamicFieldContainer.removeAllViews()
+        inputFieldMap.clear()
+        binding.btnEditExpense.visibility = View.VISIBLE
+
+        for (detail in details) {
+            val field = detail.expense_form ?: continue
+            val value = detail.expense_value
+
+            val fieldView = layoutInflater.inflate(
+                R.layout.item_expense_dynamic_input, binding.dynamicFieldContainer, false
+            )
+
+            val editText = fieldView.findViewById<TextInputEditText>(R.id.tie_expense_dynamic_field)
+            val hintEdit = fieldView.findViewById<TextInputLayout>(R.id.til_expense_dynamic_field)
+
+            if (editText == null) {
+                Log.e("exp", "EditText not found in layout!")
+                continue
+            }
+
+            hintEdit.hint = field.field_name
+            editText.setText(value)
+
+            // Map using field name (as in your original logic)
+            inputFieldMap[field.id.toString()] = editText
+
+            // Handle input type
+            when (field.field_name.lowercase()) {
+                "date" -> {
+                    editText.inputType = InputType.TYPE_NULL
+                    editText.isFocusable = false
+                    editText.isFocusableInTouchMode = false
+                    editText.setOnClickListener {
+                        showDatePickerDialog(editText)
+                    }
+                }
+
+                "text", "textarea" -> {
+                    editText.inputType = InputType.TYPE_CLASS_TEXT
+                    if (field.field_name.equals("textarea", ignoreCase = true)) {
+                        editText.maxLines = 4
+                        editText.setLines(4)
+                        editText.gravity = Gravity.TOP
+                    }
+                }
+
+                "number" -> {
+                    editText.inputType =
+                        InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+                }
+
+                else -> {
+                    editText.inputType = InputType.TYPE_CLASS_TEXT
+                }
+            }
+
+            binding.dynamicFieldContainer.addView(fieldView)
+        }
+
+
+        // Show/hide attach file section
+        binding.tilAttachFile.visibility = if (hasAttachment) View.VISIBLE else View.GONE
+        attachFile = hasAttachment
+
+
     }
 
 

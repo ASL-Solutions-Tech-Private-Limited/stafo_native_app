@@ -33,7 +33,7 @@ class ExpenseDashboardActivity : AppCompatActivity() {
     private lateinit var rvAdapter: AdapterApplyExpenseList
     private lateinit var expenseList: List<ApplyExpenseData>
 
-    private var userType:String=""
+    private var userType: String = ""
 
     private val expenseViewModel: ExpenseViewModel by viewModels()
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
@@ -41,7 +41,7 @@ class ExpenseDashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding=ActivityExpenseDashboardBinding.inflate(layoutInflater)
+        binding = ActivityExpenseDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -54,20 +54,40 @@ class ExpenseDashboardActivity : AppCompatActivity() {
         observeViewModel()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)) {
+            userType = "company"
+            getEmployeeComId()?.let {
+                expenseViewModel.getApplyExpenseList(
+                    this@ExpenseDashboardActivity,
+                    companyId = it
+                )
+            }
+        } else {
+            userType = "employee"
+            expenseViewModel.getApplyExpenseList(
+                this@ExpenseDashboardActivity,
+                companyId = getEmployeeComId().toString(),
+                employeeId = getEmployeeDetails()?.id.toString()
+            )
+        }
+    }
+
 
     private fun onClickListener() {
         binding.apply {
 
-            if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)){
-                userType="company"
+            if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)) {
+                userType = "company"
                 getEmployeeComId()?.let {
                     expenseViewModel.getApplyExpenseList(
                         this@ExpenseDashboardActivity,
-                       companyId =  it
+                        companyId = it
                     )
                 }
-            }else{
-                userType="employee"
+            } else {
+                userType = "employee"
                 expenseViewModel.getApplyExpenseList(
                     this@ExpenseDashboardActivity,
                     companyId = getEmployeeComId().toString(),
@@ -80,17 +100,17 @@ class ExpenseDashboardActivity : AppCompatActivity() {
 
 
             swipeRefreshLayout.setOnRefreshListener {
-                swipeRefreshLayout.isRefreshing=false
-                if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)){
-                    userType="company"
+                swipeRefreshLayout.isRefreshing = false
+                if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)) {
+                    userType = "company"
                     getEmployeeComId()?.let {
                         expenseViewModel.getApplyExpenseList(
                             this@ExpenseDashboardActivity,
-                            companyId =  it
+                            companyId = it
                         )
                     }
-                }else{
-                    userType="employee"
+                } else {
+                    userType = "employee"
                     expenseViewModel.getApplyExpenseList(
                         this@ExpenseDashboardActivity,
                         companyId = getEmployeeComId().toString(),
@@ -101,10 +121,20 @@ class ExpenseDashboardActivity : AppCompatActivity() {
 
             btnAddExpense.setOnClickListener {
 
-                if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)){
-                    startActivity(Intent(this@ExpenseDashboardActivity,CreateExpenseActivity::class.java))
-                }else{
-                    startActivity(Intent(this@ExpenseDashboardActivity,EmployeeApplyExpenseActivity::class.java))
+                if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)) {
+                    startActivity(
+                        Intent(
+                            this@ExpenseDashboardActivity,
+                            CreateExpenseActivity::class.java
+                        )
+                    )
+                } else {
+                    startActivity(
+                        Intent(
+                            this@ExpenseDashboardActivity,
+                            EmployeeApplyExpenseActivity::class.java
+                        )
+                    )
                 }
 
 
@@ -126,24 +156,19 @@ class ExpenseDashboardActivity : AppCompatActivity() {
             filterMap.forEach { (textView, status) ->
                 textView.setOnClickListener {
                     if (::rvAdapter.isInitialized) {
-                        txtMsg.visibility=View.GONE
+                        txtMsg.visibility = View.GONE
                         updateTabUI(textView)
                         filterByStatus(status)
-                    } else{
+                    } else {
                         updateTabUI(textView)
-                        txtMsg.visibility=View.VISIBLE
+                        txtMsg.visibility = View.VISIBLE
                     }
                 }
             }
 
 
-
-
-
-
         }
     }
-
 
 
     private fun observeViewModel() {
@@ -152,25 +177,27 @@ class ExpenseDashboardActivity : AppCompatActivity() {
         expenseViewModel.mViewApplyExpenseResponse.observe(this) { it ->
             if (it.success) {
                 if (!it.data.isNullOrEmpty()) {
-                    binding.rvShowApplyExpense.visibility=View.VISIBLE
-                    binding.txtMsg.visibility=View.GONE
+                    binding.rvShowApplyExpense.visibility = View.VISIBLE
+                    binding.txtMsg.visibility = View.GONE
 
 
-                    expenseList=it.data
+                    expenseList = it.data
 
                     rvAdapter = AdapterApplyExpenseList(
                         context = this,
                         expenseList,
                         userType,
                         onApproveClick = { expense ->
-                            companyAlertDialog("Approved",expense.id)
+                            companyAlertDialog("Approved", expense.id)
 
                         },
                         onRejectClick = { expense ->
-                            companyAlertDialog("Rejected",expense.id)
+                            companyAlertDialog("Rejected", expense.id)
                         },
                         onEditClick = { expense ->
-
+                            val intent = Intent(this@ExpenseDashboardActivity, EmployeeApplyExpenseActivity::class.java)
+                            intent.putExtra("expense_id", expense.id)
+                            startActivity(intent)
                         },
                         onDeleteClick = { expense ->
                             employeeAlertDialog(expense.id)
@@ -180,40 +207,40 @@ class ExpenseDashboardActivity : AppCompatActivity() {
                     binding.rvShowApplyExpense.adapter = rvAdapter
                     binding.rvShowApplyExpense.layoutManager = LinearLayoutManager(this)
                     rvAdapter.notifyDataSetChanged()
-                }else{
-                    binding.rvShowApplyExpense.visibility=View.GONE
-                    binding.txtMsg.visibility=View.VISIBLE
+                } else {
+                    binding.rvShowApplyExpense.visibility = View.GONE
+                    binding.txtMsg.visibility = View.VISIBLE
                 }
             }
         }
 
         expenseViewModel.mExpenseChangeStatusResponse.observe(this) { it ->
             if (it.status) {
-              CustomToast(this,it.message)
+                CustomToast(this, it.message)
 
-                if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)){
-                    userType="company"
+                if (getIsCOMPANYLogin(this@ExpenseDashboardActivity)) {
+                    userType = "company"
                     getEmployeeComId()?.let {
                         expenseViewModel.getApplyExpenseList(
                             this@ExpenseDashboardActivity,
-                            companyId =  it
+                            companyId = it
                         )
                     }
-                }else{
-                    userType="employee"
+                } else {
+                    userType = "employee"
                     expenseViewModel.getApplyExpenseList(
                         this@ExpenseDashboardActivity,
                         companyId = getEmployeeComId().toString(),
                         employeeId = getEmployeeDetails()?.id.toString()
                     )
                 }
-            } else   CustomToast(this,it.message)
+            } else CustomToast(this, it.message)
         }
 
         expenseViewModel.mEmployeeDeleteExpenseResponse.observe(this) { it ->
             if (it.status) {
-                CustomToast(this,it.message)
-                userType="employee"
+                CustomToast(this, it.message)
+                userType = "employee"
 
                 expenseViewModel.getApplyExpenseList(
                     this@ExpenseDashboardActivity,
@@ -221,7 +248,7 @@ class ExpenseDashboardActivity : AppCompatActivity() {
                     employeeId = getEmployeeDetails()?.id.toString()
                 )
 
-            } else   CustomToast(this,it.message)
+            } else CustomToast(this, it.message)
         }
 
     }
@@ -244,6 +271,7 @@ class ExpenseDashboardActivity : AppCompatActivity() {
 
         rvAdapter.updateList(filteredList)
     }
+
     private fun updateTabUI(selected: AppCompatTextView) {
         val tabViews = listOf(
             binding.tvAllTasks,
@@ -268,16 +296,15 @@ class ExpenseDashboardActivity : AppCompatActivity() {
     }
 
 
-
-    private fun companyAlertDialog(status:String, expId: Int) {
+    private fun companyAlertDialog(status: String, expId: Int) {
         AlertDialog.Builder(this)
             .setTitle("Alert")
             .setMessage("Are you sure? You want to change status this item?")
             .setPositiveButton("Yes") { dialog, _ ->
 
-                val request= ExpenseChangeStatusRequest(
+                val request = ExpenseChangeStatusRequest(
                     id = expId,
-                    status=status
+                    status = status
                 )
 
                 expenseViewModel.approveRejectExpense(this, request)

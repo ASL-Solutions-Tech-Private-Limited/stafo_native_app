@@ -159,7 +159,18 @@
                     android:text="Submit"
                     android:layout_marginTop="@dimen/_18sdp" />
 
-
+                <Button
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/til_attach_file"
+                    android:id="@+id/btn_edit_expense"
+                    android:visibility="gone"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:background="@drawable/button_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Update"
+                    android:layout_marginTop="@dimen/_18sdp" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

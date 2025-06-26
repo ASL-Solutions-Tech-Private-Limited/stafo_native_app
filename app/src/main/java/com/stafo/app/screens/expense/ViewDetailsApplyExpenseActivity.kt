@@ -31,6 +31,7 @@ import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getIsCOMPANYLogin
 
 class ViewDetailsApplyExpenseActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityViewDetailsApplyExpenseBinding
 
     private val expenseViewModel: ExpenseViewModel by viewModels()
@@ -168,11 +169,11 @@ class ViewDetailsApplyExpenseActivity : AppCompatActivity() {
                     }
                     else if (it.data.status=="Approved") {
                         binding.tvStatus.setTextColor(resources.getColor(R.color.green))
-                        binding.llcCompanyAction.visibility=View.GONE
+                        binding.llcEmployeeAction.visibility=View.GONE
                     }
                     else if (it.data.status=="Rejected") {
                         binding.tvStatus.setTextColor(resources.getColor(R.color.pastel_red))
-                        binding.llcCompanyAction.visibility=View.GONE
+                        binding.llcEmployeeAction.visibility=View.GONE
                     }
                 }
 

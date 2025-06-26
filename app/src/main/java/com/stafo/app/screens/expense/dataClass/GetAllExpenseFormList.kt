@@ -3,7 +3,7 @@ package com.stafo.app.screens.expense.dataClass
 import java.io.Serializable
 
 data class GetAllExpenseFormList(
-    val success: Boolean,
+    val status: Boolean,
     val message: String,
     val data: List<ExpenseFormTypeList>
 )

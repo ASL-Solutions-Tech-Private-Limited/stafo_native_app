@@ -20,7 +20,7 @@ data class ExpenseData(
     val updated_at: String,
     val expense_type: ExpenseType,
     val expense_details: List<ExpenseDetail>,
-    val attachments: List<Any>
+    val attachments: List<Attachment>
 )
 
 data class ExpenseType(
@@ -44,3 +44,8 @@ data class ExpenseForm(
     val description: String?
 )
 
+data class Attachment(
+    val id: Int,
+    val expense_id: Int,
+    val filename: String
+)

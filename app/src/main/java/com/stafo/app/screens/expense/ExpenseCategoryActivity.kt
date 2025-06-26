@@ -43,6 +43,16 @@ class ExpenseCategoryActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        getEmployeeComId()?.let {
+            expenseViewModel.getAllExpenseFormList(
+                this@ExpenseCategoryActivity,
+                it
+            )
+        }
+    }
+
     private fun onClickListener() {
         binding.apply {
 
@@ -78,7 +88,7 @@ class ExpenseCategoryActivity : AppCompatActivity() {
         expenseViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
         expenseViewModel.mGetAllExpenseFormListResponse.observe(this) { it ->
-            if (it.success) {
+            if (it.status) {
                 if (!it.data.isNullOrEmpty()) {
                     binding.txtMsg.visibility= View.GONE
                     binding.rvShowExpenseCategory.visibility= View.VISIBLE

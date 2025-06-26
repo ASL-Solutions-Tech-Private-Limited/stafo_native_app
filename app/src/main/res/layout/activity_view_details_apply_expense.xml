@@ -195,6 +195,7 @@
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/llExpenseFields"
             android:layout_marginTop="@dimen/_6sdp"
+            android:visibility="gone"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">

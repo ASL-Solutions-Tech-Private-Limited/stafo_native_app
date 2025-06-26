@@ -191,7 +191,12 @@ class CreateExpenseActivity : AppCompatActivity() {
         expenseViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
         expenseViewModel.mExpenseFormCreateResponse.observe(this) { it ->
-           CustomToast(this,it.message)
+            if (it.status){
+                CustomToast(this,it.message)
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            } else  CustomToast(this,it.message)
+
         }
     }
 

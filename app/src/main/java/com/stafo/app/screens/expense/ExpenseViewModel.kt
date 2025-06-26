@@ -23,6 +23,8 @@ import com.stafo.app.screens.expense.dataClass.ExpenseChangeStatusResponse
 import com.stafo.app.screens.expense.dataClass.ExpenseFormCreateRequest
 import com.stafo.app.screens.expense.dataClass.ExpenseFormCreateResponse
 import com.stafo.app.screens.expense.dataClass.GetAllExpenseFormList
+import com.stafo.app.screens.expense.dataClass.UpdateExpenseEmployeeRequest
+import com.stafo.app.screens.expense.dataClass.UpdateExpenseResponse
 import com.stafo.app.screens.expense.dataClass.ViewApplyExpenseResponse
 import com.stafo.app.screens.expense.dataClass.ViewExpenseDetailsResponse
 import com.stafo.app.utils.CustomToast
@@ -69,6 +71,63 @@ class ExpenseViewModel : BaseViewModel() {
     private var mEmployeeDeleteExpense: MutableLiveData<EmployeeDeleteExpenseResponse> =
         MutableLiveData()
     val mEmployeeDeleteExpenseResponse: LiveData<EmployeeDeleteExpenseResponse> get() = mEmployeeDeleteExpense
+
+
+    private var mUpdateExpense: MutableLiveData<UpdateExpenseResponse> = MutableLiveData()
+    val mUpdateExpenseResponse: LiveData<UpdateExpenseResponse> get() = mUpdateExpense
+
+
+    fun employeeUpdateExpense(
+        mContext: Context,
+        id: Int,
+        request: UpdateExpenseEmployeeRequest
+    ) {
+        if (!isNetworkAvailable(mContext)) return
+
+        getLoaderLiveData().value = "load"
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callUpdateExpenseEmployee(id,request)
+
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mUpdateExpense.postValue(it.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+
 
     fun deleteApplyExpense(
         mContext: Context,
