@@ -119,6 +119,11 @@ import com.stafo.app.screens.settings.dataClass.InActiveEmpResponse
 import com.stafo.app.screens.settings.dataClass.JobTitleResponse
 import com.stafo.app.screens.settings.dataClass.LeaveRequestBody
 import com.stafo.app.screens.settings.dataClass.LeaveResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeDeleteResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeListResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeRequest
+import com.stafo.app.screens.settings.dataClass.LeaveTypeResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeUpdateResponse
 import com.stafo.app.screens.settings.dataClass.OnLeaveResponse
 import com.stafo.app.screens.settings.dataClass.PanVerifyRequestBody
 import com.stafo.app.screens.settings.dataClass.PanVerifyResponse
@@ -945,4 +950,29 @@ interface ApiStores {
         @Body request: UpdateExpenseEmployeeRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<UpdateExpenseResponse>
+
+    @GET("api/leavetype/list")
+    suspend fun callLeaveTypeList(
+        @Query("company_id") companyId: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<LeaveTypeListResponse>
+
+    @POST("api/leavetype/create")
+    suspend fun callLeaveTypeCreate(
+        @Body request: LeaveTypeRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<LeaveTypeResponse>
+
+    @POST("api/leavetype/update/{id}")
+    suspend fun callLeaveTypeUpdate(
+        @Path("id") id: Int,
+        @Body request: LeaveTypeRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<LeaveTypeUpdateResponse>
+
+    @DELETE("api/leavetype/delete/{id}")
+    suspend fun callLeaveTypeDelete(
+        @Path("id") id: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<LeaveTypeDeleteResponse>
 }

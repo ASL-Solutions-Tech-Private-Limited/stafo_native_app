@@ -84,6 +84,11 @@ import com.stafo.app.screens.settings.dataClass.InActiveEmpResponse
 import com.stafo.app.screens.settings.dataClass.JobTitleResponse
 import com.stafo.app.screens.settings.dataClass.LeaveRequestBody
 import com.stafo.app.screens.settings.dataClass.LeaveResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeDeleteResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeListResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeRequest
+import com.stafo.app.screens.settings.dataClass.LeaveTypeResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeUpdateResponse
 import com.stafo.app.screens.settings.dataClass.LocationLogRequest
 import com.stafo.app.screens.settings.dataClass.LocationLogResponse
 import com.stafo.app.screens.settings.dataClass.OnLeaveResponse
@@ -497,6 +502,201 @@ class SettingsViewModel : BaseViewModel() {
     private var mUpdateShift: MutableLiveData<UpdateShiftResponse> = MutableLiveData()
 
     val mUpdateShiftResponse: LiveData<UpdateShiftResponse> get() = mUpdateShift
+
+
+    private var mLeaveTypeList: MutableLiveData<LeaveTypeListResponse> = MutableLiveData()
+
+    val mLeaveTypeListResponse: LiveData<LeaveTypeListResponse> get() = mLeaveTypeList
+
+    private var mLeaveTypeCreate: MutableLiveData<LeaveTypeResponse> = MutableLiveData()
+
+    val mLeaveTypeCreateResponse: LiveData<LeaveTypeResponse> get() = mLeaveTypeCreate
+
+    private var mLeaveTypeUpdate: MutableLiveData<LeaveTypeUpdateResponse> = MutableLiveData()
+
+    val mLeaveTypeUpdateResponse: LiveData<LeaveTypeUpdateResponse> get() = mLeaveTypeUpdate
+
+
+
+    private var mLeaveTypeDelete: MutableLiveData<LeaveTypeDeleteResponse> = MutableLiveData()
+
+    val mLeaveTypeDeleteResponse: LiveData<LeaveTypeDeleteResponse> get() = mLeaveTypeDelete
+
+
+    fun deleteLeaveType(mContext: Context,leaveId:Int) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callLeaveTypeDelete(leaveId)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mLeaveTypeDelete.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun updateLeaveType(mContext: Context,leaveId:Int, request: LeaveTypeRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callLeaveTypeUpdate(leaveId,request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mLeaveTypeUpdate.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun getLeaveTypeList(mContext: Context, comId:Int) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callLeaveTypeList(comId)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mLeaveTypeList.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+    fun createLeaveType(mContext: Context, request: LeaveTypeRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callLeaveTypeCreate(request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mLeaveTypeCreate.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
 
 
 
