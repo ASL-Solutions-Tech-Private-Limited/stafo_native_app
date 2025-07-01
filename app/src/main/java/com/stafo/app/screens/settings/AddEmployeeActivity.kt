@@ -1,45 +1,26 @@
 package com.stafo.app.screens.settings
 
 import android.app.DatePickerDialog
-import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.PorterDuff
-import android.net.Uri
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.util.Log
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ajithvgiri.searchdialog.OnSearchItemSelected
 import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityAddEmployeeBinding
 import com.stafo.app.screens.settings.dataClass.AddEmpRequestBody
-import com.stafo.app.screens.settings.dataClass.DataBranch
-import com.stafo.app.screens.settings.dataClass.DataDepartment
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
-import com.google.android.material.textfield.TextInputEditText
-import com.stafo.app.base.adapter.RadioShiftAdapter
-import com.stafo.app.screens.settings.dataClass.ShiftDataList
-import com.stafo.app.utils.setIsLock
-import com.stafo.app.utils.setIsLockUser
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -93,42 +74,7 @@ class AddEmployeeActivity : AppCompatActivity() {
 
         binding.apply {
 
-            /*   val options = resources.getStringArray(R.array.position_type)
-               val adapterTitle =
-                   ArrayAdapter(this@AddEmployeeActivity, R.layout.custom_spinner_item, options)
-               binding.spinnerJobTitle.setAdapter(adapterTitle)
-
-               binding.spinnerJobTitle.onItemSelectedListener =
-                   object : AdapterView.OnItemSelectedListener {
-                       override fun onItemSelected(
-                           parent: AdapterView<*>,
-                           view: View?,
-                           position: Int,
-                           id: Long
-                       ) {
-                           val selectedItem = parent.getItemAtPosition(position).toString()
-                           selectJobTitle = selectedItem
-                       }
-
-                       override fun onNothingSelected(parent: AdapterView<*>) {
-                       }
-                   }*/
-
-
-            /*  val text = "Basic\nDetails*"
-              val spannable = SpannableString(text)
-              spannable.setSpan(
-                  ForegroundColorSpan(Color.RED),
-                  text.length - 1,
-                  text.length,
-                  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-              )
-
-              binding.tvBasicDetails.text = spannable*/
-
-
-
-            ivBack.setOnClickListener {
+        ivBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
                 finish()
             }
@@ -267,26 +213,6 @@ class AddEmployeeActivity : AppCompatActivity() {
                 showDatePicker()
             }
 
-            /*tieBranch.setOnClickListener {
-
-                if (!mBranchList.isNullOrEmpty()){
-                    branchDialog.show()
-                }else{
-                    startActivity(Intent(this@AddEmployeeActivity,AddBranchActivity::class.java))
-                }
-
-            }
-            tieDepartment.setOnClickListener {
-
-                if (!mDepartmentList.isNullOrEmpty()){
-                    departmentDialog.show()
-                }else{
-                    startActivity(Intent(this@AddEmployeeActivity,AddDepartmentActivity::class.java))
-                }
-
-            }*/
-
-
         }
     }
 
@@ -361,46 +287,6 @@ class AddEmployeeActivity : AppCompatActivity() {
                 CustomToast(this, it.message)
             }
         }
-
-
-        /*  settingsViewModel.getJobTitleList(this)
-
-
-          settingsViewModel.mJobTitleResponse.observe(this) {
-            if (it.status){
-
-               val jobTitles = it.data.map { it.name }
-               // val jobTitles = mutableListOf("Select Job Title") + it.data.map { it.name }
-
-                val adapterTitle =
-                    ArrayAdapter(this@AddEmployeeActivity, R.layout.custom_spinner_item, jobTitles)
-                binding.spinnerJobTitle.setAdapter(adapterTitle)
-
-                binding.spinnerJobTitle.onItemSelectedListener =
-                    object : AdapterView.OnItemSelectedListener {
-                        override fun onItemSelected(
-                            parent: AdapterView<*>,
-                            view: View?,
-                            position: Int,
-                            id: Long
-                        ) {
-                            val selectedItem = parent.getItemAtPosition(position).toString()
-                            selectJobTitle = selectedItem
-                        }
-
-                        override fun onNothingSelected(parent: AdapterView<*>) {
-                        }
-                    }
-
-
-
-            }else{
-                CustomToast(this,it.message)
-            }
-
-          }*/
-
-
     }
 
 

@@ -151,8 +151,6 @@ class AddLeadsActivity : AppCompatActivity() {
           // Save button click
           binding.btnSaveLead.setOnClickListener {
               if (validateInputs()) {
-
-
                   if (isEdit){
 
                       if (getIsCOMPANYLogin(this@AddLeadsActivity)){

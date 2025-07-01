@@ -21,6 +21,8 @@ import com.stafo.app.screens.expense.ExpenseDashboardActivity
 import com.stafo.app.screens.performance.PerformanceActivity
 import com.stafo.app.screens.rank.RankListActivity
 import com.stafo.app.screens.reports.ReportsActivity
+import com.stafo.app.screens.tms.TaskMSDashboard
+import com.stafo.app.screens.tripPlan.TripDashboardActivity
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getIsCOMPANYLogin
 
@@ -188,6 +190,23 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                 }
+                                "Task" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity,
+                                            TaskMSDashboard::class.java
+                                        )
+                                    )
+                                }
+
+                                "Trips" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity,
+                                            TripDashboardActivity::class.java
+                                        )
+                                    )
+                                }
                             }
                         }
 
@@ -280,6 +299,23 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                 }
+                                "Task" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity,
+                                            TaskMSDashboard::class.java
+                                        )
+                                    )
+                                }
+
+                                "Trips" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity,
+                                            TripDashboardActivity::class.java
+                                        )
+                                    )
+                                }
                             }
                         }
 
@@ -294,6 +330,8 @@ class SubMenuActivity : AppCompatActivity() {
     private fun actionList(): List<ActionModel> {
         mActionList.add(ActionModel("Employee", R.drawable.ic_employee))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
+        mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
+       // mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
         mActionList.add(ActionModel("Location\nTrack", R.drawable.ic_location))
         mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
         mActionList.add(ActionModel("Performance", R.drawable.ic_performace))
@@ -310,6 +348,8 @@ class SubMenuActivity : AppCompatActivity() {
     private fun empActionList(): List<ActionModel> {
         mActionList.add(ActionModel("Attendance", R.drawable.ic_attendace))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
+        mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
+      //  mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))

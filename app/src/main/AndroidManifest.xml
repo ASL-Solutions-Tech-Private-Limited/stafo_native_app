@@ -76,14 +76,54 @@
             android:name=".screens.expense.ExpenseDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.subscription.PaymentActivity"
+            android:name=".screens.tripPlan.TripListActivity"
             android:exported="false" />
+        <activity
+            android:name=".screens.tripPlan.VehicleListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.tripPlan.DriverListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.tripPlan.AddVehicleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.tripPlan.TripExpensesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.tripPlan.TripDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.tripPlan.CreateTripActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.tripPlan.TripDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.tms.TaskDescriptionActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".screens.tms.TaskMSDashboard"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.tms.CreateTaskActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".screens.subscription.PaymentActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.subscription.PackageDetailsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.crm.FollowUpListActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.crm.TakeFollowUpActivity"
             android:exported="false"

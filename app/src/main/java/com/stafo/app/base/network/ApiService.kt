@@ -5,6 +5,7 @@ import com.stafo.app.screens.settings.dataClass.EmployeePostLocationRequest
 import com.stafo.app.screens.settings.dataClass.EmployeePostLocationResponse
 import com.stafo.app.screens.settings.dataClass.LocationLogRequest
 import com.stafo.app.screens.settings.dataClass.LocationLogResponse
+import com.stafo.app.screens.tripPlan.dataClass.TripGeoLocationRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
@@ -21,6 +22,12 @@ interface ApiService {
     @POST("api/devicelog-store")
     suspend fun callDeviceLog(
         @Body request: LocationLogRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<LocationLogResponse>
+
+    @POST("api/trips-geolocation/create")
+    suspend fun callTripGeoLocation(
+        @Body request: TripGeoLocationRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<LocationLogResponse>
 }

@@ -2,7 +2,6 @@ package com.stafo.app.screens.dashboard
 
 import android.Manifest
 import android.app.ActivityManager
-import android.app.AlarmManager
 import android.app.KeyguardManager
 import android.app.Service
 import android.content.Context
@@ -24,7 +23,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.app.AlarmManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -62,6 +60,8 @@ import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
 import com.stafo.app.screens.settings.PolicyActivity
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.SubMenuActivity
+import com.stafo.app.screens.tms.TaskMSDashboard
+import com.stafo.app.screens.tripPlan.TripDashboardActivity
 import com.stafo.app.screens.ui.EmplyeeyerProfile
 import com.stafo.app.screens.ui.WishListActivity
 import com.stafo.app.utils.CustomToast
@@ -231,6 +231,32 @@ class EmployeeDashboard : AppCompatActivity() {
                                 Intent(
                                     this@EmployeeDashboard,
                                     ExpenseDashboardActivity::class.java
+                                )
+                            )
+                        }
+
+                        "CRM" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard,
+                                    CRMLeadDashboard::class.java
+                                )
+                            )
+                        }
+
+                        "Task" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard,
+                                    TaskMSDashboard::class.java
+                                )
+                            )
+                        }
+                        "Trip" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard,
+                                    TripDashboardActivity::class.java
                                 )
                             )
                         }
@@ -1161,6 +1187,8 @@ class EmployeeDashboard : AppCompatActivity() {
     private fun actionList(): List<ActionModel> {
         mActionList.add(ActionModel("Attendance", R.drawable.ic_attendace))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
+        mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
+      //  mActionList.add(ActionModel("Trip", R.drawable.ic_trip))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))

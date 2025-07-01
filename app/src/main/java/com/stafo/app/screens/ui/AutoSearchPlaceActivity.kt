@@ -25,6 +25,8 @@ import com.stafo.app.R
 import com.stafo.app.databinding.ActivityAutoSearchPlaceBinding
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.dataClass.GeoLocationHistResquest
+import com.stafo.app.screens.tripPlan.TripViewModel
+import com.stafo.app.screens.tripPlan.dataClass.TripGeoLocationListRequest
 import com.stafo.app.utils.CustomLoader
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -36,6 +38,7 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityAutoSearchPlaceBinding
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
+
 
     private lateinit var mEMPID: String
     private var mSelectedDate = ""
@@ -60,7 +63,19 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         initUI()
+        fetchLocationData()
         observeViewModel()
+    }
+
+
+    private fun fetchLocationData() {
+
+        val request = GeoLocationHistResquest(
+            employee_id = mEMPID, date = mSelectedDate
+        )
+        settingsViewModel.getGeoLocationHist(this, request)
+
+
     }
 
     private fun initUI() {
@@ -74,7 +89,7 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
         googleMap.uiSettings.isZoomControlsEnabled = true
-        fetchLocationData()
+
 
         googleMap.setOnMarkerClickListener { marker ->
             val tag = marker.tag
@@ -87,15 +102,13 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun fetchLocationData() {
-        val request = GeoLocationHistResquest(
-            employee_id = mEMPID, date = mSelectedDate
-        )
-        settingsViewModel.getGeoLocationHist(this, request)
-    }
 
     private fun observeViewModel() {
+
+
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+
+
         settingsViewModel.mGeoLocationHistResponse.observe(this) {
             if (it.status && it.data.isNotEmpty()) {
                 binding.llMap.visibility = View.VISIBLE
@@ -114,6 +127,8 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
                 //CustomToast(this, it.message)
             }
         }
+
+
     }
 
     private fun handleLoader(status: String) {
