@@ -23,7 +23,7 @@
             android:id="@+id/siv_view"
             android:layout_marginEnd="@dimen/_10sdp"
             app:shapeAppearanceOverlay="@style/Circular"
-            android:background="@color/basic_deep"
+            android:background="@color/black"
             app:contentPadding="@dimen/_3sdp"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"

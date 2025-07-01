@@ -29,10 +29,23 @@ import com.stafo.app.screens.crm.dataClass.CRMDashboardResponse
 import com.stafo.app.screens.crm.dataClass.CreateFollowUpRequest
 import com.stafo.app.screens.crm.dataClass.CreateFollowUpResponse
 import com.stafo.app.screens.crm.dataClass.FollowUpListResponse
+import com.stafo.app.screens.expense.dataClass.GetAllExpenseFormList
 import com.stafo.app.screens.crm.dataClass.LeadCreateRequest
 import com.stafo.app.screens.crm.dataClass.LeadCreateResponse
 import com.stafo.app.screens.crm.dataClass.LeadListResponse
 import com.stafo.app.screens.crm.dataClass.UpdateLeadResponse
+import com.stafo.app.screens.expense.dataClass.DeleteExpenseFormResponse
+import com.stafo.app.screens.expense.dataClass.EmpApplyExpenseResponse
+import com.stafo.app.screens.expense.dataClass.EmployeeDeleteExpenseResponse
+import com.stafo.app.screens.expense.dataClass.ExpenseApplyRequest
+import com.stafo.app.screens.expense.dataClass.ExpenseChangeStatusRequest
+import com.stafo.app.screens.expense.dataClass.ExpenseChangeStatusResponse
+import com.stafo.app.screens.expense.dataClass.ExpenseFormCreateRequest
+import com.stafo.app.screens.expense.dataClass.ExpenseFormCreateResponse
+import com.stafo.app.screens.expense.dataClass.UpdateExpenseEmployeeRequest
+import com.stafo.app.screens.expense.dataClass.UpdateExpenseResponse
+import com.stafo.app.screens.expense.dataClass.ViewApplyExpenseResponse
+import com.stafo.app.screens.expense.dataClass.ViewExpenseDetailsResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
 import com.stafo.app.screens.payroll.dataClass.SalaryRequest
 import com.stafo.app.screens.payroll.dataClass.SalaryResponse
@@ -106,6 +119,11 @@ import com.stafo.app.screens.settings.dataClass.InActiveEmpResponse
 import com.stafo.app.screens.settings.dataClass.JobTitleResponse
 import com.stafo.app.screens.settings.dataClass.LeaveRequestBody
 import com.stafo.app.screens.settings.dataClass.LeaveResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeDeleteResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeListResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeRequest
+import com.stafo.app.screens.settings.dataClass.LeaveTypeResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeUpdateResponse
 import com.stafo.app.screens.settings.dataClass.OnLeaveResponse
 import com.stafo.app.screens.settings.dataClass.PanVerifyRequestBody
 import com.stafo.app.screens.settings.dataClass.PanVerifyResponse
@@ -177,6 +195,7 @@ import com.stafo.app.screens.tripPlan.dataClass.dashboard.TripListResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -865,6 +884,92 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<MySubscriptionResponse>
 
+    @POST("api/expenseform/create")
+    suspend fun callExpenseFormCreate(
+        @Body request: ExpenseFormCreateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ExpenseFormCreateResponse>
+
+    @GET("api/expenseform/list")
+    suspend fun callGetAllExpenseFormList(
+        @Query("company_id") companyId: String,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<GetAllExpenseFormList>
+    @POST("api/expenseform/update/{id}")
+    suspend fun callExpenseFormUpdate(
+        @Path("id") id: Int,
+        @Body request: ExpenseFormCreateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ExpenseFormCreateResponse>
+
+
+    @DELETE("api/expenseform/delete/{id}")
+    suspend fun callExpenseFormDelete(
+        @Path("id") id: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteExpenseFormResponse>
+
+    @GET("api/expense/list")
+    suspend fun callGetApplyExpenseList(
+        @Query("company_id") companyId: String? = null,
+        @Query("employee_id") employeeId: String? = null,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ViewApplyExpenseResponse>
+
+ /*   @Multipart
+    @POST("api/expense/create")
+    suspend fun callApplyExpense(
+        @Part("company_id") companyId: RequestBody,
+        @Part("employee_id") employeeId: RequestBody,
+        @Part("amount") amount: RequestBody,
+        @Part("expensetype_id") expenseTypeId: RequestBody,
+        @Part("expense_details") expenseDetails: RequestBody,
+        @Part attachment: List<MultipartBody.Part>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EmpApplyExpenseResponse>*/
+
+    @Multipart
+    @POST("api/expense/create")
+    suspend fun callApplyExpense(
+        @PartMap data: Map<String, @JvmSuppressWildcards RequestBody>,
+        @Part attachments: List<MultipartBody.Part>,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EmpApplyExpenseResponse>
+
+
+    @POST("api/expense/create")
+    suspend fun callApplyExpenseWithoutAttach(
+        @Body request: ExpenseApplyRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EmpApplyExpenseResponse>
+
+    @POST("api/expense/status-change")
+    suspend fun callApproveRejectApplyExpense(
+        @Body request: ExpenseChangeStatusRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ExpenseChangeStatusResponse>
+
+
+    @GET("api/expense/details")
+    suspend fun callExpenseDetails(
+        @Query("expense_id") expenseId: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<ViewExpenseDetailsResponse>
+
+
+    @DELETE("api/expense/delete/{id}")
+    suspend fun callDeleteApplyExpense(
+        @Path("id") id: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<EmployeeDeleteExpenseResponse>
+
+
+    @POST("api/expense/update/{id}")
+    suspend fun callUpdateExpenseEmployee(
+        @Path("id") id: Int,
+        @Body request: UpdateExpenseEmployeeRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<UpdateExpenseResponse>
 
     @POST("api/trips/dashboard")
     suspend fun callTripDashboardInfo(
@@ -1076,6 +1181,28 @@ interface ApiStores {
         @Part files: List<MultipartBody.Part>,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<UpdateTaskStatusResponse>
+    @GET("api/leavetype/list")
+    suspend fun callLeaveTypeList(
+        @Query("company_id") companyId: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<LeaveTypeListResponse>
 
+    @POST("api/leavetype/create")
+    suspend fun callLeaveTypeCreate(
+        @Body request: LeaveTypeRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<LeaveTypeResponse>
 
+    @POST("api/leavetype/update/{id}")
+    suspend fun callLeaveTypeUpdate(
+        @Path("id") id: Int,
+        @Body request: LeaveTypeRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<LeaveTypeUpdateResponse>
+
+    @DELETE("api/leavetype/delete/{id}")
+    suspend fun callLeaveTypeDelete(
+        @Path("id") id: Int,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<LeaveTypeDeleteResponse>
 }

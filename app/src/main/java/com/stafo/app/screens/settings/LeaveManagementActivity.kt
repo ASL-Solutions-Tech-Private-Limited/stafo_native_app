@@ -207,7 +207,7 @@ class LeaveManagementActivity : AppCompatActivity() {
         popupMenu.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 0 -> {
-                    startActivity(Intent(this, CreateLeavePolicyActivity::class.java))
+                    startActivity(Intent(this, LeaveTypeDashboardActivity::class.java))
                     true
                 }
 

@@ -1989,6 +1989,20 @@ fun requestIgnoreBatteryOptimization(context: Context, onResult: (Boolean) -> Un
         onResult(true)
     }
 }
+@RequiresApi(Build.VERSION_CODES.O)
+fun formatCreatedAtDate(input: String?): String {
+    if (input.isNullOrEmpty()) return ""
+
+    return try {
+        val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX", Locale.US)
+        val outputFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.US)
+
+        val zonedDateTime = ZonedDateTime.parse(input, inputFormatter)
+        outputFormatter.format(zonedDateTime)
+    } catch (e: Exception) {
+        ""
+    }
+}
 
 
 fun Context.uriToFile(uri: Uri): File? {
