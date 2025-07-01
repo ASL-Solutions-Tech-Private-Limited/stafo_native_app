@@ -7,6 +7,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Context.BATTERY_SERVICE
 import android.content.DialogInterface
@@ -37,6 +38,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.provider.Settings
 import android.provider.Settings.Secure
 import android.text.SpannableString
@@ -92,7 +94,9 @@ import org.xml.sax.InputSource
 import org.xml.sax.SAXException
 import tech.developingdeveloper.toaster.Toaster
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
 import java.io.StringReader
 import java.net.InetAddress
 import java.net.NetworkInterface
@@ -1590,6 +1594,22 @@ fun reportsFormatToMonthYear(dateString: String?): String {
         "N/A"
     }
 }
+
+
+fun showFormatDate(dateString: String?): String {
+    if (dateString.isNullOrEmpty()) return "N/A"
+
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        val date = inputFormat.parse(dateString)
+        if (date != null) outputFormat.format(date) else "N/A"
+    } catch (e: Exception) {
+        "N/A"
+    }
+}
+
+
 fun showCustomMonthYearPicker(
     context: Context,
     onSelected: (formattedDate: String, displayDate: String) -> Unit
@@ -1984,6 +2004,94 @@ fun formatCreatedAtDate(input: String?): String {
     }
 }
 
+
+fun Context.uriToFile(uri: Uri): File? {
+    val contentResolver: ContentResolver = this.contentResolver
+    val file = File(cacheDir, getFileName(uri))
+
+    return try {
+        val inputStream: InputStream? = contentResolver.openInputStream(uri)
+        val outputStream = FileOutputStream(file)
+
+        inputStream?.copyTo(outputStream)
+        inputStream?.close()
+        outputStream.close()
+
+        file
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
+ fun Context.getFileName(uri: Uri): String {
+    var name = "temp_file"
+    val cursor = contentResolver.query(uri, null, null, null, null)
+    cursor?.use {
+        if (it.moveToFirst()) {
+            val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (nameIndex != -1) {
+                name = it.getString(nameIndex)
+            }
+        }
+    }
+    return name
+}
+
+
+
+
+
+
+
+fun getTimeOnly12HrFormat(isoDateTime: String?): String {
+    if (isoDateTime.isNullOrBlank()) return "--"
+
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())
+        inputFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        outputFormat.timeZone = TimeZone.getDefault()
+
+        val date = inputFormat.parse(isoDateTime)
+        date?.let { outputFormat.format(it) } ?: "--"
+    } catch (e: Exception) {
+        e.printStackTrace()
+        "--"
+    }
+}
+
+fun getSmartShortAddress(fullAddress: String?): String {
+    if (fullAddress.isNullOrBlank()) return "Unknown"
+
+    val parts = fullAddress.split(",")
+        .map { it.trim() }
+        .filter { it.isNotEmpty() }
+
+    if (parts.size < 4) return parts.joinToString(", ") // Just return what’s available
+
+    // Grab the last 3 parts (e.g., "Kolkata, West Bengal, India")
+    val lastParts = parts.takeLast(3)
+
+    // Grab 1–2 location-specific parts before city
+    val localityParts = parts.dropLast(3).takeLast(2)
+
+    return (localityParts + lastParts).joinToString(", ")
+}
+
+
+fun getExpenseIcon(type: String): String {
+    return when (type.lowercase()) {
+        "parking" -> "🅿️"
+        "food" -> "🍽️"
+        "repair" -> "🔧"
+        "fuel" -> "⛽"
+        "toll" -> "🛣️"
+        "accommodation" -> "🏨"
+        else -> "💼"
+    }
+}
 
 
 

@@ -17,6 +17,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.stafo.app.R
 import com.stafo.app.base.adapter.ActionsListAdapter
 import com.stafo.app.base.adapter.AdapterOnLeave
@@ -27,21 +29,28 @@ import com.stafo.app.base.model.DashboardType
 import com.stafo.app.base.model.DashboardWish
 import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmployerDashboardBinding
+import com.stafo.app.screens.crm.CRMLeadDashboard
 import com.stafo.app.screens.emp.EmplyeeAttendaceListActivity
 import com.stafo.app.screens.emp.ViewEmpLocationTrackActivity
+import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.performance.PerformanceActivity
 import com.stafo.app.screens.profile.CompanyProfileActivity
 import com.stafo.app.screens.rank.RankListActivity
+import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.screens.settings.AddEmployeeActivity
 import com.stafo.app.screens.settings.BranchActivity
+import com.stafo.app.screens.settings.HolidayActivity
 import com.stafo.app.screens.settings.LeaveManagementActivity
 import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
 import com.stafo.app.screens.settings.PolicyActivity
 import com.stafo.app.screens.settings.SettingsViewModel
+import com.stafo.app.screens.settings.SubMenuActivity
 import com.stafo.app.screens.settings.VerifyCompanyDetailsActivity
 import com.stafo.app.screens.settings.ViewAllEmployeeActivity
 import com.stafo.app.screens.settings.ViewDeviceRequestEmpActivity
 import com.stafo.app.screens.subscription.SubscriptionActivity
+import com.stafo.app.screens.tms.TaskMSDashboard
+import com.stafo.app.screens.tripPlan.TripDashboardActivity
 import com.stafo.app.screens.ui.EmplyeeyerProfile
 import com.stafo.app.screens.ui.WishListActivity
 import com.stafo.app.utils.CustomLoader
@@ -321,6 +330,22 @@ class EmployerDashboard : AppCompatActivity() {
                                 )
                             }
 
+                            "Trips" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        TripDashboardActivity::class.java
+                                    )
+                                )
+                            }
+                            "Task" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        TaskMSDashboard::class.java
+                                    )
+                                )
+                            }
                         }
                     }
 
@@ -571,7 +596,7 @@ class EmployerDashboard : AppCompatActivity() {
 
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
-        
+
         stopLocationServiceIfRunning()
 
         settingsViewModel.getCompanyDetails(this@EmployerDashboard)
@@ -700,6 +725,8 @@ class EmployerDashboard : AppCompatActivity() {
     private fun actionList(): List<ActionModel> {
         mActionList.add(ActionModel("Employee", R.drawable.ic_employee))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
+        mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
+      //  mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
         mActionList.add(ActionModel("Location Track", R.drawable.ic_location))
         mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))

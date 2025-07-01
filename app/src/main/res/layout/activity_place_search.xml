@@ -1,14 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".screens.ui.PlaceSearchActivity">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/idSearchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:iconifiedByDefault="false"
+        android:background="@drawable/edit_text_background"
+        app:queryHint="Search for a place" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSearchResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/idSearchView"
+        android:visibility="gone"
+        android:background="@android:color/white" />
+
+    <Button
+        android:id="@+id/btn_add_address"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_margin="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_12sdp"
+        android:background="@drawable/button_background"
+        android:backgroundTint="@color/colorTextPrimary"
+        android:fontFamily="@font/gilroy_semi_bold"
+        android:text="Add Address"
+        android:textAllCaps="false"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/colorButtonText"
+        android:textSize="@dimen/_12ssp" />
+
+</RelativeLayout>
+
+
+
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="#80D3D3D3"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".screens.ui.PlaceSearchActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+
+
+
+
+
+
+
+
+  &lt;!&ndash;  <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -52,231 +119,7 @@
 
 
 
-   <!-- <LinearLayout
-        android:id="@+id/ll_tab"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:gravity="center"
-        android:visibility="visible"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
 
-
-        <RadioGroup
-            android:id="@+id/rdgp_profile"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/include_01"
-            android:orientation="horizontal">
-
-
-            <RadioButton
-                android:id="@+id/radio_map"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_weight="1"
-                android:background="@drawable/tab_btnselector"
-                android:button="@null"
-                android:checked="true"
-                android:gravity="center"
-                android:text="Map"
-                android:textColor="@color/white" />
-
-
-            <RadioButton
-                android:id="@+id/radio_custom"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_weight="1"
-                android:background="@drawable/tab_btnselector"
-                android:button="@null"
-                android:gravity="center"
-                android:text="Custom"
-                android:textColor="@color/white" />
-
-
-        </RadioGroup>
-    </LinearLayout>-->
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/llc_custom"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/btn_add_address"
-        app:layout_constraintTop_toBottomOf="@+id/ll_tab">
-
-        <LinearLayout
-            android:id="@+id/ll_basic_info"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/_12sdp"
-            android:layout_marginTop="@dimen/_12sdp"
-            android:layout_marginEnd="@dimen/_12sdp"
-            android:layout_marginBottom="@dimen/_12sdp"
-            android:orientation="vertical"
-            android:visibility="visible">
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_select_country"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                app:endIconDrawable="@drawable/ic_down"
-                app:endIconMode="custom">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_select_country"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text_background"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:fontFamily="@font/gilroy_medium"
-                    android:hint="Select Country"
-                    android:inputType="textPersonName" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_select_state"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                app:endIconDrawable="@drawable/ic_down"
-                app:endIconMode="custom">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_select_state"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text_background"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:fontFamily="@font/gilroy_medium"
-                    android:hint="Select State"
-                    android:inputType="textPersonName" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_select_city"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                app:endIconDrawable="@drawable/ic_down"
-                app:endIconMode="custom">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_select_city"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text_background"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:fontFamily="@font/gilroy_medium"
-                    android:hint="Select City"
-                    android:inputType="textPersonName" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_zipcode"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text_background"
-                    android:fontFamily="@font/gilroy_medium"
-                    android:hint="Zip Code ( Postal Code )"
-                    android:inputType="number"
-                    android:maxLength="6"
-                    android:textAllCaps="true" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_company_address"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_80sdp"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_12sdp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tie_company_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_80sdp"
-                    android:background="@drawable/edit_text_background"
-                    android:fontFamily="@font/gilroy_medium"
-                    android:gravity="start|top"
-                    android:hint="Branch Address"
-                    android:inputType="textImeMultiLine"
-                    android:textAlignment="viewStart" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </LinearLayout>
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-   <!-- <LinearLayout
-        android:id="@+id/llSearchHead"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-       android:layout_marginTop="@dimen/_14sdp"
-        android:layout_marginHorizontal="@dimen/_12sdp"
-        android:background="@drawable/search_edit_text_bg"
-        android:orientation="horizontal"
-        android:elevation="@dimen/_1sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
-
-        >
-
-
-        <EditText
-            android:id="@+id/etDirSearch"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginStart="@dimen/_6sdp"
-            android:background="@android:color/transparent"
-            android:drawableStart="@drawable/ic_search_grey"
-            android:drawablePadding="@dimen/_5sdp"
-            android:fontFamily="@font/gilroy_regular"
-            android:hint="Search place here"
-            android:imeOptions="actionSearch"
-            android:paddingStart="5dp"
-            android:paddingLeft="5dp"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp" />
-
-
-    </LinearLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llSearchHead"
-        android:id="@+id/recyclerView"
-        android:elevation="@dimen/_14sdp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp" />-->
 
 
 
@@ -293,6 +136,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/app_bar_layout" />
 
+
+
+
     <Button
         android:id="@+id/btn_add_address"
         android:layout_width="match_parent"
@@ -308,9 +154,9 @@
         android:textSize="@dimen/_12ssp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />&ndash;&gt;
 
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>-->

@@ -1,0 +1,47 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/_100sdp"
+    android:layout_height="@dimen/_80sdp"
+    android:layout_margin="@dimen/_10sdp"
+    android:gravity="center"
+    app:cardCornerRadius="@dimen/_6sdp"
+    android:background="@color/white"
+    android:orientation="vertical"
+    app:cardElevation="@dimen/_6sdp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_marginVertical="@dimen/_6sdp"
+        android:layout_marginHorizontal="@dimen/_4sdp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iconSummary"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_task" />
+
+        <TextView
+            android:id="@+id/summaryCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="6"
+            android:textColor="@color/black"
+            android:fontFamily="@font/gilroy_semi_bold"
+            android:textSize="@dimen/_14ssp"
+            />
+
+        <TextView
+            android:id="@+id/summaryLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="In Progress"
+            android:textSize="@dimen/_10ssp"
+            android:fontFamily="@font/gilroy_medium"
+            android:textColor="@color/gray_colour" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

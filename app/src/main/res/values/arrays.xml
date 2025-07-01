@@ -39,6 +39,16 @@
     </string-array>
 
 
+    <string-array name="task_status">
+        <item>Select Status</item>
+        <item>Active</item>
+        <item>In Progress</item>
+        <item>Pending</item>
+        <item>Completed</item>
+        <item>Overdue</item>
+    </string-array>
+
+
     <string-array name="leave_type">
         <item>Sick Leave</item>
         <item>Casual Leave</item>

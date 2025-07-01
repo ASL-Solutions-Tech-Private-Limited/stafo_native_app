@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/customSwitch"
+    android:layout_width="@dimen/_80sdp"
+    android:layout_height="@dimen/_40sdp"
+    android:background="@drawable/bg_switch_inactive"
+    android:clickable="true"
+    android:focusable="true"
+    android:padding="4dp">
+
+    <!-- Knob -->
+    <View
+        android:id="@+id/switchKnob"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:layout_gravity="start|center_vertical"
+        android:background="@drawable/bg_knob" />
+
+    <!-- Label -->
+    <TextView
+        android:id="@+id/switchLabel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Inactive"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+</FrameLayout>
