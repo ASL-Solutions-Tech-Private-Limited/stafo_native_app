@@ -1188,7 +1188,7 @@ class EmployeeDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("Attendance", R.drawable.ic_attendace))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
-      //  mActionList.add(ActionModel("Trip", R.drawable.ic_trip))
+        mActionList.add(ActionModel("Trip", R.drawable.ic_trip))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))

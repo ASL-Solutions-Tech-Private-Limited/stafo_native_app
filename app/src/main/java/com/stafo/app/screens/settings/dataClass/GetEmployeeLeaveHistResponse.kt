@@ -28,7 +28,8 @@ data class GetEmpLeaveData(
     @SerializedName("status") val status: String,
     @SerializedName("created_at") val createdAt: String,
     @SerializedName("updated_at") val updatedAt: String,
-    @SerializedName("employee_basic_info") val employeeBasicInfo: GetEmployeeBasicInfo
+    @SerializedName("employee_basic_info") val employeeBasicInfo: GetEmployeeBasicInfo,
+    @SerializedName("leavetype") val leaveTypeObj: LeaveType
 )
 
 data class GetEmployeeBasicInfo(
@@ -41,4 +42,11 @@ data class GetEmployeeBasicInfo(
     @SerializedName("privileged_leave") val privilegedLeave: Int,
     @SerializedName("sick_leave") val sickLeave: Int,
     @SerializedName("casual_leave") val casualLeave: Int
+)
+data class LeaveType(
+    val id: Int,
+    val name: String?,
+    val no_of_days: Int?,
+    val description: String?,
+    val is_paid: Int
 )

@@ -20,6 +20,7 @@ import com.ajithvgiri.searchdialog.SearchableDialog
 import com.stafo.app.R
 import com.stafo.app.base.adapter.AdapterEmployeeAllLeaveList
 import com.stafo.app.databinding.ActivityEmployeeLeaveHistoryBinding
+import com.stafo.app.screens.emp.adapter.AdapterDynamicLeaveCount
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.dataClass.GetEmpLeaveData
 import com.stafo.app.screens.settings.dataClass.GetEmployeeLeaveHistRequestBody
@@ -37,6 +38,7 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
     private var list: List<GetEmpLeaveData> = listOf()
     private var filteredList: List<GetEmpLeaveData> = listOf()
     private lateinit var rvAdapter:AdapterEmployeeAllLeaveList
+    private lateinit var rvLeaveCountAdapter:AdapterDynamicLeaveCount
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,11 +102,20 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
                 leaveCount=it.leaveCount
                 rvAdapter.updateList(filteredList.toMutableList())
 
-                if (leaveCount.size>2){
+                /*if (leaveCount.size>2){
                     binding.tvPrivileged.text=leaveCount[0].totalDays
                     binding.tvSick.text=leaveCount[1].totalDays
                     binding.tvCasual.text=leaveCount[2].totalDays
+                }*/
+
+                if (!leaveCount.isNullOrEmpty()) {
+                    val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
+                    binding.rvDynamicLeaveCount.layoutManager = layoutManager
+                    rvLeaveCountAdapter=AdapterDynamicLeaveCount(leaveCount,this)
+                    binding.rvDynamicLeaveCount.adapter = rvLeaveCountAdapter
                 }
+
+
 
 
             }else{

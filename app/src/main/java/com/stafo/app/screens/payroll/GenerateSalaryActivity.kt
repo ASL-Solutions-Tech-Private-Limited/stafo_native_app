@@ -41,6 +41,13 @@ class GenerateSalaryActivity : AppCompatActivity() {
 
     private var mMonthOfSalary: String = ""
     private var mEMpId: Int = 0
+    private var mOtherDeduction: Int = 0
+    private var mAbsentDays: Int = 0
+    private var mWorkingDays: Int = 0
+    private var mExpense: Int = 0
+
+
+
     private val calendar = Calendar.getInstance()
 
     private lateinit var adapter: DynamicSalaryAdapter
@@ -83,7 +90,25 @@ class GenerateSalaryActivity : AppCompatActivity() {
                     binding.tieSalary.setText(salary)
                 }
 
-                binding.tvGrossSalary.text = it.data.gross_salary.toString()
+                it.data.other_deduction?.let {
+                    mOtherDeduction = it
+                }
+
+                it.data.absent_days?.let {
+                    mAbsentDays = it
+                }
+
+                it.data.working_days?.let {
+                    mWorkingDays = it
+                }
+
+                it.data.expense?.let {
+                    mExpense = it
+                }
+
+                it.data.gross_salary?.let {
+                    binding.tvGrossSalary.text = it.toString()
+                }
 
                 if (it.data.earning.isNotEmpty()) {
                     binding.llcEarning.visibility = View.VISIBLE
@@ -231,10 +256,10 @@ class GenerateSalaryActivity : AppCompatActivity() {
                         month = month,
                         basic_salary = basicSalary,
                         gross_salary = grossSalary,
-                        other_deduction = 0.0,
-                        absent_days = 1,
-                        working_days = 29,
-                        expense = 435.45,
+                        other_deduction = mOtherDeduction.toDouble(),
+                        absent_days = mAbsentDays,
+                        working_days = mWorkingDays,
+                        expense = mExpense.toDouble(),
                         components = allComponents
                     )
 

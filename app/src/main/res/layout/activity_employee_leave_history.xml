@@ -62,7 +62,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llc_top_parent"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_80sdp"
@@ -73,7 +73,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_dynamic_leave_count"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:elevation="@dimen/_3sdp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:itemCount="1"
+            tools:listitem="@layout/custom_leave_history_leave_type_item_layout"/>
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/tea_green"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/gilroy_semi_bold"
+            android:paddingVertical="@dimen/_5sdp"
+            android:paddingHorizontal="@dimen/_12sdp"
+            android:text="\n"
+            android:textAlignment="center"
+            android:textColor="#565656"
+            android:textSize="@dimen/_11ssp"
+            app:drawableTint="@color/black" />
+
+     <!--   <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_12sdp"
@@ -183,8 +215,8 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.appcompat.widget.LinearLayoutCompat

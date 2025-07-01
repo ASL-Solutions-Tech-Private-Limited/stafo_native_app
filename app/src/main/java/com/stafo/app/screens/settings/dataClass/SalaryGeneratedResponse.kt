@@ -11,7 +11,11 @@ data class SalaryData(
     val basic_salary: String,
     val earning: List<SalaryComponent>,
     val deduction: List<SalaryComponent>,
-    val gross_salary: Int
+    val gross_salary: Int,
+    val other_deduction: Int,
+    val absent_days: Int,
+    val working_days: Int,
+    val expense: Int
 )
 
 data class SalaryComponent(
