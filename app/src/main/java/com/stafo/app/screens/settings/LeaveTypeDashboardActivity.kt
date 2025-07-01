@@ -82,6 +82,8 @@ class LeaveTypeDashboardActivity : AppCompatActivity() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
+
+
         settingsViewModel.mLeaveTypeListResponse.observe(this) {
 
             if (it.data.isNotEmpty()) {
@@ -119,6 +121,11 @@ class LeaveTypeDashboardActivity : AppCompatActivity() {
 
 
         }
+
+
+
+
+
 
 
         settingsViewModel.mLeaveTypeDeleteResponse.observe(this) {

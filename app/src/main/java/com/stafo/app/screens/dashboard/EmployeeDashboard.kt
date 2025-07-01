@@ -1159,7 +1159,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
     private fun actionList(): List<ActionModel> {
-        mActionList.add(ActionModel("Attendance", R.drawable.ic_employee))
+        mActionList.add(ActionModel("Attendance", R.drawable.ic_attendace))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))

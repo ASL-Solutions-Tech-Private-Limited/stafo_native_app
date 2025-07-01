@@ -231,6 +231,10 @@ class GenerateSalaryActivity : AppCompatActivity() {
                         month = month,
                         basic_salary = basicSalary,
                         gross_salary = grossSalary,
+                        other_deduction = 0.0,
+                        absent_days = 1,
+                        working_days = 29,
+                        expense = 435.45,
                         components = allComponents
                     )
 

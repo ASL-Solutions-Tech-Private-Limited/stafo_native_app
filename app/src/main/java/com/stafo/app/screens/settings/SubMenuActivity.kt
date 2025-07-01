@@ -17,6 +17,7 @@ import com.stafo.app.screens.emp.EmpBranchDetailsActivity
 import com.stafo.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.stafo.app.screens.emp.EmployeeLeaveHistoryActivity
 import com.stafo.app.screens.emp.ViewEmpLocationTrackActivity
+import com.stafo.app.screens.expense.ExpenseDashboardActivity
 import com.stafo.app.screens.performance.PerformanceActivity
 import com.stafo.app.screens.rank.RankListActivity
 import com.stafo.app.screens.reports.ReportsActivity
@@ -179,6 +180,14 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                 }
+                                "Expenses" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity,
+                                            ExpenseDashboardActivity::class.java
+                                        )
+                                    )
+                                }
                             }
                         }
 
@@ -263,6 +272,14 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                 }
+                                "Expenses" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity,
+                                            ExpenseDashboardActivity::class.java
+                                        )
+                                    )
+                                }
                             }
                         }
 
@@ -286,6 +303,7 @@ class SubMenuActivity : AppCompatActivity() {
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
         mActionList.add(ActionModel("Request\nDevice", R.drawable.ic_device_request))
+        mActionList.add(ActionModel("Expenses", R.drawable.ic_crm))
         return mActionList
     }
 
@@ -296,6 +314,7 @@ class SubMenuActivity : AppCompatActivity() {
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
+        mActionList.add(ActionModel("Expenses", R.drawable.ic_crm))
         return mActionList
     }
 }

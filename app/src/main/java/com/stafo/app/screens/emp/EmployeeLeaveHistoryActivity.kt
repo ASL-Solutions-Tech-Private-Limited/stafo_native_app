@@ -2,6 +2,7 @@ package com.stafo.app.screens.emp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -13,6 +14,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ajithvgiri.searchdialog.OnSearchItemSelected
+import com.ajithvgiri.searchdialog.SearchListItem
+import com.ajithvgiri.searchdialog.SearchableDialog
 import com.stafo.app.R
 import com.stafo.app.base.adapter.AdapterEmployeeAllLeaveList
 import com.stafo.app.databinding.ActivityEmployeeLeaveHistoryBinding
@@ -21,6 +25,7 @@ import com.stafo.app.screens.settings.dataClass.GetEmpLeaveData
 import com.stafo.app.screens.settings.dataClass.GetEmployeeLeaveHistRequestBody
 import com.stafo.app.screens.settings.dataClass.LeaveCount
 import com.stafo.app.utils.CustomLoader
+import com.stafo.app.utils.getEmployeeComId
 import com.stafo.app.utils.getEmployeeDetails
 
 class EmployeeLeaveHistoryActivity : AppCompatActivity() {
@@ -64,6 +69,16 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
         )
 
         settingsViewModel.getEmployeeLeaveHist(this@EmployeeLeaveHistoryActivity, request)
+
+        getEmployeeComId()?.let {
+            settingsViewModel.getLeaveTypeList(
+                this@EmployeeLeaveHistoryActivity,
+                it.toInt()
+            )
+        }
+
+
+
     }
 
     private fun observeViewModel() {
@@ -101,13 +116,73 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
         }
 
 
+
+        settingsViewModel.mLeaveTypeListResponse.observe(this) {
+
+            if (it.data.isNotEmpty()) {
+
+
+                if (!it.data.isNullOrEmpty()) {
+
+                    val getLeaveTypeList = it.data
+
+                    val options = mutableListOf<String>()
+                    options.add("All")
+                    options.addAll(getLeaveTypeList.map { it.name })
+
+                    val adapterSpinner = ArrayAdapter(
+                        this@EmployeeLeaveHistoryActivity,
+                        R.layout.custom_spinner_item,
+                        options
+                    )
+                    adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    binding.spinnerSearchType.adapter = adapterSpinner
+                    binding.spinnerSearchType.setSelection(0)
+
+                    binding.spinnerSearchType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parent: AdapterView<*>,
+                            view: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            val selectedValue = parent.getItemAtPosition(position).toString()
+
+                            filteredList = if (selectedValue.equals("All", ignoreCase = true)) {
+                                list
+                            } else {
+                                list.filter {
+                                    it.getLeaveTypeName().contains(selectedValue, ignoreCase = true)
+                                }
+                            }
+
+                            rvAdapter.updateList(filteredList.toMutableList())
+                        }
+
+                        override fun onNothingSelected(parent: AdapterView<*>) {
+
+                        }
+                    }
+                }
+
+
+
+
+            }
+
+
+        }
+
+
+
+
     }
 
     fun GetEmpLeaveData.getLeaveTypeName(): String {
         return when (this.leaveType) {
             1 -> "Casual Leave"
             2 -> "Sick Leave"
-            3 -> "Privillage Leave"
+            3 -> "Privilege Leave"
             else -> "All"
         }
     }
@@ -141,8 +216,18 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
     private fun onClickListener() {
         binding.apply {
 
+            getEmployeeComId()?.let {
+                settingsViewModel.getLeaveTypeList(
+                    this@EmployeeLeaveHistoryActivity,
+                    it.toInt()
+                )
+            }
 
-            val options = resources.getStringArray(R.array.leave_type_search)
+
+
+
+       /*     val options = resources.getStringArray(R.array.leave_type_search)
+
             val adapterSpinner = ArrayAdapter(this@EmployeeLeaveHistoryActivity, R.layout.custom_spinner_item, options)
             binding.spinnerSearchType.setAdapter(adapterSpinner)
             binding.spinnerSearchType.setSelection(0)
@@ -159,7 +244,7 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
                 }
-            }
+            }*/
 
 
 

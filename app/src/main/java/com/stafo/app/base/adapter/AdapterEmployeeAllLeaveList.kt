@@ -56,6 +56,8 @@ class AdapterEmployeeAllLeaveList(
                 } else {
                     binding.txtLeaveType.text = "Casual Leave"
                 }
+
+
                 binding.txtDescription.text = this.reason
                 val capitalizedStatus = this.status.replaceFirstChar { it.uppercaseChar() }
                 binding.txtStatus.text = capitalizedStatus
@@ -63,7 +65,15 @@ class AdapterEmployeeAllLeaveList(
                     "${getFormatDate(this.fromDate)} - ${getFormatDate(this.toDate)}"
 
 
-                binding.txtDays.text = "${calculateDuration(this.fromDate, this.toDate)} days"
+                val formattedNoDays = calculateDuration(this.fromDate, this.toDate)
+                if (formattedNoDays == "1") {
+                    binding.txtDays.text = "$formattedNoDays day"
+                } else {
+                    binding.txtDays.text = "$formattedNoDays days"
+                }
+
+
+               // binding.txtDays.text = "${calculateDuration(this.fromDate, this.toDate)} days"
 
 
             }

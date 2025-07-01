@@ -125,6 +125,17 @@ class RankListActivity : AppCompatActivity() {
                 showCustomMonthYearPicker(this@RankListActivity) { formattedDate, displayDate ->
                     mSelectMonth = formattedDate
                     binding.tieMonth.setText(displayDate)
+
+                    if (mEMpId!=0){
+                        val (year, month) = mSelectMonth.split("-")
+
+                        val request = RankListRequest(
+                            employee_id = mEMpId.toString(), month = month, year = year
+                        )
+                        billPaymentsViewModel.viewRankList(this@RankListActivity, request)
+                    }
+
+
                     Log.d("date", "$mSelectMonth")
                 }
             }
