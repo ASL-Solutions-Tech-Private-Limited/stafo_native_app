@@ -25,7 +25,7 @@ class AdapterDynamicLeaveCount(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             with(list[position]) {
-                binding.tvLeaveTypeName.text = formatLeaveType(this.leaveType.toString())
+                binding.tvLeaveTypeName.text = formatLeaveType(this.leaveTypeName)
                 binding.tvLvCount.text = this.totalDays?:""
 
             }

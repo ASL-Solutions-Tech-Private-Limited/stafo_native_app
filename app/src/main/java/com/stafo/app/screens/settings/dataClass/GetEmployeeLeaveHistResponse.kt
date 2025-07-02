@@ -11,7 +11,8 @@ data class GetEmployeeLeaveHistResponse(
 
 data class LeaveCount(
     @SerializedName("leave_type") val leaveType: Int,
-    @SerializedName("total_days") val totalDays: String
+    @SerializedName("total_days") val totalDays: String,
+   val leaveTypeName: String? = null,
 )
 
 data class GetEmpLeaveData(

@@ -77,6 +77,7 @@ import com.stafo.app.utils.setEmployeeBranchId
 import com.stafo.app.utils.setEmployeeComId
 import com.stafo.app.utils.setIsLock
 import com.stafo.app.utils.setIsLockUser
+import com.stafo.app.utils.setTripServiceAction
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -128,6 +129,9 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private fun setupViews() {
         binding?.apply {
+
+            setTripServiceAction(this@EmployeeDashboard, false)
+
             tvHeaderGreeting.text = getGreetingBasedOnTime()
             tvHeaderEmpName.text = getEmployeeDetails()?.name ?: " Guest"
             tvHeaderEmpNo.text = getEmployeeDetails()?.emp_id ?: "--"
@@ -546,6 +550,8 @@ class EmployeeDashboard : AppCompatActivity() {
                                     if (exactAlarmGranted) {
                                         requestIgnoreBatteryOptimization(this) { batteryOptGranted ->
                                             if (batteryOptGranted) {
+                                                Log.e("trackLocation","start 0")
+
                                                 startLocationServiceIfNotRunning()
 
                                                 val shiftEndReached = shiftEndTime?.let { endTime ->
@@ -584,6 +590,9 @@ class EmployeeDashboard : AppCompatActivity() {
                                         if (exactAlarmGranted) {
                                             requestIgnoreBatteryOptimization(this) { batteryOptGranted ->
                                                 if (batteryOptGranted) {
+
+                                                    Log.e("trackLocation","start 1")
+
                                                     startLocationServiceIfNotRunning()
 
                                                     val shiftEndReached = shiftEndTime?.let { endTime ->
@@ -804,6 +813,7 @@ class EmployeeDashboard : AppCompatActivity() {
     }
 
     private fun stopLocationServiceIfRunning() {
+        Log.e("trackLocation","stop ")
         if (isServiceRunning(LocationForegroundService::class.java)) {
             val stopIntent = Intent(this, LocationForegroundService::class.java)
             stopIntent.action = "STOP_FOREGROUND_SERVICE"
