@@ -15,8 +15,8 @@ import javax.net.ssl.SSLContext
 
 object RetrofitInstance {
 
-   // private const val BASE_URL = "https://stafo.in/"
-    private const val BASE_URL = "http://aslhr.2ndwork.in/"
+    private const val BASE_URL = "https://stafo.in/"
+  //  private const val BASE_URL = "http://aslhr.2ndwork.in/"
     private var retrofit: Retrofit? = null
 
     fun getRetrofit(context: Context): Retrofit {
