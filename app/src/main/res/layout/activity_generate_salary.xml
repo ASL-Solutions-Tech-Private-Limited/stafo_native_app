@@ -82,7 +82,7 @@
                             android:background="@drawable/edit_text_background"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
-                            android:fontFamily="@font/gilroy_medium"
+                            android:fontFamily="@font/gilroy_regular"
                             android:hint="Select month"
                             android:inputType="textPersonName"
                             android:textColor="@color/black"
@@ -107,7 +107,7 @@
                             android:background="@drawable/edit_text_background"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
-                            android:fontFamily="@font/gilroy_medium"
+                            android:fontFamily="@font/gilroy_regular"
                             android:hint="Employee"
                             android:inputType="textPersonName"
                             android:textColor="@color/black"
@@ -131,13 +131,56 @@
                             android:background="@drawable/edit_text_background"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
-                            android:fontFamily="@font/gilroy_medium"
+                            android:fontFamily="@font/gilroy_regular"
                             android:hint="Basic salary"
                             android:inputType="textPersonName"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12ssp" />
 
                     </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_expense"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_12sdp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tie_expense"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_background"
+                            android:fontFamily="@font/gilroy_regular"
+                            android:hint="Expense"
+                            android:inputType="numberDecimal"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_other_deduction"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_12sdp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tie_other_deduction"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_background"
+                            android:fontFamily="@font/gilroy_regular"
+                            android:hint="Other Deduction"
+                            android:inputType="numberDecimal"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
 
 
                     <LinearLayout
@@ -194,6 +237,7 @@
                             tools:itemCount="1"
                             tools:listitem="@layout/recy_dynamic_salary_item_layout" />
                     </LinearLayout>
+
 
 
                     <RelativeLayout

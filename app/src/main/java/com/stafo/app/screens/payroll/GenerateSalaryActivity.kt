@@ -1,7 +1,8 @@
 package com.stafo.app.screens.payroll
 
-import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -11,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ajithvgiri.searchdialog.OnSearchItemSelected
 import com.ajithvgiri.searchdialog.SearchListItem
 import com.ajithvgiri.searchdialog.SearchableDialog
@@ -30,11 +30,10 @@ import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 import com.stafo.app.utils.showCustomMonthYearPicker
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Locale
 
 class GenerateSalaryActivity : AppCompatActivity() {
-    private lateinit var binding:ActivityGenerateSalaryBinding
+    private lateinit var binding: ActivityGenerateSalaryBinding
 
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
@@ -45,24 +44,19 @@ class GenerateSalaryActivity : AppCompatActivity() {
     private var mAbsentDays: Int = 0
     private var mWorkingDays: Int = 0
     private var mExpense: Int = 0
-
-
-
-    private val calendar = Calendar.getInstance()
+    private var mBasicSalary: Int = 0
 
     private lateinit var adapter: DynamicSalaryAdapter
     private lateinit var deductionAdapter: DynamicDeductionAdapter
     private val dynamicFields = mutableListOf<SalaryComponent>()
     private val deductionDynamicFields = mutableListOf<SalaryComponent>()
-
     private var mEmpList: List<GetEmployee>? = ArrayList()
-
     private lateinit var employeeListDialog: SearchableDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding=ActivityGenerateSalaryBinding.inflate(layoutInflater)
+        binding = ActivityGenerateSalaryBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -87,11 +81,29 @@ class GenerateSalaryActivity : AppCompatActivity() {
 
                 if (!it.data.basic_salary.isNullOrBlank()) {
                     val salary = it.data.basic_salary.replace(".00", "")
+                    mBasicSalary = salary.toInt() ?: 0
                     binding.tieSalary.setText(salary)
                 }
 
-                it.data.other_deduction?.let {
-                    mOtherDeduction = it
+
+                val otherDeduction = it.data.other_deduction
+                if (otherDeduction != null && otherDeduction != 0) {
+                    mOtherDeduction = otherDeduction
+                    binding.tieOtherDeduction.setText(otherDeduction.toString())
+                    binding.tilOtherDeduction.visibility = View.VISIBLE
+                    calculateGrossSalary()
+                } else {
+                    binding.tilOtherDeduction.visibility = View.GONE
+                }
+
+                val expense = it.data.expense
+                if (expense != null && expense != 0) {
+                    mExpense = expense
+                    binding.tieExpense.setText(expense.toString())
+                    binding.tilExpense.visibility = View.VISIBLE
+                    calculateGrossSalary()
+                } else {
+                    binding.tilExpense.visibility = View.GONE
                 }
 
                 it.data.absent_days?.let {
@@ -100,14 +112,6 @@ class GenerateSalaryActivity : AppCompatActivity() {
 
                 it.data.working_days?.let {
                     mWorkingDays = it
-                }
-
-                it.data.expense?.let {
-                    mExpense = it
-                }
-
-                it.data.gross_salary?.let {
-                    binding.tvGrossSalary.text = it.toString()
                 }
 
                 if (it.data.earning.isNotEmpty()) {
@@ -145,6 +149,17 @@ class GenerateSalaryActivity : AppCompatActivity() {
                 } else {
                     binding.llcDeduction.visibility = View.GONE
                 }
+
+                if ((expense != null && expense != 0) || (otherDeduction != null && otherDeduction != 0)) {
+                    calculateGrossSalary()
+                } else {
+
+                    it.data.gross_salary?.let {
+                        binding.tvGrossSalary.text = it.toString()
+                    }
+                }
+
+
             } else {
                 binding.llcDeduction.visibility = View.GONE
                 binding.llcEarning.visibility = View.GONE
@@ -166,21 +181,33 @@ class GenerateSalaryActivity : AppCompatActivity() {
         }
     }
 
-    private fun calculateGrossSalary() {
-        val totalEarning = dynamicFields.sumOf { it.amount?.toString()?.toDoubleOrNull() ?: 0.0 }
-        val totalDeduction = deductionDynamicFields.sumOf { it.amount?.toString()?.toDoubleOrNull() ?: 0.0 }
-        val grossSalary = totalEarning - totalDeduction
 
-        val formattedGross = if (grossSalary % 1 == 0.0)
-            grossSalary.toInt().toString()
-        else
-            String.format("%.2f", grossSalary)
+    private fun calculateGrossSalary() {
+
+
+        val totalEarning = dynamicFields.sumOf { it.amount?.toString()?.toDoubleOrNull() ?: 0.0 }
+        val totalDeduction =
+            deductionDynamicFields.sumOf { it.amount?.toString()?.toDoubleOrNull() ?: 0.0 }
+
+        val basicSalary = mBasicSalary?.toDouble() ?: 0.0
+        val extraExpense = mExpense?.toDouble() ?: 0.0
+        val extraOtherDeduction = mOtherDeduction?.toDouble() ?: 0.0
+
+
+        val grossSalary =
+            (basicSalary + totalEarning + extraExpense) - (totalDeduction + extraOtherDeduction)
+
+        val formattedGross = if (grossSalary % 1 == 0.0) grossSalary.toInt().toString()
+        else String.format("%.2f", grossSalary)
+
+
+        Log.e(
+            "calculateGrossSalary",
+            "calculateGrossSalary called: basicSalary: $basicSalary  totalEarning: $totalEarning  totalDeduction: $totalDeduction extraExpense: $extraExpense  extraOtherDeduction: $extraOtherDeduction"
+        )
 
         binding.tvGrossSalary.text = formattedGross
     }
-
-
-
 
 
     private fun onClickListener() {
@@ -189,12 +216,11 @@ class GenerateSalaryActivity : AppCompatActivity() {
         binding.apply {
 
 
-
             settingsViewModel.getAllEmployeeList(this@GenerateSalaryActivity)
 
             tieEmployee.setOnClickListener {
                 if (mMonthOfSalary.isBlank()) {
-                    CustomToast(this@GenerateSalaryActivity,"Please select a month first")
+                    CustomToast(this@GenerateSalaryActivity, "Please select a month first")
                 } else {
                     employeeListDialog.show()
                 }
@@ -207,12 +233,40 @@ class GenerateSalaryActivity : AppCompatActivity() {
 
 
 
+            tieExpense.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?, start: Int, count: Int, after: Int
+                ) {
+                }
 
-           tieMonth.setOnClickListener {
+                override fun afterTextChanged(s: Editable?) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    mExpense = s.toString().toIntOrNull() ?: 0
+                    calculateGrossSalary()
+                }
+            })
+
+            tieOtherDeduction.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?, start: Int, count: Int, after: Int
+                ) {
+                }
+
+                override fun afterTextChanged(s: Editable?) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    mOtherDeduction = s.toString().toIntOrNull() ?: 0
+                    calculateGrossSalary()
+                }
+            })
+
+
+            tieMonth.setOnClickListener {
                 showCustomMonthYearPicker(this@GenerateSalaryActivity) { formattedDate, displayDate ->
                     mMonthOfSalary = formattedDate
                     binding.tieMonth.setText(displayDate)
-                    Log.d("date","$mMonthOfSalary")
+                    Log.d("date", "$mMonthOfSalary")
                 }
             }
             btnSubmit.setOnClickListener {
@@ -223,7 +277,10 @@ class GenerateSalaryActivity : AppCompatActivity() {
                 val grossSalary = grossSalaryStr.toDoubleOrNull()
 
                 if (basicSalary == null || grossSalary == null) {
-                    CustomToast(this@GenerateSalaryActivity, "Invalid salary values. Please check the inputs.")
+                    CustomToast(
+                        this@GenerateSalaryActivity,
+                        "Invalid salary values. Please check the inputs."
+                    )
                     return@setOnClickListener
                 }
 
@@ -270,60 +327,8 @@ class GenerateSalaryActivity : AppCompatActivity() {
             }
 
 
-          /*  btnSubmit.setOnClickListener {
-
-                val basicSalary=tieSalary.text.toString().trim()
-                val grossSalary=tvGrossSalary.text.toString().trim()
-
-                val format = SimpleDateFormat("yyyy-MM", Locale.getDefault())
-                val date = format.parse(mMonthOfSalary)
-
-                val monthFormat = SimpleDateFormat("MM", Locale.getDefault())
-                val month = monthFormat.format(date)
-
-
-
-                val allComponents = mutableListOf<SalaryComponent>()
-
-                if (dynamicFields.isNotEmpty()) {
-                    allComponents.addAll(dynamicFields)
-                }
-
-                if (deductionDynamicFields.isNotEmpty()) {
-                    allComponents.addAll(deductionDynamicFields)
-                }
-                getEmployeeComId()?.let {
-                    val request = SalaryRequest(
-                        company_id = it.toInt(),
-                        employee_id = mEMpId,
-                        month = month.toInt(),
-                        basic_salary = basicSalary.toInt(),
-                        gross_salary = grossSalary.toInt(),
-                        components = allComponents
-                    )
-
-                    settingsViewModel.saveSalary(this@GenerateSalaryActivity, request)
-                }
-
-            }*/
-
-
         }
     }
-
-    private fun isValidated(): Boolean {
-        binding.apply {
-            if (tieEmployee.text.isNullOrEmpty()) {
-                CustomToast(this@GenerateSalaryActivity,"Please select employee")
-                return false
-            }  else if (tieMonth.text.isNullOrEmpty()) {
-                CustomToast(this@GenerateSalaryActivity,"Please select month")
-                return false
-            }
-        }
-        return true
-    }
-
 
 
     private fun handleLoader(status: String) {
@@ -333,10 +338,9 @@ class GenerateSalaryActivity : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
+
     private fun setupSearchableDialog(
-        dataList: List<Any>?,
-        title: String,
-        field: TextInputEditText
+        dataList: List<Any>?, title: String, field: TextInputEditText
     ) {
         val items = dataList?.map {
             val name = when (it) {
@@ -358,12 +362,11 @@ class GenerateSalaryActivity : AppCompatActivity() {
                 field.setText(searchListItem.title)
                 if (title == "Employee List") {
 
-                    mEMpId=searchListItem.id
+                    mEMpId = searchListItem.id
 
                     getEmployeeComId()?.let {
                         val request = SalaryGeneratedRequest(
-                            employee_id = mEMpId,
-                            company_id = it.toInt()
+                            employee_id = mEMpId, company_id = it.toInt()
                         )
                         settingsViewModel.generateSalary(this@GenerateSalaryActivity, request)
                     }
