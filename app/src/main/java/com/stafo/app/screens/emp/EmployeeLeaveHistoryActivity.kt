@@ -70,29 +70,6 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
 
     }
 
-
-    override fun onResume() {
-        super.onResume()
-
-        getEmployeeComId()?.let {
-            settingsViewModel.getLeaveTypeList(
-                this@EmployeeLeaveHistoryActivity,
-                it.toInt()
-            )
-        }
-
-        val request = GetEmployeeLeaveHistRequestBody(
-            employeeId = getEmployeeDetails()?.id.toString()
-        )
-
-        settingsViewModel.getEmployeeLeaveHist(this@EmployeeLeaveHistoryActivity, request)
-
-
-
-
-
-    }
-
     private fun observeViewModel() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
@@ -128,7 +105,7 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
 
 
             }else{
-               binding.txtMsg.visibility=View.VISIBLE
+                binding.txtMsg.visibility=View.VISIBLE
             }
 
 
@@ -170,7 +147,7 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
                                 list
                             } else {
                                 list.filter {
-                                    it.getLeaveTypeName().contains(selectedValue, ignoreCase = true)
+                                    it.leaveTypeObj.name?.contains(selectedValue, ignoreCase = true) == true
                                 }
                             }
 
@@ -206,7 +183,7 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
                                 list
                             } else {
                                 list.filter {
-                                    it.getLeaveTypeName().contains(selectedValue, ignoreCase = true)
+                                    it.leaveTypeObj.name?.contains(selectedValue, ignoreCase = true) == true
                                 }
                             }
 
@@ -229,7 +206,32 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
 
     }
 
-    fun GetEmpLeaveData.getLeaveTypeName(): String {
+
+    override fun onResume() {
+        super.onResume()
+
+        getEmployeeComId()?.let {
+            settingsViewModel.getLeaveTypeList(
+                this@EmployeeLeaveHistoryActivity,
+                it.toInt()
+            )
+        }
+
+        val request = GetEmployeeLeaveHistRequestBody(
+            employeeId = getEmployeeDetails()?.id.toString()
+        )
+
+        settingsViewModel.getEmployeeLeaveHist(this@EmployeeLeaveHistoryActivity, request)
+
+
+
+
+
+    }
+
+
+
+  /*  fun GetEmpLeaveData.getLeaveTypeName(): String {
         return when (this.leaveType) {
             1 -> "Casual Leave"
             2 -> "Sick Leave"
@@ -249,7 +251,7 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
         }
 
         rvAdapter.updateList(filteredList.toMutableList())
-    }
+    }*/
 
     private fun handleLoader(status: String) {
         if (status.equals("load", ignoreCase = true)) {
