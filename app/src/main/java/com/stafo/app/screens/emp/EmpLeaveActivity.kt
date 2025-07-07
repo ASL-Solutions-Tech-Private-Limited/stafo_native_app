@@ -22,13 +22,21 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.ajithvgiri.searchdialog.OnSearchItemSelected
+import com.ajithvgiri.searchdialog.SearchListItem
+import com.ajithvgiri.searchdialog.SearchableDialog
 import com.stafo.app.R
 import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmpLeaveBinding
+import com.stafo.app.screens.settings.CreateLeavePolicyActivity
 import com.stafo.app.screens.settings.SettingsViewModel
+import com.stafo.app.screens.settings.adapter.AdapterLeaveTypeList
 import com.stafo.app.screens.settings.dataClass.EmployeeLeaveRequestBody
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.getEmployeeComId
 import com.stafo.app.utils.getEmployeeDetails
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -95,6 +103,64 @@ class EmpLeaveActivity : AppCompatActivity() {
 
         }
 
+
+        settingsViewModel.mLeaveTypeListResponse.observe(this) {
+
+            if (it.data.isNotEmpty()) {
+
+
+                if (!it.data.isNullOrEmpty()) {
+
+                    val getLeaveTypeList = it.data
+
+                    val leaveTypeList = ArrayList<SearchListItem>().apply {
+                        getLeaveTypeList.forEach { category ->
+                            add(
+                                SearchListItem(
+                                    id = category.id,
+                                    title = category.name
+                                )
+                            )
+                        }
+                    }
+
+                    Log.e("leaveApply", " get leave  type list ${leaveTypeList}")
+
+                    val firstItem = leaveTypeList.first()
+                    leaveType = firstItem.id
+                    binding.tieLeaveType.setText(firstItem.title)
+
+                    binding.tieLeaveType.setOnClickListener {
+                        val dialog = SearchableDialog(
+                            this@EmpLeaveActivity, leaveTypeList, "Leave Type"
+                        )
+                        dialog.setOnItemSelected(object : OnSearchItemSelected {
+                            override fun onClick(position: Int, searchListItem: SearchListItem) {
+                                dialog.dismiss()
+                                leaveType = searchListItem.id
+                                binding.tieLeaveType.setText(searchListItem.title)
+
+                            }
+                        })
+
+                        if (!isFinishing && !isDestroyed) {
+                            dialog.show()
+                        }
+                    }
+
+
+
+
+
+                }
+
+
+            }
+
+
+        }
+
+
     }
 
     private fun handleLoader(status: String) {
@@ -109,7 +175,7 @@ class EmpLeaveActivity : AppCompatActivity() {
     private fun onClickListener() {
 
 
-        val options = resources.getStringArray(R.array.leave_type)
+/*        val options = resources.getStringArray(R.array.leave_type)
         val adapter = ArrayAdapter(this, R.layout.custom_spinner_item, options)
         binding.spinnerLeaveType.setAdapter(adapter)
         binding.spinnerLeaveType.onItemSelectedListener =
@@ -137,14 +203,25 @@ class EmpLeaveActivity : AppCompatActivity() {
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
                 }
+            }*/
+
+
+
+
+
+
+        binding.apply {
+
+
+            getEmployeeComId()?.let {
+                settingsViewModel.getLeaveTypeList(
+                    this@EmpLeaveActivity,
+                    it.toInt()
+                )
             }
 
 
 
-
-
-
-        binding?.apply {
 
             imageBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
@@ -200,8 +277,10 @@ class EmpLeaveActivity : AppCompatActivity() {
 
                         )
 
+                        Log.e("leaveApply","get post value:  ${request}")
 
-                        settingsViewModel.requestLeaveEmp(this@EmpLeaveActivity, request)
+
+                       settingsViewModel.requestLeaveEmp(this@EmpLeaveActivity, request)
 
                     }
 
