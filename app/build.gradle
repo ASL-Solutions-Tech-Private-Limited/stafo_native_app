@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    // id 'kotlin-android-extensions'
     id 'kotlin-android'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
@@ -10,12 +9,12 @@ plugins {
 
 android {
     namespace 'com.stafo.app'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.stafo.app"
         minSdk 24
-        targetSdk 34
+        targetSdk 35
         versionCode 8
         versionName "1.0.8"
 
@@ -73,6 +72,10 @@ android {
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
+    }
+    kapt {
+        correctErrorTypes = true
     }
     applicationVariants.all { variant ->
         variant.outputs.all { output ->

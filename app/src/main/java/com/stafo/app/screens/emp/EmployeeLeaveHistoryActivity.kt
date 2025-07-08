@@ -86,8 +86,39 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
                 leaveCount=it.leaveCount
                 rvAdapter.updateList(filteredList.toMutableList())
 
-
                 if (!leaveCount.isNullOrEmpty() && getLeaveTypeList.isNotEmpty()) {
+
+
+                    val enrichedLeaveCount = leaveCount.mapNotNull { count ->
+                        val matchingLeaveItem = getLeaveTypeList.find { it.id == count.leaveType }
+                        matchingLeaveItem?.let {
+                            count.copy(leaveTypeName = it.name)
+                        }
+                    }
+
+                    if (enrichedLeaveCount.isNotEmpty()) {
+                        binding.llcTopParent.visibility = View.VISIBLE
+                        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+                        binding.rvDynamicLeaveCount.layoutManager = layoutManager
+                        rvLeaveCountAdapter = AdapterDynamicLeaveCount(enrichedLeaveCount, this)
+                        binding.rvDynamicLeaveCount.adapter = rvLeaveCountAdapter
+                    } else {
+                        binding.llcTopParent.visibility = View.GONE
+                    }
+
+                } else {
+                    Log.e("LeaveCount", "Waiting for getLeaveTypeList to load")
+                    binding.llcTopParent.visibility = View.GONE
+                }
+
+
+
+               /* if (!leaveCount.isNullOrEmpty() && getLeaveTypeList.isNotEmpty()) {
+
+                    Log.e("LeaveCount", "leaveCount: $leaveCount")
+                    Log.e("LeaveCount", "getLeaveTypeList: $getLeaveTypeList")
+
+
                     val enrichedLeaveCount = leaveCount.map { count ->
                         val matchingLeaveItem = getLeaveTypeList.find { it.id == count.leaveType }
                         count.copy(leaveTypeName = matchingLeaveItem?.name)
@@ -101,7 +132,7 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
                 } else {
                     Log.e("LeaveCount", "Waiting for getLeaveTypeList to load")
                     binding.llcTopParent.visibility = View.GONE
-                }
+                }*/
 
 
             }else{

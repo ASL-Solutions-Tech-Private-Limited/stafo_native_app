@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ajithvgiri.searchdialog.OnSearchItemSelected
 import com.ajithvgiri.searchdialog.SearchListItem
@@ -48,6 +49,8 @@ import com.stafo.app.utils.formatCreatedAtDate
 import com.stafo.app.utils.getEmployeeComId
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getIsCOMPANYLogin
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -302,8 +305,16 @@ class EmployeeApplyExpenseActivity : AppCompatActivity() {
                             dialog.show()
                         }
                     }
+                } else {
+                    CustomToast(this,"You cannot apply for expenses yet. Please contact your company to add expense types.")
+                    lifecycleScope.launch {
+                        delay(1000)
+                        onBackPressedDispatcher.onBackPressed()
+                        finish()
+                    }
                 }
-            } else Log.e("res", " get expense else")
+
+            } else  CustomToast(this,it.message)
         }
 
 
