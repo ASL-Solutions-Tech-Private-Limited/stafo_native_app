@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -56,6 +57,11 @@ import com.stafo.app.utils.setEmployeeComId
 import com.stafo.app.utils.setIsLock
 import com.stafo.app.utils.setIsLockUser
 import com.bumptech.glide.Glide
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.ActivityResult
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.gson.Gson
 import com.stafo.app.screens.chat.ChatWithCompanyActivity
 import com.stafo.app.screens.crm.CRMLeadDashboard
@@ -79,6 +85,10 @@ class EmployerDashboard : AppCompatActivity() {
 
     private var companyStatus: Boolean = false
     private var maxEmployeeAdd: String = "0"
+
+    private lateinit var appUpdateManager: AppUpdateManager
+    private val MY_REQUEST_CODE = 123
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -90,13 +100,63 @@ class EmployerDashboard : AppCompatActivity() {
             insets
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
-
+        // Initialize the AppUpdateManager
+        appUpdateManager = AppUpdateManagerFactory.create(this)
+        checkForAppUpdate()
 
         initViews()
         setOnClickEvents()
         observeViewModel()
 
     }
+
+    private fun checkForAppUpdate() {
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+
+                appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    AppUpdateType.IMMEDIATE,
+                    this,
+                    MY_REQUEST_CODE
+                )
+            }
+        }.addOnFailureListener {
+            Log.e("TAG", "checkForAppUpdate: ${it.message}")
+        }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == MY_REQUEST_CODE) {
+            when (resultCode) {
+                RESULT_OK -> Log.e("TAG", "onActivityResult: Success")
+                RESULT_CANCELED -> {
+                    CustomToast(this, "Update is required to continue")
+                    finish()
+                }
+                ActivityResult.RESULT_IN_APP_UPDATE_FAILED -> {
+                    CustomToast(this, "Update failed. Please try again.")
+                    finish()
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     private fun showScreenLockDialog() {

@@ -3,7 +3,13 @@ package com.stafo.app.screens.auth
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.core.content.ContextCompat
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.ActivityResult
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.stafo.app.R
 import com.stafo.app.base.BaseActivity
 import com.stafo.app.databinding.ActivityLoginBinding
@@ -18,15 +24,62 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, AuthViewModel>() {
     override val viewModel: AuthViewModel by lazy { AuthViewModel() }
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
 
+    private lateinit var appUpdateManager: AppUpdateManager
+    private val MY_REQUEST_CODE = 123
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
         viewDataBinding?.lifecycleOwner = this
-        obversers()
 
+        // Initialize the AppUpdateManager
+        appUpdateManager = AppUpdateManagerFactory.create(this)
+        checkForAppUpdate()
+
+        obversers()
         onClickListeners()
     }
+
+    private fun checkForAppUpdate() {
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+
+                appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    AppUpdateType.IMMEDIATE,
+                    this,
+                    MY_REQUEST_CODE
+                )
+            }
+        }.addOnFailureListener {
+           Log.e("TAG", "checkForAppUpdate: ${it.message}")
+        }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == MY_REQUEST_CODE) {
+            when (resultCode) {
+                RESULT_OK -> Log.e("TAG", "onActivityResult: Success")
+                RESULT_CANCELED -> {
+                    CustomToast(this, "Update is required to continue")
+                    finish()
+                }
+                ActivityResult.RESULT_IN_APP_UPDATE_FAILED -> {
+                    CustomToast(this, "Update failed. Please try again.")
+                    finish()
+                }
+            }
+        }
+    }
+
+
 
     private fun onClickListeners() {
         viewDataBinding?.apply {

@@ -31,6 +31,11 @@ import com.bumptech.glide.Glide
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.ActivityResult
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.gson.Gson
 import com.stafo.app.R
 import com.stafo.app.base.adapter.ActionsListAdapter
@@ -106,6 +111,9 @@ class EmployeeDashboard : AppCompatActivity() {
     private var mEmplyeeInfo: EmployeeInfo? = null
     private var isTrip: Boolean= false
 
+    private lateinit var appUpdateManager: AppUpdateManager
+    private val MY_REQUEST_CODE = 123
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -121,10 +129,57 @@ class EmployeeDashboard : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        // Initialize the AppUpdateManager
+        appUpdateManager = AppUpdateManagerFactory.create(this)
+        checkForAppUpdate()
+
         setupViews()
         onClickListener()
 
     }
+
+
+
+
+    private fun checkForAppUpdate() {
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+
+                appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    AppUpdateType.IMMEDIATE,
+                    this,
+                    MY_REQUEST_CODE
+                )
+            }
+        }.addOnFailureListener {
+            Log.e("TAG", "checkForAppUpdate: ${it.message}")
+        }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == MY_REQUEST_CODE) {
+            when (resultCode) {
+                RESULT_OK -> Log.e("TAG", "onActivityResult: Success")
+                RESULT_CANCELED -> {
+                    CustomToast(this, "Update is required to continue")
+                    finish()
+                }
+                ActivityResult.RESULT_IN_APP_UPDATE_FAILED -> {
+                    CustomToast(this, "Update failed. Please try again.")
+                    finish()
+                }
+            }
+        }
+    }
+
+
 
 
 

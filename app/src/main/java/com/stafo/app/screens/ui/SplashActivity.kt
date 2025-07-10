@@ -37,9 +37,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, CommonViewModel>() {
     override val layoutId: Int = R.layout.activity_splash
     override val viewModel: CommonViewModel by lazy { CommonViewModel(this) }
 
-    private lateinit var appUpdateManager: AppUpdateManager
-    private val MY_REQUEST_CODE = 123
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,8 +45,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, CommonViewModel>() {
 
         viewDataBinding?.lifecycleOwner = this
 
-        appUpdateManager = AppUpdateManagerFactory.create(this)
-
+        val delayMillis = 300L
         registerFirebase()
         Handler(Looper.getMainLooper()).postDelayed({
             viewDataBinding?.imgSplash?.visibility = View.VISIBLE
@@ -57,38 +53,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, CommonViewModel>() {
             viewDataBinding?.imgSplash?.startAnimation(animation)
         }, 100)
 
-        checkForAppUpdate()
-
-
-
-
-
-    }
-
-
-    private fun checkForAppUpdate() {
-        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
-
-        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
-
-                appUpdateManager.startUpdateFlowForResult(
-                    appUpdateInfo,
-                    AppUpdateType.IMMEDIATE,
-                    this,
-                    MY_REQUEST_CODE
-                )
-            } else {
-                proceedToNextScreen()
-            }
-        }.addOnFailureListener {
-            proceedToNextScreen()
-        }
-    }
-
-    private fun proceedToNextScreen() {
-        val delayMillis = 300L
         Handler(Looper.getMainLooper()).postDelayed({
             val isCompanyLogin = getIsCOMPANYLogin(this)
             val isEmployeeLogin = getIsEMPLogin(this)
@@ -111,25 +75,12 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, CommonViewModel>() {
             }
             finish()
         }, delayMillis)
-    }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == MY_REQUEST_CODE) {
-            when (resultCode) {
-                RESULT_OK -> proceedToNextScreen()
-                RESULT_CANCELED -> {
-                    CustomToast(this, "Update is required to continue")
-                    finish()
-                }
-                ActivityResult.RESULT_IN_APP_UPDATE_FAILED -> {
-                    CustomToast(this, "Update failed. Please try again.")
-                    finish()
-                }
-            }
-        }
-    }
 
+
+
+
+    }
 
 
     private fun makeStatusBarTransparent() {
