@@ -31,7 +31,6 @@ import com.bumptech.glide.Glide
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.play.core.review.testing.FakeReviewManager
 import com.google.gson.Gson
 import com.stafo.app.R
 import com.stafo.app.base.adapter.ActionsListAdapter
@@ -104,7 +103,6 @@ class EmployeeDashboard : AppCompatActivity() {
     private val PLACE_SEARCH_REQUEST_CODE = 101
 
     private val calendar = Calendar.getInstance()
-    private lateinit var reviewManager: FakeReviewManager
     private var mEmplyeeInfo: EmployeeInfo? = null
     private var isTrip: Boolean= false
 
@@ -122,8 +120,7 @@ class EmployeeDashboard : AppCompatActivity() {
         isTrip = getTripServiceAction(applicationContext)
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        // reviewManager = ReviewManagerFactory.create(this)
-        reviewManager = FakeReviewManager(this)
+
         setupViews()
         onClickListener()
 
@@ -948,55 +945,7 @@ class EmployeeDashboard : AppCompatActivity() {
         finishAffinity()
     }
 
-    private fun showRateDialog() {
-        /*val request = reviewManager.requestReviewFlow()
-        request.addOnCompleteListener { request ->
-            if (request.isSuccessful) {
-                Log.i("CheckReview","IsSuccess")
-                val reviewInfo = request.result
-                val flow = reviewManager.launchReviewFlow(this@EmployeeDashboard, reviewInfo)
-                flow.addOnCompleteListener { _ ->
-                    // The flow has finished. The API does not indicate whether the user
-                    // reviewed or not, or even whether the review dialog was shown. Thus, no
-                    // matter the result, we continue our app flow.
-                }
-            } else {
-                // There was some problem, continue regardless of the result.
-                // you can show your own rate dialog alert and redirect user to your app page
-                // on play store.
-            }
-        }*/
-        val request = reviewManager.requestReviewFlow()
-        request.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.i("CheckReview", "IsSuccess")
-                val reviewInfo = task.result
-                val flow = reviewManager.launchReviewFlow(this@EmployeeDashboard, reviewInfo)
 
-                flow.addOnCompleteListener { _ ->
-                    Log.i("CheckReview", "Review flow completed")
-                }
-            } else {
-                openPlayStoreForReview(this)
-                Log.e("CheckReview", "Review flow request failed", task.exception)
-
-                // Handle error (optional: show a custom review dialog)
-                task.exception?.let { exception ->
-                    when (exception) {
-                        is com.google.android.play.core.review.ReviewException -> {
-                            Log.e("CheckReview", "Review API error: ${exception.message}")
-                        }
-
-                        else -> {
-                            Log.e("CheckReview", "Unknown error: ${exception.message}")
-                        }
-                    }
-                }
-
-                // Alternative action: Show custom rating dialog or redirect to Play Store
-            }
-        }
-    }
 
 
     private fun showScreenLockDialog() {

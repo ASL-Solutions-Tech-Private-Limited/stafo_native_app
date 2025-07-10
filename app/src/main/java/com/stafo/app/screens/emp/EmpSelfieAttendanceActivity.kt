@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -118,70 +119,6 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                 startCamera()
             }
 
-            /*  tvTakeSelfie.setOnClickListener {
-
-                  if (ContextCompat.checkSelfPermission(
-                          this@EmpSelfieAttendanceActivity,
-                          android.Manifest.permission.CAMERA
-                      ) == PackageManager.PERMISSION_DENIED
-                  ) {
-                      ActivityCompat.requestPermissions(
-                          this@EmpSelfieAttendanceActivity,
-                          arrayOf(android.Manifest.permission.CAMERA),
-                          100
-                      )
-                  } else {
-                      val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                      cameraIntent.putExtra("android.intent.extras.CAMERA_FACING", 1)
-                      startActivityForResult(cameraIntent, 123)
-                  }
-              }*/
-
-            /* btnPunchIn.setOnClickListener {
-                 if (isSubmitting) return@setOnClickListener
-
-                 if (selfieImage == null) {
-                     CustomToast(this@EmpSelfieAttendanceActivity, "Please upload a selfie first")
-                 } else {
-                     isSubmitting = true
-                     btnPunchIn.isEnabled = false
-
-                     if (checkBranch) {
-                         getCurrentLocation { userLat, userLong ->
-                             val distance = getDistance(userLat, userLong, branchLat, branchLong)
-                             val tolerance = 1.0f
-
-                             if (distance <= radar + tolerance) {
-                                 getEmployeeDetails()?.id?.let { empId ->
-                                     settingsViewModel.selfieAttendanceEmpolyee(
-                                         this@EmpSelfieAttendanceActivity,
-                                         empId,
-                                         selfieImage
-                                     )
-                                 }
-                             } else {
-                                 CustomToast(this@EmpSelfieAttendanceActivity, "You are outside the allowed area. Move closer.")
-                             }
-
-                             isSubmitting = false
-                             btnPunchIn.isEnabled = true
-                         }
-                     } else {
-                         getEmployeeDetails()?.id?.let { empId ->
-                             settingsViewModel.selfieAttendanceEmpolyee(
-                                 this@EmpSelfieAttendanceActivity,
-                                 empId,
-                                 selfieImage
-                             )
-                         }
-
-                         isSubmitting = false
-                         btnPunchIn.isEnabled = true
-                     }
-                 }
-             }*/
-
-
         }
 
 
@@ -280,6 +217,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                             }
 
                         } else {
+
                             Log.e("LocationDebug", "Branch details not available for location check.")
                             isSubmitting = false
                             settingsViewModel.selfieAttendanceEmpolyee(
@@ -342,12 +280,12 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                     radar = branchData.radar.toFloat()
                     Handler(Looper.getMainLooper()).postDelayed({
                         takePhoto()
-                    }, 3000)
+                    }, 2000)
                 } else {
                     checkBranch = false
                     Handler(Looper.getMainLooper()).postDelayed({
                         takePhoto()
-                    }, 3000)
+                    }, 2000)
                 }
             } else {
                 checkBranch = false
@@ -356,16 +294,26 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         }
     }
 
+
     @SuppressLint("MissingPermission")
     fun getCurrentLocation(callback: (Double, Double) -> Unit) {
         if (isFetchingLocation) return
         isFetchingLocation = true
 
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        if (!isGpsEnabled) {
+            isFetchingLocation = false
+            CustomToast(this, "Please turn on GPS to mark attendance.")
+            return
+        }
+
         val locationRequest = LocationRequest.create().apply {
             priority = Priority.PRIORITY_HIGH_ACCURACY
-            interval = 2000           // 2 seconds
-            fastestInterval = 1000    // 1 second
+            interval = 2000L
+            fastestInterval = 1000L
             numUpdates = 1
         }
 
@@ -376,7 +324,14 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
                 val location = locationResult.lastLocation
                 if (location != null) {
-                    callback(location.latitude, location.longitude)
+                    Log.d("Location", "Lat: ${location.latitude}, Lng: ${location.longitude}, Accuracy: ${location.accuracy}, Provider: ${location.provider}")
+
+                    if (location.accuracy <= 50f) {
+                        callback(location.latitude, location.longitude)
+                    } else {
+                        CustomToast(this@EmpSelfieAttendanceActivity, "Location not accurate. Try again.")
+                        isSubmitting = false
+                    }
                 } else {
                     CustomToast(this@EmpSelfieAttendanceActivity, "Unable to get location.")
                     isSubmitting = false
@@ -384,7 +339,6 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
             }
         }
 
-        // Set a timeout in case GPS takes too long
         Handler(Looper.getMainLooper()).postDelayed({
             if (isFetchingLocation) {
                 fusedLocationClient.removeLocationUpdates(locationCallback)
@@ -392,10 +346,15 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                 isSubmitting = false
                 CustomToast(this@EmpSelfieAttendanceActivity, "Location request timed out.")
             }
-        }, 10_000) // 10 sec timeout
+        }, 10_000)
 
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+        )
     }
+
 
 
 

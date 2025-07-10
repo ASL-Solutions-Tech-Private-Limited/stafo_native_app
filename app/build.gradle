@@ -240,8 +240,8 @@ dependencies {
 
     //map
     implementation ("com.mapmyindia.sdk:mapmyindia-android-raster-sdk:2.5.1")
-    // for review and feedback
-    implementation 'com.google.android.play:review-ktx:2.0.2'
+
+
     implementation 'com.caverock:androidsvg:1.4'
     implementation ("com.github.yuriy-budiyev:code-scanner:2.3.2")
     //pdfview
@@ -264,8 +264,8 @@ dependencies {
 
     // For Places Autocomplete and search
     implementation 'com.google.android.libraries.places:places:3.3.0'
-
     implementation 'com.github.angads25:toggle:1.1.0'
+
 
 
 

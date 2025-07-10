@@ -17,9 +17,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class AppIntro : Fragment() {
     private var _binding: IntroAppContentBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onDestroyView() {
