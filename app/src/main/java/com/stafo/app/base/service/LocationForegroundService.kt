@@ -296,7 +296,7 @@ class LocationForegroundService : Service() {
                 val networkOn = isNetworkAvailable()
                 val isTrip = getTripServiceAction(applicationContext)
 
-                val defaultDelayMillis = 20_000L
+                val defaultDelayMillis = 30_000L
                 val tripDelayMillis = 300_000L
                 var delayMillis = defaultDelayMillis
 

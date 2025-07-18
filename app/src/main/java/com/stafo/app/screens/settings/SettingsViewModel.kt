@@ -3451,10 +3451,7 @@ class SettingsViewModel : BaseViewModel() {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-
-                Log.d("res", "update: $id ${getUserAccessToken()}")
                 val response = ASLEmpMng.instance.apiStores()?.callUpdateEmployee(id, request)
-                Log.d("res", "update: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -3467,19 +3464,20 @@ class SettingsViewModel : BaseViewModel() {
                             } ?: run {
                                 CustomToast(
                                     mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
+                                     mContext.getString(R.string.error_something_went_wrong)
                                 )
                             }
                         }
                     } ?: run {
                         CustomToast(
                             mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                             mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                Log.e("profile", "update error: ${e.message}", e)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
@@ -3497,31 +3495,21 @@ class SettingsViewModel : BaseViewModel() {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-
-
                 val response = ASLEmpMng.instance.apiStores()?.callFetchEmployeeDetails(id)
-                Log.d("res", "details: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
                         if (it.isSuccessful) {
                             mFetchEmployeeDetails.postValue(it.body())
                         } else {
-                            when (it.code()) {
-                                401 -> {
-                                    doLogout(mContext)
-                                }
-                                else -> {
-                                    it.errorBody()?.charStream()?.let { errorStream ->
-                                        val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                        CustomToast(mContext as LoginActivity, error?.message ?: "")
-                                    } ?: run {
-                                        CustomToast(
-                                            mContext,
-                                            mContext.getString(R.string.error_something_went_wrong)
-                                        )
-                                    }
-                                }
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                   mContext.getString(R.string.error_something_went_wrong)
+                                )
                             }
                         }
                     } ?: run {
@@ -3535,7 +3523,7 @@ class SettingsViewModel : BaseViewModel() {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
-                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                   CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
                 }
             }
         }

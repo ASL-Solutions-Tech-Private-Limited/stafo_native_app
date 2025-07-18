@@ -249,6 +249,17 @@ class EmployeeProfileDetails : AppCompatActivity() {
                     setField(binding.tiePfNumber, data.pfNumber, isCompanyUser)
                     setField(binding.tieOfficialEmail, data.officialEmailId, isCompanyUser)
 
+                    // set salary value
+
+                    val salary = data.salary
+                    val cleanSalary = if (salary != "0.00") {
+                        salary?.replace(Regex("\\.00$"), "") ?: ""
+                    } else {
+                        salary ?: ""
+                    }
+                    setField(binding.tieEmployeeSalary, cleanSalary, isCompanyUser)
+
+
                     mDateOfJoining = data.dateOfJoining ?: ""
                     mDateOfBirth = data.dateOfBirth ?: ""
                     mDateOfLeaving = data.dateOfLeaving ?: ""
@@ -300,7 +311,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                 onBackPressedDispatcher.onBackPressed()
                 finish()
             } else {
-                CustomToast(this, it.message)
+                CustomToast(this, "error "+it.message)
             }
         }
 
@@ -443,7 +454,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
     private fun onClickListener() {
-        binding?.apply {
+        binding.apply {
 
             if (mEmpType == "View") {
                 btnUpdateProfile.visibility = View.INVISIBLE
@@ -689,6 +700,10 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
             btnUpdateProfile.setOnClickListener {
 
+                val postEmpSalary = tieEmployeeSalary.text.toString().trim()
+
+
+
 
                 if (profileType == "basic_details") {
                     if (validateBasicInfo()) {
@@ -698,7 +713,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             email = tieEmailId.text.toString(),
                             phone = tieMobileNo.text.toString(),
                             position = selectJobTitle,
-                            salary = 0,
+                            salary = postEmpSalary,
                             maritalStatus = selectMarital,
                             guardianName = "",
                             bloodGroup = " ",
@@ -722,7 +737,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
 
-                        Log.d("res", "post: $request")
+                        Log.e("profile", "post: $request")
 
                         if (getIsCOMPANYLogin(this@EmployeeProfileDetails) == true) {
                             settingsViewModel.updateEmployeeDetails(
@@ -748,7 +763,7 @@ class EmployeeProfileDetails : AppCompatActivity() {
                             email = tieEmailId.text.toString(),
                             phone = tieMobileNo.text.toString(),
                             position = selectJobTitle,
-                            salary = 0,
+                            salary =  postEmpSalary,
                             maritalStatus = selectMarital,
                             guardianName = tieGurdianName.text.toString(),
                             bloodGroup = tieBloodGroup.text?.toString()?.trim() ?: "",
@@ -825,12 +840,16 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
                 } else if (profileType == "employee_details") {
+
+
+
+
                     val request = UpdateEmployeeProfile(
                         name = tieStaffName.text.toString(),
                         email = tieEmailId.text.toString(),
                         phone = tieMobileNo.text.toString(),
                         position = selectJobTitle,
-                        salary = 0,
+                        salary =  postEmpSalary,
                         maritalStatus = selectMarital,
                         guardianName = tieGurdianName.text.toString(),
                         bloodGroup = tieBloodGroup.text.toString(),
@@ -852,7 +871,6 @@ class EmployeeProfileDetails : AppCompatActivity() {
 
 
                     if (getIsCOMPANYLogin(this@EmployeeProfileDetails) == true) {
-
                         settingsViewModel.updateEmployeeDetails(
                             this@EmployeeProfileDetails,
                             mEmpID,

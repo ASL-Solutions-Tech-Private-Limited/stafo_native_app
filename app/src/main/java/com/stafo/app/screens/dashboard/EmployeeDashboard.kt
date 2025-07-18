@@ -1,12 +1,19 @@
 package com.stafo.app.screens.dashboard
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.ActivityManager
 import android.app.KeyguardManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RenderEffect
+import android.graphics.Shader
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -14,8 +21,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.renderscript.Allocation
+import android.renderscript.Element
+import android.renderscript.RenderScript
+import android.renderscript.ScriptIntrinsicBlur
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -82,11 +94,11 @@ import com.stafo.app.utils.setEmployeeBranchId
 import com.stafo.app.utils.setEmployeeComId
 import com.stafo.app.utils.setIsLock
 import com.stafo.app.utils.setIsLockUser
-import com.stafo.app.utils.setTripServiceAction
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+
 
 class EmployeeDashboard : AppCompatActivity() {
     private lateinit var binding: ActivityEmpDashboardBinding
@@ -1078,6 +1090,22 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
     private fun showCustomBottomSheet() {
+
+     /*   val rootView = window.decorView.findViewById<View>(android.R.id.content)
+        rootView.post {
+            val screenshot = getBitmapFromView(rootView)
+
+            val blurProcessor = RSBlurProcessor(this)
+            val blurredBitmap = blurProcessor.blur(screenshot, radius = 30f, repeat = 1)
+
+            if (blurredBitmap != null) {
+                val blurOverlay: ImageView = binding.blurOverlay
+                blurOverlay.setImageBitmap(blurredBitmap)
+                blurOverlay.visibility = View.VISIBLE
+                binding.rootContainer.visibility = View.VISIBLE
+            }
+        }*/
+
         bottomSheetDialog = BottomSheetDialog(this)
         bottomSheetDialogBinding = CustomBottomSheetAttendanceLayoutBinding.inflate(layoutInflater)
         bottomSheetDialog.setOnShowListener { dialog ->
@@ -1088,11 +1116,15 @@ class EmployeeDashboard : AppCompatActivity() {
 
         bottomSheetDialog.setCancelable(false)
         bottomSheetDialogBinding.bottomSheetCancel.setOnClickListener {
+            binding.blurOverlay.visibility=View.GONE
+            binding.rootContainer.visibility = View.GONE
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialogBinding.llGeoAttendance.setOnClickListener {
             if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo") {
                 if (isLocationEnabled()) {
+                    binding.blurOverlay.visibility=View.GONE
+                    binding.rootContainer.visibility = View.GONE
                     bottomSheetDialog.dismiss()
                     startActivity(Intent(this, EmployeePunchInActivity::class.java))
                 } else {
@@ -1104,6 +1136,8 @@ class EmployeeDashboard : AppCompatActivity() {
         bottomSheetDialogBinding.llSelfieAttendance.setOnClickListener {
             if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "selfie" || mEmplyeeInfo?.attendance_type == null) {
                 if (isLocationEnabled()) {
+                    binding.blurOverlay.visibility=View.GONE
+                    binding.rootContainer.visibility = View.GONE
                     bottomSheetDialog.dismiss()
                     startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
                 } else {
@@ -1120,6 +1154,8 @@ class EmployeeDashboard : AppCompatActivity() {
 
             if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "qr code") {
                 if (isLocationEnabled()) {
+                    binding.blurOverlay.visibility=View.GONE
+                    binding.rootContainer.visibility = View.GONE
                     bottomSheetDialog.dismiss()
                     startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
                 } else {
@@ -1133,7 +1169,21 @@ class EmployeeDashboard : AppCompatActivity() {
 
         bottomSheetDialog.setContentView(bottomSheetDialogBinding.root)
         bottomSheetDialog.show()
+
     }
+
+    fun getBitmapFromView(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.layout(view.left, view.top, view.right, view.bottom)
+        view.draw(canvas)
+        return bitmap
+    }
+
+
+
+
+
 
     private fun isLocationEnabled(): Boolean {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
