@@ -2,22 +2,28 @@ package com.stafo.app.screens.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.stafo.app.R
 import com.stafo.app.base.adapter.SubMneuActionsListAdapter
 import com.stafo.app.base.model.ActionModel
 import com.stafo.app.databinding.ActivitySubMenuBinding
+import com.stafo.app.databinding.PayrollBottomSheetLayoutBinding
 import com.stafo.app.screens.crm.CRMLeadDashboard
 import com.stafo.app.screens.emp.EmpBranchDetailsActivity
 import com.stafo.app.screens.emp.EmployeeAttendanceRecordActivity
 import com.stafo.app.screens.emp.EmployeeLeaveHistoryActivity
 import com.stafo.app.screens.emp.ViewEmpLocationTrackActivity
 import com.stafo.app.screens.expense.ExpenseDashboardActivity
+import com.stafo.app.screens.payroll.GenerateSalaryActivity
+import com.stafo.app.screens.payroll.SalarySlipActivity
+import com.stafo.app.screens.payroll.SalaryTypeActivity
 import com.stafo.app.screens.performance.PerformanceActivity
 import com.stafo.app.screens.rank.RankListActivity
 import com.stafo.app.screens.reports.ReportsActivity
@@ -27,10 +33,12 @@ import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getIsCOMPANYLogin
 
 class SubMenuActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivitySubMenuBinding
-
-
     private val mActionList = ArrayList<ActionModel>()
+    //for bottom sheet
+    private lateinit var bottomSheetDialog: BottomSheetDialog
+    private lateinit var bottomSheetDialogBinding: PayrollBottomSheetLayoutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +100,11 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                 }
+                                "Payroll" -> {
+                                    showCustomPayrollBottomSheet()
+                                }
+
+
                                 "Reports" -> {
                                     startActivity(Intent(this@SubMenuActivity, ReportsActivity::class.java))
                                     overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
@@ -235,6 +248,19 @@ class SubMenuActivity : AppCompatActivity() {
                                     )
                                 }
 
+                                "Salary Slip" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity,
+                                            SalarySlipActivity::class.java
+                                        )
+                                    )
+                                    overridePendingTransition(
+                                        R.anim.slide_from_right,
+                                        R.anim.slide_to_left
+                                    )
+                                }
+
                                 "CRM" -> {
                                     startActivity(
                                         Intent(
@@ -332,15 +358,16 @@ class SubMenuActivity : AppCompatActivity() {
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
         mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
-        mActionList.add(ActionModel("Location\nTrack", R.drawable.ic_location))
-        mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
-        mActionList.add(ActionModel("Performance", R.drawable.ic_performace))
-        mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
+        mActionList.add(ActionModel("Location Track", R.drawable.ic_location))
+        mActionList.add(ActionModel("Payroll", R.drawable.payroll_2))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
+        mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
+        mActionList.add(ActionModel("Performance Type", R.drawable.ic_performace))
+        mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
-        mActionList.add(ActionModel("Request\nDevice", R.drawable.ic_device_request))
+        mActionList.add(ActionModel("Request Device", R.drawable.ic_device_request))
         mActionList.add(ActionModel("Expenses", R.drawable.ic_crm))
         return mActionList
     }
@@ -350,11 +377,46 @@ class SubMenuActivity : AppCompatActivity() {
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
        mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
+        mActionList.add(ActionModel("Salary Slip", R.drawable.payroll_2))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
         mActionList.add(ActionModel("Expenses", R.drawable.ic_crm))
         return mActionList
+    }
+
+    private fun showCustomPayrollBottomSheet() {
+
+        bottomSheetDialog = BottomSheetDialog(this)
+        bottomSheetDialogBinding = PayrollBottomSheetLayoutBinding.inflate(layoutInflater)
+        bottomSheetDialog.setOnShowListener { dialog ->
+            val bottomSheet =
+                (dialog as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.setBackgroundResource(android.R.color.transparent)
+        }
+
+        bottomSheetDialog.setCancelable(true)
+
+        bottomSheetDialogBinding.llcSalaryType.setOnClickListener {
+            bottomSheetDialog.dismiss()
+            startActivity(Intent(this@SubMenuActivity, SalaryTypeActivity::class.java))
+            overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+        }
+        bottomSheetDialogBinding.llcGenerateSalary.setOnClickListener {
+            bottomSheetDialog.dismiss()
+            startActivity(Intent(this@SubMenuActivity, GenerateSalaryActivity::class.java))
+            overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+        }
+        bottomSheetDialogBinding.llcSalarySlip.setOnClickListener {
+            bottomSheetDialog.dismiss()
+            startActivity(Intent(this@SubMenuActivity, SalarySlipActivity::class.java))
+            overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+        }
+
+
+        bottomSheetDialog.setContentView(bottomSheetDialogBinding.root)
+        bottomSheetDialog.show()
+
     }
 }

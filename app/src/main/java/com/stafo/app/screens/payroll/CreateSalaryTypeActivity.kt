@@ -190,6 +190,9 @@ class CreateSalaryTypeActivity : AppCompatActivity() {
                 ) {
                     val selectedItem = parent.getItemAtPosition(position).toString()
                     mAmountType = selectedItem
+                    if (mAmountType=="Flat"){
+                        binding.tilAmount.hint="Enter Amount"
+                    } else  binding.tilAmount.hint="Enter Percentage"
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {

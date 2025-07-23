@@ -71,6 +71,7 @@ import com.stafo.app.screens.emp.EmployeePunchInActivity
 import com.stafo.app.screens.emp.QRCodeAttendanceEmpActivity
 import com.stafo.app.screens.expense.ExpenseDashboardActivity
 import com.stafo.app.screens.notification.NotificationActivity
+import com.stafo.app.screens.payroll.SalarySlipActivity
 import com.stafo.app.screens.settings.HolidayActivity
 import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
 import com.stafo.app.screens.settings.PolicyActivity
@@ -244,6 +245,18 @@ class EmployeeDashboard : AppCompatActivity() {
                                 Intent(
                                     this@EmployeeDashboard,
                                     EmployeeLeaveHistoryActivity::class.java
+                                )
+                            )
+                            overridePendingTransition(
+                                R.anim.slide_from_right,
+                                R.anim.slide_to_left
+                            )
+                        }
+                        "Salary Slip" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard,
+                                    SalarySlipActivity::class.java
                                 )
                             )
                             overridePendingTransition(
@@ -1335,6 +1348,7 @@ class EmployeeDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
         mActionList.add(ActionModel("Trip", R.drawable.ic_trip))
+        mActionList.add(ActionModel("Salary Slip", R.drawable.payroll_2))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
