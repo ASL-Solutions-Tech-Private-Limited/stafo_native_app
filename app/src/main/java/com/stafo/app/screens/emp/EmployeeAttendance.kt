@@ -60,19 +60,19 @@ class EmployeeAttendance : AppCompatActivity() {
     }
 
 
-
     private fun onClickListener() {
         binding.apply {
 
-            val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
+            val currentDate =
+                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
             binding.txtDate.setText(currentDate)
 
-            settingsViewModel.getEmpList(this@EmployeeAttendance,currentDate)
+            settingsViewModel.getEmpList(this@EmployeeAttendance, currentDate)
 
 
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
-                settingsViewModel.getEmpList(this@EmployeeAttendance,currentDate)
+                settingsViewModel.getEmpList(this@EmployeeAttendance, currentDate)
 
             }
 
@@ -89,9 +89,6 @@ class EmployeeAttendance : AppCompatActivity() {
     }
 
 
-
-
-
     private fun observeViewModel() {
 
 
@@ -102,11 +99,11 @@ class EmployeeAttendance : AppCompatActivity() {
                 binding.txtMsg.visibility = View.GONE
                 Log.d("res", it.data.toString())
 
-                if (it.data.isNotEmpty()){
+                if (it.data.isNotEmpty()) {
                     val layoutManager: RecyclerView.LayoutManager =
                         LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                     binding.rvEmpAttendList.setLayoutManager(layoutManager)
-                    rvAdapter = EmployeeAttendanceAdapter(it.data, this)
+                    rvAdapter = EmployeeAttendanceAdapter(it.data, this,"")
                     binding.rvEmpAttendList.adapter = rvAdapter
                     rvAdapter.notifyDataSetChanged()
                 } else {
@@ -131,7 +128,6 @@ class EmployeeAttendance : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
-
 
 
 }

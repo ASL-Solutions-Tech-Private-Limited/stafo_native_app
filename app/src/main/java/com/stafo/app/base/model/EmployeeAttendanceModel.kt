@@ -3,7 +3,7 @@ package com.stafo.app.base.model
 import com.google.gson.annotations.SerializedName
 
 data class EmployeeAttendanceModel(
-
+    val id: Int,
     val attendance: String,
     val halfday: Int,
     val date: String,

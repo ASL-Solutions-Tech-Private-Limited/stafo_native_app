@@ -107,27 +107,36 @@ class SalaryTypeActivity : AppCompatActivity() {
 
         settingsViewModel.mSalaryTypeListResponse.observe(this) {
 
-            if (it.data.isNotEmpty()) {
-                binding.txtMsg.visibility = View.GONE
-                binding.rvShowBranchList.visibility = View.VISIBLE
-                dataList = it.data
-                filteredList = dataList
+            if (it.success){
+                if (it.data.isNotEmpty()) {
+                    binding.txtMsg.visibility = View.GONE
+                    binding.rvShowBranchList.visibility = View.VISIBLE
+                    dataList = it.data
+                    filteredList = dataList
 
-                binding.etDirSearch.isFocusable = true
-                binding.etDirSearch.isFocusableInTouchMode = true
+                    binding.etDirSearch.isFocusable = true
+                    binding.etDirSearch.isFocusableInTouchMode = true
 
-                val layoutManager: RecyclerView.LayoutManager =
-                    LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-                binding.rvShowBranchList.setLayoutManager(layoutManager)
-                rvAdapter = SalaryTypeListAdapter(dataList, this)
-                binding.rvShowBranchList.adapter = rvAdapter
-                rvAdapter.notifyDataSetChanged()
-            } else {
+                    val layoutManager: RecyclerView.LayoutManager =
+                        LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                    binding.rvShowBranchList.setLayoutManager(layoutManager)
+                    rvAdapter = SalaryTypeListAdapter(dataList, this)
+                    binding.rvShowBranchList.adapter = rvAdapter
+                    rvAdapter.notifyDataSetChanged()
+                } else {
+                    binding.rvShowBranchList.visibility = View.GONE
+                    binding.etDirSearch.isFocusable = false
+                    binding.etDirSearch.isFocusableInTouchMode = false
+                    binding.txtMsg.visibility = View.VISIBLE
+                }
+            }else {
                 binding.rvShowBranchList.visibility = View.GONE
                 binding.etDirSearch.isFocusable = false
                 binding.etDirSearch.isFocusableInTouchMode = false
                 binding.txtMsg.visibility = View.VISIBLE
             }
+
+
 
 
         }

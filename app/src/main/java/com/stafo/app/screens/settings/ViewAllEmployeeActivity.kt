@@ -1,7 +1,6 @@
 package com.stafo.app.screens.settings
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
 import android.graphics.RenderEffect
 import android.graphics.Shader
@@ -12,8 +11,6 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -30,14 +27,12 @@ import com.stafo.app.R
 import com.stafo.app.base.adapter.EmpListAdapter
 import com.stafo.app.base.adapter.RadioShiftAdapter
 import com.stafo.app.databinding.ActivityViewAllEmployeeBinding
-import com.stafo.app.screens.settings.dataClass.AssignShiftRequest
 import com.stafo.app.screens.settings.dataClass.GetEmployee
 import com.stafo.app.screens.settings.dataClass.SetAttendanceTypeRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.stafo.app.base.adapter.ShiftAdapter
 import com.stafo.app.screens.settings.dataClass.InActiveEmpRequest
 import com.stafo.app.screens.settings.dataClass.RemoveSelfieRequest
 import com.stafo.app.screens.settings.dataClass.Shift
@@ -301,7 +296,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         }
     }
 
-    fun is24HourFormat(time: String): Boolean {
+    private fun is24HourFormat(time: String): Boolean {
         return try {
             val format24 = SimpleDateFormat("HH:mm", Locale.getDefault())
             format24.isLenient = false
@@ -312,7 +307,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         }
     }
 
-    fun convertTo12HourFormat(time24: String): String {
+    private fun convertTo12HourFormat(time24: String): String {
         return try {
             val sdf24 = SimpleDateFormat("HH:mm", Locale.getDefault())
             val sdf12 = SimpleDateFormat("hh:mm a", Locale.getDefault())

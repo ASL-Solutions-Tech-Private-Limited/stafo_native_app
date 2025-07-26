@@ -36,6 +36,8 @@ import com.stafo.app.screens.settings.dataClass.AssignBranchResponse
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentResponse
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
+import com.stafo.app.screens.settings.dataClass.AttendanceUpdateRequest
+import com.stafo.app.screens.settings.dataClass.AttendanceUpdateResponse
 import com.stafo.app.screens.settings.dataClass.BannerResponse
 import com.stafo.app.screens.settings.dataClass.BranchListResponse
 import com.stafo.app.screens.settings.dataClass.ChangeDeviceRequest
@@ -332,12 +334,14 @@ class SettingsViewModel : BaseViewModel() {
 
     val mDepartmentCreateResponse: LiveData<DepartmentCreateResponse> get() = mDepartmentCreate
 
-    private var mEmployeeUploadImage: MutableLiveData<EmployeeUploadImageResponse> = MutableLiveData()
+    private var mEmployeeUploadImage: MutableLiveData<EmployeeUploadImageResponse> =
+        MutableLiveData()
 
     val mEmployeeUploadImageResponse: LiveData<EmployeeUploadImageResponse> get() = mEmployeeUploadImage
 
 
-    private var mCompanyUploadImage: MutableLiveData<UpdateCompanyProfileResponse> = MutableLiveData()
+    private var mCompanyUploadImage: MutableLiveData<UpdateCompanyProfileResponse> =
+        MutableLiveData()
 
     val mCompanyUploadImageResponse: LiveData<UpdateCompanyProfileResponse> get() = mCompanyUploadImage
 
@@ -356,29 +360,28 @@ class SettingsViewModel : BaseViewModel() {
     val mAadhaarVerifyResponse: LiveData<PanVerifyResponse> get() = mAadhaarVerfication
 
 
-
-
-    private var mVerifyRegisterNumber: MutableLiveData<VerifyRegisterNumberResponse> = MutableLiveData()
+    private var mVerifyRegisterNumber: MutableLiveData<VerifyRegisterNumberResponse> =
+        MutableLiveData()
 
     val mVerifyRegisterNumberResponse: LiveData<VerifyRegisterNumberResponse> get() = mVerifyRegisterNumber
-
 
 
     private var mDelete: MutableLiveData<DeleteResponse> = MutableLiveData()
 
     val mDeleteResponse: LiveData<DeleteResponse> get() = mDelete
 
-    private var mEmployeeViewDocument: MutableLiveData<EmployeeViewDocumentResponse> = MutableLiveData()
+    private var mEmployeeViewDocument: MutableLiveData<EmployeeViewDocumentResponse> =
+        MutableLiveData()
 
     val mEmployeeViewDocumentResponse: LiveData<EmployeeViewDocumentResponse> get() = mEmployeeViewDocument
-
 
 
     private var mChangeDevice: MutableLiveData<ChangeDeviceResponse> = MutableLiveData()
 
     val mChangeDeviceResponse: LiveData<ChangeDeviceResponse> get() = mChangeDevice
 
-    private var mGetCompanyViewRequestDevice: MutableLiveData<CompanyViewRequestDeviceResponse> = MutableLiveData()
+    private var mGetCompanyViewRequestDevice: MutableLiveData<CompanyViewRequestDeviceResponse> =
+        MutableLiveData()
 
     val mGetCompanyViewRequestDeviceResponse: LiveData<CompanyViewRequestDeviceResponse> get() = mGetCompanyViewRequestDevice
 
@@ -406,11 +409,9 @@ class SettingsViewModel : BaseViewModel() {
     val mGenerateQRCodeResponse: LiveData<Bitmap> get() = mGenerateQRCode
 
 
-
     private var mSendFeedback: MutableLiveData<SendFeedbackResponse> = MutableLiveData()
 
     val mSendFeedbackResponse: LiveData<SendFeedbackResponse> get() = mSendFeedback
-
 
 
     private var mDeleteCompany: MutableLiveData<DeleteCompanyResponse> = MutableLiveData()
@@ -425,7 +426,6 @@ class SettingsViewModel : BaseViewModel() {
     private var mInActiveEmp: MutableLiveData<InActiveEmpResponse> = MutableLiveData()
 
     val mInActiveEmpResponse: LiveData<InActiveEmpResponse> get() = mInActiveEmp
-
 
 
     private var mSelfieUpload: MutableLiveData<SelfieUploadResponse> = MutableLiveData()
@@ -460,7 +460,8 @@ class SettingsViewModel : BaseViewModel() {
 
     val mAssignDepartmentResponse: LiveData<AssignDepartmentResponse> get() = mAssignDepartment
 
-    private var mReportsEmployeeList: MutableLiveData<ReportsEmployeeListResponse> = MutableLiveData()
+    private var mReportsEmployeeList: MutableLiveData<ReportsEmployeeListResponse> =
+        MutableLiveData()
 
     val mReportsEmployeeListResponse: LiveData<ReportsEmployeeListResponse> get() = mReportsEmployeeList
 
@@ -517,13 +518,66 @@ class SettingsViewModel : BaseViewModel() {
     val mLeaveTypeUpdateResponse: LiveData<LeaveTypeUpdateResponse> get() = mLeaveTypeUpdate
 
 
-
     private var mLeaveTypeDelete: MutableLiveData<LeaveTypeDeleteResponse> = MutableLiveData()
 
     val mLeaveTypeDeleteResponse: LiveData<LeaveTypeDeleteResponse> get() = mLeaveTypeDelete
 
 
-    fun deleteLeaveType(mContext: Context,leaveId:Int) {
+    private var mAttendanceUpdate: MutableLiveData<AttendanceUpdateResponse> = MutableLiveData()
+
+    val mAttendanceUpdateResponse: LiveData<AttendanceUpdateResponse> get() = mAttendanceUpdate
+
+    fun updateAttendance(mContext: Context, comId: Int, request: AttendanceUpdateRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callAttendanceUpdate(comId, request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAttendanceUpdate.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+    fun deleteLeaveType(mContext: Context, leaveId: Int) {
 
         if (!isNetworkAvailable(mContext)) {
             return
@@ -567,7 +621,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-    fun updateLeaveType(mContext: Context,leaveId:Int, request: LeaveTypeRequest) {
+    fun updateLeaveType(mContext: Context, leaveId: Int, request: LeaveTypeRequest) {
 
         if (!isNetworkAvailable(mContext)) {
             return
@@ -576,7 +630,7 @@ class SettingsViewModel : BaseViewModel() {
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ASLEmpMng.instance.apiStores()?.callLeaveTypeUpdate(leaveId,request)
+                val response = ASLEmpMng.instance.apiStores()?.callLeaveTypeUpdate(leaveId, request)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -610,7 +664,7 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun getLeaveTypeList(mContext: Context, comId:Int) {
+    fun getLeaveTypeList(mContext: Context, comId: Int) {
 
         if (!isNetworkAvailable(mContext)) {
             return
@@ -652,7 +706,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
 
 
     fun createLeaveType(mContext: Context, request: LeaveTypeRequest) {
@@ -697,8 +750,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
-
 
 
     /*fun locationLog(mContext: Context,request: LocationLogRequest) {
@@ -749,9 +800,7 @@ class SettingsViewModel : BaseViewModel() {
     }*/
 
 
-
-
-    fun updateShift(mContext: Context, id:Int,request: ShiftCreateRequest) {
+    fun updateShift(mContext: Context, id: Int, request: ShiftCreateRequest) {
 
         if (!isNetworkAvailable(mContext)) {
             return
@@ -762,7 +811,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
 
 
-                val response = ASLEmpMng.instance.apiStores()?.callUpdateShift(id,request)
+                val response = ASLEmpMng.instance.apiStores()?.callUpdateShift(id, request)
                 Log.d("res", "shift Edit " + response?.body())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
@@ -798,9 +847,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-    fun editBranch(mContext: Context, id:Int,request: AddBranchRequest) {
+    fun editBranch(mContext: Context, id: Int, request: AddBranchRequest) {
 
         if (!isNetworkAvailable(mContext)) {
             return
@@ -811,7 +858,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
 
 
-                val response = ASLEmpMng.instance.apiStores()?.callEditBranch(id,request)
+                val response = ASLEmpMng.instance.apiStores()?.callEditBranch(id, request)
                 Log.d("res", "branch Edit " + response?.body())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
@@ -847,11 +894,6 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
     fun viewAllReportsList(
         mContext: Context,
         id: String
@@ -865,7 +907,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callViewReportsList(id.toInt())
 
-                Log.d("res","All reports list  $response")
+                Log.d("res", "All reports list  $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -913,7 +955,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callSalarySlip(request)
 
-                Log.d("res","save salary  $response")
+                Log.d("res", "save salary  $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -960,7 +1002,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callSaveSalary(request)
 
-                Log.d("res","save salary  $response")
+                Log.d("res", "save salary  $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -995,7 +1037,6 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
     fun generateSalary(
         mContext: Context,
         request: SalaryGeneratedRequest
@@ -1009,7 +1050,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callSalaryGenerate(request)
 
-                Log.d("res","genearte salary  $response")
+                Log.d("res", "genearte salary  $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1057,7 +1098,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callDeleteSalaryType(request)
 
-                Log.d("res","delete s_type  $response")
+                Log.d("res", "delete s_type  $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1104,7 +1145,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callSalaryTypeList(request)
 
-                Log.d("res","leave reports $response")
+                Log.d("res", "leave reports $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1130,6 +1171,8 @@ class SettingsViewModel : BaseViewModel() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+
+                Log.e("salary-type", "salary ${e.message}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
@@ -1152,7 +1195,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callSalaryType(request)
 
-                Log.d("res","leave reports $response")
+                Log.d("res", "leave reports $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1200,7 +1243,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callReportsLeave(request)
 
-                Log.d("res","leave reports $response")
+                Log.d("res", "leave reports $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1246,7 +1289,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callReportsAttendance(request)
-                Log.d("res","attendance reports $response")
+                Log.d("res", "attendance reports $response")
 
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
@@ -1295,7 +1338,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callReportsEmployeeList(request)
 
-                Log.d("res","emp list reports $response")
+                Log.d("res", "emp list reports $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1467,7 +1510,6 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
     fun getBannerImage(
         mContext: Context
     ) {
@@ -1515,11 +1557,6 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
     fun upgradePackage(
         mContext: Context
     ) {
@@ -1564,11 +1601,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
-
-
-
-
 
 
     fun postRemoveSelfie(
@@ -1618,10 +1650,6 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
     fun uploadSelfieAttendance(
         mContext: Context,
         employeeId: String,
@@ -1643,12 +1671,15 @@ class SettingsViewModel : BaseViewModel() {
                     }
                     return@launch
                 }
-                val requestBodyEmployeeId = RequestBody.create("text/plain".toMediaTypeOrNull(), employeeId)
+                val requestBodyEmployeeId =
+                    RequestBody.create("text/plain".toMediaTypeOrNull(), employeeId)
                 val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
 
-                val imagePart = MultipartBody.Part.createFormData("selfie_image", file.name, requestFile)
+                val imagePart =
+                    MultipartBody.Part.createFormData("selfie_image", file.name, requestFile)
 
-                val response = ASLEmpMng.instance.apiStores()?.uploadSelfieImage(requestBodyEmployeeId,imagePart)
+                val response = ASLEmpMng.instance.apiStores()
+                    ?.uploadSelfieImage(requestBodyEmployeeId, imagePart)
 
 
                 Log.d("res", "add selfie image :${response?.body().toString()}")
@@ -1684,11 +1715,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
-
-
-
-
 
 
     fun postActiveInactiveEmp(
@@ -1738,10 +1764,6 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
     fun createLeavePolicyCompany(
         mContext: Context,
         request: CreateLeavePolicyRequest
@@ -1789,8 +1811,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
-
 
 
     fun deleteAccount(
@@ -1885,18 +1905,11 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
-
-
     fun generateQRCode(
         mContext: Context,
         request: GenerateQCodeRequest
 
-        ) {
+    ) {
         if (!isNetworkAvailable(mContext)) {
             return
         }
@@ -1908,7 +1921,7 @@ class SettingsViewModel : BaseViewModel() {
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     if (response == null) {
-                        CustomToast(mContext,  "Response is null")
+                        CustomToast(mContext, "Response is null")
                         return@withContext
                     }
                     response?.let {
@@ -1919,23 +1932,23 @@ class SettingsViewModel : BaseViewModel() {
                         } else {
 
                             val errorMessage = response.errorBody()?.string() ?: "Unknown error"
-                            CustomToast(mContext,  "API Error: $errorMessage")
-                      /*      it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    "else run"+mContext.getString(R.string.error_something_went_wrong)
-                                )
+                            CustomToast(mContext, "API Error: $errorMessage")
+                            /*      it.errorBody()?.charStream()?.let { errorStream ->
+                                      val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                      CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                  } ?: run {
+                                      CustomToast(
+                                          mContext,
+                                          "else run"+mContext.getString(R.string.error_something_went_wrong)
+                                      )
 
 
-                            }*/
+                                  }*/
                         }
                     } ?: run {
                         CustomToast(
                             mContext,
-                            "run"+mContext.getString(R.string.error_something_went_wrong)
+                            "run" + mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1966,7 +1979,6 @@ class SettingsViewModel : BaseViewModel() {
             null
         }
     }
-
 
 
     fun markAttendanceQREmp(
@@ -2063,12 +2075,6 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
-
     fun getDayAttendanceRecordEmp(
         mContext: Context,
         request: DayPunchINRequest
@@ -2117,10 +2123,6 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
     fun selfieAttendanceEmpolyee(
         mContext: Context,
         employeeId: Int,
@@ -2143,23 +2145,28 @@ class SettingsViewModel : BaseViewModel() {
                     }
                     return@launch
                 }
-                val requestBody = employeeId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+                val requestBody =
+                    employeeId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
                 val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
                 val imagePart = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
-                val response = ASLEmpMng.instance.apiStores()?.selfieAttendanceEmp(requestBody, imagePart)
+                val response =
+                    ASLEmpMng.instance.apiStores()?.selfieAttendanceEmp(requestBody, imagePart)
 
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().postValue("stop")
 
                     if (response == null) {
-                        CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
                         return@withContext
                     }
 
                     if (response.isSuccessful) {
 
-                        Log.d("res",response.body().toString())
+                        Log.d("res", response.body().toString())
                         mSelfieAttendanceEmp.postValue(response.body())
                     } else {
                         val errorResponse = response.errorBody()?.charStream()?.use { reader ->
@@ -2179,13 +2186,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
-
-
-
-
-
-
 
 
     fun companyAcceptRequestDeviceChange(
@@ -2235,8 +2235,6 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
     fun companyAcceptRequestDeviceChange(
         mContext: Context,
         request: CompanyAcceptDeviceRequest
@@ -2248,7 +2246,8 @@ class SettingsViewModel : BaseViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ASLEmpMng.instance.apiStores()?.callCompanyAcceptRequestDevice(request)
+                val response =
+                    ASLEmpMng.instance.apiStores()?.callCompanyAcceptRequestDevice(request)
                 Log.d("res", "device accept :${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
@@ -2282,8 +2281,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
-
 
 
     fun requestDeviceChange(
@@ -2379,14 +2376,9 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
     fun companyDeleteBranch(
         mContext: Context,
-        id:Int
+        id: Int
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2429,9 +2421,10 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
+
     fun companyDeleteShift(
         mContext: Context,
-        id:Int
+        id: Int
     ) {
 
         if (!isNetworkAvailable(mContext)) {
@@ -2479,7 +2472,7 @@ class SettingsViewModel : BaseViewModel() {
 
     fun companyDeleteHoliday(
         mContext: Context,
-        id:Int
+        id: Int
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2731,7 +2724,8 @@ class SettingsViewModel : BaseViewModel() {
 
                 val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
 
-                val imagePart = MultipartBody.Part.createFormData("image_name", file.name, requestFile)
+                val imagePart =
+                    MultipartBody.Part.createFormData("image_name", file.name, requestFile)
 
                 val response = ASLEmpMng.instance.apiStores()?.updateCompanyImage(imagePart)
 
@@ -2771,12 +2765,6 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
-
     fun changeEmpProfileImage(
         mContext: Context,
         employeeId: Int,
@@ -2803,7 +2791,8 @@ class SettingsViewModel : BaseViewModel() {
                 val imagePart = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
                 val response = ASLEmpMng.instance.apiStores()?.updateEmployeeImage(
-                    employeeId, imagePart)
+                    employeeId, imagePart
+                )
 
 
                 Log.d("res", "emp change image :${response?.body().toString()}")
@@ -2839,10 +2828,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
-
-
-
 
 
     fun createDepartment(
@@ -3031,7 +3016,7 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun fetchPolicy(mContext: Context,id:Int) {
+    fun fetchPolicy(mContext: Context, id: Int) {
         if (!isNetworkAvailable(mContext)) {
             return
         }
@@ -3366,7 +3351,8 @@ class SettingsViewModel : BaseViewModel() {
 
                 Log.d("res", "Final Shift Data: $shiftIdsMap, Employee ID: $employeeId")
 
-                val response = ASLEmpMng.instance.apiStores()?.callAssignShift(employeeId, shiftIdsMap)
+                val response =
+                    ASLEmpMng.instance.apiStores()?.callAssignShift(employeeId, shiftIdsMap)
 
                 Log.d("res", "Response: ${response?.body().toString()}")
 
@@ -3379,10 +3365,16 @@ class SettingsViewModel : BaseViewModel() {
                             val errorBody = it.errorBody()?.string()
                             Log.e("API_ERROR", "Error response: $errorBody")
 
-                            CustomToast(mContext, errorBody ?: mContext.getString(R.string.error_something_went_wrong))
+                            CustomToast(
+                                mContext,
+                                errorBody ?: mContext.getString(R.string.error_something_went_wrong)
+                            )
                         }
                     } ?: run {
-                        CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                        CustomToast(
+                            mContext,
+                            mContext.getString(R.string.error_something_went_wrong)
+                        )
                     }
                 }
             } catch (e: Exception) {
@@ -3394,7 +3386,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
 
 
     fun punchInRequest(mContext: Context, request: PunchInRequest) {
@@ -3464,14 +3455,14 @@ class SettingsViewModel : BaseViewModel() {
                             } ?: run {
                                 CustomToast(
                                     mContext,
-                                     mContext.getString(R.string.error_something_went_wrong)
+                                    mContext.getString(R.string.error_something_went_wrong)
                                 )
                             }
                         }
                     } ?: run {
                         CustomToast(
                             mContext,
-                             mContext.getString(R.string.error_something_went_wrong)
+                            mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3508,7 +3499,7 @@ class SettingsViewModel : BaseViewModel() {
                             } ?: run {
                                 CustomToast(
                                     mContext,
-                                   mContext.getString(R.string.error_something_went_wrong)
+                                    mContext.getString(R.string.error_something_went_wrong)
                                 )
                             }
                         }
@@ -3523,7 +3514,7 @@ class SettingsViewModel : BaseViewModel() {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
-                   CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
                 }
             }
         }
@@ -3808,7 +3799,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callHolidayList(id.toInt())
-                Log.d("res","holiday: ${response?.body()}")
+                Log.d("res", "holiday: ${response?.body()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -3859,11 +3850,13 @@ class SettingsViewModel : BaseViewModel() {
                         } else {
                             when (it.code()) {
                                 401 -> {
-                                   doLogout(mContext)
+                                    doLogout(mContext)
                                 }
+
                                 else -> {
                                     it.errorBody()?.charStream()?.let { errorStream ->
-                                        val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                        val error =
+                                            Gson().fromJson(errorStream, ErrorResponse::class.java)
                                         CustomToast(mContext as LoginActivity, error?.message ?: "")
                                     } ?: run {
                                         CustomToast(
@@ -3891,47 +3884,47 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-  /*  fun getCompanyDetails(mContext: Context) {
-        if (!isNetworkAvailable(mContext)) {
-            return
-        }
+    /*  fun getCompanyDetails(mContext: Context) {
+          if (!isNetworkAvailable(mContext)) {
+              return
+          }
 
-        getLoaderLiveData().value = "load"
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val response = ASLEmpMng.instance.apiStores()?.callCompanyProfile()
-                withContext(Dispatchers.Main) {
-                    getLoaderLiveData().value = "stop"
-                    response?.let {
-                        if (it.isSuccessful) {
-                            mCompanyProfile.postValue(it.body())
-                        } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
-                            }
-                        }
-                    } ?: run {
-                        CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
-                        )
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                withContext(Dispatchers.Main) {
-                    getLoaderLiveData().value = "stop"
-                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
-                }
-            }
-        }
-    }*/
+          getLoaderLiveData().value = "load"
+          viewModelScope.launch(Dispatchers.IO) {
+              try {
+                  val response = ASLEmpMng.instance.apiStores()?.callCompanyProfile()
+                  withContext(Dispatchers.Main) {
+                      getLoaderLiveData().value = "stop"
+                      response?.let {
+                          if (it.isSuccessful) {
+                              mCompanyProfile.postValue(it.body())
+                          } else {
+                              it.errorBody()?.charStream()?.let { errorStream ->
+                                  val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                  CustomToast(mContext as LoginActivity, error?.message ?: "")
+                              } ?: run {
+                                  CustomToast(
+                                      mContext,
+                                      mContext.getString(R.string.error_something_went_wrong)
+                                  )
+                              }
+                          }
+                      } ?: run {
+                          CustomToast(
+                              mContext,
+                              mContext.getString(R.string.error_something_went_wrong)
+                          )
+                      }
+                  }
+              } catch (e: Exception) {
+                  e.printStackTrace()
+                  withContext(Dispatchers.Main) {
+                      getLoaderLiveData().value = "stop"
+                      CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                  }
+              }
+          }
+      }*/
 
 
     fun requestLeaveEmp(mContext: Context, request: EmployeeLeaveRequestBody) {
@@ -4043,9 +4036,11 @@ class SettingsViewModel : BaseViewModel() {
                                 401 -> {
                                     doLogout(mContext)
                                 }
+
                                 else -> {
                                     it.errorBody()?.charStream()?.let { errorStream ->
-                                        val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                        val error =
+                                            Gson().fromJson(errorStream, ErrorResponse::class.java)
                                         CustomToast(mContext as LoginActivity, error?.message ?: "")
                                     } ?: run {
                                         CustomToast(
@@ -4351,12 +4346,6 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
-
     fun addEmployee(
         mContext: Context,
         request: AddEmpRequestBody
@@ -4392,8 +4381,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
-
 
 
     fun createNewShift(mContext: Context, request: ShiftCreateRequest) {
@@ -4516,9 +4503,11 @@ class SettingsViewModel : BaseViewModel() {
                                 401 -> {
                                     doLogout(mContext)
                                 }
+
                                 else -> {
                                     it.errorBody()?.charStream()?.let { errorStream ->
-                                        val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                        val error =
+                                            Gson().fromJson(errorStream, ErrorResponse::class.java)
                                         CustomToast(mContext as LoginActivity, error?.message ?: "")
                                     } ?: run {
                                         CustomToast(

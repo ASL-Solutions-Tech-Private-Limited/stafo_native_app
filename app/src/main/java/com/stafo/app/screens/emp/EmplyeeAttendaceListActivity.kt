@@ -63,6 +63,11 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        settingsViewModel.getEmpList(this@EmplyeeAttendaceListActivity, mSelectedDate)
+    }
+
     private fun showDatePicker() {
         val datePickerDialog = DatePickerDialog(
             this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
@@ -148,7 +153,7 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
                     val layoutManager: RecyclerView.LayoutManager =
                         LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                     binding.rvEmpAttendList.setLayoutManager(layoutManager)
-                    rvAdapter = EmployeeAttendanceAdapter(attendList, this)
+                    rvAdapter = EmployeeAttendanceAdapter(attendList, this,mSelectedDate)
                     binding.rvEmpAttendList.adapter = rvAdapter
                     rvAdapter.notifyDataSetChanged()
                 } else {

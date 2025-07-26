@@ -71,6 +71,8 @@ import com.stafo.app.screens.settings.dataClass.AssignBranchResponse
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentResponse
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
+import com.stafo.app.screens.settings.dataClass.AttendanceUpdateRequest
+import com.stafo.app.screens.settings.dataClass.AttendanceUpdateResponse
 import com.stafo.app.screens.settings.dataClass.BannerResponse
 import com.stafo.app.screens.settings.dataClass.BranchListResponse
 import com.stafo.app.screens.settings.dataClass.ChangeDeviceRequest
@@ -1205,4 +1207,12 @@ interface ApiStores {
         @Path("id") id: Int,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<LeaveTypeDeleteResponse>
+
+
+    @POST("api/attendance/update/{id}")
+    suspend fun callAttendanceUpdate(
+        @Path("id") id: Int,
+        @Body request: AttendanceUpdateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AttendanceUpdateResponse>
 }

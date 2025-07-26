@@ -5,6 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
+    <ImageView
+        android:id="@+id/iv_update_attendance"
+        android:layout_width="@dimen/_19sdp"
+        android:layout_height="@dimen/_19sdp"
+        android:layout_marginEnd="@dimen/_4sdp"
+        android:background="@drawable/custom_emp_item_bg2"
+        android:backgroundTint="@color/light_blue"
+        android:elevation="@dimen/_1sdp"
+        android:padding="6dp"
+        android:src="@drawable/ic_editing"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -150,12 +167,12 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/civ_emp"
-                        app:shapeAppearanceOverlay="@style/Circular"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_marginStart="@dimen/_5sdp"
                         android:background="#4D90D6FF"
                         android:scaleType="fitXY"
-                        android:layout_marginStart="@dimen/_5sdp"
-                        android:layout_width="@dimen/_30sdp"
-                        android:layout_height="@dimen/_30sdp" />
+                        app:shapeAppearanceOverlay="@style/Circular" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -177,20 +194,20 @@
                             android:textSize="@dimen/_12ssp"
                             app:drawableTint="@color/black" />
 
-                    <!--    <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_emp_job_title"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/ng_header"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/gilroy_medium"
-                            android:gravity="center"
-                            android:maxLines="3"
-                            android:text="EMP-001 - Manager"
-                            android:textColor="#565656"
-                            android:textSize="@dimen/_8sdp"
-                            app:drawableTint="@color/black" />-->
+                        <!--    <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tv_emp_job_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/ng_header"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:gravity="center"
+                                android:maxLines="3"
+                                android:text="EMP-001 - Manager"
+                                android:textColor="#565656"
+                                android:textSize="@dimen/_8sdp"
+                                app:drawableTint="@color/black" />-->
 
                     </LinearLayout>
 
