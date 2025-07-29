@@ -23,6 +23,7 @@ import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.dataClass.AttendanceUpdateRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.showFormatDate
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -69,8 +70,13 @@ class EditAttendanceActivity : AppCompatActivity() {
             settingsViewModel.getAllEmployeeList(this@EditAttendanceActivity)
 
             if (!empName.isNullOrBlank()) {
+                binding.tieEmpName.visibility = View.VISIBLE
                 binding.tieEmpName.setText(empName)
                 binding.tieDate.setText(showFormatDate(selectedDate))
+                tvTopTitle.text = "Edit Attendance"
+            } else {
+                binding.tieEmpName.visibility = View.GONE
+                tvTopTitle.text = "Request Attendance"
             }
 
             val options = resources.getStringArray(R.array.attendance_type)
@@ -174,31 +180,85 @@ class EditAttendanceActivity : AppCompatActivity() {
                         return@setOnClickListener
                     }
 
-                    val request = AttendanceUpdateRequest(
-                        employee_id = empId.toInt(),
-                        attendance = selectedAttendanceType,
-                        date = selectedDate,
-                        in_time = selectedInTime,
-                        out_time = selectedOutTime,
-                        halfday = attendanceDayValue
-                    )
 
-                    settingsViewModel.updateAttendance(
-                        this@EditAttendanceActivity, postItemId.toInt(), request
-                    )
+                    if (!empName.isNullOrBlank()) {
+                        val request = AttendanceUpdateRequest(
+                            employee_id = empId.toInt(),
+                            attendance = selectedAttendanceType,
+                            date = selectedDate,
+                            in_time = selectedInTime,
+                            out_time = selectedOutTime,
+                            halfday = attendanceDayValue
+                        )
+
+                        settingsViewModel.updateAttendance(
+                            this@EditAttendanceActivity, postItemId.toInt(), request
+                        )
+                    }else{
+
+                        getEmployeeDetails()?.let { it1 ->
+                            val request = AttendanceUpdateRequest(
+                                employee_id = it1.id,
+                                company_id = it1.company_id,
+                                branch_id = it1.branch_id.toInt() ?: 0,
+                                department_id = it1.department_id.toInt() ?: 0,
+                                attendance = selectedAttendanceType,
+                                date = selectedDate,
+                                in_time = selectedInTime,
+                                out_time = selectedOutTime,
+                                halfday = attendanceDayValue
+                            )
+
+                            settingsViewModel.attendanceRequest(
+                                this@EditAttendanceActivity, request
+                            )
+
+                        }
+                    }
+
+
+
+
+
 
 
                 } else {
 
-                    val request = AttendanceUpdateRequest(
-                        employee_id = empId.toInt(),
-                        attendance = selectedAttendanceType,
-                        date = selectedDate
-                    )
+                    if (!empName.isNullOrBlank()) {
+                        val request = AttendanceUpdateRequest(
+                            employee_id = empId.toInt(),
+                            attendance = selectedAttendanceType,
+                            date = selectedDate,
+                            in_time = selectedInTime,
+                            out_time = selectedOutTime,
+                            halfday = attendanceDayValue
+                        )
 
-                    settingsViewModel.updateAttendance(
-                        this@EditAttendanceActivity, postItemId.toInt(), request
-                    )
+                        settingsViewModel.updateAttendance(
+                            this@EditAttendanceActivity, postItemId.toInt(), request
+                        )
+                    } else {
+                        getEmployeeDetails()?.let { it1 ->
+                            val request = AttendanceUpdateRequest(
+                                employee_id = it1.id,
+                                company_id = it1.company_id,
+                                branch_id = it1.branch_id.toInt() ?: 0,
+                                department_id = it1.department_id.toInt() ?: 0,
+                                attendance = selectedAttendanceType,
+                                date = selectedDate,
+                                in_time = selectedInTime,
+                                out_time = selectedOutTime,
+                                halfday = attendanceDayValue
+                            )
+
+                            settingsViewModel.attendanceRequest(
+                                this@EditAttendanceActivity, request
+                            )
+
+                        }
+
+
+                    }
                 }
 
 
@@ -227,7 +287,7 @@ class EditAttendanceActivity : AppCompatActivity() {
                     if (matchedEmployee != null) {
                         val matchedEmpId = matchedEmployee.id
 
-                        Log.e("attendance","${matchedEmployee}")
+                        Log.e("attendance", "${matchedEmployee}")
 
                         empId = matchedEmpId.toString()
 
@@ -245,6 +305,14 @@ class EditAttendanceActivity : AppCompatActivity() {
         }
 
         settingsViewModel.mAttendanceUpdateResponse.observe(this) {
+            if (it.status) {
+                CustomToast(this, it.message)
+                onBackPressedDispatcher.onBackPressed()
+                finish()
+            } else CustomToast(this, it.message)
+
+        }
+        settingsViewModel.mAttendanceRequestResponse.observe(this) {
             if (it.status) {
                 CustomToast(this, it.message)
                 onBackPressedDispatcher.onBackPressed()

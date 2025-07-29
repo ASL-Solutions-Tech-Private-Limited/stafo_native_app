@@ -54,7 +54,7 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/drop_down_menu"
                 android:tint="@color/white"
-                android:visibility="gone"
+                android:visibility="visible"
                 tools:ignore="UseAppTint" />
 
         </RelativeLayout>

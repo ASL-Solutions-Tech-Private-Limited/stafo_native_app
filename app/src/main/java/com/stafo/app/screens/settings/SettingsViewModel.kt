@@ -22,6 +22,7 @@ import com.stafo.app.base.request.AddBranchRequest
 import com.stafo.app.screens.auth.LoginActivity
 import com.stafo.app.screens.auth.dataClass.AddBranchResponse
 import com.stafo.app.screens.auth.dataClass.SelfieAttendanceResponse
+import com.stafo.app.screens.emp.dataClass.AttendanceRequestResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
 import com.stafo.app.screens.payroll.dataClass.SalaryRequest
 import com.stafo.app.screens.payroll.dataClass.SalaryResponse
@@ -35,6 +36,8 @@ import com.stafo.app.screens.settings.dataClass.AssignBranchRequest
 import com.stafo.app.screens.settings.dataClass.AssignBranchResponse
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentResponse
+import com.stafo.app.screens.settings.dataClass.AttendanceActionRequest
+import com.stafo.app.screens.settings.dataClass.AttendanceRequestListResponse
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.stafo.app.screens.settings.dataClass.AttendanceUpdateRequest
 import com.stafo.app.screens.settings.dataClass.AttendanceUpdateResponse
@@ -133,6 +136,7 @@ import com.stafo.app.screens.settings.dataClass.UpgradePackageResponse
 import com.stafo.app.screens.settings.dataClass.VerifyGSTNumberResponse
 import com.stafo.app.screens.settings.dataClass.VerifyRegisterNumberResponse
 import com.stafo.app.screens.settings.dataClass.ViewBranchResponse
+import com.stafo.app.screens.tms.dataClass.DeleteTaskResponse
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.doLogout
 import com.stafo.app.utils.getUserAccessToken
@@ -182,8 +186,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -527,6 +530,161 @@ class SettingsViewModel : BaseViewModel() {
 
     val mAttendanceUpdateResponse: LiveData<AttendanceUpdateResponse> get() = mAttendanceUpdate
 
+    private var mAttendanceRequestList: MutableLiveData<AttendanceRequestListResponse> =
+        MutableLiveData()
+
+    val mAttendanceRequestListResponse: LiveData<AttendanceRequestListResponse> get() = mAttendanceRequestList
+
+
+    private var mAttendanceRequest: MutableLiveData<AttendanceRequestResponse> = MutableLiveData()
+
+    val mAttendanceRequestResponse: LiveData<AttendanceRequestResponse> get() = mAttendanceRequest
+
+
+    private var mAttendanceRequestAction: MutableLiveData<DeleteTaskResponse> = MutableLiveData()
+
+    val mAttendanceRequestActionResponse: LiveData<DeleteTaskResponse> get() = mAttendanceRequestAction
+
+    fun attendanceRequestStatusUpdate(mContext: Context, id: Int, request: AttendanceActionRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response =
+                    ASLEmpMng.instance.apiStores()?.callAttendanceStatusUpdate(id, request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAttendanceRequestAction.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun attendanceRequest(mContext: Context, request: AttendanceUpdateRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callAttendanceRequest(request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAttendanceRequest.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun attendanceRequestList(mContext: Context, postId: String,userType:Boolean) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = if (userType) {
+                    ASLEmpMng.instance.apiStores()?.callGetAttendanceRequestList(
+                        employeeId = postId,
+                        companyId = null
+                    )
+                } else {
+                    ASLEmpMng.instance.apiStores()?.callGetAttendanceRequestList(
+                        companyId = postId,
+                        employeeId = null
+                    )
+                }
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAttendanceRequestList.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
     fun updateAttendance(mContext: Context, comId: Int, request: AttendanceUpdateRequest) {
 
         if (!isNetworkAvailable(mContext)) {
@@ -555,8 +713,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -569,12 +726,6 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
-
-
-
-
-
-
 
 
     fun deleteLeaveType(mContext: Context, leaveId: Int) {
@@ -605,8 +756,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -649,8 +799,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -692,8 +841,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -736,8 +884,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -831,8 +978,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -878,8 +1024,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -895,8 +1040,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun viewAllReportsList(
-        mContext: Context,
-        id: String
+        mContext: Context, id: String
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -926,8 +1070,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -943,8 +1086,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getSalarySlip(
-        mContext: Context,
-        request: SalarySlipRequest
+        mContext: Context, request: SalarySlipRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -974,8 +1116,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -990,8 +1131,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun saveSalary(
-        mContext: Context,
-        request: SalaryRequest
+        mContext: Context, request: SalaryRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1021,8 +1161,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1038,8 +1177,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun generateSalary(
-        mContext: Context,
-        request: SalaryGeneratedRequest
+        mContext: Context, request: SalaryGeneratedRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1069,8 +1207,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1086,8 +1223,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun deleteSalaryType(
-        mContext: Context,
-        request: SalaryTypeDeleteRequest
+        mContext: Context, request: SalaryTypeDeleteRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1117,8 +1253,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1133,8 +1268,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun salaryTypeList(
-        mContext: Context,
-        request: SalaryTypeListRequest
+        mContext: Context, request: SalaryTypeListRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1164,8 +1298,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1183,8 +1316,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun createSalaryType(
-        mContext: Context,
-        request: SalaryTypeRequest
+        mContext: Context, request: SalaryTypeRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1214,8 +1346,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1231,8 +1362,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun reportsAllEmployeeLeave(
-        mContext: Context,
-        request: ReportsEmployeeListRequest
+        mContext: Context, request: ReportsEmployeeListRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1262,8 +1392,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1278,8 +1407,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun reportsAllEmployeeAttendance(
-        mContext: Context,
-        request: ReportsEmployeeListRequest
+        mContext: Context, request: ReportsEmployeeListRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1309,8 +1437,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1326,8 +1453,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun reportsEmployeeList(
-        mContext: Context,
-        request: ReportsEmployeeListRequest
+        mContext: Context, request: ReportsEmployeeListRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1357,8 +1483,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1374,8 +1499,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun assignBranch(
-        mContext: Context,
-        request: AssignBranchRequest
+        mContext: Context, request: AssignBranchRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1403,8 +1527,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1419,8 +1542,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun assignDepartment(
-        mContext: Context,
-        request: AssignDepartmentRequest
+        mContext: Context, request: AssignDepartmentRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1448,8 +1570,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1465,8 +1586,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getEmpAttendanceBranch(
-        mContext: Context,
-        request: GetAttendanceBranchRequest
+        mContext: Context, request: GetAttendanceBranchRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1494,8 +1614,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1541,8 +1660,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1587,8 +1705,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1604,8 +1721,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun postRemoveSelfie(
-        mContext: Context,
-        request: RemoveSelfieRequest
+        mContext: Context, request: RemoveSelfieRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1634,8 +1750,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1651,9 +1766,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun uploadSelfieAttendance(
-        mContext: Context,
-        employeeId: String,
-        file: File?
+        mContext: Context, employeeId: String, file: File?
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1701,8 +1814,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1718,8 +1830,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun postActiveInactiveEmp(
-        mContext: Context,
-        request: InActiveEmpRequest
+        mContext: Context, request: InActiveEmpRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1748,8 +1859,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1765,8 +1875,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun createLeavePolicyCompany(
-        mContext: Context,
-        request: CreateLeavePolicyRequest
+        mContext: Context, request: CreateLeavePolicyRequest
     ) {
 
         if (!isNetworkAvailable(mContext)) {
@@ -1797,8 +1906,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1843,8 +1951,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1860,8 +1967,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun postFeedback(
-        mContext: Context,
-        request: SendFeedbackRequest
+        mContext: Context, request: SendFeedbackRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -1889,8 +1995,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1906,8 +2011,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun generateQRCode(
-        mContext: Context,
-        request: GenerateQCodeRequest
+        mContext: Context, request: GenerateQCodeRequest
 
     ) {
         if (!isNetworkAvailable(mContext)) {
@@ -1932,8 +2036,7 @@ class SettingsViewModel : BaseViewModel() {
                         } else {
 
                             val errorMessage = response.errorBody()?.string() ?: "Unknown error"
-                            CustomToast(mContext, "API Error: $errorMessage")
-                            /*      it.errorBody()?.charStream()?.let { errorStream ->
+                            CustomToast(mContext, "API Error: $errorMessage")/*      it.errorBody()?.charStream()?.let { errorStream ->
                                       val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
                                       CustomToast(mContext as LoginActivity, error?.message ?: "")
                                   } ?: run {
@@ -1982,8 +2085,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun markAttendanceQREmp(
-        mContext: Context,
-        request: QRAttendanceMarkRequest
+        mContext: Context, request: QRAttendanceMarkRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2012,8 +2114,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2029,8 +2130,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun setAttendanceTypeEmployee(
-        mContext: Context,
-        request: SetAttendanceTypeRequest
+        mContext: Context, request: SetAttendanceTypeRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2059,8 +2159,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2076,8 +2175,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getDayAttendanceRecordEmp(
-        mContext: Context,
-        request: DayPunchINRequest
+        mContext: Context, request: DayPunchINRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2107,8 +2205,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2124,9 +2221,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun selfieAttendanceEmpolyee(
-        mContext: Context,
-        employeeId: Int,
-        file: File?
+        mContext: Context, employeeId: Int, file: File?
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2158,8 +2253,7 @@ class SettingsViewModel : BaseViewModel() {
 
                     if (response == null) {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                         return@withContext
                     }
@@ -2189,8 +2283,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun companyAcceptRequestDeviceChange(
-        mContext: Context,
-        request: CompanyViewRequestDevice
+        mContext: Context, request: CompanyViewRequestDevice
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2219,8 +2312,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2236,8 +2328,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun companyAcceptRequestDeviceChange(
-        mContext: Context,
-        request: CompanyAcceptDeviceRequest
+        mContext: Context, request: CompanyAcceptDeviceRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2267,8 +2358,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2284,8 +2374,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun requestDeviceChange(
-        mContext: Context,
-        request: ChangeDeviceRequest
+        mContext: Context, request: ChangeDeviceRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2314,8 +2403,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2330,8 +2418,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun viewEmployeeDocuments(
-        mContext: Context,
-        request: EmployeeViewDocumentRequest
+        mContext: Context, request: EmployeeViewDocumentRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2360,8 +2447,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2377,8 +2463,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun companyDeleteBranch(
-        mContext: Context,
-        id: Int
+        mContext: Context, id: Int
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2407,8 +2492,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2423,8 +2507,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun companyDeleteShift(
-        mContext: Context,
-        id: Int
+        mContext: Context, id: Int
     ) {
 
         if (!isNetworkAvailable(mContext)) {
@@ -2455,8 +2538,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2471,8 +2553,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun companyDeleteHoliday(
-        mContext: Context,
-        id: Int
+        mContext: Context, id: Int
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2501,8 +2582,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2517,8 +2597,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun companyRGSVerify(
-        mContext: Context,
-        request: PanVerifyRequestBody
+        mContext: Context, request: PanVerifyRequestBody
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2546,8 +2625,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2562,8 +2640,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun companyGSTVerify(
-        mContext: Context,
-        request: PanVerifyRequestBody
+        mContext: Context, request: PanVerifyRequestBody
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2592,8 +2669,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2608,8 +2684,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun companyPanVerify(
-        mContext: Context,
-        request: PanVerifyRequestBody
+        mContext: Context, request: PanVerifyRequestBody
     ) {
 
         if (!isNetworkAvailable(mContext)) {
@@ -2639,8 +2714,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2655,8 +2729,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun comapnyAadhaarVerfication(
-        mContext: Context,
-        request: PanVerifyRequestBody
+        mContext: Context, request: PanVerifyRequestBody
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2686,8 +2759,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2703,8 +2775,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun changeCompanyProfileImage(
-        mContext: Context,
-        file: File?
+        mContext: Context, file: File?
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2749,8 +2820,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2766,9 +2836,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun changeEmpProfileImage(
-        mContext: Context,
-        employeeId: Int,
-        file: File?
+        mContext: Context, employeeId: Int, file: File?
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2814,8 +2882,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2831,8 +2898,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun createDepartment(
-        mContext: Context,
-        request: DepartmentCreateRequest
+        mContext: Context, request: DepartmentCreateRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -2861,8 +2927,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2878,9 +2943,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun postEmpUploadDocument(
-        mContext: Context,
-        employeeId: String,
-        documents: List<Triple<String, String, File>>
+        mContext: Context, employeeId: String, documents: List<Triple<String, String, File>>
     ) {
 
         if (!isNetworkAvailable(mContext)) {
@@ -2901,8 +2964,7 @@ class SettingsViewModel : BaseViewModel() {
                         documentName.toRequestBody("text/plain".toMediaTypeOrNull())
                     documentParts.add(
                         MultipartBody.Part.createFormData(
-                            "documents[$index][document_name]",
-                            documentName
+                            "documents[$index][document_name]", documentName
                         )
                     )
 
@@ -2910,24 +2972,20 @@ class SettingsViewModel : BaseViewModel() {
                         documentTypeId.toRequestBody("text/plain".toMediaTypeOrNull())
                     documentParts.add(
                         MultipartBody.Part.createFormData(
-                            "documents[$index][document_type_id]",
-                            documentTypeId
+                            "documents[$index][document_type_id]", documentTypeId
                         )
                     )
 
                     val requestFile = file.asRequestBody("application/pdf".toMediaTypeOrNull())
                     documentParts.add(
                         MultipartBody.Part.createFormData(
-                            "documents[$index][file]",
-                            file.name,
-                            requestFile
+                            "documents[$index][file]", file.name, requestFile
                         )
                     )
                 }
 
                 val response = ASLEmpMng.instance.apiStores()?.callEmployeeUploadDocument(
-                    employeeId = employeeIdBody,
-                    documents = documentParts
+                    employeeId = employeeIdBody, documents = documentParts
                 )
                 Log.d("res", "emp doc :${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
@@ -2948,8 +3006,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3001,8 +3058,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3044,8 +3100,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3061,9 +3116,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun postCompanyUpdateDocument(
-        mContext: Context,
-        imageUris: List<Uri>,
-        documentTypeIds: List<Int>
+        mContext: Context, imageUris: List<Uri>, documentTypeIds: List<Int>
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -3098,8 +3151,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
                 val response = ASLEmpMng.instance.apiStores()?.callCompanyUpdateDocument(
-                    documentTypeIds = documentTypeParts,
-                    documents = documentParts
+                    documentTypeIds = documentTypeParts, documents = documentParts
                 )
 
 
@@ -3123,8 +3175,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3183,8 +3234,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3227,8 +3277,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3273,8 +3322,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3319,8 +3367,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3372,8 +3419,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3418,8 +3464,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3461,8 +3506,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3505,8 +3549,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3551,8 +3594,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3599,8 +3641,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3643,8 +3684,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3686,8 +3726,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3731,8 +3770,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3774,8 +3812,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3818,8 +3855,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3869,8 +3905,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3957,8 +3992,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4000,8 +4034,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4053,8 +4086,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4100,8 +4132,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4148,8 +4179,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4192,8 +4222,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4238,8 +4267,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4283,8 +4311,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4330,8 +4357,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4347,8 +4373,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun addEmployee(
-        mContext: Context,
-        request: AddEmpRequestBody
+        mContext: Context, request: AddEmpRequestBody
     ) {
         if (!isNetworkAvailable(mContext)) {
             return
@@ -4416,8 +4441,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4467,8 +4491,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4520,8 +4543,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4566,8 +4588,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }

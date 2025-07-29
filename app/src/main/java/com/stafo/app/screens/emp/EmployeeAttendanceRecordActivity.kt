@@ -1,12 +1,15 @@
 package com.stafo.app.screens.emp
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
+import android.widget.PopupMenu
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -28,6 +31,7 @@ import com.stafo.app.utils.getIsCOMPANYLogin
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.stafo.app.screens.settings.AttendanceRequestActivity
 import com.stafo.app.utils.convertTo12HourFormat2
 import com.stafo.app.utils.convertTo12HourFormat3
 import com.stafo.app.utils.showCustomMonthYearPicker
@@ -231,6 +235,10 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
 
 
+            imageSettings.setOnClickListener { view ->
+                showPopupMenu(view)
+            }
+
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
                 fetchAttendanceData()
@@ -239,6 +247,33 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
 
         }
+    }
+
+
+    private fun showPopupMenu(view: View) {
+        val popupMenu = PopupMenu(this, view)
+        val menu = popupMenu.menu
+        val options = resources.getStringArray(R.array.request_attendance)
+        options.forEachIndexed { index, option ->
+            menu.add(0, index, index, option)
+        }
+
+        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
+            when (item.itemId) {
+                0 -> {
+                    startActivity(Intent(this, EditAttendanceActivity::class.java))
+                    true
+                }
+
+                1 -> {
+                    startActivity(Intent(this, AttendanceRequestActivity::class.java))
+                    true
+                }
+
+                else -> false
+            }
+        }
+        popupMenu.show()
     }
 
     fun getDayNameOld(dateString: String, format: String = "yyyy-MM-dd"): String {

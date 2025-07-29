@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
+import android.widget.PopupMenu
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +21,9 @@ import com.stafo.app.R
 import com.stafo.app.base.adapter.EmployeeAttendanceAdapter
 import com.stafo.app.databinding.ActivityEmployeeAttendanceBinding
 import com.stafo.app.screens.dashboard.EmployerDashboard
+import com.stafo.app.screens.settings.AttendanceRequestActivity
+import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
+import com.stafo.app.screens.settings.LeaveTypeDashboardActivity
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.dataClass.EmployeeDataList
 import com.stafo.app.utils.CustomLoader
@@ -94,7 +99,7 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
     }
 
     private fun onClickListener() {
-        binding?.apply {
+        binding.apply {
 
             val currentDate = SimpleDateFormat("dd MMM yy", Locale.getDefault()).format(calendar.time)
             binding.txtDate.setText(currentDate)
@@ -122,12 +127,25 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
                 showDatePicker()
             }
 
+            imageSettings.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@EmplyeeAttendaceListActivity,
+                        AttendanceRequestActivity::class.java
+                    ))
+            }
+
             //progressBar.updateProgress(50.0F)
             //  progressBar.updateProgress(Random().nextInt(100).toFloat())
 
 
         }
     }
+
+
+
+
+
 
     private fun observeViewModel() {
 

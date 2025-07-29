@@ -34,6 +34,7 @@ import com.stafo.app.screens.crm.dataClass.LeadCreateRequest
 import com.stafo.app.screens.crm.dataClass.LeadCreateResponse
 import com.stafo.app.screens.crm.dataClass.LeadListResponse
 import com.stafo.app.screens.crm.dataClass.UpdateLeadResponse
+import com.stafo.app.screens.emp.dataClass.AttendanceRequestResponse
 import com.stafo.app.screens.expense.dataClass.DeleteExpenseFormResponse
 import com.stafo.app.screens.expense.dataClass.EmpApplyExpenseResponse
 import com.stafo.app.screens.expense.dataClass.EmployeeDeleteExpenseResponse
@@ -70,6 +71,8 @@ import com.stafo.app.screens.settings.dataClass.AssignBranchRequest
 import com.stafo.app.screens.settings.dataClass.AssignBranchResponse
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentResponse
+import com.stafo.app.screens.settings.dataClass.AttendanceActionRequest
+import com.stafo.app.screens.settings.dataClass.AttendanceRequestListResponse
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.stafo.app.screens.settings.dataClass.AttendanceUpdateRequest
 import com.stafo.app.screens.settings.dataClass.AttendanceUpdateResponse
@@ -744,8 +747,7 @@ interface ApiStores {
 
     @POST("api/chat/get")
     suspend fun callChatAdmin(
-        @Body request: ChatRequest,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+        @Body request: ChatRequest, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<ChatResponse>
 
     @POST("api/chat/send")
@@ -767,13 +769,9 @@ interface ApiStores {
     ): Response<AddPerformanceResponse>
 
 
-
-
-
     @DELETE("api/performancetype/delete/{id}")
     suspend fun callDeletePerformance(
-        @Path("id") id: Int,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+        @Path("id") id: Int, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeletePerformanceResponse>
 
     @POST("api/performancetype/update/{id}")
@@ -788,7 +786,6 @@ interface ApiStores {
         @Body request: PerformanceAddRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<PerformanceAddResponse>
-
 
 
     @POST("api/performance/rank-list")
@@ -897,6 +894,7 @@ interface ApiStores {
         @Query("company_id") companyId: String,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<GetAllExpenseFormList>
+
     @POST("api/expenseform/update/{id}")
     suspend fun callExpenseFormUpdate(
         @Path("id") id: Int,
@@ -907,8 +905,7 @@ interface ApiStores {
 
     @DELETE("api/expenseform/delete/{id}")
     suspend fun callExpenseFormDelete(
-        @Path("id") id: Int,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+        @Path("id") id: Int, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeleteExpenseFormResponse>
 
     @GET("api/expense/list")
@@ -918,17 +915,17 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<ViewApplyExpenseResponse>
 
- /*   @Multipart
-    @POST("api/expense/create")
-    suspend fun callApplyExpense(
-        @Part("company_id") companyId: RequestBody,
-        @Part("employee_id") employeeId: RequestBody,
-        @Part("amount") amount: RequestBody,
-        @Part("expensetype_id") expenseTypeId: RequestBody,
-        @Part("expense_details") expenseDetails: RequestBody,
-        @Part attachment: List<MultipartBody.Part>,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
-    ): Response<EmpApplyExpenseResponse>*/
+    /*   @Multipart
+       @POST("api/expense/create")
+       suspend fun callApplyExpense(
+           @Part("company_id") companyId: RequestBody,
+           @Part("employee_id") employeeId: RequestBody,
+           @Part("amount") amount: RequestBody,
+           @Part("expensetype_id") expenseTypeId: RequestBody,
+           @Part("expense_details") expenseDetails: RequestBody,
+           @Part attachment: List<MultipartBody.Part>,
+           @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+       ): Response<EmpApplyExpenseResponse>*/
 
     @Multipart
     @POST("api/expense/create")
@@ -961,8 +958,7 @@ interface ApiStores {
 
     @DELETE("api/expense/delete/{id}")
     suspend fun callDeleteApplyExpense(
-        @Path("id") id: Int,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+        @Path("id") id: Int, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<EmployeeDeleteExpenseResponse>
 
 
@@ -1063,14 +1059,14 @@ interface ApiStores {
     suspend fun callTripDelete(
         @Body request: HashMap<String, Any>,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
-    ):Response<TripActionResponse>
+    ): Response<TripActionResponse>
 
 
     @POST("api/vehicles/delete")
     suspend fun callVehicleDelete(
         @Body request: HashMap<String, Any>,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
-    ):Response<TripActionResponse>
+    ): Response<TripActionResponse>
 
     @POST("api/trips-expense/list")
     suspend fun callTripExpensesList(
@@ -1130,8 +1126,7 @@ interface ApiStores {
 
     @DELETE("api/task/delete/{id}")
     suspend fun callDeleteTask(
-        @Path ("id")taskId:Int,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+        @Path("id") taskId: Int, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeleteTaskResponse>
 
 
@@ -1149,30 +1144,26 @@ interface ApiStores {
     ): Response<TripGeoLocationListReponse>
 
 
-
-
     @POST("api/task/comment-create")
     suspend fun callAddComment(
-        @Body request:AddCommentRequest,
+        @Body request: AddCommentRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<AddCommentResponse>
 
     @DELETE("api/task/comment-delete/{id}")
     suspend fun callDeleteComment(
-        @Path ("id")commentId:Int,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+        @Path("id") commentId: Int, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeleteTaskResponse>
 
     @DELETE("api/task/file-delete/{id}")
     suspend fun callDeleteAttachFile(
-        @Path ("id")fileId:Int,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+        @Path("id") fileId: Int, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeleteTaskResponse>
 
     @POST("api/task/status-change/{id}")
     suspend fun callTaskStatus(
-        @Path ("id")taskId:Int,
-        @Body request:TaskStatusRequest,
+        @Path("id") taskId: Int,
+        @Body request: TaskStatusRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<UpdateTaskStatusResponse>
 
@@ -1183,6 +1174,7 @@ interface ApiStores {
         @Part files: List<MultipartBody.Part>,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<UpdateTaskStatusResponse>
+
     @GET("api/leavetype/list")
     suspend fun callLeaveTypeList(
         @Query("company_id") companyId: Int,
@@ -1204,8 +1196,7 @@ interface ApiStores {
 
     @DELETE("api/leavetype/delete/{id}")
     suspend fun callLeaveTypeDelete(
-        @Path("id") id: Int,
-        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+        @Path("id") id: Int, @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<LeaveTypeDeleteResponse>
 
 
@@ -1215,4 +1206,28 @@ interface ApiStores {
         @Body request: AttendanceUpdateRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<AttendanceUpdateResponse>
+
+
+    @GET("api/attendance-request-list")
+    suspend fun callGetAttendanceRequestList(
+        @Query("company_id") companyId: String? = null,
+        @Query("employee_id") employeeId: String? = null,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AttendanceRequestListResponse>
+
+
+    @POST("api/attendance-request")
+    suspend fun callAttendanceRequest(
+        @Body request: AttendanceUpdateRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AttendanceRequestResponse>
+
+    @POST("api/attendance-request-status-update/{attendance_request_id}")
+    suspend fun callAttendanceStatusUpdate(
+        @Path("attendance_request_id") id: Int,
+        @Body request: AttendanceActionRequest,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<DeleteTaskResponse>
+
+
 }
