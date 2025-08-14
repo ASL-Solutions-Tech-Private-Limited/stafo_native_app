@@ -269,8 +269,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     fun getCurrentLocation(callback: (Double, Double) -> Unit) {
         if(!showLoaderLocation){
             showLoadingDialog()
-            binding.rlSelfiePunchIn.visibility=View.GONE
-            binding.viewAlert.visibility=View.VISIBLE
+            showAlertView()
         }
 
 
@@ -302,8 +301,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
                 val location = locationResult.lastLocation
                 if (location != null) {
-                    binding.rlSelfiePunchIn.visibility=View.VISIBLE
-                    binding.viewAlert.visibility=View.GONE
+                    hideAlertView()
                     loadingDialog.dismiss()
                     if (location.accuracy <= 50f) {
                         callback(location.latitude, location.longitude)
@@ -316,8 +314,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                         finish()
                     }
                 } else {
-                    binding.rlSelfiePunchIn.visibility=View.VISIBLE
-                    binding.viewAlert.visibility=View.GONE
+                    hideAlertView()
                     loadingDialog.dismiss()
                     CustomToast(this@EmpSelfieAttendanceActivity, "Unable to get location.")
                     isSubmitting = false
@@ -337,6 +334,34 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
             locationRequest, locationCallback, Looper.getMainLooper()
         )
     }
+
+
+    private fun showAlertView() {
+        val alertView =binding.viewAlert
+        alertView.apply {
+            visibility = View.VISIBLE
+            animate()
+                .alpha(1f)
+                .setDuration(300)
+                .start()
+        }
+        binding.rlSelfiePunchIn.visibility=View.GONE
+    }
+
+   private fun hideAlertView() {
+        val alertView =binding.viewAlert
+        alertView.animate()
+            .alpha(0f)
+            .setDuration(300)
+            .withEndAction {
+                alertView.visibility = View.GONE
+            }
+            .start()
+        binding.rlSelfiePunchIn.visibility=View.VISIBLE
+    }
+
+
+
 
 
     fun calculateDistance(
