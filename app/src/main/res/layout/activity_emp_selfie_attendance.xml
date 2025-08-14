@@ -50,11 +50,22 @@
 
 
     </com.google.android.material.appbar.AppBarLayout>
+    <View
+        android:id="@+id/view_alert"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        android:background="#80ADD8E6"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"/>
+
+
 
     <RelativeLayout
         android:id="@+id/rl_selfie_punch_in"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="gone"
         android:background="@color/tea_green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout">

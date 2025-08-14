@@ -15,8 +15,10 @@ import android.os.Looper
 import android.util.Log
 import android.view.Surface
 import android.view.View
+import android.window.OnBackInvokedDispatcher
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -61,12 +63,15 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     private var branchLong: Double = 0.0
     private var radar: Float = 0.0f
     private var checkBranch: Boolean = false
+    private var showLoaderLocation: Boolean = false
 
     private var isSubmitting = false
     private var isFetchingLocation = false
 
     private var imageCapture: ImageCapture? = null
     private var mEmpID = ""
+
+    private lateinit var loadingDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,13 +85,19 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
-        if (getIsCOMPANYLogin(this@EmpSelfieAttendanceActivity)){
+        if (getIsCOMPANYLogin(this@EmpSelfieAttendanceActivity)) {
             mEmpID = intent.getStringExtra("EMP_ID").toString()
-        } else mEmpID=getEmployeeDetails()?.id.toString()
+        } else mEmpID = getEmployeeDetails()?.id.toString()
 
 
         observeViewModel()
         onClickListener()
+    }
+
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        showLoaderLocation=false
     }
 
     private fun onClickListener() {
@@ -99,14 +110,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
 
 
-            mEmpID.let { empId ->
 
-                val request = GetAttendanceBranchRequest(
-                    employee_id = empId
-                )
-
-                settingsViewModel.getEmpAttendanceBranch(this@EmpSelfieAttendanceActivity, request)
-            }
 
             if (ContextCompat.checkSelfPermission(
                     this@EmpSelfieAttendanceActivity, Manifest.permission.CAMERA
@@ -116,7 +120,21 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                     this@EmpSelfieAttendanceActivity, arrayOf(Manifest.permission.CAMERA), 100
                 )
             } else {
-                startCamera()
+                getCurrentLocation { lat, lng ->
+                    if (lat != 0.0 && lng != 0.0) {
+                        startCamera()
+                        mEmpID.let { empId ->
+
+                            val request = GetAttendanceBranchRequest(
+                                employee_id = empId
+                            )
+                            settingsViewModel.getEmpAttendanceBranch(this@EmpSelfieAttendanceActivity, request)
+                        }
+                    } else {
+                        CustomToast(this@EmpSelfieAttendanceActivity, "Unable to get location. Try again.")
+                    }
+                }
+
             }
 
         }
@@ -130,7 +148,20 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 100 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            startCamera()
+            getCurrentLocation { lat, lng ->
+                if (lat != 0.0 && lng != 0.0) {
+                    startCamera()
+                    mEmpID.let { empId ->
+
+                        val request = GetAttendanceBranchRequest(
+                            employee_id = empId
+                        )
+                        settingsViewModel.getEmpAttendanceBranch(this@EmpSelfieAttendanceActivity, request)
+                    }
+                } else {
+                    CustomToast(this@EmpSelfieAttendanceActivity, "Unable to get location. Try again.")
+                }
+            }
         } else {
             CustomToast(this, "Camera permission denied")
         }
@@ -168,6 +199,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
 
     private fun takePhoto() {
+        showLoaderLocation=true
         val imageCapture = imageCapture ?: return
         val outputFile = File(externalCacheDir, "selfie.jpg")
 
@@ -177,12 +209,12 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
             ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+
                     selfieImage = outputFile
                     selfieImage?.let {
                         if (checkBranch) {
 
                             if (branchLat == 0.0 || branchLong == 0.0) {
-                                Log.e("LocationDebug", "Branch Lat/Long not initialized properly.")
                                 CustomToast(this@EmpSelfieAttendanceActivity, "Please try again.")
                                 onBackPressedDispatcher.onBackPressed()
                                 finish()
@@ -195,14 +227,14 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                                     currentLat, currentLong, branchLat, branchLong
                                 )
 
-                                Log.e("LocationDebug", "Current Location: Lat=$currentLat, Lon=$currentLong")
-                                Log.e("LocationDebug", "Branch Location: Lat=$branchLat, Lon=$branchLong, Radar=$radar")
-                                Log.e("LocationDebug", "Calculated distance: $distance meters")
+
 
                                 if (distance <= radar) {
-                                    Log.e("LocationDebug", "User is WITHIN radar. Taking photo.")
+
                                     settingsViewModel.selfieAttendanceEmpolyee(
-                                        this@EmpSelfieAttendanceActivity, mEmpID.toInt(), selfieImage
+                                        this@EmpSelfieAttendanceActivity,
+                                        mEmpID.toInt(),
+                                        selfieImage
                                     )
                                 } else {
                                     onApiResponseError()
@@ -218,7 +250,6 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
                         } else {
 
-                            Log.e("LocationDebug", "Branch details not available for location check.")
                             isSubmitting = false
                             settingsViewModel.selfieAttendanceEmpolyee(
                                 this@EmpSelfieAttendanceActivity, mEmpID.toInt(), selfieImage
@@ -234,69 +265,16 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     }
 
 
-    fun onApiResponseSuccess() {
-        binding.cameraOverlayView.setStrokeColor(Color.GREEN)
-    }
-
-    fun onApiResponseError() {
-        binding.cameraOverlayView.setStrokeColor(Color.RED)
-    }
-
-    private fun observeViewModel() {
-        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-        settingsViewModel.mSelfieAttendanceEmpResponse.observe(this) {
-            if (it.status) {
-                binding.rtlAttendanceMsg.visibility = View.VISIBLE
-                val currentTime = Calendar.getInstance().time
-                val formatter = SimpleDateFormat("dd MMM yyyy hh:mm a", Locale.getDefault())
-                val formattedDateTime = formatter.format(currentTime)
-                binding.tvPunchTime.text = formattedDateTime
-                binding.tvPunchUser.text = "Punched by ${getEmployeeDetails()?.name ?: ""}"
-                val bitmap = BitmapFactory.decodeFile(selfieImage?.absolutePath)
-                binding.civPunchSelfie.setImageBitmap(bitmap)
-                onApiResponseSuccess()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    onBackPressedDispatcher.onBackPressed()
-                    finish()
-                }, 1000)
-            } else {
-                CustomToast(this,it.message)
-                onApiResponseError()
-                binding.rtlAttendanceMsg.visibility = View.GONE
-            }
-
-
-        }
-
-        settingsViewModel.mGetAttendanceBranchResponse.observe(this) { response ->
-            if (response?.status == true) {
-
-                Log.e("LocationDebug", "observeViewModel: ${response.data}")
-                val branchData = response.data
-                if (branchData != null && branchData.latitude != null && branchData.longitude != null) {
-                    checkBranch = true
-                    branchLat = branchData.latitude.toDouble()
-                    branchLong = branchData.longitude.toDouble()
-                    radar = branchData.radar.toFloat()
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        takePhoto()
-                    }, 2000)
-                } else {
-                    checkBranch = false
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        takePhoto()
-                    }, 2000)
-                }
-            } else {
-                checkBranch = false
-
-            }
-        }
-    }
-
-
     @SuppressLint("MissingPermission")
     fun getCurrentLocation(callback: (Double, Double) -> Unit) {
+        if(!showLoaderLocation){
+            showLoadingDialog()
+            binding.rlSelfiePunchIn.visibility=View.GONE
+            binding.viewAlert.visibility=View.VISIBLE
+        }
+
+
+
         if (isFetchingLocation) return
         isFetchingLocation = true
 
@@ -324,15 +302,23 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
                 val location = locationResult.lastLocation
                 if (location != null) {
-                    Log.d("Location", "Lat: ${location.latitude}, Lng: ${location.longitude}, Accuracy: ${location.accuracy}, Provider: ${location.provider}")
-
+                    binding.rlSelfiePunchIn.visibility=View.VISIBLE
+                    binding.viewAlert.visibility=View.GONE
+                    loadingDialog.dismiss()
                     if (location.accuracy <= 50f) {
                         callback(location.latitude, location.longitude)
                     } else {
-                        CustomToast(this@EmpSelfieAttendanceActivity, "Location not accurate. Try again.")
+                        CustomToast(
+                            this@EmpSelfieAttendanceActivity, "Location not accurate. Try again."
+                        )
                         isSubmitting = false
+                        onBackPressedDispatcher.onBackPressed()
+                        finish()
                     }
                 } else {
+                    binding.rlSelfiePunchIn.visibility=View.VISIBLE
+                    binding.viewAlert.visibility=View.GONE
+                    loadingDialog.dismiss()
                     CustomToast(this@EmpSelfieAttendanceActivity, "Unable to get location.")
                     isSubmitting = false
                 }
@@ -344,18 +330,13 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                 fusedLocationClient.removeLocationUpdates(locationCallback)
                 isFetchingLocation = false
                 isSubmitting = false
-                CustomToast(this@EmpSelfieAttendanceActivity, "Location request timed out.")
             }
         }, 10_000)
 
         fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
+            locationRequest, locationCallback, Looper.getMainLooper()
         )
     }
-
-
 
 
     fun calculateDistance(
@@ -366,8 +347,75 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
         return results[0]
     }
 
+    private fun showLoadingDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setView(R.layout.dialog_loading)
+        builder.setCancelable(false)
+        loadingDialog = builder.create()
+        loadingDialog.show()
+    }
 
 
+    private fun onApiResponseSuccess() {
+        binding.cameraOverlayView.setStrokeColor(Color.GREEN)
+    }
+
+    fun onApiResponseError() {
+        binding.cameraOverlayView.setStrokeColor(Color.RED)
+    }
+
+
+    private fun observeViewModel() {
+        settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
+        settingsViewModel.mSelfieAttendanceEmpResponse.observe(this) {
+            if (it.status) {
+                binding.rtlAttendanceMsg.visibility = View.VISIBLE
+                val currentTime = Calendar.getInstance().time
+                val formatter = SimpleDateFormat("dd MMM yyyy hh:mm a", Locale.getDefault())
+                val formattedDateTime = formatter.format(currentTime)
+                binding.tvPunchTime.text = formattedDateTime
+                binding.tvPunchUser.text = "Punched by ${getEmployeeDetails()?.name ?: ""}"
+                val bitmap = BitmapFactory.decodeFile(selfieImage?.absolutePath)
+                binding.civPunchSelfie.setImageBitmap(bitmap)
+                onApiResponseSuccess()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    onBackPressedDispatcher.onBackPressed()
+                    finish()
+                }, 1000)
+            } else {
+                CustomToast(this, it.message)
+                onApiResponseError()
+                binding.rtlAttendanceMsg.visibility = View.GONE
+            }
+
+
+        }
+
+        settingsViewModel.mGetAttendanceBranchResponse.observe(this) { response ->
+            if (response?.status == true) {
+
+                Log.e("LocationDebug", "observeViewModel: ${response.data}")
+                val branchData = response.data
+                if (branchData != null && branchData.latitude != null && branchData.longitude != null) {
+                    checkBranch = true
+                    branchLat = branchData.latitude.toDouble()
+                    branchLong = branchData.longitude.toDouble()
+                    radar = branchData.radar.toFloat()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        takePhoto()
+                    }, 100)
+                } else {
+                    checkBranch = false
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        takePhoto()
+                    }, 100)
+                }
+            } else {
+                checkBranch = false
+
+            }
+        }
+    }
 
     private fun handleLoader(status: String) {
         if (status.equals("load", ignoreCase = true)) {
@@ -376,8 +424,6 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
             if (customLoader.isShowing) customLoader.dismiss()
         }
     }
-
-
 
 
 }

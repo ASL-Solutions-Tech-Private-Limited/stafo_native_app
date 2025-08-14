@@ -122,7 +122,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private val calendar = Calendar.getInstance()
     private var mEmplyeeInfo: EmployeeInfo? = null
-    private var isTrip: Boolean= false
+    private var isTrip: Boolean = false
 
     private lateinit var appUpdateManager: AppUpdateManager
     private val MY_REQUEST_CODE = 123
@@ -152,20 +152,17 @@ class EmployeeDashboard : AppCompatActivity() {
     }
 
 
-
-
     private fun checkForAppUpdate() {
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
 
         appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(
+                    AppUpdateType.IMMEDIATE
+                )
+            ) {
 
                 appUpdateManager.startUpdateFlowForResult(
-                    appUpdateInfo,
-                    AppUpdateType.IMMEDIATE,
-                    this,
-                    MY_REQUEST_CODE
+                    appUpdateInfo, AppUpdateType.IMMEDIATE, this, MY_REQUEST_CODE
                 )
             }
         }.addOnFailureListener {
@@ -184,6 +181,7 @@ class EmployeeDashboard : AppCompatActivity() {
                     CustomToast(this, "Update is required to continue")
                     finish()
                 }
+
                 ActivityResult.RESULT_IN_APP_UPDATE_FAILED -> {
                     CustomToast(this, "Update failed. Please try again.")
                     finish()
@@ -191,9 +189,6 @@ class EmployeeDashboard : AppCompatActivity() {
             }
         }
     }
-
-
-
 
 
     private fun setupViews() {
@@ -205,9 +200,7 @@ class EmployeeDashboard : AppCompatActivity() {
             rvLeaves.layoutManager =
                 LinearLayoutManager(this@EmployeeDashboard, LinearLayoutManager.HORIZONTAL, false)
             rvWishes.layoutManager = LinearLayoutManager(
-                this@EmployeeDashboard,
-                LinearLayoutManager.HORIZONTAL,
-                false
+                this@EmployeeDashboard, LinearLayoutManager.HORIZONTAL, false
             )
 
         }
@@ -220,9 +213,8 @@ class EmployeeDashboard : AppCompatActivity() {
 
         binding.rvActivities.layoutManager =
             LinearLayoutManager(this@EmployeeDashboard, LinearLayoutManager.HORIZONTAL, false)
-        val actionsAdapter = ActionsListAdapter(actionList(),
-            this@EmployeeDashboard,
-            object : ActionsListAdapter.ActionClickListener {
+        val actionsAdapter = ActionsListAdapter(
+            actionList(), this@EmployeeDashboard, object : ActionsListAdapter.ActionClickListener {
                 override fun onActionClick(action: String) {
                     when (action) {
                         "Attendance" -> {
@@ -232,70 +224,49 @@ class EmployeeDashboard : AppCompatActivity() {
                                     EmployeeAttendanceRecordActivity::class.java
                                 ).apply {
                                     putExtra("EMP_ID", "${getEmployeeDetails()?.id.toString()}")
-                                }
-                            )
+                                })
                             overridePendingTransition(
-                                R.anim.slide_from_right,
-                                R.anim.slide_to_left
+                                R.anim.slide_from_right, R.anim.slide_to_left
                             )
                         }
 
                         "Leaves" -> {
                             startActivity(
                                 Intent(
-                                    this@EmployeeDashboard,
-                                    EmployeeLeaveHistoryActivity::class.java
+                                    this@EmployeeDashboard, EmployeeLeaveHistoryActivity::class.java
                                 )
                             )
                             overridePendingTransition(
-                                R.anim.slide_from_right,
-                                R.anim.slide_to_left
-                            )
-                        }
-                        "Salary Slip" -> {
-                            startActivity(
-                                Intent(
-                                    this@EmployeeDashboard,
-                                    SalarySlipActivity::class.java
-                                )
-                            )
-                            overridePendingTransition(
-                                R.anim.slide_from_right,
-                                R.anim.slide_to_left
+                                R.anim.slide_from_right, R.anim.slide_to_left
                             )
                         }
 
                         "Branches" -> {
                             startActivity(
                                 Intent(
-                                    this@EmployeeDashboard,
-                                    EmpBranchDetailsActivity::class.java
+                                    this@EmployeeDashboard, EmpBranchDetailsActivity::class.java
                                 )
                             )
                             overridePendingTransition(
-                                R.anim.slide_from_right,
-                                R.anim.slide_to_left
+                                R.anim.slide_from_right, R.anim.slide_to_left
                             )
                         }
 
                         "Policy" -> {
                             startActivity(
                                 Intent(
-                                    this@EmployeeDashboard,
-                                    PolicyActivity::class.java
+                                    this@EmployeeDashboard, PolicyActivity::class.java
                                 )
                             )
                             overridePendingTransition(
-                                R.anim.slide_from_right,
-                                R.anim.slide_to_left
+                                R.anim.slide_from_right, R.anim.slide_to_left
                             )
                         }
 
                         "CRM" -> {
                             startActivity(
                                 Intent(
-                                    this@EmployeeDashboard,
-                                    CRMLeadDashboard::class.java
+                                    this@EmployeeDashboard, CRMLeadDashboard::class.java
                                 )
                             )
                         }
@@ -303,8 +274,7 @@ class EmployeeDashboard : AppCompatActivity() {
                         "Holidays" -> {
                             startActivity(
                                 Intent(
-                                    this@EmployeeDashboard,
-                                    HolidayActivity::class.java
+                                    this@EmployeeDashboard, HolidayActivity::class.java
                                 )
                             )
                         }
@@ -312,8 +282,7 @@ class EmployeeDashboard : AppCompatActivity() {
                         "Expenses" -> {
                             startActivity(
                                 Intent(
-                                    this@EmployeeDashboard,
-                                    ExpenseDashboardActivity::class.java
+                                    this@EmployeeDashboard, ExpenseDashboardActivity::class.java
                                 )
                             )
                         }
@@ -321,8 +290,7 @@ class EmployeeDashboard : AppCompatActivity() {
                         "CRM" -> {
                             startActivity(
                                 Intent(
-                                    this@EmployeeDashboard,
-                                    CRMLeadDashboard::class.java
+                                    this@EmployeeDashboard, CRMLeadDashboard::class.java
                                 )
                             )
                         }
@@ -330,16 +298,15 @@ class EmployeeDashboard : AppCompatActivity() {
                         "Task" -> {
                             startActivity(
                                 Intent(
-                                    this@EmployeeDashboard,
-                                    TaskMSDashboard::class.java
+                                    this@EmployeeDashboard, TaskMSDashboard::class.java
                                 )
                             )
                         }
+
                         "Trip" -> {
                             startActivity(
                                 Intent(
-                                    this@EmployeeDashboard,
-                                    TripDashboardActivity::class.java
+                                    this@EmployeeDashboard, TripDashboardActivity::class.java
                                 )
                             )
                         }
@@ -356,8 +323,7 @@ class EmployeeDashboard : AppCompatActivity() {
         isTrip = getTripServiceAction(applicationContext)
         settingsViewModel.getEmployeDashboard(this)
         settingsViewModel.fetchEmployeeDetails(
-            this@EmployeeDashboard,
-            getEmployeeDetails()?.id.toString()
+            this@EmployeeDashboard, getEmployeeDetails()?.id.toString()
         )
 
     }
@@ -372,7 +338,7 @@ class EmployeeDashboard : AppCompatActivity() {
             }
 
             ivNotification.setOnClickListener {
-                startActivity(Intent(this@EmployeeDashboard,NotificationActivity::class.java))
+                startActivity(Intent(this@EmployeeDashboard, NotificationActivity::class.java))
                 overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
             }
 
@@ -380,8 +346,7 @@ class EmployeeDashboard : AppCompatActivity() {
             tvActivitiesViewAll.setOnClickListener {
                 startActivity(
                     Intent(
-                        this@EmployeeDashboard,
-                        SubMenuActivity::class.java
+                        this@EmployeeDashboard, SubMenuActivity::class.java
                     )
                 )
 
@@ -389,8 +354,7 @@ class EmployeeDashboard : AppCompatActivity() {
             }
 
             settingsViewModel.fetchEmployeeDetails(
-                this@EmployeeDashboard,
-                getEmployeeDetails()?.id.toString()
+                this@EmployeeDashboard, getEmployeeDetails()?.id.toString()
             )
 
             settingsViewModel.getBannerImage(this@EmployeeDashboard)
@@ -398,8 +362,7 @@ class EmployeeDashboard : AppCompatActivity() {
             binding.tvLeaveViewAll.setOnClickListener {
                 startActivity(
                     Intent(
-                        this@EmployeeDashboard,
-                        LeaveRequestHistoryActivity::class.java
+                        this@EmployeeDashboard, LeaveRequestHistoryActivity::class.java
                     )
                 )
             }
@@ -471,8 +434,7 @@ class EmployeeDashboard : AppCompatActivity() {
             tvHeaderSetting.setOnClickListener {
                 startActivity(
                     Intent(
-                        this@EmployeeDashboard,
-                        EmplyeeyerProfile::class.java
+                        this@EmployeeDashboard, EmplyeeyerProfile::class.java
                     )
                 )
             }
@@ -484,8 +446,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private fun isLocationPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            this, Manifest.permission.ACCESS_BACKGROUND_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
 
@@ -537,19 +498,16 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
     private fun showSettingsDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Permission Required")
+        AlertDialog.Builder(this).setTitle("Permission Required")
             .setMessage("Background location access is required. Please enable it in settings.")
             .setPositiveButton("Go to Settings") { _, _ ->
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 val uri = Uri.fromParts("package", packageName, null)
                 intent.data = uri
                 startActivity(intent)
-            }
-            .setNegativeButton("Cancel") { dialog, _ ->
+            }.setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
-            }
-            .show()
+            }.show()
     }
 
 
@@ -569,7 +527,7 @@ class EmployeeDashboard : AppCompatActivity() {
                     binding.tvOfficeTiming.text =
                         "Your Office timing is $startTime12Hr to $endTime12Hr"
 
-                }?: run {
+                } ?: run {
                     binding.tvOfficeTiming.text = "Your Office timing is 10 AM to 8 PM"
                 }
 
@@ -581,8 +539,7 @@ class EmployeeDashboard : AppCompatActivity() {
                     builder.setPositiveButton("Accept") { dialog, which ->
 
                         settingsViewModel.sendGeoLocationRequest(
-                            this@EmployeeDashboard,
-                            getEmployeeDetails()?.id.toString(), "1"
+                            this@EmployeeDashboard, getEmployeeDetails()?.id.toString(), "1"
                         )
 
                         dialog.dismiss()
@@ -592,8 +549,7 @@ class EmployeeDashboard : AppCompatActivity() {
                     builder.setNegativeButton("Reject") { dialog, which ->
 
                         settingsViewModel.sendGeoLocationRequest(
-                            this@EmployeeDashboard,
-                            getEmployeeDetails()?.id.toString(), "2"
+                            this@EmployeeDashboard, getEmployeeDetails()?.id.toString(), "2"
                         )
                         dialog.dismiss()
                     }
@@ -607,7 +563,8 @@ class EmployeeDashboard : AppCompatActivity() {
                 wishList.clear()
 
                 if (!it.employeeInfo.punches.isNullOrEmpty()) {
-                    val todayDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                    val todayDate =
+                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                     val punchesToday = it.employeeInfo.punches.filter { punch ->
                         punch.punchIn?.startsWith(todayDate) == true
                     }
@@ -618,33 +575,37 @@ class EmployeeDashboard : AppCompatActivity() {
                     val shiftEndTime = it.employeeInfo.shifts.firstOrNull()?.endTime
                     val now = Calendar.getInstance()
 
-                    Log.e("trackLocation","shift time : ${shiftEndTime}")
+                    Log.e("trackLocation", "shift time : ${shiftEndTime}")
 
                     if (punchesToday.isNotEmpty()) {
-                        val ongoingPunch = punchesToday.lastOrNull { punch -> punch.punchIn != null && punch.punchOut == null }
+                        val ongoingPunch =
+                            punchesToday.lastOrNull { punch -> punch.punchIn != null && punch.punchOut == null }
 
 
                         if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo") {
-                            if (ongoingPunch != null){
+                            if (ongoingPunch != null) {
                                 checkExactAlarmPermission(this) { exactAlarmGranted ->
                                     if (exactAlarmGranted) {
                                         requestIgnoreBatteryOptimization(this) { batteryOptGranted ->
                                             if (batteryOptGranted) {
-                                                Log.e("trackLocation","start 0")
+                                                Log.e("trackLocation", "start 0")
 
-                                                if (!isTrip){
+                                                if (!isTrip) {
                                                     startLocationServiceIfNotRunning()
                                                 }
-
 
 
                                                 val shiftEndReached = shiftEndTime?.let { endTime ->
                                                     val shiftEndCal = Calendar.getInstance()
                                                     val end: Date? = try {
-                                                        SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(endTime)
+                                                        SimpleDateFormat(
+                                                            "hh:mm a", Locale.getDefault()
+                                                        ).parse(endTime)
                                                     } catch (e: Exception) {
                                                         try {
-                                                            SimpleDateFormat("HH:mm", Locale.getDefault()).parse(endTime)
+                                                            SimpleDateFormat(
+                                                                "HH:mm", Locale.getDefault()
+                                                            ).parse(endTime)
                                                         } catch (ex: Exception) {
                                                             null
                                                         }
@@ -653,8 +614,14 @@ class EmployeeDashboard : AppCompatActivity() {
                                                     if (end != null) {
                                                         val endCal = Calendar.getInstance()
                                                         endCal.time = end
-                                                        shiftEndCal.set(Calendar.HOUR_OF_DAY, endCal.get(Calendar.HOUR_OF_DAY))
-                                                        shiftEndCal.set(Calendar.MINUTE, endCal.get(Calendar.MINUTE))
+                                                        shiftEndCal.set(
+                                                            Calendar.HOUR_OF_DAY,
+                                                            endCal.get(Calendar.HOUR_OF_DAY)
+                                                        )
+                                                        shiftEndCal.set(
+                                                            Calendar.MINUTE,
+                                                            endCal.get(Calendar.MINUTE)
+                                                        )
                                                         shiftEndCal.set(Calendar.SECOND, 0)
                                                         now.after(shiftEndCal)
                                                     } else {
@@ -665,19 +632,28 @@ class EmployeeDashboard : AppCompatActivity() {
 
                                                 if (shiftEndReached) {
 
-                                                    if (!isTrip){
+                                                    if (!isTrip) {
                                                         stopLocationServiceIfRunning()
                                                     }
 
-                                                    Log.e("trackLocation", "Stopped service after shift end 1.")
+                                                    Log.e(
+                                                        "trackLocation",
+                                                        "Stopped service after shift end 1."
+                                                    )
                                                 }
 
                                                 if (shiftEndTime.isNullOrEmpty()) {
-                                                    if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(Calendar.MINUTE) == 0) {
-                                                        if (!isTrip){
+                                                    if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(
+                                                            Calendar.MINUTE
+                                                        ) == 0
+                                                    ) {
+                                                        if (!isTrip) {
                                                             stopLocationServiceIfRunning()
                                                         }
-                                                        Log.e("trackLocation", "Stopped service at 9 PM, no shift end.")
+                                                        Log.e(
+                                                            "trackLocation",
+                                                            "Stopped service at 9 PM, no shift end."
+                                                        )
                                                     }
                                                 }
                                             }
@@ -687,7 +663,7 @@ class EmployeeDashboard : AppCompatActivity() {
                             }
 
 
-                        }else{
+                        } else {
 
                             if (ongoingPunch != null) {
                                 updateUIForPunchIn(ongoingPunch.punchIn!!)
@@ -697,72 +673,89 @@ class EmployeeDashboard : AppCompatActivity() {
                                             requestIgnoreBatteryOptimization(this) { batteryOptGranted ->
                                                 if (batteryOptGranted) {
 
-                                                    Log.e("trackLocation","start 1")
+                                                    Log.e("trackLocation", "start 1")
 
-                                                    if (!isTrip){
+                                                    if (!isTrip) {
                                                         startLocationServiceIfNotRunning()
                                                     }
 
-                                                    val shiftEndReached = shiftEndTime?.let { endTime ->
-                                                        val shiftEndCal = Calendar.getInstance()
-                                                        val end: Date? = try {
-                                                            SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(endTime)
-                                                        } catch (e: Exception) {
-                                                            try {
-                                                                SimpleDateFormat("HH:mm", Locale.getDefault()).parse(endTime)
-                                                            } catch (ex: Exception) {
-                                                                null
+                                                    val shiftEndReached =
+                                                        shiftEndTime?.let { endTime ->
+                                                            val shiftEndCal = Calendar.getInstance()
+                                                            val end: Date? = try {
+                                                                SimpleDateFormat(
+                                                                    "hh:mm a", Locale.getDefault()
+                                                                ).parse(endTime)
+                                                            } catch (e: Exception) {
+                                                                try {
+                                                                    SimpleDateFormat(
+                                                                        "HH:mm", Locale.getDefault()
+                                                                    ).parse(endTime)
+                                                                } catch (ex: Exception) {
+                                                                    null
+                                                                }
                                                             }
-                                                        }
 
-                                                        if (end != null) {
-                                                            val endCal = Calendar.getInstance()
-                                                            endCal.time = end
-                                                            shiftEndCal.set(Calendar.HOUR_OF_DAY, endCal.get(Calendar.HOUR_OF_DAY))
-                                                            shiftEndCal.set(Calendar.MINUTE, endCal.get(Calendar.MINUTE))
-                                                            shiftEndCal.set(Calendar.SECOND, 0)
-                                                            now.after(shiftEndCal)
-                                                        } else {
-                                                            false
-                                                        }
-                                                    } ?: false
+                                                            if (end != null) {
+                                                                val endCal = Calendar.getInstance()
+                                                                endCal.time = end
+                                                                shiftEndCal.set(
+                                                                    Calendar.HOUR_OF_DAY,
+                                                                    endCal.get(Calendar.HOUR_OF_DAY)
+                                                                )
+                                                                shiftEndCal.set(
+                                                                    Calendar.MINUTE,
+                                                                    endCal.get(Calendar.MINUTE)
+                                                                )
+                                                                shiftEndCal.set(Calendar.SECOND, 0)
+                                                                now.after(shiftEndCal)
+                                                            } else {
+                                                                false
+                                                            }
+                                                        } ?: false
 
 
                                                     if (shiftEndReached) {
-                                                        if (!isTrip){
+                                                        if (!isTrip) {
                                                             stopLocationServiceIfRunning()
                                                         }
-                                                        Log.e("trackLocation", "Stopped service after shift end 2.")
+                                                        Log.e(
+                                                            "trackLocation",
+                                                            "Stopped service after shift end 2."
+                                                        )
                                                     }
 
                                                     if (shiftEndTime.isNullOrEmpty()) {
-                                                        if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(Calendar.MINUTE) == 0) {
-                                                            if (!isTrip){
+                                                        if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(
+                                                                Calendar.MINUTE
+                                                            ) == 0
+                                                        ) {
+                                                            if (!isTrip) {
                                                                 stopLocationServiceIfRunning()
                                                             }
-                                                            Log.e("trackLocation", "Stopped service at 9 PM, no shift end.")
+                                                            Log.e(
+                                                                "trackLocation",
+                                                                "Stopped service at 9 PM, no shift end."
+                                                            )
                                                         }
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                }
-
-                                else {
-                                    if (!isTrip){
+                                } else {
+                                    if (!isTrip) {
                                         stopLocationServiceIfRunning()
                                     }
                                 }
 
-                            }
-                            else {
+                            } else {
                                 val lastPunch = punchesToday.lastOrNull()
                                 val punchOutTime = lastPunch?.punchOut
 
                                 if (punchOutTime != null) {
                                     updateUIForPunchOut(punchOutTime)
-                                    if (!isTrip){
+                                    if (!isTrip) {
                                         stopLocationServiceIfRunning()
                                     }
                                 } else {
@@ -772,10 +765,14 @@ class EmployeeDashboard : AppCompatActivity() {
                                     val shiftEndReached = shiftEndTime?.let { endTime ->
                                         val shiftEndCal = Calendar.getInstance()
                                         val end: Date? = try {
-                                            SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(endTime)
+                                            SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(
+                                                endTime
+                                            )
                                         } catch (e: Exception) {
                                             try {
-                                                SimpleDateFormat("HH:mm", Locale.getDefault()).parse(endTime)
+                                                SimpleDateFormat(
+                                                    "HH:mm", Locale.getDefault()
+                                                ).parse(endTime)
                                             } catch (ex: Exception) {
                                                 null
                                             }
@@ -784,8 +781,13 @@ class EmployeeDashboard : AppCompatActivity() {
                                         if (end != null) {
                                             val endCal = Calendar.getInstance()
                                             endCal.time = end
-                                            shiftEndCal.set(Calendar.HOUR_OF_DAY, endCal.get(Calendar.HOUR_OF_DAY))
-                                            shiftEndCal.set(Calendar.MINUTE, endCal.get(Calendar.MINUTE))
+                                            shiftEndCal.set(
+                                                Calendar.HOUR_OF_DAY,
+                                                endCal.get(Calendar.HOUR_OF_DAY)
+                                            )
+                                            shiftEndCal.set(
+                                                Calendar.MINUTE, endCal.get(Calendar.MINUTE)
+                                            )
                                             shiftEndCal.set(Calendar.SECOND, 0)
                                             now.after(shiftEndCal)
                                         } else {
@@ -795,16 +797,19 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
                                     if (shiftEndReached) {
-                                        if (!isTrip){
+                                        if (!isTrip) {
                                             stopLocationServiceIfRunning()
                                         }
                                         Log.e("trackLocation", "Stopped service after shift end 3.")
                                     } else if (shiftEndTime.isNullOrEmpty()) {
                                         if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(Calendar.MINUTE) == 0) {
-                                            if (!isTrip){
+                                            if (!isTrip) {
                                                 stopLocationServiceIfRunning()
                                             }
-                                            Log.e("trackLocation", "Stopped service at 9 PM, no shift end.")
+                                            Log.e(
+                                                "trackLocation",
+                                                "Stopped service at 9 PM, no shift end."
+                                            )
                                         }
                                     }
                                 }
@@ -813,16 +818,11 @@ class EmployeeDashboard : AppCompatActivity() {
                         }
 
 
-
-
-
-
-
                     } else {
                         binding.btnPunchIn.text = "Punch In"
                         binding.btnPunchIn.isEnabled = true
                         binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-                        if (!isTrip){
+                        if (!isTrip) {
                             stopLocationServiceIfRunning()
                         }
                     }
@@ -831,13 +831,11 @@ class EmployeeDashboard : AppCompatActivity() {
                     binding.btnPunchIn.isEnabled = true
                     binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
 
-                    if (!isTrip){
+                    if (!isTrip) {
                         stopLocationServiceIfRunning()
                     }
 
                 }
-
-
 
 
             }
@@ -892,12 +890,9 @@ class EmployeeDashboard : AppCompatActivity() {
                 binding.rvLeaves.visibility = View.VISIBLE
                 binding.llLeaves.visibility = View.GONE
 
-                binding.rvLeaves.layoutManager =
-                    LinearLayoutManager(
-                        this@EmployeeDashboard,
-                        LinearLayoutManager.HORIZONTAL,
-                        false
-                    )
+                binding.rvLeaves.layoutManager = LinearLayoutManager(
+                    this@EmployeeDashboard, LinearLayoutManager.HORIZONTAL, false
+                )
 
                 val rvAdapter = AdapterOnLeave(it.employeesOnLeave, this)
                 binding.rvLeaves.adapter = rvAdapter
@@ -927,9 +922,7 @@ class EmployeeDashboard : AppCompatActivity() {
                     binding.ivHeaderProfilePic.visibility = View.VISIBLE
                     val imageUrl = it.imageUrl
 
-                    Glide.with(this)
-                        .load(imageUrl)
-                        .into(binding.ivHeaderProfilePic)
+                    Glide.with(this).load(imageUrl).into(binding.ivHeaderProfilePic)
 
 
                 } else {
@@ -947,11 +940,10 @@ class EmployeeDashboard : AppCompatActivity() {
 
             if (it.status) {
 
-                if (it.data.banner.isNotEmpty()){
+                if (it.data.banner.isNotEmpty()) {
                     binding.imageSlider.setSliderAdapter(
                         SliderAdapter(
-                            it.data.path,
-                            it.data.banner
+                            it.data.path, it.data.banner
                         )
                     )
 
@@ -972,14 +964,13 @@ class EmployeeDashboard : AppCompatActivity() {
     }
 
     private fun stopLocationServiceIfRunning() {
-        Log.e("trackLocation","stop ")
+        Log.e("trackLocation", "stop ")
         if (isServiceRunning(LocationForegroundService::class.java)) {
             val stopIntent = Intent(this, LocationForegroundService::class.java)
             stopIntent.action = "STOP_FOREGROUND_SERVICE"
             ContextCompat.startForegroundService(this, stopIntent)
         }
     }
-
 
 
     private fun updateUIForPunchIn(punchInTime: String) {
@@ -1013,38 +1004,25 @@ class EmployeeDashboard : AppCompatActivity() {
     }
 
 
-
-
-
-
-
-
-
     override fun onBackPressed() {
         super.onBackPressed()
         finishAffinity()
     }
 
 
-
-
     private fun showScreenLockDialog() {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.app_name)
+        AlertDialog.Builder(this).setTitle(R.string.app_name)
             .setMessage("Are you using a screen lock for better security?")
             .setPositiveButton("Yes") { dialog, _ ->
                 setIsLockUser(true)
                 setIsLock(true)
                 showLockScreen()
                 dialog.dismiss()
-            }
-            .setNegativeButton("No") { dialog, _ ->
+            }.setNegativeButton("No") { dialog, _ ->
                 setIsLockUser(true)
                 setIsLock(false)
                 dialog.dismiss()
-            }
-            .setCancelable(false)
-            .show()
+            }.setCancelable(false).show()
     }
 
     private fun showLockScreen() {
@@ -1052,8 +1030,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
         if (keyguardManager.isDeviceSecure) {
             val intent = keyguardManager.createConfirmDeviceCredentialIntent(
-                "Unlock Your Phone",
-                "Please confirm your identity"
+                "Unlock Your Phone", "Please confirm your identity"
             )
             if (intent != null) {
                 lockScreenLauncher.launch(intent)
@@ -1104,39 +1081,39 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private fun showCustomBottomSheet() {
 
-     /*   val rootView = window.decorView.findViewById<View>(android.R.id.content)
-        rootView.post {
-            val screenshot = getBitmapFromView(rootView)
+        /*   val rootView = window.decorView.findViewById<View>(android.R.id.content)
+           rootView.post {
+               val screenshot = getBitmapFromView(rootView)
 
-            val blurProcessor = RSBlurProcessor(this)
-            val blurredBitmap = blurProcessor.blur(screenshot, radius = 30f, repeat = 1)
+               val blurProcessor = RSBlurProcessor(this)
+               val blurredBitmap = blurProcessor.blur(screenshot, radius = 30f, repeat = 1)
 
-            if (blurredBitmap != null) {
-                val blurOverlay: ImageView = binding.blurOverlay
-                blurOverlay.setImageBitmap(blurredBitmap)
-                blurOverlay.visibility = View.VISIBLE
-                binding.rootContainer.visibility = View.VISIBLE
-            }
-        }*/
+               if (blurredBitmap != null) {
+                   val blurOverlay: ImageView = binding.blurOverlay
+                   blurOverlay.setImageBitmap(blurredBitmap)
+                   blurOverlay.visibility = View.VISIBLE
+                   binding.rootContainer.visibility = View.VISIBLE
+               }
+           }*/
 
         bottomSheetDialog = BottomSheetDialog(this)
         bottomSheetDialogBinding = CustomBottomSheetAttendanceLayoutBinding.inflate(layoutInflater)
         bottomSheetDialog.setOnShowListener { dialog ->
-            val bottomSheet = (dialog as BottomSheetDialog)
-                .findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            val bottomSheet =
+                (dialog as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.setBackgroundResource(android.R.color.transparent)
         }
 
         bottomSheetDialog.setCancelable(false)
         bottomSheetDialogBinding.bottomSheetCancel.setOnClickListener {
-            binding.blurOverlay.visibility=View.GONE
+            binding.blurOverlay.visibility = View.GONE
             binding.rootContainer.visibility = View.GONE
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialogBinding.llGeoAttendance.setOnClickListener {
             if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo") {
                 if (isLocationEnabled()) {
-                    binding.blurOverlay.visibility=View.GONE
+                    binding.blurOverlay.visibility = View.GONE
                     binding.rootContainer.visibility = View.GONE
                     bottomSheetDialog.dismiss()
                     startActivity(Intent(this, EmployeePunchInActivity::class.java))
@@ -1149,7 +1126,7 @@ class EmployeeDashboard : AppCompatActivity() {
         bottomSheetDialogBinding.llSelfieAttendance.setOnClickListener {
             if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "selfie" || mEmplyeeInfo?.attendance_type == null) {
                 if (isLocationEnabled()) {
-                    binding.blurOverlay.visibility=View.GONE
+                    binding.blurOverlay.visibility = View.GONE
                     binding.rootContainer.visibility = View.GONE
                     bottomSheetDialog.dismiss()
                     startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
@@ -1167,15 +1144,14 @@ class EmployeeDashboard : AppCompatActivity() {
 
             if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "qr code") {
                 if (isLocationEnabled()) {
-                    binding.blurOverlay.visibility=View.GONE
+                    binding.blurOverlay.visibility = View.GONE
                     binding.rootContainer.visibility = View.GONE
                     bottomSheetDialog.dismiss()
                     startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
                 } else {
                     requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                 }
-            } else CustomToast(this, "QR Attendance is not enabled for you")
-            /* startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
+            } else CustomToast(this, "QR Attendance is not enabled for you")/* startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
              bottomSheetDialog.dismiss()*/
 
         }
@@ -1194,14 +1170,11 @@ class EmployeeDashboard : AppCompatActivity() {
     }
 
 
-
-
-
-
     private fun isLocationEnabled(): Boolean {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
     }
 
     private val locationSettingsLauncher =
@@ -1212,15 +1185,11 @@ class EmployeeDashboard : AppCompatActivity() {
         }
 
     private fun showLocationServicesDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Enable Location Services")
+        AlertDialog.Builder(this).setTitle("Enable Location Services")
             .setMessage("This app requires location services to be enabled. Please turn on location services.")
             .setPositiveButton("OK") { _, _ ->
                 locationSettingsLauncher.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-            }
-            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-            .create()
-            .show()
+            }.setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }.create().show()
     }
 
     private val requestLocationPermissionLauncher =
@@ -1234,8 +1203,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private fun checkLocationPermissionAndFind() {
         if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                this, Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             getLocation()
@@ -1249,18 +1217,15 @@ class EmployeeDashboard : AppCompatActivity() {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (ActivityCompat.checkSelfPermission(
                 this, android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 this, android.Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
+                this, arrayOf(
                     android.Manifest.permission.ACCESS_FINE_LOCATION,
                     android.Manifest.permission.ACCESS_COARSE_LOCATION
-                ),
-                LOCATION_PERMISSION_REQUEST_CODE
+                ), LOCATION_PERMISSION_REQUEST_CODE
             )
             return
         }
@@ -1271,19 +1236,13 @@ class EmployeeDashboard : AppCompatActivity() {
         if (hasGps || hasNetwork) {
             if (hasGps) {
                 locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    5000,
-                    0F,
-                    gpsLocationListener
+                    LocationManager.GPS_PROVIDER, 5000, 0F, gpsLocationListener
                 )
             }
 
             if (hasNetwork) {
                 locationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER,
-                    5000,
-                    0F,
-                    networkLocationListener
+                    LocationManager.NETWORK_PROVIDER, 5000, 0F, networkLocationListener
                 )
             }
 
@@ -1348,7 +1307,6 @@ class EmployeeDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
         mActionList.add(ActionModel("Trip", R.drawable.ic_trip))
-        mActionList.add(ActionModel("Salary Slip", R.drawable.payroll_2))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
@@ -1377,9 +1335,6 @@ class EmployeeDashboard : AppCompatActivity() {
         super.onDestroy()
         Log.d("NetworkHandler", " onDestroy called on activity")
     }
-
-
-
 
 
 }

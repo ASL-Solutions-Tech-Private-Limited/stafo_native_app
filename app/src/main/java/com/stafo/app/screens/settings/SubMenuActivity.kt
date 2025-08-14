@@ -36,6 +36,7 @@ class SubMenuActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySubMenuBinding
     private val mActionList = ArrayList<ActionModel>()
+
     //for bottom sheet
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var bottomSheetDialogBinding: PayrollBottomSheetLayoutBinding
@@ -65,14 +66,14 @@ class SubMenuActivity : AppCompatActivity() {
         binding.apply {
 
 
-
             ivBack.setOnClickListener {
                 onBackPressed()
             }
-            if (getIsCOMPANYLogin(this@SubMenuActivity)==true){
+            if (getIsCOMPANYLogin(this@SubMenuActivity) == true) {
                 binding.rvActivities.layoutManager = GridLayoutManager(this@SubMenuActivity, 3)
 
-                val actionsAdapter = SubMneuActionsListAdapter(actionList(),
+                val actionsAdapter = SubMneuActionsListAdapter(
+                    actionList(),
                     this@SubMenuActivity,
                     object : SubMneuActionsListAdapter.ActionClickListener {
                         override fun onActionClick(action: String) {
@@ -84,39 +85,59 @@ class SubMenuActivity : AppCompatActivity() {
                                             ViewAllEmployeeActivity::class.java
                                         ).apply {
                                             putExtra("FROM", "View All")
-                                        }
-                                    )
+                                        })
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
 
                                 }
+
                                 "CRM" -> {
                                     startActivity(
                                         Intent(
-                                            this@SubMenuActivity,
-                                            CRMLeadDashboard::class.java
+                                            this@SubMenuActivity, CRMLeadDashboard::class.java
                                         )
                                     )
                                 }
+
                                 "Payroll" -> {
                                     showCustomPayrollBottomSheet()
                                 }
 
 
                                 "Reports" -> {
-                                    startActivity(Intent(this@SubMenuActivity, ReportsActivity::class.java))
-                                    overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity, ReportsActivity::class.java
+                                        )
+                                    )
+                                    overridePendingTransition(
+                                        R.anim.slide_from_right, R.anim.slide_to_left
+                                    )
                                 }
-                                "Performance"-> {
-                                    startActivity(Intent(this@SubMenuActivity, PerformanceActivity::class.java))
-                                    overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+
+                                "Performance" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity, PerformanceActivity::class.java
+                                        )
+                                    )
+                                    overridePendingTransition(
+                                        R.anim.slide_from_right, R.anim.slide_to_left
+                                    )
                                 }
-                                "Rank List"-> {
-                                    startActivity(Intent(this@SubMenuActivity, RankListActivity::class.java))
-                                    overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+
+                                "Rank List" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity, RankListActivity::class.java
+                                        )
+                                    )
+                                    overridePendingTransition(
+                                        R.anim.slide_from_right, R.anim.slide_to_left
+                                    )
                                 }
+
                                 "Leaves" -> {
                                     startActivity(
                                         Intent(
@@ -125,40 +146,38 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
 
 
                                 }
+
                                 "Branches" -> {
                                     startActivity(
                                         Intent(
-                                            this@SubMenuActivity,
-                                            BranchActivity::class.java
+                                            this@SubMenuActivity, BranchActivity::class.java
                                         )
                                     )
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
 
 
                                 }
+
                                 "Policy" -> {
 
                                     startActivity(
                                         Intent(
-                                            this@SubMenuActivity,
-                                            PolicyActivity::class.java
+                                            this@SubMenuActivity, PolicyActivity::class.java
                                         )
                                     )
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
 
                                 }
+
                                 "Location\nTrack" -> {
 
                                     startActivity(
@@ -168,11 +187,11 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
 
                                 }
+
                                 "Request\nDevice" -> {
                                     startActivity(
                                         Intent(
@@ -182,19 +201,19 @@ class SubMenuActivity : AppCompatActivity() {
                                     )
 
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
 
                                 }
+
                                 "Holidays" -> {
                                     startActivity(
                                         Intent(
-                                            this@SubMenuActivity,
-                                            HolidayActivity::class.java
+                                            this@SubMenuActivity, HolidayActivity::class.java
                                         )
                                     )
                                 }
+
                                 "Expenses" -> {
                                     startActivity(
                                         Intent(
@@ -203,11 +222,11 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                 }
+
                                 "Task" -> {
                                     startActivity(
                                         Intent(
-                                            this@SubMenuActivity,
-                                            TaskMSDashboard::class.java
+                                            this@SubMenuActivity, TaskMSDashboard::class.java
                                         )
                                     )
                                 }
@@ -215,8 +234,7 @@ class SubMenuActivity : AppCompatActivity() {
                                 "Trips" -> {
                                     startActivity(
                                         Intent(
-                                            this@SubMenuActivity,
-                                            TripDashboardActivity::class.java
+                                            this@SubMenuActivity, TripDashboardActivity::class.java
                                         )
                                     )
                                 }
@@ -225,9 +243,10 @@ class SubMenuActivity : AppCompatActivity() {
 
                     })
                 rvActivities.adapter = actionsAdapter
-            }else{
+            } else {
                 binding.rvActivities.layoutManager = GridLayoutManager(this@SubMenuActivity, 3)
-                val actionsAdapter = SubMneuActionsListAdapter(empActionList(),
+                val actionsAdapter = SubMneuActionsListAdapter(
+                    empActionList(),
                     this@SubMenuActivity,
                     object : SubMneuActionsListAdapter.ActionClickListener {
                         override fun onActionClick(action: String) {
@@ -238,34 +257,21 @@ class SubMenuActivity : AppCompatActivity() {
                                             this@SubMenuActivity,
                                             EmployeeAttendanceRecordActivity::class.java
                                         ).apply {
-                                            putExtra("EMP_ID", "${getEmployeeDetails()?.id.toString()}")
-                                        }
-                                    )
+                                            putExtra(
+                                                "EMP_ID", "${getEmployeeDetails()?.id.toString()}"
+                                            )
+                                        })
 
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
                                 }
 
-                                "Salary Slip" -> {
-                                    startActivity(
-                                        Intent(
-                                            this@SubMenuActivity,
-                                            SalarySlipActivity::class.java
-                                        )
-                                    )
-                                    overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
-                                    )
-                                }
 
                                 "CRM" -> {
                                     startActivity(
                                         Intent(
-                                            this@SubMenuActivity,
-                                            CRMLeadDashboard::class.java
+                                            this@SubMenuActivity, CRMLeadDashboard::class.java
                                         )
                                     )
                                 }
@@ -278,8 +284,7 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
                                 }
 
@@ -291,32 +296,29 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
                                 }
 
                                 "Policy" -> {
                                     startActivity(
                                         Intent(
-                                            this@SubMenuActivity,
-                                            PolicyActivity::class.java
+                                            this@SubMenuActivity, PolicyActivity::class.java
                                         )
                                     )
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
                                 }
 
                                 "Holidays" -> {
                                     startActivity(
                                         Intent(
-                                            this@SubMenuActivity,
-                                            HolidayActivity::class.java
+                                            this@SubMenuActivity, HolidayActivity::class.java
                                         )
                                     )
                                 }
+
                                 "Expenses" -> {
                                     startActivity(
                                         Intent(
@@ -325,11 +327,11 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                 }
+
                                 "Task" -> {
                                     startActivity(
                                         Intent(
-                                            this@SubMenuActivity,
-                                            TaskMSDashboard::class.java
+                                            this@SubMenuActivity, TaskMSDashboard::class.java
                                         )
                                     )
                                 }
@@ -337,8 +339,7 @@ class SubMenuActivity : AppCompatActivity() {
                                 "Trips" -> {
                                     startActivity(
                                         Intent(
-                                            this@SubMenuActivity,
-                                            TripDashboardActivity::class.java
+                                            this@SubMenuActivity, TripDashboardActivity::class.java
                                         )
                                     )
                                 }
@@ -376,8 +377,7 @@ class SubMenuActivity : AppCompatActivity() {
         mActionList.add(ActionModel("Attendance", R.drawable.ic_attendace))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
-       mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
-        mActionList.add(ActionModel("Salary Slip", R.drawable.payroll_2))
+        mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
@@ -401,17 +401,17 @@ class SubMenuActivity : AppCompatActivity() {
         bottomSheetDialogBinding.llcSalaryType.setOnClickListener {
             bottomSheetDialog.dismiss()
             startActivity(Intent(this@SubMenuActivity, SalaryTypeActivity::class.java))
-            overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
         bottomSheetDialogBinding.llcGenerateSalary.setOnClickListener {
             bottomSheetDialog.dismiss()
             startActivity(Intent(this@SubMenuActivity, GenerateSalaryActivity::class.java))
-            overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
         bottomSheetDialogBinding.llcSalarySlip.setOnClickListener {
             bottomSheetDialog.dismiss()
             startActivity(Intent(this@SubMenuActivity, SalarySlipActivity::class.java))
-            overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
 
 
