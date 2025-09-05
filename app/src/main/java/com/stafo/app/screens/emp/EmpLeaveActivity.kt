@@ -53,7 +53,7 @@ class EmpLeaveActivity : AppCompatActivity() {
     private var todate = ""
     private var fromdate: String = ""
     private var reason: String = ""
-    private var leaveType: Int = 2
+    private var leaveType: Int = -1
     private var nodays = 0f
 
     private var postFromDate: String = ""
@@ -117,14 +117,12 @@ class EmpLeaveActivity : AppCompatActivity() {
                         getLeaveTypeList.forEach { category ->
                             add(
                                 SearchListItem(
-                                    id = category.id,
-                                    title = category.name
+                                    id = category.id, title = category.name
                                 )
                             )
                         }
                     }
 
-                    Log.e("leaveApply", " get leave  type list ${leaveTypeList}")
 
                     val firstItem = leaveTypeList.first()
                     leaveType = firstItem.id
@@ -149,12 +147,15 @@ class EmpLeaveActivity : AppCompatActivity() {
                     }
 
 
-
-
-
+                } else {
+                    CustomToast(this, "No leave types available. Please contact your company.")
+                    onBackPressedDispatcher.onBackPressed()
                 }
 
 
+            } else {
+                CustomToast(this, "No leave types available. Please contact your company.")
+                onBackPressedDispatcher.onBackPressed()
             }
 
 
@@ -173,50 +174,12 @@ class EmpLeaveActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun onClickListener() {
-
-
-/*        val options = resources.getStringArray(R.array.leave_type)
-        val adapter = ArrayAdapter(this, R.layout.custom_spinner_item, options)
-        binding.spinnerLeaveType.setAdapter(adapter)
-        binding.spinnerLeaveType.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    val selectedValue = parent.getItemAtPosition(position).toString()
-
-                    if (selectedValue == "Casual Leave") {
-                        leaveType = 1
-
-                    } else if (selectedValue == "Sick Leave") {
-                        leaveType = 2
-                    } else if (selectedValue == "Privilege Leave") {
-                        leaveType = 3
-                    }
-
-                    Log.d("res", "leavetype: $leaveType  $selectedValue")
-
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                }
-            }*/
-
-
-
-
-
-
         binding.apply {
 
 
             getEmployeeComId()?.let {
                 settingsViewModel.getLeaveTypeList(
-                    this@EmpLeaveActivity,
-                    it.toInt()
+                    this@EmpLeaveActivity, it.toInt()
                 )
             }
 
@@ -277,10 +240,7 @@ class EmpLeaveActivity : AppCompatActivity() {
 
                         )
 
-                        Log.e("leaveApply","get post value:  ${request}")
-
-
-                       settingsViewModel.requestLeaveEmp(this@EmpLeaveActivity, request)
+                        settingsViewModel.requestLeaveEmp(this@EmpLeaveActivity, request)
 
                     }
 
@@ -318,7 +278,11 @@ class EmpLeaveActivity : AppCompatActivity() {
     }
 
     private fun isValidate(): Boolean {
-        binding?.apply {
+        binding.apply {
+            if (leaveType == -1) {
+                CustomToast(this@EmpLeaveActivity, "Please select leave type")
+                return false
+            }
             if (edtFromDate.text.isNullOrEmpty()) {
                 CustomToast(this@EmpLeaveActivity, "Please enter from date")
                 return false
@@ -422,11 +386,9 @@ class EmpLeaveActivity : AppCompatActivity() {
 
             if (toDate.before(fromDate)) {
                 binding.nodTxt.text = "No of leave: 0 days"
-                AlertDialog.Builder(this@EmpLeaveActivity)
-                    .setTitle("Invalid Date Range")
+                AlertDialog.Builder(this@EmpLeaveActivity).setTitle("Invalid Date Range")
                     .setMessage("The 'To Date' cannot be earlier than the 'From Date'.")
-                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-                    .show()
+                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }.show()
                 return
             }
 
@@ -451,23 +413,18 @@ class EmpLeaveActivity : AppCompatActivity() {
 
     private fun hasLocationPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
+            this, Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestLocationPermission() {
         ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_CODE_LOCATION
+            this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE_LOCATION
         )
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_LOCATION) {
@@ -477,9 +434,7 @@ class EmpLeaveActivity : AppCompatActivity() {
             } else {
                 // Permission denied, show a message
                 Toast.makeText(
-                    this,
-                    "Location permission is required for this service.",
-                    Toast.LENGTH_SHORT
+                    this, "Location permission is required for this service.", Toast.LENGTH_SHORT
                 ).show()
             }
         }

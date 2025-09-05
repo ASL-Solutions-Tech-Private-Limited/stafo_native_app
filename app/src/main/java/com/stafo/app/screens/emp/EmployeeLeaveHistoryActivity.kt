@@ -231,6 +231,43 @@ class EmployeeLeaveHistoryActivity : AppCompatActivity() {
 
 
             }
+            else{
+                val options = mutableListOf<String>()
+                options.add("All")
+                val adapterSpinner = ArrayAdapter(
+                    this@EmployeeLeaveHistoryActivity,
+                    R.layout.custom_spinner_item,
+                    options
+                )
+                adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                binding.spinnerSearchType.adapter = adapterSpinner
+                binding.spinnerSearchType.setSelection(0)
+
+                binding.spinnerSearchType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        val selectedValue = parent.getItemAtPosition(position).toString()
+
+                        filteredList = if (selectedValue.equals("All", ignoreCase = true)) {
+                            list
+                        } else {
+                            list.filter {
+                                it.leaveTypeObj.name?.contains(selectedValue, ignoreCase = true) == true
+                            }
+                        }
+
+                        rvAdapter.updateList(filteredList.toMutableList())
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>) {
+
+                    }
+                }
+            }
 
 
         }

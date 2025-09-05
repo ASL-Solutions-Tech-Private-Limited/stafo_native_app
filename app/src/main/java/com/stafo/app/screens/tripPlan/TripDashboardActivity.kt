@@ -61,9 +61,8 @@ class TripDashboardActivity : AppCompatActivity() {
     private fun setupListeners() {
         binding.ivBack.setOnClickListener { finish() }
         binding.ivBack.setOnClickListener {
-            startActivity(Intent(this, TripListActivity::class.java).apply {
-                putExtra("flag", "ongoing")
-            })
+           onBackPressedDispatcher.onBackPressed()
+            finish()
         }
         binding.btnCreateTrip.setOnClickListener {
             startActivity(Intent(this, CreateTripActivity::class.java).apply {
