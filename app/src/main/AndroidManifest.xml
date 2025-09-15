@@ -21,22 +21,6 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
-    <queries>
-
-        <!-- Explicit apps you know in advance about: -->
-        <package android:name="com.acpl.registersdk" />
-        <package android:name="com.scl.rdservice" />
-        <package android:name="com.mantra.rdservice" />
-        <package android:name="com.precision.pb510.rdservice" />
-        <package android:name="com.nextbiometrics.onetouchrdservice" />
-        <package android:name="com.phonepe.app" />
-        <package android:name="net.one97.paytm" />
-        <package android:name="com.google.android.apps.nbu.paisa.user" />
-        <package android:name="protean.assisted.ekyc" />
-        <package android:name="com.whatsapp" />
-        <package android:name="com.mantra.mis100v2.rdservice" />
-        <package android:name="com.idemia.l1rdservice" />
-    </queries>
 
     <application
         android:name=".ASLEmpMng"
@@ -55,13 +39,16 @@
         tools:targetApi="31">
         <activity
             android:name=".screens.settings.AttendanceRequestActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.emp.EditAttendanceActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.settings.PayrollActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".screens.settings.LeaveTypeDashboardActivity"
             android:exported="false"
