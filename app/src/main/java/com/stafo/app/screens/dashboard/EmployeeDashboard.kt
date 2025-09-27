@@ -966,9 +966,13 @@ class EmployeeDashboard : AppCompatActivity() {
     private fun stopLocationServiceIfRunning() {
         Log.e("trackLocation", "stop ")
         if (isServiceRunning(LocationForegroundService::class.java)) {
+            /*val stopIntent = Intent(this, LocationForegroundService::class.java)
+            stopIntent.action = "STOP_FOREGROUND_SERVICE"*/
+            //ContextCompat.startForegroundService(this, stopIntent)
+
             val stopIntent = Intent(this, LocationForegroundService::class.java)
             stopIntent.action = "STOP_FOREGROUND_SERVICE"
-            ContextCompat.startForegroundService(this, stopIntent)
+            stopService(stopIntent)
         }
     }
 

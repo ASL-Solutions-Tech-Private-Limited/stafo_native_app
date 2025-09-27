@@ -116,7 +116,7 @@ class SubMenuActivity : AppCompatActivity() {
                                     )
                                 }
 
-                                "Performance" -> {
+                                "Performance\nType" -> {
                                     startActivity(
                                         Intent(
                                             this@SubMenuActivity, PerformanceActivity::class.java
@@ -359,16 +359,16 @@ class SubMenuActivity : AppCompatActivity() {
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
         mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
-        mActionList.add(ActionModel("Location Track", R.drawable.ic_location))
+        mActionList.add(ActionModel("Location\nTrack", R.drawable.ic_location))
         mActionList.add(ActionModel("Payroll", R.drawable.payroll_2))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
-        mActionList.add(ActionModel("Performance Type", R.drawable.ic_performace))
+        mActionList.add(ActionModel("Performance\nType", R.drawable.ic_performace))
         mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
-        mActionList.add(ActionModel("Request Device", R.drawable.ic_device_request))
+        mActionList.add(ActionModel("Request\nDevice", R.drawable.ic_device_request))
         mActionList.add(ActionModel("Expenses", R.drawable.ic_crm))
         return mActionList
     }

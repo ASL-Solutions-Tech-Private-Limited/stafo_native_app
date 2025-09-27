@@ -210,7 +210,8 @@ class LocationForegroundService : Service() {
 
 
     private fun startAsForegroundService() {
-        val notificationManager =
+
+       /* val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val existingNotification = notificationManager.activeNotifications.find {
             it.id == NOTIFICATION_ID
@@ -223,7 +224,28 @@ class LocationForegroundService : Service() {
             NotificationCompat.Builder(this, NotificationsHelper.NOTIFICATION_CHANNEL_ID)
                 .setContentTitle("").setContentText("").setSmallIcon(R.drawable.ic_notification)
                 .build()
+        }*/
+
+        if (hasNotificationShown) {
+            return
         }
+
+        val notification = NotificationsHelper.buildNotification(this)
+
+        ServiceCompat.startForeground(
+            this,
+            NOTIFICATION_ID,
+            notification,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+            } else {
+                0
+            }
+        )
+
+        hasNotificationShown = true
+
+
 
         ServiceCompat.startForeground(
             this,

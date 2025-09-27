@@ -243,8 +243,10 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                                         "Please move closer to the branch area to punch attendance."
                                     )
                                     isSubmitting = false
-                                    onBackPressedDispatcher.onBackPressed()
-                                    finish()
+                                    Handler(Looper.getMainLooper()).postDelayed({
+                                        onBackPressedDispatcher.onBackPressed()
+                                        finish()
+                                    }, 700)
                                 }
                             }
 
@@ -393,6 +395,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     private fun observeViewModel() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
         settingsViewModel.mSelfieAttendanceEmpResponse.observe(this) {
+            Log.e("AttendSelfie", "observeViewModel: $it")
             if (it.status) {
                 binding.rtlAttendanceMsg.visibility = View.VISIBLE
                 val currentTime = Calendar.getInstance().time
@@ -411,6 +414,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                 CustomToast(this, it.message)
                 onApiResponseError()
                 binding.rtlAttendanceMsg.visibility = View.GONE
+
             }
 
 

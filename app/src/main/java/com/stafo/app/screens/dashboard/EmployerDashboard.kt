@@ -618,7 +618,11 @@ class EmployerDashboard : AppCompatActivity() {
         if (isServiceRunning(LocationForegroundService::class.java)) {
             val stopIntent = Intent(this, LocationForegroundService::class.java)
             stopIntent.action = "STOP_FOREGROUND_SERVICE"
-            ContextCompat.startForegroundService(this, stopIntent)
+            stopService(stopIntent)
+
+            /*val stopIntent = Intent(this, LocationForegroundService::class.java)
+            stopIntent.action = "STOP_FOREGROUND_SERVICE"
+            ContextCompat.startForegroundService(this, stopIntent)*/
         }
     }
 
