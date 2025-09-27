@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Base64
 import android.util.Base64.NO_WRAP
 import android.util.Log
+import android.view.View
 import android.webkit.WebView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -142,9 +143,25 @@ class SubscriptionActivity : AppCompatActivity() {
         }
     }
 
+
     private fun selectPlan(index: Int, selectedView: TextView) {
 
-        if (!::list.isInitialized || list.size <= index) return
+        if (!::list.isInitialized || list.isEmpty() || list.size <= index) {
+            binding.rtlMonthly.visibility = View.GONE
+            binding.rtlNotAvailable.visibility = View.VISIBLE
+
+            for ((view, bgRes) in planViews) {
+                if (view == selectedView) {
+                    view.setBackgroundResource(bgRes)
+                } else {
+                    view.background = null
+                }
+            }
+            return
+        }
+
+        binding.rtlMonthly.visibility = View.VISIBLE
+        binding.rtlNotAvailable.visibility = View.GONE
 
         for ((view, bgRes) in planViews) {
             if (view == selectedView) {
@@ -175,7 +192,49 @@ class SubscriptionActivity : AppCompatActivity() {
             rvAdapter.notifyDataSetChanged()
             binding.rvFeatureList.scrollToPosition(0)
         }
+
+
     }
+
+
+    /*  private fun selectPlan(index: Int, selectedView: TextView) {
+
+
+          if (!::list.isInitialized || list.isEmpty() || list.size <= index) {
+              CustomToast(this@SubscriptionActivity,"This package is not available right now")
+              return
+          }
+
+          for ((view, bgRes) in planViews) {
+              if (view == selectedView) {
+                  view.setBackgroundResource(bgRes)
+                  binding.btnBuyNow.setBackgroundResource(bgRes)
+              } else {
+                  view.background = null
+              }
+          }
+
+          val selectedPackage = list[index]
+
+
+          selectPlanId = selectedPackage.id.toString()
+
+          val price = selectedPackage.discount_price
+          if (!price.isNullOrBlank()) {
+              binding.tvPrice.text = "₹" + price.removeSuffix(".00")
+              binding.tvDuration.text = "${selectedPackage.days} days"
+          }
+
+
+          val features = selectedPackage.features?.filter { it.pivot.feature_value != "No" }
+
+          if (!features.isNullOrEmpty()) {
+              rvAdapter = AdapterPlanList(features, this, index)
+              binding.rvFeatureList.adapter = rvAdapter
+              rvAdapter.notifyDataSetChanged()
+              binding.rvFeatureList.scrollToPosition(0)
+          }
+      }*/
 
 
     private fun observeViewModel() {
@@ -189,8 +248,11 @@ class SubscriptionActivity : AppCompatActivity() {
 
 
                 if (it.data.isNotEmpty()) {
-
+                    binding.rtlMonthly.visibility=View.VISIBLE
+                    binding.rtlNotAvailable.visibility=View.GONE
                     list = it.data
+
+                    Log.e("res","package data: ${list.size}")
 
 
                     val packageItem = list.firstOrNull()
@@ -225,9 +287,15 @@ class SubscriptionActivity : AppCompatActivity() {
                     }
 
 
+                }else{
+                    binding.rtlMonthly.visibility=View.GONE
+                    binding.rtlNotAvailable.visibility=View.VISIBLE
                 }
 
 
+            }else{
+                onBackPressedDispatcher.onBackPressed()
+                finish()
             }
         }
 

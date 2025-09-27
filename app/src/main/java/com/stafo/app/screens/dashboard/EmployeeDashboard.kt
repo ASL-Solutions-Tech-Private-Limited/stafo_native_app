@@ -252,7 +252,7 @@ class EmployeeDashboard : AppCompatActivity() {
                             )
                         }
 
-                        "Policy" -> {
+                        "Policies" -> {
                             startActivity(
                                 Intent(
                                     this@EmployeeDashboard, PolicyActivity::class.java
@@ -1314,7 +1314,7 @@ class EmployeeDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
-        mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
+        mActionList.add(ActionModel("Policies", R.drawable.ic_policy))
         mActionList.add(ActionModel("Expenses", R.drawable.ic_crm))
         return mActionList
     }

@@ -704,7 +704,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
                 }
 
                 "Logout" -> {
-                    doLogout(this)
+                    showLogoutDialog()
                 }
             }
         }
@@ -750,7 +750,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
                     startActivity(intent)
                 }
 
-                "Policy" -> {
+                "Policies" -> {
                     val intent = Intent(this, PolicyActivity::class.java)
                     startActivity(intent)
                 }
@@ -794,7 +794,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
                 }
 
                 "Logout" -> {
-                    doLogout(this)
+                    showLogoutDialog()
                 }
             }
         }
@@ -802,6 +802,25 @@ class EmplyeeyerProfile : AppCompatActivity() {
         binding.settingsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.settingsRecyclerView.adapter = adapter
 
+    }
+
+
+    private fun showLogoutDialog() {
+        val builder = AlertDialog.Builder(this@EmplyeeyerProfile)
+        builder.setTitle(R.string.app_name)
+        builder.setMessage("Are you sure? You want to logout from device!")
+
+        builder.setPositiveButton("Yes") { dialog, _ ->
+            doLogout(this)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
     }
 
 

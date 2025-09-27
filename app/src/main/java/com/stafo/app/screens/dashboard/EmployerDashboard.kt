@@ -320,7 +320,7 @@ class EmployerDashboard : AppCompatActivity() {
 
                             }
 
-                            "Policy" -> {
+                            "Office Policies" -> {
 
 
                                 if (companyStatus) {
@@ -795,7 +795,7 @@ class EmployerDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
-        mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
+        mActionList.add(ActionModel("Office Policies", R.drawable.ic_policy))
         mActionList.add(ActionModel("Request Device", R.drawable.ic_device_request))
         mActionList.add(ActionModel("Expenses", R.drawable.ic_crm))
         return mActionList

@@ -54,7 +54,7 @@ class CreatePerformanceTypeActivity : AppCompatActivity() {
         binding.apply {
 
 
-            if (mID=="null" && mName=="null"){
+            if (mID=="" && mName==""){
                 tvTitle.text="Create Performance Type"
                 tieDescription.setText("")
                 tiePerformanceName.setText("")
