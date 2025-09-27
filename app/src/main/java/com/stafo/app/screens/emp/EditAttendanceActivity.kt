@@ -200,8 +200,8 @@ class EditAttendanceActivity : AppCompatActivity() {
                             val request = AttendanceUpdateRequest(
                                 employee_id = it1.id,
                                 company_id = it1.company_id,
-                                branch_id = it1.branch_id.toInt() ?: 0,
-                                department_id = it1.department_id.toInt() ?: 0,
+                                branch_id = it1.branch_id?.toIntOrNull() ?: 0,
+                                department_id = it1.department_id?.toIntOrNull() ?: 0,
                                 attendance = selectedAttendanceType,
                                 date = selectedDate,
                                 in_time = selectedInTime,
@@ -242,8 +242,8 @@ class EditAttendanceActivity : AppCompatActivity() {
                             val request = AttendanceUpdateRequest(
                                 employee_id = it1.id,
                                 company_id = it1.company_id,
-                                branch_id = it1.branch_id.toInt() ?: 0,
-                                department_id = it1.department_id.toInt() ?: 0,
+                                branch_id = it1.branch_id?.toIntOrNull() ?: 0,
+                                department_id = it1.department_id?.toIntOrNull() ?: 0,
                                 attendance = selectedAttendanceType,
                                 date = selectedDate,
                                 in_time = selectedInTime,

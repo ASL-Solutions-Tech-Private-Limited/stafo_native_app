@@ -48,7 +48,11 @@ class AttendanceRequestActivity : AppCompatActivity() {
 
         onClickListener()
         observeViewModel()
-        setupSearchListener()
+        if (getIsCOMPANYLogin(this)){
+            binding.llSearchHead.visibility = View.VISIBLE
+            setupSearchListener()
+        }else binding.llSearchHead.visibility = View.GONE
+
 
     }
 

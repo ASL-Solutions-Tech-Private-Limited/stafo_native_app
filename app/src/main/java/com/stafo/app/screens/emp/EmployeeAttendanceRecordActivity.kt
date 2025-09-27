@@ -235,6 +235,11 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
 
 
+           if (getIsCOMPANYLogin(this@EmployeeAttendanceRecordActivity)){
+                imageSettings.visibility = View.GONE
+            } else imageSettings.visibility = View.VISIBLE
+
+
             imageSettings.setOnClickListener { view ->
                 showPopupMenu(view)
             }
@@ -253,7 +258,7 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
     private fun showPopupMenu(view: View) {
         val popupMenu = PopupMenu(this, view)
         val menu = popupMenu.menu
-        val options = resources.getStringArray(R.array.request_attendance)
+        val options = resources.getStringArray(R.array.request_attendance_com)
         options.forEachIndexed { index, option ->
             menu.add(0, index, index, option)
         }
