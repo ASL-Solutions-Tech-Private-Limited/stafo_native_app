@@ -296,6 +296,8 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         }
     }
 
+
+
     private fun is24HourFormat(time: String): Boolean {
         return try {
             val format24 = SimpleDateFormat("HH:mm", Locale.getDefault())

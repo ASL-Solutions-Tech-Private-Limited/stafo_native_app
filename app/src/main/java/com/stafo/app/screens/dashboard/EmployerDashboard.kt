@@ -81,6 +81,7 @@ import com.stafo.app.screens.recharge.RechargeActivity
 import com.stafo.app.screens.reports.ReportsActivity
 import com.stafo.app.screens.settings.HolidayActivity
 import com.stafo.app.screens.settings.PayrollActivity
+import com.stafo.app.screens.settings.SalaryDisbursementActivity
 import com.stafo.app.screens.settings.SubMenuActivity
 import com.tanodxyz.gdownload.isNetworkAvailable
 
@@ -240,6 +241,18 @@ class EmployerDashboard : AppCompatActivity() {
                                     showCompanyVerificationDialog()
                                 }
 
+                            }
+
+                            "Salary Disbursement" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard,
+                                        SalaryDisbursementActivity::class.java
+                                    )
+                                )
+                                overridePendingTransition(
+                                    R.anim.slide_from_right, R.anim.slide_to_left
+                                )
                             }
 
                             "CRM" -> {
@@ -618,11 +631,7 @@ class EmployerDashboard : AppCompatActivity() {
         if (isServiceRunning(LocationForegroundService::class.java)) {
             val stopIntent = Intent(this, LocationForegroundService::class.java)
             stopIntent.action = "STOP_FOREGROUND_SERVICE"
-            stopService(stopIntent)
-
-            /*val stopIntent = Intent(this, LocationForegroundService::class.java)
-            stopIntent.action = "STOP_FOREGROUND_SERVICE"
-            ContextCompat.startForegroundService(this, stopIntent)*/
+            ContextCompat.startForegroundService(this, stopIntent)
         }
     }
 
@@ -789,6 +798,7 @@ class EmployerDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
         mActionList.add(ActionModel("Location Track", R.drawable.ic_location))
         mActionList.add(ActionModel("Payroll", R.drawable.payroll_2))
+        mActionList.add(ActionModel("Salary Disbursement", R.drawable.ic_salary_payout))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
         mActionList.add(ActionModel("Performance Type", R.drawable.ic_performace))
@@ -867,17 +877,17 @@ class EmployerDashboard : AppCompatActivity() {
         bottomSheetDialogBinding.llcSalaryType.setOnClickListener {
             bottomSheetDialog.dismiss()
             startActivity(Intent(this@EmployerDashboard, SalaryTypeActivity::class.java))
-            overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
         bottomSheetDialogBinding.llcGenerateSalary.setOnClickListener {
             bottomSheetDialog.dismiss()
             startActivity(Intent(this@EmployerDashboard, GenerateSalaryActivity::class.java))
-            overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
         bottomSheetDialogBinding.llcSalarySlip.setOnClickListener {
             bottomSheetDialog.dismiss()
             startActivity(Intent(this@EmployerDashboard, SalarySlipActivity::class.java))
-            overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
 
 

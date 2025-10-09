@@ -103,6 +103,16 @@ class SubMenuActivity : AppCompatActivity() {
                                 "Payroll" -> {
                                     showCustomPayrollBottomSheet()
                                 }
+                                "Salary\nDisbursement" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity, SalaryDisbursementActivity::class.java
+                                        )
+                                    )
+                                    overridePendingTransition(
+                                        R.anim.slide_from_right, R.anim.slide_to_left
+                                    )
+                                }
 
 
                                 "Reports" -> {
@@ -361,6 +371,7 @@ class SubMenuActivity : AppCompatActivity() {
         mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
         mActionList.add(ActionModel("Location\nTrack", R.drawable.ic_location))
         mActionList.add(ActionModel("Payroll", R.drawable.payroll_2))
+        mActionList.add(ActionModel("Salary\nDisbursement", R.drawable.ic_salary_payout))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
         mActionList.add(ActionModel("Performance\nType", R.drawable.ic_performace))
