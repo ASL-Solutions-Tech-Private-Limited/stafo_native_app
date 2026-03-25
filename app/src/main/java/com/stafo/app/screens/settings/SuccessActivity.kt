@@ -35,7 +35,7 @@ class SuccessActivity : AppCompatActivity() {
             lottieViewSuccess.playAnimation()
             Handler(Looper.getMainLooper()).postDelayed({
                 onBackPressedDispatcher.onBackPressed()
-            }, 7000)
+            }, 5000)
 
 
         }

@@ -75,11 +75,7 @@ class SalarySlipActivity : AppCompatActivity() {
     }
 
     private fun onClickListener() {
-
-
         binding.apply {
-
-
             settingsViewModel.getAllEmployeeList(this@SalarySlipActivity)
 
             tieEmployee.setOnClickListener {

@@ -37,6 +37,11 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_add_leads.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_add_policy.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
@@ -53,6 +58,11 @@
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_attendance_report.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_attendance_request.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
@@ -92,12 +102,22 @@
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_create_task.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_create_ticket.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_dashboard.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_edit_attendance.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
@@ -128,6 +148,11 @@
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_emp_selfie_attendance.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_employee_apply_expense.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
@@ -277,6 +302,11 @@
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_payroll.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_place_search.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
@@ -297,6 +327,11 @@
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_rank_list.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_recharge.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
@@ -313,6 +348,11 @@
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_reports.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_salary_disbursement.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
@@ -348,6 +388,16 @@
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_subscription.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_success.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_trip_dashboard.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
@@ -392,6 +442,11 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/attendance_request_item_layout.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_assign_branch_layout.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
@@ -427,12 +482,27 @@
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/custom_leave_history_leave_type_item_layout.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/custom_spinner_item.xml">
         <config>
           <theme>@style/Theme.Sims</theme>
         </config>
       </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_full_screen_image.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_loading.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_payment_initiate.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
@@ -577,6 +647,16 @@
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/payout_employee_salary_bottom_sheet.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/payroll_bottom_sheet_layout.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/payroll_history_item_layout.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
@@ -682,6 +762,11 @@
           <theme>@style/Theme.Sims.NoActionBar</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/recy_payout_employee_item.xml">
+        <config>
+          <theme>@style/Theme.Sims.NoActionBar</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/recy_plan_view_child_layout.xml">
         <config>
           <theme>@style/Theme.Sims.NoActionBar</theme>
@@ -743,23 +828,55 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eeb3fca-a4a9-48ce-a4f9-f3fda60e9524" name="Changes" comment="Feat: Payu integration">
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/checksums/md5-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/checksums/sha1-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" afterDir="false" />
+    <list default="true" id="1eeb3fca-a4a9-48ce-a4f9-f3fda60e9524" name="Changes" comment="Feature:Salary Disbursement ui design">
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/dialog_payment_initiate.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/checksums/checksums.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/checksums/md5-checksums.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/checksums/sha1-checksums.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/dependencies-accessors/dependencies-accessors.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/dependencies-accessors/gc.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/executionHistory/executionHistory.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileChanges/last-build.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/fileHashes/resourceHashesCache.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.5/gc.properties" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deploymentTargetSelector.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/subscription/SubscriptionActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/subscription/SubscriptionActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/ui/PlaceSearchActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/ui/PlaceSearchActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_place_search.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_place_search.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/xml/network_security_config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/xml/network_security_config.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/production/release/STAFO-03-05-2025.apk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/production/release/output-metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/production/release/output-metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/NetworkMonitor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/NetworkMonitor.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/DynamicDeductionAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/DynamicDeductionAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/DynamicSalaryAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/adapter/DynamicSalaryAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/service/LocationForegroundService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/base/service/LocationForegroundService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/dashboard/EmployeeDashboard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/dashboard/EmployeeDashboard.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmpSelfieAttendanceActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmpSelfieAttendanceActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmployeePunchInActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/emp/EmployeePunchInActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/payroll/GenerateSalaryActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/payroll/GenerateSalaryActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/payroll/SalarySlipActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/payroll/SalarySlipActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AddDepartmentActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/AddDepartmentActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/SalaryDisbursementActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/SalaryDisbursementActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/SuccessActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/SuccessActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/SalaryGeneratedResponse.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/settings/dataClass/SalaryGeneratedResponse.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/tripPlan/TripActionBottomSheet.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/tripPlan/TripActionBottomSheet.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/tripPlan/TripDetailsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/screens/tripPlan/TripDetailsActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/utils/Utils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/stafo/app/utils/Utils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_generate_salary.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_generate_salary.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/recy_holiday_item_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/recy_holiday_item_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/arrays.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/arrays.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -769,7 +886,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=PhysicalDevice, isTemplate=false, identifier=serial=13911499310008M)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\com\.android\avd\Pixel_9.avd)]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -823,22 +940,22 @@
         <option value="Kotlin Enum" />
         <option value="valueResourceFile" />
         <option value="Kotlin Data Class" />
+        <option value="resourceFile" />
         <option value="Kotlin Class" />
         <option value="layoutResourceFile" />
-        <option value="resourceFile" />
       </list>
     </option>
   </component>
   <component name="GenerateSignedApkSettings">
-    <option name="KEY_STORE_PATH" value="D:\stafo\stafo.jks" />
-    <option name="KEY_ALIAS" value="key0" />
+    <option name="KEY_STORE_PATH" value="D:\stafoJSK.unknown" />
+    <option name="KEY_ALIAS" value="stafo" />
     <option name="REMEMBER_PASSWORDS" value="true" />
     <option name="BUILD_TARGET_KEY" value="apk" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Dev" />
+        <entry key="$PROJECT_DIR$" value="feature/update_employee_details" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -861,16 +978,18 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;AnalyzeApkAction.lastApkPath&quot;: &quot;D:/asl_hr_app_and/app/build/intermediates/apk/production/debug/ASL_HR_productionDebug_1.1.0_1760036328787.apk&quot;,
     &quot;Android App.Asl_EMP__1.0.app.executor&quot;: &quot;Run&quot;,
     &quot;Android App.app.executor&quot;: &quot;Run&quot;,
     &quot;ApkExportedModule&quot;: &quot;Asl_EMP__1.0.app&quot;,
-    &quot;BundleExportedModule&quot;: &quot;Softmint_UPI_1.0.app&quot;,
+    &quot;BundleExportedModule&quot;: &quot;Asl_EMP__1.0.app&quot;,
     &quot;DEBUGGABLE_DEVICE&quot;: &quot;vivo-v2153-13911499310008M&quot;,
     &quot;DEBUGGABLE_PROCESS&quot;: &quot;com.stafo.app&quot;,
     &quot;DEBUGGER_ID&quot;: &quot;Auto&quot;,
     &quot;ExportApk.ApkPathForAsl_EMP__1.0.app&quot;: &quot;D:\\asl_hr_app_and\\app&quot;,
     &quot;ExportApk.ApkPathForSoftmint_KYC.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app&quot;,
     &quot;ExportApk.ApkPathForSoftmint_UPI_1.0.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app&quot;,
+    &quot;ExportBundle.BundlePathForAsl_EMP__1.0.app&quot;: &quot;D:\\asl_hr_app_and\\app&quot;,
     &quot;ExportBundle.BundlePathForSoftmint_KYC.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/SoftmintKYC/app&quot;,
     &quot;ExportBundle.BundlePathForSoftmint_UPI_1.0.app&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/Softmint Pvt Ltd/Softmint UPI 1.0/app&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
@@ -889,14 +1008,14 @@
     &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
     &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
     &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/Mobile__recharge&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/salary__payout&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_directory_selection&quot;: &quot;/Users/injamamul/Desktop/Android Projects/Freelance/ASL Projects/ASLHRManagement/app/src/main/res/drawable&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/asl_hr_app_and/app/src/main/res/drawable&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Dependencies&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/asl_hr_app_and/app/build/intermediates/apk/production/debug/ASL_HR_productionDebug_1.1.0_1760036328787.apk&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.Mappings&quot;,
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -949,6 +1068,9 @@
     <key name="android.template.-1325931760">
       <recent name="com.softmint_pro.app.screens.aeps" />
     </key>
+    <key name="android.template.-2038352997">
+      <recent name="com.stafo.app.screens.settings" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\asl_hr_app_and\app\src\main\assets\pdfjs" />
       <recent name="$PROJECT_DIR$/app/src/main/res/color" />
@@ -957,11 +1079,11 @@
       <recent name="com.softmint_pro.app.utils" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.stafo.app.screens.settings" />
       <recent name="com.asl_emp_mng.app.base.request" />
       <recent name="com.softmint_upi.app.screens.account.bank" />
       <recent name="com.softmint_upi.app.screens.auth" />
       <recent name="com.softmint_pro.app.screens.qrCodeAgentOnboard.screens" />
-      <recent name="com.softmint_pro.app.screens.report.adapters" />
     </key>
     <key name="android.template.-1940949072">
       <recent name="com.softmint_pro.app.screens.report" />
@@ -1011,6 +1133,9 @@
     <key name="android.template.-124362806">
       <recent name="com.asl_emp_mng.app.screens" />
     </key>
+    <key name="android.template.1924665411">
+      <recent name="com.stafo.app.screens.settings" />
+    </key>
     <key name="android.template.1544000632">
       <recent name="com.asl_emp_mng.app.screens" />
     </key>
@@ -1038,6 +1163,9 @@
     <key name="android.template.-1856986408">
       <recent name="com.asl_emp_mng.app.screens" />
     </key>
+    <key name="android.template.1846612509">
+      <recent name="com.stafo.app.screens.emp" />
+    </key>
     <key name="android.template.-1711694327">
       <recent name="com.stafo.app.screens.rank" />
       <recent name="com.stafo.app.screens.performance" />
@@ -1054,6 +1182,9 @@
     </key>
     <key name="android.template.-2113371898">
       <recent name="com.asl_emp_mng.app.screens.settings" />
+    </key>
+    <key name="android.template.694142519">
+      <recent name="com.stafo.app.screens.settings" />
     </key>
     <key name="android.template.-893457043">
       <recent name="com.stafo.app.screens.ticket" />
@@ -1086,6 +1217,9 @@
     <key name="android.template.-1921858786">
       <recent name="com.stafo.app.screens.recharge" />
     </key>
+    <key name="android.template.-1709659304">
+      <recent name="com.stafo.app.screens.emp" />
+    </key>
     <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
       <recent name="com.stafo.app.screens.subscription" />
       <recent name="com.stafo.app.utils" />
@@ -1100,11 +1234,11 @@
       <recent name="com.stafo.app.screens.recharge" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\asl_hr_app_and\app\src\main\res\raw" />
       <recent name="D:\asl_hr_app_and\app\src\main\res\drawable" />
       <recent name="D:\asl_hr_app_and\app\src\main\assets\pdfjs\web" />
       <recent name="$PROJECT_DIR$/app" />
       <recent name="D:\asl_hr_app_and\app\libs" />
-      <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
     </key>
     <key name="android.template.708963382">
       <recent name="com.asl_emp_mng.app.screens.ui" />
@@ -1323,110 +1457,6 @@
       <option name="project" value="LOCAL" />
       <updated>1700929052052</updated>
     </task>
-    <task id="LOCAL-00003" summary="Initial Commit">
-      <option name="closed" value="true" />
-      <created>1710529981797</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1710529981797</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Check And Fixed Issue">
-      <option name="closed" value="true" />
-      <created>1710870189609</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1710870189609</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Fixed Success Redirection Issue">
-      <option name="closed" value="true" />
-      <created>1710870686567</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1710870686567</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Add L1 Device and Fixed Number Issue">
-      <option name="closed" value="true" />
-      <created>1710925158333</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1710925158333</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Improved Image Quality">
-      <option name="closed" value="true" />
-      <created>1711112656138</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1711112656138</updated>
-    </task>
-    <task id="LOCAL-00008" summary="KYC Report Added">
-      <option name="closed" value="true" />
-      <created>1712687243857</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1712687243857</updated>
-    </task>
-    <task id="LOCAL-00009" summary="KYC Report Added">
-      <option name="closed" value="true" />
-      <created>1712692990202</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1712692990202</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Add Number on KYC Report">
-      <option name="closed" value="true" />
-      <created>1712693642396</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1712693642396</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Update Dashboard UI ,Added Earning Report and Report Section">
-      <option name="closed" value="true" />
-      <created>1713725288237</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1713725288237</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Update Dashboard UI ,Added Earning Report and Report Section">
-      <option name="closed" value="true" />
-      <created>1713764615441</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1713764615441</updated>
-    </task>
-    <task id="LOCAL-00013" summary="Fixed Earning Report Issue and User List Scrolling Issue">
-      <option name="closed" value="true" />
-      <created>1713891749591</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1713891749591</updated>
-    </task>
-    <task id="LOCAL-00014" summary="Added Lat Long on First Step of OnBoarding">
-      <option name="closed" value="true" />
-      <created>1714420375265</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1714420375265</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Aeps Report Added &#10;-Change in Login Permission">
-      <option name="closed" value="true" />
-      <created>1714504774107</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1714504774107</updated>
-    </task>
     <task id="LOCAL-00016" summary="Change View User Report and Added Spinner and Search">
       <option name="closed" value="true" />
       <created>1714809428415</created>
@@ -1571,7 +1601,239 @@
       <option name="project" value="LOCAL" />
       <updated>1746716165379</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="feat: trip geo location api integration">
+      <option name="closed" value="true" />
+      <created>1749165714023</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1749165714023</updated>
+    </task>
+    <task id="LOCAL-00035" summary="fix: trip geo location api integration and track live location">
+      <option name="closed" value="true" />
+      <created>1749828300416</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1749828300416</updated>
+    </task>
+    <task id="LOCAL-00036" summary="fix: Geo Attendance of Employee using google map">
+      <option name="closed" value="true" />
+      <created>1749855547602</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1749855547602</updated>
+    </task>
+    <task id="LOCAL-00037" summary="fix: modify save salary preview">
+      <option name="closed" value="true" />
+      <created>1751400944705</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1751400944705</updated>
+    </task>
+    <task id="LOCAL-00038" summary="fix: find some issue that is solved like salary generate, salary slip etc...">
+      <option name="closed" value="true" />
+      <created>1751411819610</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1751411819610</updated>
+    </task>
+    <task id="LOCAL-00039" summary="fix: find some issue that is solved">
+      <option name="closed" value="true" />
+      <created>1751498945842</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1751498945842</updated>
+    </task>
+    <task id="LOCAL-00040" summary="fix: Fix Issue Employee Location tracking depends on  Punchin and punchout time , Trip Live location tracking">
+      <option name="closed" value="true" />
+      <created>1751583611591</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1751583611591</updated>
+    </task>
+    <task id="LOCAL-00041" summary="fix: Modify Generate SAlary and Fix issue trip vehicle list response , and also check trip module">
+      <option name="closed" value="true" />
+      <created>1751670129874</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1751670129874</updated>
+    </task>
+    <task id="LOCAL-00042" summary="fix: Modify leave list filter issue">
+      <option name="closed" value="true" />
+      <created>1751904370266</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1751904370266</updated>
+    </task>
+    <task id="LOCAL-00043" summary="feat:Upgrade sdk version 34 to 35 , and face issue , solve it">
+      <option name="closed" value="true" />
+      <created>1752013417716</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1752013417716</updated>
+    </task>
+    <task id="LOCAL-00044" summary="feat:Upgrade sdk version 34 to 35 , and face issue , solve it">
+      <option name="closed" value="true" />
+      <created>1752013514348</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1752013514348</updated>
+    </task>
+    <task id="LOCAL-00045" summary="feat:Upgrade sdk version 34 to 35 , and face issue , solve it">
+      <option name="closed" value="true" />
+      <created>1752014913732</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1752014913732</updated>
+    </task>
+    <task id="LOCAL-00046" summary="feat:In-App Update">
+      <option name="closed" value="true" />
+      <created>1752167806637</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1752167806637</updated>
+    </task>
+    <task id="LOCAL-00047" summary="feat:In-App Update Check Login , Company&amp;Employee Dashboard">
+      <option name="closed" value="true" />
+      <created>1752169303196</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1752169303196</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Fix:Employee Details like Salary.">
+      <option name="closed" value="true" />
+      <created>1752879853693</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1752879853693</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Fix:Payroll Menu , and modify generate salary etc....">
+      <option name="closed" value="true" />
+      <created>1753312036182</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1753312036182</updated>
+    </task>
+    <task id="LOCAL-00050" summary="Feat:Edit Attendance Employee and Api Intgration  etc...">
+      <option name="closed" value="true" />
+      <created>1753566822496</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1753566822512</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Feat:Request for  Attendance Employee&amp; Company action it  and Api Intgration  etc...">
+      <option name="closed" value="true" />
+      <created>1753830587829</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1753830587829</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Fix:Fetching current location and show dialog until get location">
+      <option name="closed" value="true" />
+      <created>1755208746226</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1755208746227</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Fix:Fetching current location and show dialog until get location">
+      <option name="closed" value="true" />
+      <created>1755209854358</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1755209854358</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Fix:Employee profile image set, Trip dashbaord &amp; apply leave and show leave history ...">
+      <option name="closed" value="true" />
+      <created>1757104961127</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1757104961127</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Feature: Upgrade version code">
+      <option name="closed" value="true" />
+      <created>1757107388324</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1757107388324</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Fix:Remove third party app package &amp; upgrade version code">
+      <option name="closed" value="true" />
+      <created>1757950064472</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1757950064472</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Fix:Live location tracking Notification &amp; handle stop service &amp; error selfie attendance">
+      <option name="closed" value="true" />
+      <created>1758992747276</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1758992747277</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Fix:Subscription ui design and match all text like Policies etc..">
+      <option name="closed" value="true" />
+      <created>1759001855233</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1759001855233</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Fix:Subscription ui design and match all text like Policies etc..">
+      <option name="closed" value="true" />
+      <created>1759013939990</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1759013939990</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Update:Upgrade version code 13">
+      <option name="closed" value="true" />
+      <created>1759329245058</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1759329245059</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Feature:Salary Disbursement ui design">
+      <option name="closed" value="true" />
+      <created>1760026505694</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1760026505694</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Feature:Salary Disbursement ui design">
+      <option name="closed" value="true" />
+      <created>1760026988363</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1760026988363</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -1616,26 +1878,32 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="Changes In Aeps" />
-    <MESSAGE value="Changes in Aeps Activity.Remove Default Check" />
-    <MESSAGE value="Initial Commit" />
-    <MESSAGE value="Check And Fixed Issue" />
-    <MESSAGE value="Fixed Success Redirection Issue" />
-    <MESSAGE value="Add L1 Device and Fixed Number Issue" />
-    <MESSAGE value="Improved Image Quality" />
-    <MESSAGE value="KYC Report Added" />
-    <MESSAGE value="Add Number on KYC Report" />
-    <MESSAGE value="Update Dashboard UI ,Added Earning Report and Report Section" />
-    <MESSAGE value="Fixed Earning Report Issue and User List Scrolling Issue" />
-    <MESSAGE value="Added Lat Long on First Step of OnBoarding" />
-    <MESSAGE value="Aeps Report Added &#10;-Change in Login Permission" />
-    <MESSAGE value="Change View User Report and Added Spinner and Search" />
-    <MESSAGE value="Implement QR Code" />
-    <MESSAGE value="Fixed Issue" />
-    <MESSAGE value="Update Add Staff API" />
-    <MESSAGE value="Added Intro Image and TestK" />
     <MESSAGE value="Fix: Resolve conflict" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix: Resolve conflict" />
+    <MESSAGE value="feat: trip geo location api integration" />
+    <MESSAGE value="fix: trip geo location api integration and track live location" />
+    <MESSAGE value="fix: Geo Attendance of Employee using google map" />
+    <MESSAGE value="fix: modify save salary preview" />
+    <MESSAGE value="fix: find some issue that is solved like salary generate, salary slip etc..." />
+    <MESSAGE value="fix: find some issue that is solved" />
+    <MESSAGE value="fix: Fix Issue Employee Location tracking depends on  Punchin and punchout time , Trip Live location tracking" />
+    <MESSAGE value="fix: Modify Generate SAlary and Fix issue trip vehicle list response , and also check trip module" />
+    <MESSAGE value="fix: Modify leave list filter issue" />
+    <MESSAGE value="feat:Upgrade sdk version 34 to 35 , and face issue , solve it" />
+    <MESSAGE value="feat:In-App Update" />
+    <MESSAGE value="feat:In-App Update Check Login , Company&amp;Employee Dashboard" />
+    <MESSAGE value="Fix:Employee Details like Salary." />
+    <MESSAGE value="Fix:Payroll Menu , and modify generate salary etc...." />
+    <MESSAGE value="Feat:Edit Attendance Employee and Api Intgration  etc..." />
+    <MESSAGE value="Feat:Request for  Attendance Employee&amp; Company action it  and Api Intgration  etc..." />
+    <MESSAGE value="Fix:Fetching current location and show dialog until get location" />
+    <MESSAGE value="Fix:Employee profile image set, Trip dashbaord &amp; apply leave and show leave history ..." />
+    <MESSAGE value="Feature: Upgrade version code" />
+    <MESSAGE value="Fix:Remove third party app package &amp; upgrade version code" />
+    <MESSAGE value="Fix:Live location tracking Notification &amp; handle stop service &amp; error selfie attendance" />
+    <MESSAGE value="Fix:Subscription ui design and match all text like Policies etc.." />
+    <MESSAGE value="Update:Upgrade version code 13" />
+    <MESSAGE value="Feature:Salary Disbursement ui design" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feature:Salary Disbursement ui design" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1844,12 +2112,12 @@
         </entry>
         <entry key="com.stafo.app">
           <value>
-            <CheckInfo lastCheckTimestamp="1746898112308" />
+            <CheckInfo lastCheckTimestamp="1764605051895" />
           </value>
         </entry>
         <entry key="com.stafo.app.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1746898112288" />
+            <CheckInfo lastCheckTimestamp="1764605051881" />
           </value>
         </entry>
       </map>

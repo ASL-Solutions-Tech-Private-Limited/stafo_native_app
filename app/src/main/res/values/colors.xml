@@ -4,9 +4,9 @@
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="colorButton">#0E68FF</color>
     <color name="colorButtonText">#ffffff</color>
     <color name="colorPlaceholder">#505050</color>
+    <color name="colorButton">#0E68FF</color>
     <color name="colorTextPrimary">#0E68FF</color>
     <color name="primaryColor">#0E68FF</color>
     <color name="primaryColorDark">#0A47B3</color>

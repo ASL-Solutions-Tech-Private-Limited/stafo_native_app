@@ -65,6 +65,15 @@
         <item>Create Leave Policy</item>
         <item>History</item>
     </string-array>
+
+    <string-array name="request_attendance_emp">
+        <item>Request Attendance</item>
+    </string-array>
+
+    <string-array name="request_attendance_com">
+        <item>Request Attendance</item>
+        <item>History</item>
+    </string-array>
     <string-array name="emp_leave">
         <item>History</item>
     </string-array>
@@ -92,6 +101,13 @@
     <string-array name="reports_type">
         <item>Attendance Reports</item>
         <item>Leave Reports</item>
+    </string-array>
+
+    <string-array name="attendance_type">
+        <item>Select Attendance Type</item>
+        <item>Present</item>
+        <item>Absent</item>
+        <item>Leave</item>
     </string-array>
 
     <string-array name="position_type">

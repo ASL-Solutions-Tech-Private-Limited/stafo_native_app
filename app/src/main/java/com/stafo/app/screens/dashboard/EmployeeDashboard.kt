@@ -562,12 +562,22 @@ class EmployeeDashboard : AppCompatActivity() {
 
                 wishList.clear()
 
+                // 03/11/2025 modify code for punchin & punchout
+
+
+
+
+
+
+
                 if (!it.employeeInfo.punches.isNullOrEmpty()) {
                     val todayDate =
                         SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                     val punchesToday = it.employeeInfo.punches.filter { punch ->
                         punch.punchIn?.startsWith(todayDate) == true
                     }
+
+
 
                     Log.e("trackLocation", "response: $punchesToday")
 
@@ -578,12 +588,13 @@ class EmployeeDashboard : AppCompatActivity() {
                     Log.e("trackLocation", "shift time : ${shiftEndTime}")
 
                     if (punchesToday.isNotEmpty()) {
-                        val ongoingPunch =
-                            punchesToday.lastOrNull { punch -> punch.punchIn != null && punch.punchOut == null }
+                        val ongoingPunch = punchesToday.firstOrNull{ punch -> punch.punchIn != null && punch.punchOut == null }
 
 
                         if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo") {
                             if (ongoingPunch != null) {
+                                updateUIForPunchIn(ongoingPunch.punchIn!!)
+
                                 checkExactAlarmPermission(this) { exactAlarmGranted ->
                                     if (exactAlarmGranted) {
                                         requestIgnoreBatteryOptimization(this) { batteryOptGranted ->
@@ -660,10 +671,77 @@ class EmployeeDashboard : AppCompatActivity() {
                                         }
                                     }
                                 }
+
+                            }
+                            else {
+                                val lastPunch = punchesToday.firstOrNull()
+                                val punchOutTime = lastPunch?.punchOut
+
+                                if (punchOutTime != null) {
+                                    updateUIForPunchOut(punchOutTime)
+                                    if (!isTrip) {
+                                        stopLocationServiceIfRunning()
+                                    }
+                                } else {
+                                    binding.btnPunchIn.text = "Punch In"
+                                    binding.btnPunchIn.isEnabled = true
+                                    binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+                                    val shiftEndReached = shiftEndTime?.let { endTime ->
+                                        val shiftEndCal = Calendar.getInstance()
+                                        val end: Date? = try {
+                                            SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(
+                                                endTime
+                                            )
+                                        } catch (e: Exception) {
+                                            try {
+                                                SimpleDateFormat(
+                                                    "HH:mm", Locale.getDefault()
+                                                ).parse(endTime)
+                                            } catch (ex: Exception) {
+                                                null
+                                            }
+                                        }
+
+                                        if (end != null) {
+                                            val endCal = Calendar.getInstance()
+                                            endCal.time = end
+                                            shiftEndCal.set(
+                                                Calendar.HOUR_OF_DAY,
+                                                endCal.get(Calendar.HOUR_OF_DAY)
+                                            )
+                                            shiftEndCal.set(
+                                                Calendar.MINUTE, endCal.get(Calendar.MINUTE)
+                                            )
+                                            shiftEndCal.set(Calendar.SECOND, 0)
+                                            now.after(shiftEndCal)
+                                        } else {
+                                            false
+                                        }
+                                    } ?: false
+
+
+                                    if (shiftEndReached) {
+                                        if (!isTrip) {
+                                            stopLocationServiceIfRunning()
+                                        }
+                                        Log.e("trackLocation", "Stopped service after shift end 3.")
+                                    } else if (shiftEndTime.isNullOrEmpty()) {
+                                        if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(Calendar.MINUTE) == 0) {
+                                            if (!isTrip) {
+                                                stopLocationServiceIfRunning()
+                                            }
+                                            Log.e(
+                                                "trackLocation",
+                                                "Stopped service at 9 PM, no shift end."
+                                            )
+                                        }
+                                    }
+                                }
                             }
 
+                        }
 
-                        } else {
+                        else {
 
                             if (ongoingPunch != null) {
                                 updateUIForPunchIn(ongoingPunch.punchIn!!)
@@ -749,8 +827,9 @@ class EmployeeDashboard : AppCompatActivity() {
                                     }
                                 }
 
-                            } else {
-                                val lastPunch = punchesToday.lastOrNull()
+                            }
+                            else {
+                                val lastPunch = punchesToday.firstOrNull()
                                 val punchOutTime = lastPunch?.punchOut
 
                                 if (punchOutTime != null) {
@@ -836,6 +915,11 @@ class EmployeeDashboard : AppCompatActivity() {
                     }
 
                 }
+
+
+
+
+
 
 
             }
@@ -966,13 +1050,10 @@ class EmployeeDashboard : AppCompatActivity() {
     private fun stopLocationServiceIfRunning() {
         Log.e("trackLocation", "stop ")
         if (isServiceRunning(LocationForegroundService::class.java)) {
-            /*val stopIntent = Intent(this, LocationForegroundService::class.java)
-            stopIntent.action = "STOP_FOREGROUND_SERVICE"*/
-            //ContextCompat.startForegroundService(this, stopIntent)
-
             val stopIntent = Intent(this, LocationForegroundService::class.java)
             stopIntent.action = "STOP_FOREGROUND_SERVICE"
-            stopService(stopIntent)
+            ContextCompat.startForegroundService(this, stopIntent)
+
         }
     }
 
@@ -1006,6 +1087,10 @@ class EmployeeDashboard : AppCompatActivity() {
             }"
         }
     }
+
+
+
+
 
 
     override fun onBackPressed() {
@@ -1339,6 +1424,5 @@ class EmployeeDashboard : AppCompatActivity() {
         super.onDestroy()
         Log.d("NetworkHandler", " onDestroy called on activity")
     }
-
 
 }

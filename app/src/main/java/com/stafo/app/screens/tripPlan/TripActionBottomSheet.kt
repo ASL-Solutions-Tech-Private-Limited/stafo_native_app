@@ -41,6 +41,7 @@ class TripActionBottomSheet(
     private lateinit var locationManager: LocationManager
     private var currentLocation: Location? = null
     private val LOCATION_PERMISSION_REQUEST_CODE = 100
+
     fun show() {
         binding = BottomSheetTripActionBinding.inflate(LayoutInflater.from(context))
         val view = binding.root

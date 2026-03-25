@@ -67,7 +67,7 @@ class AddDepartmentActivity : AppCompatActivity() {
         }
     }
     private fun onClickListener() {
-        binding?.apply {
+        binding.apply {
 
 
             btnAddDepartment.setOnClickListener {
@@ -93,7 +93,7 @@ class AddDepartmentActivity : AppCompatActivity() {
     }
 
     private fun isValidate(): Boolean {
-        binding?.apply {
+        binding.apply {
             if (tieDepartmentName.text.isNullOrEmpty()) {
                 tieDepartmentName.error = "Please enter department name"
                 tieDepartmentName.requestFocus()
