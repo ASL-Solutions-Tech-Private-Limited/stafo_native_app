@@ -517,6 +517,7 @@ class EmployeeDashboard : AppCompatActivity() {
                 }
 
                 if (it.employeeInfo.geoStatus != null && it.employeeInfo.geoStatus == "0") {
+
                     val builder = AlertDialog.Builder(this)
                     builder.setTitle(R.string.app_name)
                     builder.setMessage("Your admin has requested to track your live location. Do you accept?")
@@ -541,7 +542,11 @@ class EmployeeDashboard : AppCompatActivity() {
                     dialog.show()
 
                 }
+
+
+
                 wishList.clear()
+
                 if (!it.employeeInfo.punches.isNullOrEmpty()) {
                     val todayDate =
                         SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
@@ -558,7 +563,10 @@ class EmployeeDashboard : AppCompatActivity() {
                     Log.e("trackLocation", "shift time : ${shiftEndTime}")
 
                     if (punchesToday.isNotEmpty()) {
-                        val ongoingPunch = punchesToday.lastOrNull { punch -> punch.punchIn != null && punch.punchOut == null }
+                        val ongoingPunch =
+                            punchesToday.lastOrNull { punch -> punch.punchIn != null && punch.punchOut == null }
+
+
                         if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo") {
                             if (ongoingPunch != null) {
                                 checkExactAlarmPermission(this) { exactAlarmGranted ->
@@ -637,6 +645,7 @@ class EmployeeDashboard : AppCompatActivity() {
                                         }
                                     }
                                 }
+
                             }
 
 

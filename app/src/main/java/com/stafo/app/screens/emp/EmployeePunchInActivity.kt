@@ -2,7 +2,10 @@ package com.stafo.app.screens.emp
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -27,6 +30,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.stafo.app.screens.settings.dataClass.GetAttendanceBranchRequest
+import com.stafo.app.utils.getIsCOMPANYLogin
 
 
 class EmployeePunchInActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -42,7 +47,11 @@ class EmployeePunchInActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-
+    private var mEmpID = ""
+    private var branchLat: Double = 0.0
+    private var branchLong: Double = 0.0
+    private var radar: Float = 0.0f
+    private var checkBranch: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +68,18 @@ class EmployeePunchInActivity : AppCompatActivity(), OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        mEmpID = getEmployeeDetails()?.id.toString() ?: ""
+
+        mEmpID.let { empId ->
+
+            val request = GetAttendanceBranchRequest(
+                employee_id = empId
+            )
+            settingsViewModel.getEmpAttendanceBranch(
+                this, request
+            )
+        }
 
         onClickListener()
         observeViewModel()
@@ -77,13 +98,75 @@ class EmployeePunchInActivity : AppCompatActivity(), OnMapReadyCallback {
                 return@setOnClickListener
             }
 
-            val request = PunchInRequest(
+            if (checkBranch) {
+                val distance = calculateDistance(getLati!!, getLongi!!, branchLat, branchLong)
+
+                Log.d("res", "post: $getLati $getLongi   distance: $distance")
+
+                if (distance <= radar) {
+
+                    val request = PunchInRequest(
+                        employeeId = getEmployeeDetails()?.id.toString(),
+                        latitude = getLati.toString(),
+                        longitude = getLongi.toString()
+                    )
+
+                    /* val request = PunchInRequest(
+                         employeeId = getEmployeeDetails()?.id.toString(),
+                         latitude = "23.6304733",
+                         longitude = "88.4355422"
+                     )*/
+                    settingsViewModel.punchInRequest(this, request)
+
+
+                } else {
+                    CustomToast(
+                        this@EmployeePunchInActivity,
+                        "Please move closer to the branch area to punch attendance."
+                    )
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        onBackPressedDispatcher.onBackPressed()
+                        finish()
+                    }, 700)
+                }
+            } else {
+
+                val request = PunchInRequest(
+                    employeeId = getEmployeeDetails()?.id.toString(),
+                    latitude = getLati.toString(),
+                    longitude = getLongi.toString()
+                )
+                Log.d("res", "post: $getLati $getLongi   distance:")/* val request = PunchInRequest(
+                     employeeId = getEmployeeDetails()?.id.toString(),
+                     latitude = "23.6304733",
+                     longitude = "88.4355422"
+                 )*/
+                settingsViewModel.punchInRequest(this, request)
+                Log.d("res", "post: branch not assign")
+            }
+
+
+            /*   val request = PunchInRequest(
+                   employeeId = getEmployeeDetails()?.id.toString(),
+                   latitude = getLati.toString(),
+                   longitude = getLongi.toString()
+               )
+
+              *//* val request = PunchInRequest(
                 employeeId = getEmployeeDetails()?.id.toString(),
-                latitude = getLati.toString(),
-                longitude = getLongi.toString()
-            )
-            Log.d("res", "post: $getLati $getLongi")
-            settingsViewModel.punchInRequest(this, request)
+                latitude = "23.6304733",
+                longitude = "88.4355422"
+            )*/
+
+
+            // settingsViewModel.punchInRequest(this, request)
+
+
+
+
+
+
+
         }
     }
 
@@ -97,8 +180,6 @@ class EmployeePunchInActivity : AppCompatActivity(), OnMapReadyCallback {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
-
-
         settingsViewModel.mPunchInResponse.observe(this) {
 
             if (it.status) {
@@ -110,6 +191,21 @@ class EmployeePunchInActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
 
+        }
+
+        settingsViewModel.mGetAttendanceBranchResponse.observe(this) { response ->
+            if (response?.status == true) {
+                Log.e("LocationDebug", "observeViewModel: ${response.data}")
+                val branchData = response.data
+                if (branchData != null && branchData.latitude != null && branchData.longitude != null) {
+
+                    branchLat = branchData.latitude.toDouble()
+                    branchLong = branchData.longitude.toDouble()
+                    radar = branchData.radar.toFloat()
+                    checkBranch = true
+
+                } else checkBranch = false
+            } else checkBranch = false
         }
 
 
@@ -163,6 +259,16 @@ class EmployeePunchInActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
+    private fun calculateDistance(
+        lat1: Double, lon1: Double, lat2: Double, lon2: Double
+    ): Float {
+        val results = FloatArray(1)
+        Location.distanceBetween(lat1, lon1, lat2, lon2, results)
+        return results[0]
+    }
+
 
 }
+
+
 

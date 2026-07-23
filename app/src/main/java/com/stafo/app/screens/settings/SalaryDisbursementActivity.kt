@@ -3,10 +3,13 @@ package com.stafo.app.screens.settings
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.stafo.app.R
 import com.stafo.app.base.adapter.EmpListAdapter
@@ -203,8 +207,13 @@ class SalaryDisbursementActivity : AppCompatActivity() {
         amount.setText("10000")
 
 
-        btnPayNow.setOnClickListener {
+        /*btnPayNow.setOnClickListener {
             bottomSheetDialog.dismiss()
+
+
+
+
+
             startActivity(
                 Intent(
                     this@SalaryDisbursementActivity, SuccessActivity::class.java
@@ -214,7 +223,34 @@ class SalaryDisbursementActivity : AppCompatActivity() {
                 R.anim.slide_from_right, R.anim.slide_to_left
             )
 
+        }*/
+
+
+        btnPayNow.setOnClickListener {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_payment_initiate, null)
+            val tvPaymentText = dialogView.findViewById<TextView>(R.id.tvPaymentText)
+            val dialog = MaterialAlertDialogBuilder(this)
+                .setView(dialogView)
+                .setCancelable(false)
+                .show()
+
+            val handler = Handler(Looper.getMainLooper())
+            tvPaymentText.text = "Initiating Payment..."
+            handler.postDelayed({
+                tvPaymentText.text = "Processing..."
+            }, 2000)
+
+            handler.postDelayed({
+                bottomSheetDialog.dismiss()
+                dialog.dismiss()
+                startActivity(
+                    Intent(this@SalaryDisbursementActivity, SuccessActivity::class.java)
+                )
+                overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
+            }, 5000)
         }
+
+
 
 
 

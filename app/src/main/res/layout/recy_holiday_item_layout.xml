@@ -27,7 +27,7 @@
             android:paddingVertical="@dimen/_14sdp"
             android:background="@drawable/holiday_item_bg"
             android:orientation="horizontal"
-            android:layout_width="@dimen/_58sdp"
+            android:layout_width="@dimen/_66sdp"
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/txt_holiday_month"

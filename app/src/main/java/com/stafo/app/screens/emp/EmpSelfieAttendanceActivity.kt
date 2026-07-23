@@ -2,22 +2,29 @@ package com.stafo.app.screens.emp
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
+import android.os.SystemClock
+import android.provider.Settings
 import android.util.Log
 import android.view.Surface
 import android.view.View
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -29,11 +36,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.Granularity
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityEmpSelfieAttendanceBinding
 import com.stafo.app.screens.settings.SettingsViewModel
@@ -97,7 +107,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        showLoaderLocation=false
+        showLoaderLocation = false
     }
 
     private fun onClickListener() {
@@ -128,10 +138,14 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                             val request = GetAttendanceBranchRequest(
                                 employee_id = empId
                             )
-                            settingsViewModel.getEmpAttendanceBranch(this@EmpSelfieAttendanceActivity, request)
+                            settingsViewModel.getEmpAttendanceBranch(
+                                this@EmpSelfieAttendanceActivity, request
+                            )
                         }
                     } else {
-                        CustomToast(this@EmpSelfieAttendanceActivity, "Unable to get location. Try again.")
+                        CustomToast(
+                            this@EmpSelfieAttendanceActivity, "Unable to get location. Try again."
+                        )
                     }
                 }
 
@@ -156,10 +170,16 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                         val request = GetAttendanceBranchRequest(
                             employee_id = empId
                         )
-                        settingsViewModel.getEmpAttendanceBranch(this@EmpSelfieAttendanceActivity, request)
+                        settingsViewModel.getEmpAttendanceBranch(
+                            this@EmpSelfieAttendanceActivity, request
+                        )
                     }
                 } else {
-                    CustomToast(this@EmpSelfieAttendanceActivity, "Unable to get location. Try again.")
+                    CustomToast(
+                        this@EmpSelfieAttendanceActivity, "Unable to get location. Try again."
+                    )
+                    onBackPressedDispatcher.onBackPressed()
+                    finish()
                 }
             }
         } else {
@@ -199,7 +219,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
 
     private fun takePhoto() {
-        showLoaderLocation=true
+        showLoaderLocation = true
         val imageCapture = imageCapture ?: return
         val outputFile = File(externalCacheDir, "selfie.jpg")
 
@@ -269,7 +289,7 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     fun getCurrentLocation(callback: (Double, Double) -> Unit) {
-        if(!showLoaderLocation){
+        if (!showLoaderLocation) {
             showLoadingDialog()
             showAlertView()
         }
@@ -303,8 +323,10 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
                 val location = locationResult.lastLocation
                 if (location != null) {
-                    hideAlertView()
-                    loadingDialog.dismiss()
+                    hideAlertView(true)
+                    if (!isFinishing && !(isDestroyed) && ::loadingDialog.isInitialized && loadingDialog.isShowing) {
+                        loadingDialog.dismiss()
+                    }
                     if (location.accuracy <= 50f) {
                         callback(location.latitude, location.longitude)
                     } else {
@@ -316,10 +338,16 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                         finish()
                     }
                 } else {
-                    hideAlertView()
-                    loadingDialog.dismiss()
-                    CustomToast(this@EmpSelfieAttendanceActivity, "Unable to get location.")
+                    hideAlertView(false)
+                    if (!isFinishing && !(isDestroyed) && ::loadingDialog.isInitialized && loadingDialog.isShowing) {
+                        loadingDialog.dismiss()
+                    }
+                    CustomToast(
+                        this@EmpSelfieAttendanceActivity, "Unable to get location.Try again!"
+                    )
                     isSubmitting = false
+                    onBackPressedDispatcher.onBackPressed()
+                    finish()
                 }
             }
         }
@@ -339,31 +367,23 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
 
     private fun showAlertView() {
-        val alertView =binding.viewAlert
+        val alertView = binding.viewAlert
         alertView.apply {
             visibility = View.VISIBLE
-            animate()
-                .alpha(1f)
-                .setDuration(300)
-                .start()
+            animate().alpha(1f).setDuration(300).start()
         }
-        binding.rlSelfiePunchIn.visibility=View.GONE
+        binding.rlSelfiePunchIn.visibility = View.GONE
     }
 
-   private fun hideAlertView() {
-        val alertView =binding.viewAlert
-        alertView.animate()
-            .alpha(0f)
-            .setDuration(300)
-            .withEndAction {
-                alertView.visibility = View.GONE
-            }
-            .start()
-        binding.rlSelfiePunchIn.visibility=View.VISIBLE
+    private fun hideAlertView(getCurrentLocation: Boolean) {
+        val alertView = binding.viewAlert
+        alertView.animate().alpha(0f).setDuration(300).withEndAction {
+            alertView.visibility = View.GONE
+        }.start()
+        if (getCurrentLocation) binding.rlSelfiePunchIn.visibility =
+            View.VISIBLE else binding.rlSelfiePunchIn.visibility = View.GONE
+
     }
-
-
-
 
 
     fun calculateDistance(

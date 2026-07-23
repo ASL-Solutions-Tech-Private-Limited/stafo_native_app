@@ -56,6 +56,7 @@ class LocationForegroundService : Service() {
         return binder
     }
 
+
     override fun onCreate() {
         super.onCreate()
         NotificationsHelper.createNotificationChannel(this)
@@ -114,10 +115,8 @@ class LocationForegroundService : Service() {
                     )
                     Log.d(TAG, "Exact alarm scheduled")
                 } else {
-                    Log.w(
-                        TAG,
-                        "Exact alarm permission not granted. Redirect user to settings if necessary."
-                    )
+                    Log.w(TAG, "Exact alarm permission not granted. Redirect user to settings if necessary.")
+
                     // Optionally, guide the user to Settings to grant this permission
                 }
             } else {

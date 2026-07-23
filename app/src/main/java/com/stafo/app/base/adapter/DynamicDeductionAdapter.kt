@@ -46,11 +46,12 @@ class DynamicDeductionAdapter(
                 val pos = holder.bindingAdapterPosition
                 if (pos != RecyclerView.NO_POSITION) {
                     val newValue = s.toString().toDoubleOrNull() ?: 0.0
-                    fields[pos].amount = newValue.toInt()
+                    fields[pos].amount = newValue  // ✅ Fix: assign Double directly
                     onAmountChanged()
                 }
             }
         })
+
     }
 
     override fun getItemCount(): Int = fields.size

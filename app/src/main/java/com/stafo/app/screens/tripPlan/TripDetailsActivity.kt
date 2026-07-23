@@ -67,7 +67,6 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        //setContentView(R.layout.activity_trip_details)
         binding = ActivityTripDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -612,11 +611,7 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         if (isServiceRunning(LocationForegroundService::class.java)) {
             val stopIntent = Intent(this, LocationForegroundService::class.java)
             stopIntent.action = "STOP_FOREGROUND_SERVICE"
-            stopService(stopIntent)
-
-            /*val stopIntent = Intent(this, LocationForegroundService::class.java)
-            stopIntent.action = "STOP_FOREGROUND_SERVICE"
-            ContextCompat.startForegroundService(this, stopIntent)*/
+            ContextCompat.startForegroundService(this, stopIntent)
         }
     }
 
