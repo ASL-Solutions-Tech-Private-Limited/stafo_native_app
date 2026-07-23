@@ -1,48 +1,57 @@
 package com.stafo.app.screens.emp
 
-import android.content.Intent
+import android.Manifest
 import android.content.pm.PackageManager
-import android.os.Build
+import android.location.Location
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.stafo.app.R
-import com.stafo.app.base.model.PunchInType
-import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmployeePunchInBinding
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.dataClass.PunchInRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeDetails
-import com.github.dhaval2404.imagepicker.ImagePicker
-import org.osmdroid.config.Configuration
-import com.mmi.MapmyIndiaMapView
-import com.mmi.layers.Marker
-import com.mmi.layers.Polygon
-import com.mmi.layers.UserLocationOverlay
-import com.mmi.layers.location.GpsLocationProvider
-import com.mmi.util.GeoPoint
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.stafo.app.screens.settings.dataClass.GetAttendanceBranchRequest
+import com.stafo.app.utils.getIsCOMPANYLogin
 
 
-class EmployeePunchInActivity : AppCompatActivity() {
+class EmployeePunchInActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     private lateinit var binding: ActivityEmployeePunchInBinding
     private val customLoader: CustomLoader by lazy { CustomLoader(this) }
     private val settingsViewModel: SettingsViewModel by viewModels()
 
-    private lateinit var userLocationOverlay: UserLocationOverlay
     private var getLati: Double? = null
     private var getLongi: Double? = null
 
+    private lateinit var mMap: GoogleMap
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    private var mEmpID = ""
+    private var branchLat: Double = 0.0
+    private var branchLong: Double = 0.0
+    private var radar: Float = 0.0f
+    private var checkBranch: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,129 +65,120 @@ class EmployeePunchInActivity : AppCompatActivity() {
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    1
-                )
-            }
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
+        mEmpID = getEmployeeDetails()?.id.toString() ?: ""
+
+        mEmpID.let { empId ->
+
+            val request = GetAttendanceBranchRequest(
+                employee_id = empId
+            )
+            settingsViewModel.getEmpAttendanceBranch(
+                this, request
+            )
         }
-
-        Configuration.getInstance().load(applicationContext, getSharedPreferences("osm_prefs", MODE_PRIVATE))
-
-
-
-
-
-
-
 
         onClickListener()
         observeViewModel()
-       // startLocationService()
+
     }
 
     private fun onClickListener() {
-
-        val mapmyIndiaMapView = findViewById<MapmyIndiaMapView>(R.id.idMapView)
-        val mapView = mapmyIndiaMapView.mapView
-
-        // Enable User Location Tracking
-        userLocationOverlay = UserLocationOverlay(GpsLocationProvider(this), mapView)
-
-        // Use default location marker icon by not setting a custom one
-        // If you still want to set a custom location marker, uncomment the below code and ensure the drawable exists
-        /*
-        val locationIconResId = R.drawable.ic_launcher_background  // Your custom marker drawable
-        val locationIcon = resources.getDrawable(locationIconResId, theme)
-        if (locationIcon != null) {
-            userLocationOverlay.setCurrentLocationResId(locationIconResId)
-        } else {
-            Log.e("MainActivity", "Location icon not found.")
-        }
-        */
-
-        userLocationOverlay.enableMyLocation()
-        mapView.overlays.add(userLocationOverlay)
-        mapView.invalidate()
-
-        // Set Marker at User's Location
-        userLocationOverlay.runOnFirstFix {
-            val userLocation = userLocationOverlay.myLocation
-            getLati=userLocation.latitude
-            getLongi=userLocation.longitude
-            if (userLocation != null) {
-                runOnUiThread {
-                    val marker = Marker(mapView)
-                    marker.position = userLocation
-                    marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                    mapView.overlays.add(marker)
-
-                    val circle = Polygon(this@EmployeePunchInActivity)
-                    circle.fillColor = 0x3000FF00
-                    circle.strokeColor = 0xFF00FF00.toInt()
-                    circle.strokeWidth = 4f
-
-                    val radiusInMeters = 500.0
-                    val circlePoints = ArrayList<GeoPoint>()
-                    for (i in 0 until 360 step 10) {
-                        val radian = Math.toRadians(i.toDouble())
-                        val newLat = getLati!! + (radiusInMeters / 111000) * Math.sin(radian)
-                        val newLon = getLongi!! + (radiusInMeters / (111000 * Math.cos(Math.toRadians(getLati!!)))) * Math.cos(radian)
-                        circlePoints.add(GeoPoint(newLat, newLon))
-                    }
-
-                    circle.points = circlePoints
-                    mapView.overlays.add(circle)
-
-
-
-
-                    mapView.invalidate()
-                    mapView.setCenter(userLocation)
-                    mapView.setZoom(15)
-                }
-            }
-        }
-
-
-
-
         binding.imageBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
             finish()
         }
 
-
-
-
         binding.btnPunchIn.setOnClickListener {
-            val request = PunchInRequest(
+            if (getLati == null || getLongi == null) {
+                CustomToast(this, "Location not available. Please wait or enable GPS.")
+                return@setOnClickListener
+            }
+
+            if (checkBranch) {
+                val distance = calculateDistance(getLati!!, getLongi!!, branchLat, branchLong)
+
+                Log.d("res", "post: $getLati $getLongi   distance: $distance")
+
+                if (distance <= radar) {
+
+                    val request = PunchInRequest(
+                        employeeId = getEmployeeDetails()?.id.toString(),
+                        latitude = getLati.toString(),
+                        longitude = getLongi.toString()
+                    )
+
+                    /* val request = PunchInRequest(
+                         employeeId = getEmployeeDetails()?.id.toString(),
+                         latitude = "23.6304733",
+                         longitude = "88.4355422"
+                     )*/
+                    settingsViewModel.punchInRequest(this, request)
+
+
+                } else {
+                    CustomToast(
+                        this@EmployeePunchInActivity,
+                        "Please move closer to the branch area to punch attendance."
+                    )
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        onBackPressedDispatcher.onBackPressed()
+                        finish()
+                    }, 700)
+                }
+            } else {
+
+                val request = PunchInRequest(
+                    employeeId = getEmployeeDetails()?.id.toString(),
+                    latitude = getLati.toString(),
+                    longitude = getLongi.toString()
+                )
+                Log.d("res", "post: $getLati $getLongi   distance:")/* val request = PunchInRequest(
+                     employeeId = getEmployeeDetails()?.id.toString(),
+                     latitude = "23.6304733",
+                     longitude = "88.4355422"
+                 )*/
+                settingsViewModel.punchInRequest(this, request)
+                Log.d("res", "post: branch not assign")
+            }
+
+
+            /*   val request = PunchInRequest(
+                   employeeId = getEmployeeDetails()?.id.toString(),
+                   latitude = getLati.toString(),
+                   longitude = getLongi.toString()
+               )
+
+              *//* val request = PunchInRequest(
                 employeeId = getEmployeeDetails()?.id.toString(),
-                latitude = getLati.toString(),
-                longitude = getLongi.toString()
-            )
-            Log.d("res","post: $getLati $getLongi")
-            settingsViewModel.punchInRequest(this, request)
+                latitude = "23.6304733",
+                longitude = "88.4355422"
+            )*/
+
+
+            // settingsViewModel.punchInRequest(this, request)
+
+
+
+
+
 
 
         }
     }
 
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+        enableMyLocation()
+    }
 
     private fun observeViewModel() {
 
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-
-
 
         settingsViewModel.mPunchInResponse.observe(this) {
 
@@ -193,9 +193,23 @@ class EmployeePunchInActivity : AppCompatActivity() {
 
         }
 
+        settingsViewModel.mGetAttendanceBranchResponse.observe(this) { response ->
+            if (response?.status == true) {
+                Log.e("LocationDebug", "observeViewModel: ${response.data}")
+                val branchData = response.data
+                if (branchData != null && branchData.latitude != null && branchData.longitude != null) {
+
+                    branchLat = branchData.latitude.toDouble()
+                    branchLong = branchData.longitude.toDouble()
+                    radar = branchData.radar.toFloat()
+                    checkBranch = true
+
+                } else checkBranch = false
+            } else checkBranch = false
+        }
+
 
     }
-
 
 
     private fun handleLoader(status: String) {
@@ -207,23 +221,54 @@ class EmployeePunchInActivity : AppCompatActivity() {
     }
 
 
-    private fun openPicker(req: Int) {
-        Log.e("TAG", "openPicker: $req")
-        ImagePicker.with(this)
-            .crop()
-            .compress(1024)
-            .maxResultSize(
-                1080,
-                1080
+    private fun enableMyLocation() {
+
+
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+
+            mMap.isMyLocationEnabled = true
+
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    getLati = location.latitude
+                    getLongi = location.longitude
+                    Log.e("punchin", "$getLati $getLongi")
+
+                    val currentLatLng = LatLng(location.latitude, location.longitude)
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
+                    mMap.addMarker(MarkerOptions().position(currentLatLng).title("You are here"))
+                }
+            }
+        } else {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1001
             )
-            .start(req)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1001 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            enableMyLocation()
+        }
     }
 
 
-    private fun startLocationService() {
-        val serviceIntent = Intent(this, LocationForegroundService::class.java)
-        ContextCompat.startForegroundService(this, serviceIntent)
+    private fun calculateDistance(
+        lat1: Double, lon1: Double, lat2: Double, lon2: Double
+    ): Float {
+        val results = FloatArray(1)
+        Location.distanceBetween(lat1, lon1, lat2, lon2, results)
+        return results[0]
     }
 
 
 }
+
+
+

@@ -1,12 +1,14 @@
 package com.stafo.app.screens.emp
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
+import android.view.MenuItem
 import android.view.View
+import android.widget.PopupMenu
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -15,21 +17,22 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.stafo.app.R
 import com.stafo.app.base.adapter.AdapterEmployeeRecord
 import com.stafo.app.base.model.DateItem
 import com.stafo.app.databinding.ActivityEmployeeAttendanceRecordBinding
+import com.stafo.app.screens.settings.AttendanceRequestActivity
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.calculateMinutes
+import com.stafo.app.utils.convertTo12HourFormat3
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getIsCOMPANYLogin
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointForward
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.stafo.app.utils.convertTo12HourFormat2
-import com.stafo.app.utils.convertTo12HourFormat3
+import com.stafo.app.utils.isWeekOff
+import com.stafo.app.utils.prepareHolidaySet
 import com.stafo.app.utils.showCustomMonthYearPicker
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -47,6 +50,7 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
     private val calendar = Calendar.getInstance()
     private var mSelectedDate = ""
     private var avgWork: Float? = null
+    // private var mEmployeeDetails: EmployeeDataList? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +69,9 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
         mSelectedDate = curren
 
         mEMPID = intent.getStringExtra("EMP_ID") ?: ""
-
+        /*mEmployeeDetails = intent.getStringExtra("EmployeeDetails").let {
+            Gson().fromJson(it, EmployeeDataList::class.java)
+        }*/
 
         onClickListener()
         observeViewModel()
@@ -75,7 +81,6 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
     private fun fetchAttendanceData() {
         if (getIsCOMPANYLogin(this) == true) {
-
             settingsViewModel.getMonthlyAttendance(
                 this@EmployeeAttendanceRecordActivity,
                 mSelectedDate,
@@ -92,142 +97,141 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observeViewModel() {
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-        /*  settingsViewModel.mAttendanceHistoryResponse.observe(this) {
-              if (it.status) {
-                  if (it.data != null) {
-                      binding.txtMsg.visibility = View.GONE
-                  val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-                      var mPresentCount = 0
-                      var mTotalWorkingHour = 0
-                      val mMonth = getAllDatesFromMonth(mSelectedDate)
-                      for (month in mMonth.indices) {
-                          for (item in it.data.indices) {
-                              if (mMonth[month].date == it.data[item].date) {
-                                  mMonth[month].isPresent = it.data[item].attendance
-                                  mMonth[month].punchIn = it.data[item].in_time.toString()
-                                  mMonth[month].punchOut = it.data[item].out_time.toString()
-                                  if (it.data[item].attendance == "Present") {
-                                      mPresentCount++
-                                  }
-                                  if (!it.data[item].in_time.isNullOrEmpty()) {
-                                      mTotalWorkingHour += calculateMinutes(
-                                          it.data[item].in_time.toString(),
-                                          it.data[item].out_time.toString()
-                                      ).toInt()
-                                  }
-                              }
-                          }
-                      }
-                      Log.e(TAG, "observeViewModel: $mPresentCount")
-                      val totalHours = mTotalWorkingHour / 60
-                      val totalMinutes = mTotalWorkingHour % 60
-
-  // Display the total time in "hh:mm" format
-                      val totalWorkingTime = String.format("%02d:%02d", totalHours, totalMinutes)
-
-                     // Calculate the average working hours per day
-
-                      val officeHoursPerDay = 8.0
-                      val totalWorkingHours = mTotalWorkingHour / 60.0
-                      avgWork = calculateAverageHours(totalWorkingHours, mPresentCount)
-                      Log.d("res", "get avg: $avgWork")
-                      avgWork?.let {
-                          val progress = ((it / officeHoursPerDay) * 100).toFloat()
-                          binding.cpb.updateProgress(progress.coerceIn(0f, 100f))
-                      }
-
-                      binding.txtTotalPresent.text = mPresentCount.toString() ?: "0"
-                      binding.txtTotalWorking.text = totalWorkingTime ?: "00:00"
-                  binding.rvEmpAttendList.setLayoutManager(layoutManager)
-                      val rvAdapter = AdapterEmployeeRecord(mMonth, this)
-                  binding.rvEmpAttendList.adapter = rvAdapter
-                  rvAdapter.notifyDataSetChanged()
-              } else {
-                  binding.txtMsg.visibility = View.VISIBLE
-              }
-              }
-          }*/
-
         settingsViewModel.mAttendanceHistoryResponse.observe(this) { response ->
+
             if (response.status && response.data != null) {
 
+                binding.txtMsg.visibility = View.GONE
+
                 val today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                val todayAttendance = response.data.find { it.date == today }
 
-                if (todayAttendance != null) {
-                    val inTime = todayAttendance.in_time?.takeIf { it.isNotBlank() }
-                    val outTime = todayAttendance.out_time?.takeIf { it.isNotBlank() }
+                // ✅ Maps for fast lookup
+                val attendanceMap = response.data.associateBy { it.date }
+                val holidaySet = prepareHolidaySet(response.holidays!!) // pass your holiday API list
 
-                    val timeToShow = when {
-                        outTime != null -> convertTo12HourFormat3(outTime)
-                        inTime != null -> convertTo12HourFormat3(inTime)
-                        else -> "--"
+                val mMonth = getAllDatesFromMonth(mSelectedDate)
+
+                var mPresentCount = 0
+                var mTotalWorkingMinutes = 0
+
+                for (i in mMonth.indices) {
+
+                    val item = mMonth[i]
+
+                    // ✅ Skip placeholders or invalid dates
+                    if (item.isPlaceholder || item.date.isNullOrBlank()) {
+                        continue
                     }
 
-                    binding.tvTodayTime.text = timeToShow
+                    val dateStr = item.date
 
-                } else binding.tvTodayTime.text = "00.00"
+                    val localDate = try {
+                        LocalDate.parse(dateStr)
+                    } catch (e: Exception) {
+                        continue // extra safety
+                    }
 
+                    val attendance = attendanceMap[dateStr]
 
+                    when {
 
+                        // 🎉 HOLIDAY (Highest Priority)
+                        holidaySet.contains(dateStr) -> {
+                            item.isPresent = "Holiday"
+                        }
 
+                        // 🛌 WEEK OFF
+                        isWeekOff(localDate, response.shifts?.getOrNull(0)) -> {
+                            item.isPresent = "Week Off"
+                        }
 
+                        // ✅ PRESENT / API DATA
+                        attendance != null -> {
 
-                binding.txtMsg.visibility = View.GONE
-                val mMonth = getAllDatesFromMonth(mSelectedDate)
-                var mPresentCount = 0
-                var mTotalWorkingHour = 0
+                            item.isPresent = attendance.attendance
+                            item.punchIn = attendance.in_time ?: ""
+                            item.punchOut = attendance.out_time ?: ""
 
-                for (month in mMonth.indices) {
-                    for (item in response.data.indices) {
-                        if (mMonth[month].date == response.data[item].date) {
-                            mMonth[month].isPresent = response.data[item].attendance
-                            mMonth[month].punchIn = response.data[item].in_time.toString()
-                            mMonth[month].punchOut = response.data[item].out_time.toString()
-                            if (response.data[item].attendance == "Present") {
+                            if (attendance.attendance == "Present") {
                                 mPresentCount++
                             }
-                            if (!response.data[item].in_time.isNullOrEmpty()) {
-                                mTotalWorkingHour += calculateMinutes(
-                                    response.data[item].in_time.toString(),
-                                    response.data[item].out_time.toString()
+
+                            if (!attendance.in_time.isNullOrEmpty() &&
+                                !attendance.out_time.isNullOrEmpty()
+                            ) {
+                                mTotalWorkingMinutes += calculateMinutes(
+                                    attendance.in_time,
+                                    attendance.out_time
                                 ).toInt()
                             }
+                        }
+
+                        // ❌ ABSENT
+                        else -> {
+                            item.isPresent = "Absent"
                         }
                     }
                 }
 
-                val totalHours = mTotalWorkingHour / 60
-                val totalMinutes = mTotalWorkingHour % 60
+                // ✅ TODAY TIME LOGIC
+                val todayAttendance = attendanceMap[today]
+
+                val timeToShow = when {
+                    todayAttendance?.out_time?.isNotBlank() == true ->
+                        convertTo12HourFormat3(todayAttendance.out_time)
+
+                    todayAttendance?.in_time?.isNotBlank() == true ->
+                        convertTo12HourFormat3(todayAttendance.in_time)
+
+                    else -> "--"
+                }
+
+                binding.tvTodayTime.text = timeToShow
+
+                // ✅ TOTAL TIME
+                val totalHours = mTotalWorkingMinutes / 60
+                val totalMinutes = mTotalWorkingMinutes % 60
                 val totalWorkingTime = String.format("%02d:%02d", totalHours, totalMinutes)
 
-                avgWork = calculateAverageHours(mTotalWorkingHour / 60.0, mPresentCount)
+                binding.txtTotalPresent.text = mPresentCount.toString()
+                binding.txtTotalWorking.text = totalWorkingTime
+
+                // ✅ AVERAGE + PROGRESS
+                avgWork = (if (mPresentCount > 0) {
+                    mTotalWorkingMinutes / 60.0 / mPresentCount
+                } else 0.0)?.toFloat()
+
                 avgWork?.let {
                     val progress = ((it / 9.0) * 100).toFloat()
                     binding.cpb.updateProgress(progress.coerceIn(0f, 100f))
                 }
 
-                binding.txtTotalPresent.text = mPresentCount.toString()
-                binding.txtTotalWorking.text = totalWorkingTime
-
+                // ✅ RecyclerView Setup
                 val adapter = binding.rvEmpAttendList.adapter as? AdapterEmployeeRecord
+
                 if (adapter != null) {
                     adapter.submitList(mMonth)
                 } else {
-                    binding.rvEmpAttendList.layoutManager = GridLayoutManager(this,7)
+
+                    binding.rvEmpAttendList.layoutManager = GridLayoutManager(this, 7)
+
                     val newAdapter = AdapterEmployeeRecord(this, mEMPID)
                     binding.rvEmpAttendList.adapter = newAdapter
-                    newAdapter.submitList(mMonth)
 
                     newAdapter.submitList(mMonth) {
+
                         Handler(Looper.getMainLooper()).postDelayed({
+
                             val currentDatePosition = newAdapter.getCurrentDatePosition()
+
                             if (currentDatePosition != -1) {
-                                binding.rvEmpAttendList.smoothScrollToPosition(currentDatePosition) // Smooth scrolling
+                                binding.rvEmpAttendList.smoothScrollToPosition(currentDatePosition)
                             }
+
                         }, 300)
                     }
                 }
+
             } else {
                 binding.txtMsg.visibility = View.VISIBLE
             }
@@ -258,9 +262,9 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
             fetchAttendanceData()
 
-           /* llCalendar.setOnClickListener {
-                showDatePicker()
-            }*/
+            /* llCalendar.setOnClickListener {
+                 showDatePicker()
+             }*/
 
             llCalendar.setOnClickListener {
                 showCustomMonthYearPicker(this@EmployeeAttendanceRecordActivity) { formattedDate, displayDate ->
@@ -287,6 +291,15 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
 
 
+            if (getIsCOMPANYLogin(this@EmployeeAttendanceRecordActivity)) {
+                imageSettings.visibility = View.GONE
+            } else imageSettings.visibility = View.VISIBLE
+
+
+            imageSettings.setOnClickListener { view ->
+                showPopupMenu(view)
+            }
+
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
                 fetchAttendanceData()
@@ -295,6 +308,33 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
 
         }
+    }
+
+
+    private fun showPopupMenu(view: View) {
+        val popupMenu = PopupMenu(this, view)
+        val menu = popupMenu.menu
+        val options = resources.getStringArray(R.array.request_attendance_com)
+        options.forEachIndexed { index, option ->
+            menu.add(0, index, index, option)
+        }
+
+        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
+            when (item.itemId) {
+                0 -> {
+                    startActivity(Intent(this, EditAttendanceActivity::class.java))
+                    true
+                }
+
+                1 -> {
+                    startActivity(Intent(this, AttendanceRequestActivity::class.java))
+                    true
+                }
+
+                else -> false
+            }
+        }
+        popupMenu.show()
     }
 
     fun getDayNameOld(dateString: String, format: String = "yyyy-MM-dd"): String {
@@ -336,9 +376,6 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
         )
         datePickerDialog.show()
     }
-
-
-
 
 
     private fun showMonthYearPicker(onMonthSelected: (month: Int, year: Int) -> Unit) {
@@ -414,20 +451,33 @@ class EmployeeAttendanceRecordActivity : AppCompatActivity() {
 
         // Fill empty cells before the first day
         repeat(dayOfWeekOfFirst) {
-            allDates.add(DateItem(date = "", isPresent = "", punchIn = "", punchOut = "", isPlaceholder = true))
+            allDates.add(
+                DateItem(
+                    date = "",
+                    isPresent = "",
+                    punchIn = "",
+                    punchOut = "",
+                    isPlaceholder = true
+                )
+            )
         }
 
         // Add actual month days
         for (day in 1..lastDay) {
             val date = yearMonth.atDay(day).format(dateFormatter)
-            allDates.add(DateItem(date = date, isPresent = "", punchIn = "", punchOut = "", isPlaceholder = false))
+            allDates.add(
+                DateItem(
+                    date = date,
+                    isPresent = "",
+                    punchIn = "",
+                    punchOut = "",
+                    isPlaceholder = false
+                )
+            )
         }
 
         return allDates
     }
-
-
-
 
 
     fun calculateAverageHours(totalHours: Double, presentDays: Int): Float? {

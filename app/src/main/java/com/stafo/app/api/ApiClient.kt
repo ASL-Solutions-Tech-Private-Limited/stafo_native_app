@@ -2,6 +2,10 @@ package com.stafo.app.api
 
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.provider.Settings
+import android.util.Log
 import com.stafo.app.BuildConfig
 import com.stafo.app.utils.CustomTrustManager
 import com.stafo.app.utils.getDeviceId
@@ -9,11 +13,17 @@ import com.stafo.app.utils.getUserAccessToken
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.doLogout
+import com.stafo.app.utils.getEMPDevice
+import com.stafo.app.utils.getEmployeeDetails
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
+import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 
@@ -42,7 +52,7 @@ object ApiClient {
     var HTTP_STATUS_CODE_UNAUTHENTICATED_401 = 401
 
 
-    private fun getUnsafeOkHttpClient(context: Context?): OkHttpClient {
+    /*private fun getUnsafeOkHttpClient(context: Context?): OkHttpClient {
         try {
             // Create an SSL context with a custom TrustManager that trusts the self-signed certificate
             val sslContext = SSLContext.getInstance("TLS")
@@ -85,9 +95,93 @@ object ApiClient {
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
+    }*/
+
+
+    private fun getUnsafeOkHttpClient(context: Context): OkHttpClient {
+        try {
+            val sslContext = SSLContext.getInstance("TLS")
+            val trustManager = CustomTrustManager()
+            sslContext.init(null, arrayOf(trustManager), SecureRandom())
+
+            val httpClient = OkHttpClient.Builder()
+                .sslSocketFactory(sslContext.socketFactory, trustManager)
+                .hostnameVerifier { _, _ -> true }
+                .addInterceptor { chain ->
+                    Log.e("AuthDebug", "Interceptor triggered")
+                    if (SessionManager.isLoggedOut) {
+                        throw IOException("Session expired. No further API calls allowed.")
+                    }
+
+                    val request = chain.request()
+                    val response = chain.proceed(request)
+
+
+                    val oldDevice = getEMPDevice(context)
+                    val currentDevice = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+
+                    Log.e("AuthDebug", "oldDevice: $oldDevice  currentDevice: $currentDevice")
+
+                    if (response.code == 401) {
+                        Handler(Looper.getMainLooper()).post {
+                            CustomToast(context,"Session expired. Please log in again.")
+                        }
+                        SessionManager.logout(context)
+
+                    } else if (!oldDevice.isNullOrBlank() && oldDevice != currentDevice) {
+
+                        Handler(Looper.getMainLooper()).post {
+                            CustomToast(context,"Device mismatch detected. You have been logged out.")
+                        }
+                        SessionManager.logout(context)
+                    }
+
+                    response
+                }
+                .readTimeout(ApiStores.READ_TIMEOUT, TimeUnit.SECONDS)
+                .connectTimeout(ApiStores.CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(ApiStores.WRITE_TIMEOUT, TimeUnit.SECONDS)
+
+            if (BuildConfig.DEBUG) {
+                val loggingInterceptor = HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+
+                val chuckInterceptor = ChuckerInterceptor.Builder(context)
+                    .collector(ChuckerCollector(context))
+                    .maxContentLength(250000L)
+                    .redactHeaders(emptySet())
+                    .alwaysReadResponseBody(false)
+                    .build()
+
+                httpClient.addInterceptor(loggingInterceptor)
+                httpClient.addInterceptor(chuckInterceptor)
+            }
+
+            val cacheSize = 10 * 1024 * 1024
+            val cache = Cache(context.cacheDir, cacheSize.toLong())
+            httpClient.cache(cache)
+
+            return httpClient.build()
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
     }
 
-    fun retrofit(context: Context?, apiServerUrl: String): Retrofit? {
+    fun retrofit(context: Context, apiServerUrl: String): Retrofit {
+        if (mRetrofit == null) {
+            mRetrofit = Retrofit.Builder()
+                .baseUrl(apiServerUrl)
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(getUnsafeOkHttpClient(context))
+                .build()
+        }
+        return mRetrofit!!
+    }
+
+
+  /*  fun retrofit(context: Context?, apiServerUrl: String): Retrofit? {
 
         if (mRetrofit == null && context != null) {
             mRetrofit = Retrofit.Builder()
@@ -98,8 +192,20 @@ object ApiClient {
                 .build()
         }
         return mRetrofit
-    }
+    }*/
 
+    object SessionManager {
+        var isLoggedOut = false
+
+        fun logout(context: Context) {
+            if (!isLoggedOut) {
+                isLoggedOut = true
+
+               doLogout(context)
+
+            }
+        }
+    }
 
 
 

@@ -109,7 +109,6 @@ class EmpProfileActivity : AppCompatActivity() {
 
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
 
-
         settingsViewModel.mFetchEmployeeDetailsResponse.observe(this) {
 
             if (it.status) {
@@ -156,10 +155,6 @@ class EmpProfileActivity : AppCompatActivity() {
                         }
                     }
 
-
-
-
-
                     val position = data.position ?: ""
                     selectJobTitle = position
 
@@ -186,13 +181,6 @@ class EmpProfileActivity : AppCompatActivity() {
                     binding.txtLComEmpId.text = data.empId.orDash()
                     binding.txtLComPfNo.text = data.pfNumber?.orDash()
                     binding.txtLComOfficialEmail.text = data.email.orDash()
-
-
-
-
-
-
-
 
                 }
             } else {

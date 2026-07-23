@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:id="@+id/rl_emp"
@@ -22,11 +23,11 @@
 
         <LinearLayout
             android:id="@+id/ll_date"
-            android:paddingHorizontal="@dimen/_6sdp"
+            android:paddingHorizontal="@dimen/_4sdp"
             android:paddingVertical="@dimen/_14sdp"
             android:background="@drawable/holiday_item_bg"
             android:orientation="horizontal"
-            android:layout_width="@dimen/_58sdp"
+            android:layout_width="@dimen/_66sdp"
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/txt_holiday_month"
@@ -35,6 +36,7 @@
                 android:fontFamily="@font/gilroy_semi_bold"
                 android:textAllCaps="true"
                 android:singleLine="true"
+                tools:text="OCT"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_12ssp" />
             <View
@@ -51,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/gilroy_regular"
                 android:singleLine="true"
+                tools:text="20"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_12ssp" />
         </LinearLayout>

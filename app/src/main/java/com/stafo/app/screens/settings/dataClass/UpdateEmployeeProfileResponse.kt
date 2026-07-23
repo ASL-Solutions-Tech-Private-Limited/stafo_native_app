@@ -44,7 +44,7 @@ data class EmployeeUpdate(
     @SerializedName("image") val image: String?,
     @SerializedName("phone") val phone: String,
     @SerializedName("position") val position: String?,
-    @SerializedName("salary") val salary: Int?,
+    @SerializedName("salary") val salary: String?,
     @SerializedName("geo_status") val geoStatus: String?,
     @SerializedName("created_at") val createdAt: String,
     @SerializedName("updated_at") val updatedAt: String,

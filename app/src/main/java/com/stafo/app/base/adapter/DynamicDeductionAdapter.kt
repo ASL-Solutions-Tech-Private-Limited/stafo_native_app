@@ -13,8 +13,7 @@ import com.stafo.app.screens.settings.dataClass.SalaryComponent
 
 
 class DynamicDeductionAdapter(
-    private val fields: MutableList<SalaryComponent>,
-    private val onAmountChanged: () -> Unit
+    private val fields: MutableList<SalaryComponent>, private val onAmountChanged: () -> Unit
 ) : RecyclerView.Adapter<DynamicDeductionAdapter.DynamicViewHolder>() {
 
     inner class DynamicViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -47,52 +46,14 @@ class DynamicDeductionAdapter(
                 val pos = holder.bindingAdapterPosition
                 if (pos != RecyclerView.NO_POSITION) {
                     val newValue = s.toString().toDoubleOrNull() ?: 0.0
-                    fields[pos].amount = newValue.toInt()
+                    fields[pos].amount = newValue  // ✅ Fix: assign Double directly
                     onAmountChanged()
                 }
             }
         })
+
     }
 
     override fun getItemCount(): Int = fields.size
 }
-/*
-class DynamicDeductionAdapter (private val fields: MutableList<SalaryComponent>) :
-    RecyclerView.Adapter<DynamicDeductionAdapter.DynamicViewHolder>() {
 
-    inner class DynamicViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textView: AppCompatTextView = view.findViewById(R.id.tv_title)
-        val editText: AppCompatEditText = view.findViewById(R.id.editText)
-
-
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DynamicViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.recy_dynamic_salary_item_layout, parent, false)
-        return DynamicViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: DynamicViewHolder, position: Int) {
-        val field = fields[position]
-
-
-
-        holder.textView.text = if (field.amount_type == "Percentage") {
-            "${field.label} (${field.amount}%)"
-        } else {
-            field.label
-        }
-        holder.editText.setText(field.amount.toString())
-
-
-    }
-
-
-    override fun getItemCount(): Int = fields.size
-
-    fun getAllFields(): List<SalaryComponent> {
-        return fields
-    }
-
-}*/

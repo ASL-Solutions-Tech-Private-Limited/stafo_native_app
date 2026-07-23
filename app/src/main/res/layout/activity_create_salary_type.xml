@@ -149,6 +149,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_amount"
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -160,8 +161,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/edit_text_background"
                     android:fontFamily="@font/gilroy_medium"
-                    android:hint="Enter Amount"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
+                    android:maxLength="10"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12ssp" />
 

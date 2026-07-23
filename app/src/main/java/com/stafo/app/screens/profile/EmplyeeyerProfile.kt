@@ -49,6 +49,7 @@ import com.stafo.app.screens.subscription.SubscriptionActivity
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.doLogout
+import com.stafo.app.utils.generateTextBitmap
 import com.stafo.app.utils.getCompanyDetails
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getIsCOMPANYLogin
@@ -92,16 +93,14 @@ class EmplyeeyerProfile : AppCompatActivity() {
                 llHeaderUserProfile.setOnClickListener {
                     startActivity(
                         Intent(
-                            this@EmplyeeyerProfile,
-                            CompanyProfileActivity::class.java
+                            this@EmplyeeyerProfile, CompanyProfileActivity::class.java
                         )
                     )
                 }
             } else {
                 setupSettingsViewsForEpm()
                 settingsViewModel.fetchEmployeeDetails(
-                    this@EmplyeeyerProfile,
-                    getEmployeeDetails()?.id.toString()
+                    this@EmplyeeyerProfile, getEmployeeDetails()?.id.toString()
                 )
                 tvHeaderEmpName.text = getEmployeeDetails()?.name ?: "Guest"
                 tvHeaderEmpEmail.text = getEmployeeDetails()?.email ?: "--"
@@ -120,8 +119,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
             settingsViewModel.getCompanyDetails(this@EmplyeeyerProfile)
         } else {
             settingsViewModel.fetchEmployeeDetails(
-                this@EmplyeeyerProfile,
-                getEmployeeDetails()?.id.toString()
+                this@EmplyeeyerProfile, getEmployeeDetails()?.id.toString()
             )
 
         }
@@ -138,8 +136,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
             if (it.status) {
 
                 settingsViewModel.fetchEmployeeDetails(
-                    this@EmplyeeyerProfile,
-                    getEmployeeDetails()?.id.toString()
+                    this@EmplyeeyerProfile, getEmployeeDetails()?.id.toString()
                 )
 
                 CustomToast(this, it.message)
@@ -156,9 +153,14 @@ class EmplyeeyerProfile : AppCompatActivity() {
                 if (!it.imageUrl.isNullOrEmpty()) {
                     val imageUrl = it.imageUrl
 
-                    Glide.with(this)
-                        .load(imageUrl)
-                        .into(binding.ivHeaderProfilePic)
+                    Glide.with(this).load(imageUrl).into(binding.ivHeaderProfilePic)
+                } else {
+
+                    getEmployeeDetails()?.let { it1 ->
+                        val placeholderBitmap = generateTextBitmap(it1.name)
+                        binding.ivHeaderProfilePic.setImageBitmap(placeholderBitmap)
+                    }
+
                 }
 
             } else {
@@ -174,9 +176,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
             if (it.status) {
 
                 it.data?.companyLogo?.let { imageUrl ->
-                    Glide.with(this)
-                        .load(imageUrl)
-                        .into(binding.ivHeaderProfilePic)
+                    Glide.with(this).load(imageUrl).into(binding.ivHeaderProfilePic)
                 } ?: run {
 
                 }
@@ -480,14 +480,9 @@ class EmplyeeyerProfile : AppCompatActivity() {
 
     private fun openPicker(req: Int) {
 
-        ImagePicker.with(this)
-            .crop()
-            .compress(1024)
-            .maxResultSize(
-                1080,
-                1080
-            )
-            .start(req)
+        ImagePicker.with(this).crop().compress(1024).maxResultSize(
+            1080, 1080
+        ).start(req)
     }
 
 
@@ -684,19 +679,16 @@ class EmplyeeyerProfile : AppCompatActivity() {
                 "Set Attendance" -> {
                     startActivity(
                         Intent(
-                            this@EmplyeeyerProfile,
-                            ViewAllEmployeeActivity::class.java
+                            this@EmplyeeyerProfile, ViewAllEmployeeActivity::class.java
                         ).apply {
                             putExtra("FROM", "SetAttendance")
-                        }
-                    )
+                        })
                 }
 
                 "Assign Branch" -> {
                     startActivity(
                         Intent(
-                            this@EmplyeeyerProfile,
-                            AssignBranchActivity::class.java
+                            this@EmplyeeyerProfile, AssignBranchActivity::class.java
                         ).apply {
                             putExtra("Assign_Type", "branch")
                         })
@@ -705,15 +697,14 @@ class EmplyeeyerProfile : AppCompatActivity() {
                 "Assign Department" -> {
                     startActivity(
                         Intent(
-                            this@EmplyeeyerProfile,
-                            AssignBranchActivity::class.java
+                            this@EmplyeeyerProfile, AssignBranchActivity::class.java
                         ).apply {
                             putExtra("Assign_Type", "department")
                         })
                 }
 
                 "Logout" -> {
-                    doLogout(this)
+                    showLogoutDialog()
                 }
             }
         }
@@ -740,13 +731,11 @@ class EmplyeeyerProfile : AppCompatActivity() {
                 "Branch" -> {
                     startActivity(
                         Intent(
-                            this@EmplyeeyerProfile,
-                            EmpBranchDetailsActivity::class.java
+                            this@EmplyeeyerProfile, EmpBranchDetailsActivity::class.java
                         )
                     )
                     overridePendingTransition(
-                        R.anim.slide_from_right,
-                        R.anim.slide_to_left
+                        R.anim.slide_from_right, R.anim.slide_to_left
                     )
                 }
 
@@ -761,7 +750,7 @@ class EmplyeeyerProfile : AppCompatActivity() {
                     startActivity(intent)
                 }
 
-                "Policy" -> {
+                "Policies" -> {
                     val intent = Intent(this, PolicyActivity::class.java)
                     startActivity(intent)
                 }
@@ -784,33 +773,28 @@ class EmplyeeyerProfile : AppCompatActivity() {
                 "Attendance" -> {
                     startActivity(
                         Intent(
-                            this@EmplyeeyerProfile,
-                            EmployeeAttendanceRecordActivity::class.java
+                            this@EmplyeeyerProfile, EmployeeAttendanceRecordActivity::class.java
                         ).apply {
                             putExtra("EMP_ID", "${getEmployeeDetails()?.id.toString()}")
-                        }
-                    )
+                        })
                     overridePendingTransition(
-                        R.anim.slide_from_right,
-                        R.anim.slide_to_left
+                        R.anim.slide_from_right, R.anim.slide_to_left
                     )
                 }
 
                 "Leaves" -> {
                     startActivity(
                         Intent(
-                            this@EmplyeeyerProfile,
-                            EmployeeLeaveHistoryActivity::class.java
+                            this@EmplyeeyerProfile, EmployeeLeaveHistoryActivity::class.java
                         )
                     )
                     overridePendingTransition(
-                        R.anim.slide_from_right,
-                        R.anim.slide_to_left
+                        R.anim.slide_from_right, R.anim.slide_to_left
                     )
                 }
 
                 "Logout" -> {
-                    doLogout(this)
+                    showLogoutDialog()
                 }
             }
         }
@@ -818,6 +802,25 @@ class EmplyeeyerProfile : AppCompatActivity() {
         binding.settingsRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.settingsRecyclerView.adapter = adapter
 
+    }
+
+
+    private fun showLogoutDialog() {
+        val builder = AlertDialog.Builder(this@EmplyeeyerProfile)
+        builder.setTitle(R.string.app_name)
+        builder.setMessage("Are you sure? You want to logout from device!")
+
+        builder.setPositiveButton("Yes") { dialog, _ ->
+            doLogout(this)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
     }
 
 

@@ -7,20 +7,23 @@ data class SalaryGeneratedResponse(
 )
 
 data class SalaryData(
-    val employee_id: Int,
     val basic_salary: String,
     val earning: List<SalaryComponent>,
     val deduction: List<SalaryComponent>,
-    val gross_salary: Int
+    val other_deduction:  Double = 0.0,
+    val gross_salary: Int,
+    val absent_days: Int,
+    val working_days: Int,
+    val expense: Int
 )
 
 data class SalaryComponent(
     val id: Int,
     val label: String,
-    var amount: Int,
+    var amount: Double,
     val amount_type: String,
     val payment_type: String,
-    val percentage: Int?
+    val percentage: Double?
 
 )
 

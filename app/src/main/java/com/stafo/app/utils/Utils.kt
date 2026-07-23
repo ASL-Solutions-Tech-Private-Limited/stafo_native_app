@@ -2,12 +2,12 @@ package com.stafo.app.utils
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.ActivityNotFoundException
-import android.content.ClipData
-import android.content.ClipboardManager
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Context.BATTERY_SERVICE
 import android.content.DialogInterface
@@ -23,7 +23,6 @@ import android.graphics.Paint
 import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.location.LocationManager
 import android.net.ConnectivityManager
@@ -36,9 +35,11 @@ import android.os.CountDownTimer
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.provider.MediaStore
+import android.provider.OpenableColumns
+import android.provider.Settings
 import android.provider.Settings.Secure
-import android.text.InputType
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
@@ -62,7 +63,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -70,7 +70,6 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
-import com.stafo.app.screens.auth.LoginWithOTPActivity
 import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -82,6 +81,8 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.orhanobut.hawk.Hawk
 import com.stafo.app.R
 import com.stafo.app.base.EndOfDaySyncWorker
+import com.stafo.app.base.model.Holiday
+import com.stafo.app.base.model.ShiftAttendance
 import com.stafo.app.screens.ui.SplashActivity
 import com.trackier.sdk.TrackierEvent
 import com.trackier.sdk.TrackierSDK.trackEvent
@@ -92,7 +93,9 @@ import org.xml.sax.InputSource
 import org.xml.sax.SAXException
 import tech.developingdeveloper.toaster.Toaster
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
 import java.io.StringReader
 import java.net.InetAddress
 import java.net.NetworkInterface
@@ -100,11 +103,10 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
@@ -1590,6 +1592,22 @@ fun reportsFormatToMonthYear(dateString: String?): String {
         "N/A"
     }
 }
+
+
+fun showFormatDate(dateString: String?): String {
+    if (dateString.isNullOrEmpty()) return "N/A"
+
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+        val date = inputFormat.parse(dateString)
+        if (date != null) outputFormat.format(date) else "N/A"
+    } catch (e: Exception) {
+        "N/A"
+    }
+}
+
+
 fun showCustomMonthYearPicker(
     context: Context,
     onSelected: (formattedDate: String, displayDate: String) -> Unit
@@ -1889,14 +1907,18 @@ fun convertTo12Hour(time: String?): String {
 }
 
 fun isNetworkAvailable(context: Context): Boolean {
-    val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork = connectivityManager.activeNetwork ?: return false
     val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
 
-    return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+            networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
 }
+
+
+
+
+
 fun isGpsEnabled(context: Context): Boolean {
     val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
@@ -1942,83 +1964,167 @@ fun scheduleDailyEndOfDaySync(context: Context) {
     )
 }
 
-
-val gradientList = listOf(
-    intArrayOf(Color.parseColor("#8E2DE2"), Color.parseColor("#4A00E0")), // purple-blue
-    intArrayOf(Color.parseColor("#FF512F"), Color.parseColor("#DD2476")), // orange-pink
-    intArrayOf(Color.parseColor("#36D1DC"), Color.parseColor("#5B86E5")), // blue gradient
-    intArrayOf(Color.parseColor("#00C9FF"), Color.parseColor("#92FE9D")), // aqua-green
-    intArrayOf(Color.parseColor("#f7971e"), Color.parseColor("#ffd200")), // golden-orange
-    intArrayOf(Color.parseColor("#ff6a00"), Color.parseColor("#ee0979")), // sunset
-    intArrayOf(Color.parseColor("#7F00FF"), Color.parseColor("#E100FF")), // violet
-    intArrayOf(Color.parseColor("#00F260"), Color.parseColor("#0575E6"))  // green-blue
-)
-
-
-fun showSearchableDialog(
-    context: Context,
-    title: String,
-    items: List<String>,
-    onItemSelected: (String) -> Unit
-) {
-    val dialog = AlertDialog.Builder(context)
-        .setTitle(title)
-        .setItems(items.toTypedArray()) { _, which ->
-            onItemSelected(items[which])
+fun checkExactAlarmPermission(context: Context, onResult: (Boolean) -> Unit) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val alarmManager = context.getSystemService(AlarmManager::class.java)
+        if (!alarmManager.canScheduleExactAlarms()) {
+            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+            intent.data = Uri.parse("package:${context.packageName}")
+            (context as Activity).startActivityForResult(intent, 1001)
+            onResult(false)
+        } else {
+            onResult(true)
         }
-        .create()
-    dialog.show()
-}
-
-
- fun getInputTypeUtil(dataType: String?): Int {
-    return when (dataType?.uppercase()) {
-        "NUMERIC" -> InputType.TYPE_CLASS_NUMBER
-        "ALPHABET" -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS
-        "ALPHANUMERIC" -> InputType.TYPE_CLASS_TEXT
-        else -> InputType.TYPE_CLASS_TEXT
-    }
-}
-
-
-fun jsonObjectToMap(jsonObject: JSONObject): Map<String, Any> {
-    val map = mutableMapOf<String, Any>()
-    val keys = jsonObject.keys()
-    while (keys.hasNext()) {
-        val key = keys.next()
-        val value = jsonObject.get(key)
-        map[key] = value
-    }
-    return map
-}
-
-fun isPromoExpired(expiresAt: String): Boolean {
-    return try {
-        val formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME
-        val expiryDateTime = ZonedDateTime.parse(expiresAt, formatter)
-        val currentDateTime = ZonedDateTime.now()
-        currentDateTime.isAfter(expiryDateTime)
-    } catch (e: Exception) {
-        // Handle parsing errors
-        true // treat as expired if invalid date format
-    }
-}
-
-
-fun copyTextFromTextView(context: Context, textView: TextView) {
-    val textToCopy = textView.text.toString()
-    if (textToCopy.isNotBlank()) {
-        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("Copied Text", textToCopy)
-        clipboard.setPrimaryClip(clip)
-        Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
     } else {
-        Toast.makeText(context, "Nothing to copy", Toast.LENGTH_SHORT).show()
+        onResult(true)
     }
+}
+
+fun requestIgnoreBatteryOptimization(context: Context, onResult: (Boolean) -> Unit) {
+    val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+    if (!pm.isIgnoringBatteryOptimizations(context.packageName)) {
+        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+        intent.data = Uri.parse("package:${context.packageName}")
+        (context as Activity).startActivityForResult(intent, 1002)
+        onResult(false)
+    } else {
+        onResult(true)
+    }
+}
+@RequiresApi(Build.VERSION_CODES.O)
+fun formatCreatedAtDate(input: String?): String {
+    if (input.isNullOrEmpty()) return ""
+
+    return try {
+        val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX", Locale.US)
+        val outputFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.US)
+
+        val zonedDateTime = ZonedDateTime.parse(input, inputFormatter)
+        outputFormatter.format(zonedDateTime)
+    } catch (e: Exception) {
+        ""
+    }
+}
+
+
+fun Context.uriToFile(uri: Uri): File? {
+    val contentResolver: ContentResolver = this.contentResolver
+    val file = File(cacheDir, getFileName(uri))
+
+    return try {
+        val inputStream: InputStream? = contentResolver.openInputStream(uri)
+        val outputStream = FileOutputStream(file)
+
+        inputStream?.copyTo(outputStream)
+        inputStream?.close()
+        outputStream.close()
+
+        file
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
+ fun Context.getFileName(uri: Uri): String {
+    var name = "temp_file"
+    val cursor = contentResolver.query(uri, null, null, null, null)
+    cursor?.use {
+        if (it.moveToFirst()) {
+            val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (nameIndex != -1) {
+                name = it.getString(nameIndex)
+            }
+        }
+    }
+    return name
 }
 
 
 
 
 
+
+
+fun getTimeOnly12HrFormat(isoDateTime: String?): String {
+    if (isoDateTime.isNullOrBlank()) return "--"
+
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())
+        inputFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        outputFormat.timeZone = TimeZone.getDefault()
+
+        val date = inputFormat.parse(isoDateTime)
+        date?.let { outputFormat.format(it) } ?: "--"
+    } catch (e: Exception) {
+        e.printStackTrace()
+        "--"
+    }
+}
+
+fun getSmartShortAddress(fullAddress: String?): String {
+    if (fullAddress.isNullOrBlank()) return "Unknown"
+
+    val parts = fullAddress.split(",")
+        .map { it.trim() }
+        .filter { it.isNotEmpty() }
+
+    if (parts.size < 4) return parts.joinToString(", ") // Just return what’s available
+
+    // Grab the last 3 parts (e.g., "Kolkata, West Bengal, India")
+    val lastParts = parts.takeLast(3)
+
+    // Grab 1–2 location-specific parts before city
+    val localityParts = parts.dropLast(3).takeLast(2)
+
+    return (localityParts + lastParts).joinToString(", ")
+}
+
+
+fun getExpenseIcon(type: String): String {
+    return when (type.lowercase()) {
+        "parking" -> "🅿️"
+        "food" -> "🍽️"
+        "repair" -> "🔧"
+        "fuel" -> "⛽"
+        "toll" -> "🛣️"
+        "accommodation" -> "🏨"
+        else -> "💼"
+    }
+}
+
+
+fun isWeekOff(date: LocalDate, shift: ShiftAttendance?): Boolean {
+
+    // 🔒 If shift is null → assume NO week off (or change based on your business rule)
+    shift ?: return false
+
+    return when (date.dayOfWeek) {
+        DayOfWeek.SUNDAY -> shift.sunday == 0
+        DayOfWeek.MONDAY -> shift.monday == 0
+        DayOfWeek.TUESDAY -> shift.tuesday == 0
+        DayOfWeek.WEDNESDAY -> shift.wednesday == 0
+        DayOfWeek.THURSDAY -> shift.thursday == 0
+        DayOfWeek.FRIDAY -> shift.friday == 0
+        DayOfWeek.SATURDAY -> shift.saturday == 0
+    }
+}
+
+fun prepareHolidaySet(holidayList: List<Holiday>): Set<String> {
+    val holidaySet = mutableSetOf<String>()
+
+    holidayList.forEach { holiday ->
+        var date = LocalDate.parse(holiday.startDate)
+        val end = LocalDate.parse(holiday.endDate)
+
+        while (!date.isAfter(end)) {
+            holidaySet.add(date.toString())
+            date = date.plusDays(1)
+        }
+    }
+
+    return holidaySet
+}
 

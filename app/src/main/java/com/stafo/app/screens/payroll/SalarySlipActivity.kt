@@ -75,11 +75,7 @@ class SalarySlipActivity : AppCompatActivity() {
     }
 
     private fun onClickListener() {
-
-
         binding.apply {
-
-
             settingsViewModel.getAllEmployeeList(this@SalarySlipActivity)
 
             tieEmployee.setOnClickListener {
@@ -113,7 +109,7 @@ class SalarySlipActivity : AppCompatActivity() {
                     val chooser = Intent.createChooser(shareIntent, "Share File Link via")
                     startActivity(chooser)
                 } else {
-                    CustomToast(this@SalarySlipActivity, "Please generate salary slip first")
+                    CustomToast(this@SalarySlipActivity, "Please generate salary slip first!")
                 }
 
             }
@@ -124,7 +120,7 @@ class SalarySlipActivity : AppCompatActivity() {
                     val mimeType = getMimeType(slipUrl)
                     downloadFile(this@SalarySlipActivity, slipUrl, fileName, mimeType)
                 } else {
-                    CustomToast(this@SalarySlipActivity, "Please first generate salary slip!")
+                    CustomToast(this@SalarySlipActivity, "Please generate salary slip first!")
                 }
             }
 
@@ -135,9 +131,7 @@ class SalarySlipActivity : AppCompatActivity() {
     }
 
     private fun setupSearchableDialog(
-        dataList: List<Any>?,
-        title: String,
-        field: TextInputEditText
+        dataList: List<Any>?, title: String, field: TextInputEditText
     ) {
         val items = dataList?.map {
             val name = when (it) {
@@ -216,12 +210,14 @@ class SalarySlipActivity : AppCompatActivity() {
                 slipUrl = it.data.download_url
 
                 if (slipUrl.isNotBlank()) {
+                    binding.pdfView.visibility = View.VISIBLE
                     binding.pdfView.initWithUrl(
                         url = slipUrl,
                         lifecycleCoroutineScope = lifecycleScope,
                         lifecycle = lifecycle,
                     )
                 } else {
+                    binding.pdfView.visibility = View.GONE
                     Log.e("PDF", "Slip URL is null or empty")
                 }
 
@@ -240,9 +236,7 @@ class SalarySlipActivity : AppCompatActivity() {
                     mEmpList = it.data
                     binding.let { it1 ->
                         setupSearchableDialog(
-                            mEmpList,
-                            "Employee List",
-                            it1.tieEmployee
+                            mEmpList, "Employee List", it1.tieEmployee
                         )
                     }
 
@@ -268,8 +262,7 @@ class SalarySlipActivity : AppCompatActivity() {
         return when {
             url.endsWith(".pdf", ignoreCase = true) -> "application/pdf"
             url.endsWith(".xls", ignoreCase = true) || url.endsWith(
-                ".xlsx",
-                ignoreCase = true
+                ".xlsx", ignoreCase = true
             ) -> "application/vnd.ms-excel"
 
             else -> "*/*"
@@ -277,14 +270,11 @@ class SalarySlipActivity : AppCompatActivity() {
     }
 
     private fun downloadFile(context: Context, url: String, fileName: String, mimeType: String) {
-        val request = DownloadManager.Request(Uri.parse(url))
-            .setTitle("Downloading $fileName")
+        val request = DownloadManager.Request(Uri.parse(url)).setTitle("Downloading $fileName")
             .setDescription("Please wait...")
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
-            .setMimeType(mimeType)
-            .setAllowedOverMetered(true)
-            .setAllowedOverRoaming(true)
+            .setMimeType(mimeType).setAllowedOverMetered(true).setAllowedOverRoaming(true)
 
         val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val downloadId = downloadManager.enqueue(request)

@@ -4,9 +4,9 @@
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="colorButton">#0E68FF</color>
     <color name="colorButtonText">#ffffff</color>
     <color name="colorPlaceholder">#505050</color>
+    <color name="colorButton">#0E68FF</color>
     <color name="colorTextPrimary">#0E68FF</color>
     <color name="primaryColor">#0E68FF</color>
     <color name="primaryColorDark">#0A47B3</color>
@@ -47,6 +47,20 @@
     <color name="basic_light">#f41b94</color>
     <color name="basic_deep">#93399c</color>
     <color name="semiTransparentBlue">#330099cc</color>
+
+    <color name="priority_low">#4CAF50</color>      <!-- Green -->
+    <color name="priority_medium">#FFC107</color>   <!-- Amber -->
+    <color name="priority_high">#FF5722</color>     <!-- Deep Orange -->
+    <color name="priority_urgent">#F44336</color>   <!-- Red -->
+    <color name="priority_none">#9E9E9E</color>     <!-- Gray -->
+    <color name="grey_600">#757575</color>
+    <color name="grey_300">#E0E0E0</color>
+    <color name="status_in_progress">#5075FF</color>
+    <color name="status_pending">#E3A100</color>
+    <color name="status_completed">#0ACF83</color>
+    <color name="status_overdue">#FF5C5C</color>
     <color name="steel_blue">#90D5FF</color>
+    <color name="holiday">#FFF3E0</color>
     <color name="emerald_green">#0AAA40</color>
+    <color name="green">#008000</color>
 </resources>

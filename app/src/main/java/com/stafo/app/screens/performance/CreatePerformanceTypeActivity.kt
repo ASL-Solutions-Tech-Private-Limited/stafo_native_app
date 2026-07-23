@@ -1,6 +1,7 @@
 package com.stafo.app.screens.performance
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -39,9 +40,9 @@ class CreatePerformanceTypeActivity : AppCompatActivity() {
             insets
         }
 
-        mID = intent.getStringExtra("id").toString()
-        mName = intent.getStringExtra("name").toString()
-        mDesc = intent.getStringExtra("desc").toString()
+        mID = intent.getStringExtra("id") ?: ""
+        mName = intent.getStringExtra("name") ?: ""
+        mDesc = intent.getStringExtra("desc") ?: ""
 
         onClickListener()
         observeViewModel()
@@ -53,7 +54,7 @@ class CreatePerformanceTypeActivity : AppCompatActivity() {
         binding.apply {
 
 
-            if (mID=="null" && mName=="null"){
+            if (mID=="" && mName==""){
                 tvTitle.text="Create Performance Type"
                 tieDescription.setText("")
                 tiePerformanceName.setText("")
@@ -79,50 +80,50 @@ class CreatePerformanceTypeActivity : AppCompatActivity() {
             ivBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
             btnSubmit.setOnClickListener {
 
+                  if (mID.isNotBlank() && mName.isNotBlank()){
+                      Log.e("crm","update")
+                      if (isValidate()){
 
-                if (mID.isNotBlank() && mName.isNotBlank()){
-                    if (isValidate()){
+                          if (!tieDescription.text.isNullOrEmpty()){
+                              val request= AddPerformanceRequest(
+                                  name = tiePerformanceName.text.toString(),
+                                  description = tieDescription.text.toString()
 
-                        if (!tieDescription.text.isNullOrEmpty()){
-                            val request= AddPerformanceRequest(
-                                name = tiePerformanceName.text.toString(),
-                                description = tieDescription.text.toString()
+                              )
+                              billPaymentsViewModel.updatePerformanceType(this@CreatePerformanceTypeActivity,mID.toInt(), request)
+                          }else{
+                              val request= AddPerformanceRequest(
+                                  name = tiePerformanceName.text.toString(),
+                                  description = ""
 
-                            )
-                            billPaymentsViewModel.updatePerformanceType(this@CreatePerformanceTypeActivity,mID.toInt(), request)
-                        }else{
-                            val request= AddPerformanceRequest(
-                                name = tiePerformanceName.text.toString(),
-                                description = ""
+                              )
+                              billPaymentsViewModel.updatePerformanceType(this@CreatePerformanceTypeActivity,mID.toInt(), request)
+                          }
 
-                            )
-                            billPaymentsViewModel.updatePerformanceType(this@CreatePerformanceTypeActivity,mID.toInt(), request)
-                        }
-
-                    }
+                      }
 
 
-                }else{
-                    if (isValidate()){
+                  }else{
+                      if (isValidate()){
 
-                        if (!tieDescription.text.isNullOrEmpty()){
-                            val request= AddPerformanceRequest(
-                                name = tiePerformanceName.text.toString(),
-                                description = tieDescription.text.toString()
+                          if (!tieDescription.text.isNullOrEmpty()){
+                              val request= AddPerformanceRequest(
+                                  name = tiePerformanceName.text.toString(),
+                                  description = tieDescription.text.toString()
 
-                            )
-                            billPaymentsViewModel.createPerformance(this@CreatePerformanceTypeActivity, request)
-                        }else{
-                            val request= AddPerformanceRequest(
-                                name = tiePerformanceName.text.toString(),
-                                description = ""
+                              )
+                              billPaymentsViewModel.createPerformance(this@CreatePerformanceTypeActivity, request)
+                          }else{
+                              val request= AddPerformanceRequest(
+                                  name = tiePerformanceName.text.toString(),
+                                  description = ""
 
-                            )
-                            billPaymentsViewModel.createPerformance(this@CreatePerformanceTypeActivity, request)
-                        }
+                              )
+                              billPaymentsViewModel.createPerformance(this@CreatePerformanceTypeActivity, request)
+                          }
 
-                    }
-                }
+                      }
+                  }
 
 
 

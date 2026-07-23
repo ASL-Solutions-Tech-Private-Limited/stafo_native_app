@@ -171,7 +171,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:fontFamily="@font/poppins_regular"
-            android:text="No rankings available for this employee in January 2025."
+            android:text="No ranking record available for this employee during this month."
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>

@@ -1,10 +1,14 @@
 package com.stafo.app.screens.dashboard
 
+import android.Manifest
+import android.app.ActivityManager
 import android.app.KeyguardManager
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -48,6 +52,8 @@ import com.stafo.app.screens.settings.VerifyCompanyDetailsActivity
 import com.stafo.app.screens.settings.ViewAllEmployeeActivity
 import com.stafo.app.screens.settings.ViewDeviceRequestEmpActivity
 import com.stafo.app.screens.subscription.SubscriptionActivity
+import com.stafo.app.screens.tms.TaskMSDashboard
+import com.stafo.app.screens.tripPlan.TripDashboardActivity
 import com.stafo.app.screens.ui.EmplyeeyerProfile
 import com.stafo.app.screens.ui.WishListActivity
 import com.stafo.app.utils.CustomLoader
@@ -59,6 +65,33 @@ import com.stafo.app.utils.getTodayDate
 import com.stafo.app.utils.setEmployeeComId
 import com.stafo.app.utils.setIsLock
 import com.stafo.app.utils.setIsLockUser
+import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.ActivityResult
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.gson.Gson
+import com.stafo.app.databinding.CustomBottomSheetAttendanceLayoutBinding
+import com.stafo.app.databinding.PayrollBottomSheetLayoutBinding
+import com.stafo.app.screens.chat.ChatWithCompanyActivity
+import com.stafo.app.screens.crm.CRMLeadDashboard
+import com.stafo.app.screens.emp.EmpSelfieAttendanceActivity
+import com.stafo.app.screens.emp.EmployeePunchInActivity
+import com.stafo.app.screens.emp.QRCodeAttendanceEmpActivity
+import com.stafo.app.screens.expense.ExpenseDashboardActivity
+import com.stafo.app.screens.notification.NotificationActivity
+import com.stafo.app.screens.payroll.GenerateSalaryActivity
+import com.stafo.app.screens.payroll.SalarySlipActivity
+import com.stafo.app.screens.payroll.SalaryTypeActivity
+import com.stafo.app.screens.recharge.RechargeActivity
+import com.stafo.app.screens.reports.ReportsActivity
+import com.stafo.app.screens.settings.HolidayActivity
+import com.stafo.app.screens.settings.PayrollActivity
+import com.stafo.app.screens.settings.SalaryDisbursementActivity
+import com.stafo.app.screens.settings.SubMenuActivity
+import com.tanodxyz.gdownload.isNetworkAvailable
 
 class EmployerDashboard : AppCompatActivity() {
 
@@ -72,6 +105,14 @@ class EmployerDashboard : AppCompatActivity() {
 
     private var companyStatus: Boolean = false
     private var maxEmployeeAdd: String = "0"
+
+    private lateinit var appUpdateManager: AppUpdateManager
+    private val MY_REQUEST_CODE = 123
+
+    //for bottom sheet
+    private lateinit var bottomSheetDialog: BottomSheetDialog
+    private lateinit var bottomSheetDialogBinding: PayrollBottomSheetLayoutBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -83,19 +124,9 @@ class EmployerDashboard : AppCompatActivity() {
             insets
         }
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
-
-
-        /*  if (getIsLockUser()==true){
-              if (getIsLock()==true){
-                  val delayMillis = 100L
-                  Handler(Looper.getMainLooper()).postDelayed({
-                      showLockScreen()
-                  }, delayMillis)
-              }
-          }else{
-              showScreenLockDialog()
-          }*/
-
+        // Initialize the AppUpdateManager
+        appUpdateManager = AppUpdateManagerFactory.create(this)
+        checkForAppUpdate()
 
         initViews()
         setOnClickEvents()
@@ -103,24 +134,58 @@ class EmployerDashboard : AppCompatActivity() {
 
     }
 
+    private fun checkForAppUpdate() {
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(
+                    AppUpdateType.IMMEDIATE
+                )
+            ) {
+
+                appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo, AppUpdateType.IMMEDIATE, this, MY_REQUEST_CODE
+                )
+            }
+        }.addOnFailureListener {
+            Log.e("TAG", "checkForAppUpdate: ${it.message}")
+        }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == MY_REQUEST_CODE) {
+            when (resultCode) {
+                RESULT_OK -> Log.e("TAG", "onActivityResult: Success")
+                RESULT_CANCELED -> {
+                    CustomToast(this, "Update is required to continue")
+                    finish()
+                }
+
+                ActivityResult.RESULT_IN_APP_UPDATE_FAILED -> {
+                    CustomToast(this, "Update failed. Please try again.")
+                    finish()
+                }
+            }
+        }
+    }
+
 
     private fun showScreenLockDialog() {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.app_name)
+        AlertDialog.Builder(this).setTitle(R.string.app_name)
             .setMessage("Are you using a screen lock for better security?")
             .setPositiveButton("Yes") { dialog, _ ->
                 setIsLockUser(true)
                 setIsLock(true)
                 showLockScreen()
                 dialog.dismiss()
-            }
-            .setNegativeButton("No") { dialog, _ ->
+            }.setNegativeButton("No") { dialog, _ ->
                 setIsLockUser(true)
                 setIsLock(false)
                 dialog.dismiss()
-            }
-            .setCancelable(false)
-            .show()
+            }.setCancelable(false).show()
     }
 
     private fun showLockScreen() {
@@ -128,8 +193,7 @@ class EmployerDashboard : AppCompatActivity() {
 
         if (keyguardManager.isDeviceSecure) {
             val intent = keyguardManager.createConfirmDeviceCredentialIntent(
-                "Unlock Your Phone",
-                "Please confirm your identity"
+                "Unlock Your Phone", "Please confirm your identity"
             )
             if (intent != null) {
                 lockScreenLauncher.launch(intent)
@@ -162,7 +226,8 @@ class EmployerDashboard : AppCompatActivity() {
             rvActions.layoutManager =
                 LinearLayoutManager(this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false)
 
-            val actionsAdapter = ActionsListAdapter(actionList(),
+            val actionsAdapter = ActionsListAdapter(
+                actionList(),
                 this@EmployerDashboard,
                 object : ActionsListAdapter.ActionClickListener {
                     override fun onActionClick(action: String) {
@@ -176,11 +241,9 @@ class EmployerDashboard : AppCompatActivity() {
                                             ViewAllEmployeeActivity::class.java
                                         ).apply {
                                             putExtra("FROM", "View All")
-                                        }
-                                    )
+                                        })
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
                                 } else {
                                     showCompanyVerificationDialog()
@@ -188,26 +251,57 @@ class EmployerDashboard : AppCompatActivity() {
 
                             }
 
-                            "CRM" -> {
+                            "Salary Disbursement" -> {
                                 startActivity(
                                     Intent(
                                         this@EmployerDashboard,
-                                        CRMLeadDashboard::class.java
+                                        SalaryDisbursementActivity::class.java
+                                    )
+                                )
+                                overridePendingTransition(
+                                    R.anim.slide_from_right, R.anim.slide_to_left
+                                )
+                            }
+
+                            "CRM" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard, CRMLeadDashboard::class.java
                                     )
                                 )
                             }
 
                             "Reports" -> {
-                                startActivity(Intent(this@EmployerDashboard, ReportsActivity::class.java))
-                                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard, ReportsActivity::class.java
+                                    )
+                                )
+                                overridePendingTransition(
+                                    R.anim.slide_from_right, R.anim.slide_to_left
+                                )
                             }
-                            "Performance Type"-> {
-                                startActivity(Intent(this@EmployerDashboard, PerformanceActivity::class.java))
-                                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+
+                            "Performance Type" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard, PerformanceActivity::class.java
+                                    )
+                                )
+                                overridePendingTransition(
+                                    R.anim.slide_from_right, R.anim.slide_to_left
+                                )
                             }
-                            "Rank List"-> {
-                                startActivity(Intent(this@EmployerDashboard, RankListActivity::class.java))
-                                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
+
+                            "Rank List" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard, RankListActivity::class.java
+                                    )
+                                )
+                                overridePendingTransition(
+                                    R.anim.slide_from_right, R.anim.slide_to_left
+                                )
                             }
 
 
@@ -221,8 +315,7 @@ class EmployerDashboard : AppCompatActivity() {
                                         )
                                     )
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
                                 } else {
                                     showCompanyVerificationDialog()
@@ -235,13 +328,11 @@ class EmployerDashboard : AppCompatActivity() {
                                 if (companyStatus) {
                                     startActivity(
                                         Intent(
-                                            this@EmployerDashboard,
-                                            BranchActivity::class.java
+                                            this@EmployerDashboard, BranchActivity::class.java
                                         )
                                     )
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
                                 } else {
                                     showCompanyVerificationDialog()
@@ -250,19 +341,17 @@ class EmployerDashboard : AppCompatActivity() {
 
                             }
 
-                            "Policy" -> {
+                            "Office Policies" -> {
 
 
                                 if (companyStatus) {
                                     startActivity(
                                         Intent(
-                                            this@EmployerDashboard,
-                                            PolicyActivity::class.java
+                                            this@EmployerDashboard, PolicyActivity::class.java
                                         )
                                     )
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
                                 } else {
                                     showCompanyVerificationDialog()
@@ -281,8 +370,7 @@ class EmployerDashboard : AppCompatActivity() {
                                         )
                                     )
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
                                 } else {
                                     showCompanyVerificationDialog()
@@ -302,8 +390,7 @@ class EmployerDashboard : AppCompatActivity() {
                                     )
 
                                     overridePendingTransition(
-                                        R.anim.slide_from_right,
-                                        R.anim.slide_to_left
+                                        R.anim.slide_from_right, R.anim.slide_to_left
                                     )
                                 } else {
                                     showCompanyVerificationDialog()
@@ -314,8 +401,15 @@ class EmployerDashboard : AppCompatActivity() {
                             "Holidays" -> {
                                 startActivity(
                                     Intent(
-                                        this@EmployerDashboard,
-                                        HolidayActivity::class.java
+                                        this@EmployerDashboard, HolidayActivity::class.java
+                                    )
+                                )
+                            }
+
+                            "Expenses" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard, ExpenseDashboardActivity::class.java
                                     )
                                 )
                             }
@@ -327,6 +421,25 @@ class EmployerDashboard : AppCompatActivity() {
                                 )
                             }
 
+                            "Trips" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard, TripDashboardActivity::class.java
+                                    )
+                                )
+                            }
+
+                            "Task" -> {
+                                startActivity(
+                                    Intent(
+                                        this@EmployerDashboard, TaskMSDashboard::class.java
+                                    )
+                                )
+                            }
+
+                            "Payroll" -> {
+                                showCustomPayrollBottomSheet()
+                            }
                         }
                     }
 
@@ -398,12 +511,9 @@ class EmployerDashboard : AppCompatActivity() {
                 }
 
                 if (it.employeesOnLeave != null && it.employeesOnLeave.isNotEmpty()) {
-                    binding.rvLeaves.layoutManager =
-                        LinearLayoutManager(
-                            this@EmployerDashboard,
-                            LinearLayoutManager.HORIZONTAL,
-                            false
-                        )
+                    binding.rvLeaves.layoutManager = LinearLayoutManager(
+                        this@EmployerDashboard, LinearLayoutManager.HORIZONTAL, false
+                    )
                     val rvAdapter = AdapterOnLeave(it.employeesOnLeave, this)
                     binding.rvLeaves.adapter = rvAdapter
                     binding.tvOnLeaveEmp.text = it.employeesOnLeave.size.toString()
@@ -441,9 +551,7 @@ class EmployerDashboard : AppCompatActivity() {
 
                 it.data?.companyLogo?.let { imageUrl ->
                     binding.ivHeaderProfilePic.visibility = View.VISIBLE
-                    Glide.with(this)
-                        .load(imageUrl)
-                        .into(binding.ivHeaderProfilePic)
+                    Glide.with(this).load(imageUrl).into(binding.ivHeaderProfilePic)
                 } ?: run {
                     binding.ivHeaderProfilePic.visibility = View.GONE
                 }
@@ -475,8 +583,7 @@ class EmployerDashboard : AppCompatActivity() {
                 if (it.data.banner.isNotEmpty()) {
                     binding.imageSlider.setSliderAdapter(
                         SliderAdapter(
-                            it.data.path,
-                            it.data.banner
+                            it.data.path, it.data.banner
                         )
                     )
                     binding.imageSlider.setScrollTimeInSec(5)
@@ -497,11 +604,10 @@ class EmployerDashboard : AppCompatActivity() {
         builder.setPositiveButton("Upgrade Now") { _, _ ->
 
 
-            startActivity(Intent(this,SubscriptionActivity::class.java))
+            startActivity(Intent(this, SubscriptionActivity::class.java))
 
 
-
-           // settingsViewModel.upgradePackage(this@EmployerDashboard)
+            // settingsViewModel.upgradePackage(this@EmployerDashboard)
 
 
         }
@@ -536,10 +642,25 @@ class EmployerDashboard : AppCompatActivity() {
         }
     }
 
-    private fun stopLocationService() {
-        val intent = Intent(this, LocationForegroundService::class.java)
-        stopService(intent)
+    private fun stopLocationServiceIfRunning() {
+        if (isServiceRunning(LocationForegroundService::class.java)) {
+            val stopIntent = Intent(this, LocationForegroundService::class.java)
+            stopIntent.action = "STOP_FOREGROUND_SERVICE"
+            ContextCompat.startForegroundService(this, stopIntent)
+        }
     }
+
+
+    private fun isServiceRunning(serviceClass: Class<out Service>): Boolean {
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in activityManager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
 
     private fun setOnClickEvents() {
 
@@ -555,28 +676,14 @@ class EmployerDashboard : AppCompatActivity() {
         binding.tvActivitiesViewAll.setOnClickListener {
             startActivity(
                 Intent(
-                    this@EmployerDashboard,
-                    SubMenuActivity::class.java
+                    this@EmployerDashboard, SubMenuActivity::class.java
                 )
             )
 
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
         }
 
-
-
-       /* binding.llcRecharge.setOnClickListener {
-            startActivity(Intent(this, DashboardActivity::class.java))
-        }
-
-        binding.llcLoan.setOnClickListener {
-            startActivity(Intent(this, ChatWithCompanyActivity::class.java))
-            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
-        }*/
-
-
-
-        stopLocationService()
+        stopLocationServiceIfRunning()
 
         settingsViewModel.getCompanyDetails(this@EmployerDashboard)
 
@@ -600,12 +707,10 @@ class EmployerDashboard : AppCompatActivity() {
             if (companyStatus) {
                 startActivity(
                     Intent(
-                        this@EmployerDashboard,
-                        ViewAllEmployeeActivity::class.java
+                        this@EmployerDashboard, ViewAllEmployeeActivity::class.java
                     ).apply {
                         putExtra("FROM", "View All")
-                    }
-                )
+                    })
             } else {
                 showCompanyVerificationDialog()
             }
@@ -704,16 +809,22 @@ class EmployerDashboard : AppCompatActivity() {
     private fun actionList(): List<ActionModel> {
         mActionList.add(ActionModel("Employee", R.drawable.ic_employee))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
+        mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
+        mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
         mActionList.add(ActionModel("Location Track", R.drawable.ic_location))
         mActionList.add(ActionModel("BBPS", R.drawable.ic_bbps_ic))
         mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
+        mActionList.add(ActionModel("Payroll", R.drawable.payroll_2))
+        mActionList.add(ActionModel("Salary Disbursement", R.drawable.ic_salary_payout))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
+        mActionList.add(ActionModel("Reports", R.drawable.ic_reports))
         mActionList.add(ActionModel("Performance Type", R.drawable.ic_performace))
         mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
-        mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
+        mActionList.add(ActionModel("Office Policies", R.drawable.ic_policy))
         mActionList.add(ActionModel("Request Device", R.drawable.ic_device_request))
+        mActionList.add(ActionModel("Expenses", R.drawable.ic_crm))
         return mActionList
     }
 
@@ -765,5 +876,40 @@ class EmployerDashboard : AppCompatActivity() {
 
         val dialog = builder.create()
         dialog.show()
+    }
+
+
+    private fun showCustomPayrollBottomSheet() {
+
+        bottomSheetDialog = BottomSheetDialog(this)
+        bottomSheetDialogBinding = PayrollBottomSheetLayoutBinding.inflate(layoutInflater)
+        bottomSheetDialog.setOnShowListener { dialog ->
+            val bottomSheet =
+                (dialog as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.setBackgroundResource(android.R.color.transparent)
+        }
+
+        bottomSheetDialog.setCancelable(true)
+
+        bottomSheetDialogBinding.llcSalaryType.setOnClickListener {
+            bottomSheetDialog.dismiss()
+            startActivity(Intent(this@EmployerDashboard, SalaryTypeActivity::class.java))
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
+        }
+        bottomSheetDialogBinding.llcGenerateSalary.setOnClickListener {
+            bottomSheetDialog.dismiss()
+            startActivity(Intent(this@EmployerDashboard, GenerateSalaryActivity::class.java))
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
+        }
+        bottomSheetDialogBinding.llcSalarySlip.setOnClickListener {
+            bottomSheetDialog.dismiss()
+            startActivity(Intent(this@EmployerDashboard, SalarySlipActivity::class.java))
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
+        }
+
+
+        bottomSheetDialog.setContentView(bottomSheetDialogBinding.root)
+        bottomSheetDialog.show()
+
     }
 }

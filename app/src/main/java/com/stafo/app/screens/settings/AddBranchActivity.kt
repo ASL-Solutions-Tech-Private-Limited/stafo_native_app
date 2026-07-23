@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.textfield.TextInputLayout
 import com.stafo.app.R
 import com.stafo.app.base.request.AddBranchRequest
 import com.stafo.app.databinding.ActivityAddBranchBinding
@@ -49,12 +50,6 @@ class AddBranchActivity : AppCompatActivity() {
 
     private var actionType:String=""
     private var branchId:Int=0
-
-
-
-
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -232,10 +227,16 @@ class AddBranchActivity : AppCompatActivity() {
 
                 binding.tieBranchAddress.isFocusable=true
                 binding.tieBranchAddress.isFocusableInTouchMode=true
+                binding.tilBranchAddress.endIconMode = TextInputLayout.END_ICON_NONE
 
             } else{
                 binding.tieBranchAddress.isFocusable=false
                 binding.tieBranchAddress.isFocusableInTouchMode=false
+                binding.tilBranchAddress.endIconMode = TextInputLayout.END_ICON_CUSTOM
+                binding.tilBranchAddress.setEndIconDrawable(R.drawable.ic_add_location)
+                tieBranchAddress.setOnClickListener {
+                    getLocation()
+                }
             }
 
 
@@ -288,9 +289,7 @@ class AddBranchActivity : AppCompatActivity() {
                 }
             }
 
-            tieBranchAddress.setOnClickListener {
-                getLocation()
-            }
+
 
             ivBack.setOnClickListener {
                 onBackPressedDispatcher.onBackPressed()
@@ -314,9 +313,12 @@ class AddBranchActivity : AppCompatActivity() {
                 "map" -> {
                     val lat = data.getDoubleExtra("latitude", 0.0)
                     val lng = data.getDoubleExtra("longitude", 0.0)
+                    val fullAddress = data.getStringExtra("fullAddress")
+                    binding.tieBranchAddress.setText(fullAddress)
                     latitude = lat ?: 0.0
                     longitude = lng ?: 0.0
-                    getAddressFromLocation(latitude!!, longitude!!)
+
+                    //getAddressFromLocation(latitude!!, longitude!!)
 
                     Log.d("MapTap", "main Location: Lat=${latitude}, Lng=${longitude}")
                 }

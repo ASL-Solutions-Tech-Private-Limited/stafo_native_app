@@ -115,16 +115,17 @@ class ReportsActivity : AppCompatActivity() {
             }*/
 
 
+           // payroll
 
-            binding.expandablePayrollSetting.setOnClickListener {
-                binding.expandablePayrollSetting.toggleLayout()
+           /* expandablePayrollSetting.setOnClickListener {
+                expandablePayrollSetting.toggleLayout()
 
             }
 
 
-            val rtlSalaryType = binding.expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_salary_type)
-            val rtlGenerateSalary = binding.expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_generate_salary)
-            val rtlSalarySlip = binding.expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_salary_slip)
+            val rtlSalaryType = expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_salary_type)
+            val rtlGenerateSalary =expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_generate_salary)
+            val rtlSalarySlip =expandablePayrollSetting.findViewById<RelativeLayout>(R.id.rtl_salary_slip)
 
             rtlSalaryType.setOnClickListener {
                 startActivity(Intent(this@ReportsActivity, SalaryTypeActivity::class.java))
@@ -138,7 +139,7 @@ class ReportsActivity : AppCompatActivity() {
             rtlSalarySlip.setOnClickListener {
                 startActivity(Intent(this@ReportsActivity, SalarySlipActivity::class.java))
                 overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left)
-            }
+            }*/
 
 
         }

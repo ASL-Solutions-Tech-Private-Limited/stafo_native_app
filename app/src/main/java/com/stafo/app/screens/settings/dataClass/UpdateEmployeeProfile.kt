@@ -6,7 +6,7 @@ data class UpdateEmployeeProfile(
     @SerializedName("email") val email: String,
     @SerializedName("phone") val phone: String,
     @SerializedName("position") val position: String,
-    @SerializedName("salary") val salary: Int?,
+    @SerializedName("salary") val salary: String?,
     @SerializedName("marital_status") val maritalStatus: String,
     @SerializedName("guardian_name") val guardianName: String,
     @SerializedName("blood_group") val bloodGroup: String,

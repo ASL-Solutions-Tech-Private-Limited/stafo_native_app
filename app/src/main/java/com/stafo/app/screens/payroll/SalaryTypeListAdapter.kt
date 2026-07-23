@@ -31,7 +31,7 @@ class SalaryTypeListAdapter (
         with(holder) {
             with(list[position]) {
                 binding.txtBranchName.text = this.salary_type
-                binding.txtPaymentType.text = this.salary_type_description
+                binding.txtPaymentType.text = this.payment_type
                 binding.txtAmount.text = if (this.amount_type == "Flat") {
                     "₹ ${this.amount}"
                 } else {

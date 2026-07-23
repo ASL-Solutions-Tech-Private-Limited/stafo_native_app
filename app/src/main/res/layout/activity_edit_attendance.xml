@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_header"
+    tools:context=".screens.emp.EditAttendanceActivity">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_12sdp"
+        android:padding="@dimen/_6sdp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_top_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_12sdp"
+        android:fontFamily="@font/gilroy_bold"
+        android:padding="@dimen/_4sdp"
+        android:text="Edit Attendance"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_back" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@drawable/card_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_top_title">
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/btn_update_attendance"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/_10sdp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/ll_basic_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_emp_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tie_emp_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_text_background"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:hint="Employee Name"
+                            android:inputType="textPersonName"
+                            android:textSize="@dimen/_12ssp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/llc_first"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:background="@drawable/rounded_corner_white"
+                        android:orientation="vertical"
+                        app:layout_constraintTop_toBottomOf="@+id/llc_leave_list">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_regular"
+                            android:text="Attendance type"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+                        <Spinner
+                            android:id="@+id/spinner_attendance_type"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_38sdp"
+                            android:background="@drawable/edit_text_background"
+                            android:dropDownVerticalOffset="@dimen/_34sdp"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="5dip"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp" />
+
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:fontFamily="@font/poppins_regular"
+                            android:text="Select Date"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_branch_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            app:endIconDrawable="@drawable/ic_calendar_month"
+                            app:endIconMode="custom">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tie_date"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/edit_text_background"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:fontFamily="@font/gilroy_medium"
+                                android:hint="Date"
+                                android:maxLines="1"
+                                android:textSize="@dimen/_12ssp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:id="@+id/llc_leave"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:weightSum="1">
+
+                                <androidx.appcompat.widget.LinearLayoutCompat
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.5"
+                                    android:orientation="vertical">
+
+
+                                    <androidx.appcompat.widget.AppCompatTextView
+                                        android:id="@+id/tv_start_date"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="16dp"
+                                        android:fontFamily="@font/poppins_regular"
+                                        android:text="In Time:"
+                                        android:textColor="@color/black"
+                                        android:textSize="14sp" />
+
+
+                                    <androidx.appcompat.widget.AppCompatEditText
+                                        android:id="@+id/edt_in_time"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/_37sdp"
+                                        android:layout_marginTop="@dimen/_6sdp"
+                                        android:background="@drawable/edit_text_background"
+                                        android:drawableRight="@drawable/ic_time"
+                                        android:focusable="false"
+                                        android:focusableInTouchMode="false"
+                                        android:fontFamily="@font/gilroy_regular"
+                                        android:gravity="center_vertical"
+                                        android:hint="In Time"
+                                        android:paddingHorizontal="@dimen/_10sdp"
+                                        android:textColor="@color/black"
+                                        android:textSize="@dimen/_12ssp" />
+
+
+                                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                                <androidx.appcompat.widget.LinearLayoutCompat
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="24dp"
+                                    android:layout_weight="0.5"
+                                    android:orientation="vertical">
+
+                                    <!--<androidx.appcompat.widget.AppCompatTextView
+                                        android:id="@+id/tv_end_date"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="12dp"
+                                        android:layout_marginTop="12dp"
+                                        android:gravity="center_vertical"
+                                        android:hint="End date:"
+                                        android:textColor="@color/black"
+                                        android:textSize="14sp" />-->
+
+                                    <androidx.appcompat.widget.AppCompatTextView
+                                        android:id="@+id/tv_end_date"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="16dp"
+                                        android:fontFamily="@font/poppins_regular"
+                                        android:text="Out Time:"
+                                        android:textColor="@color/black"
+                                        android:textSize="14sp" />
+
+                                    <androidx.appcompat.widget.AppCompatEditText
+                                        android:id="@+id/edt_out_time"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/_37sdp"
+                                        android:layout_marginTop="@dimen/_6sdp"
+                                        android:background="@drawable/edit_text_background"
+                                        android:drawableRight="@drawable/ic_time"
+                                        android:focusable="false"
+                                        android:focusableInTouchMode="false"
+                                        android:fontFamily="@font/gilroy_regular"
+                                        android:gravity="center_vertical"
+                                        android:hint="Out Time"
+                                        android:paddingHorizontal="@dimen/_10sdp"
+                                        android:textColor="@color/black"
+                                        android:textSize="@dimen/_12ssp" />
+
+                                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                            <RadioGroup
+                                android:id="@+id/rg_leav"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:orientation="horizontal"
+                                android:padding="2dp">
+
+                                <RadioButton
+                                    android:id="@+id/rd_full_day"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:button="@null"
+                                    android:background="@null"
+                                    android:foreground="@null"
+                                    android:text="Full Day"
+                                    android:drawableStart="@drawable/custom_radio_button"
+                                    android:textColor="@color/black"
+                                    android:textSize="12sp"
+                                    android:drawablePadding="@dimen/_8sdp"
+                                    android:gravity="center_vertical" />
+
+                                <RadioButton
+                                    android:id="@+id/rd_half_day"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/_20sdp"
+                                    android:layout_weight="1"
+                                    android:button="@null"
+                                    android:background="@null"
+                                    android:foreground="@null"
+                                    android:drawableStart="@drawable/custom_radio_button"
+                                    android:text="Half Day"
+                                    android:textColor="@color/black"
+                                    android:textSize="12sp"
+                                    android:drawablePadding="8dp"
+                                    android:gravity="center_vertical" />
+                            </RadioGroup>
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_update_attendance"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginBottom="@dimen/_24sdp"
+            android:background="@drawable/button_background"
+            android:backgroundTint="@color/colorTextPrimary"
+            android:fontFamily="@font/gilroy_semi_bold"
+            android:text="Submit"
+            android:textAllCaps="false"
+            android:textColor="@color/colorButtonText"
+            android:textSize="@dimen/_12ssp" />
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

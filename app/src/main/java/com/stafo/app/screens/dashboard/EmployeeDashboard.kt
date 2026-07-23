@@ -7,6 +7,8 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -31,7 +33,11 @@ import com.bumptech.glide.Glide
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.play.core.review.testing.FakeReviewManager
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.ActivityResult
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.gson.Gson
 import com.stafo.app.R
 import com.stafo.app.base.adapter.ActionsListAdapter
@@ -40,8 +46,10 @@ import com.stafo.app.base.adapter.AdapterWishList
 import com.stafo.app.base.adapter.SliderAdapter
 import com.stafo.app.base.model.ActionModel
 import com.stafo.app.base.model.DashboardWish
+import com.stafo.app.base.model.EmployeeDashboardResponse
 import com.stafo.app.base.model.EmployeeInfo
 import com.stafo.app.base.model.FullScreenDialog
+import com.stafo.app.base.model.Punch
 import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmpDashboardBinding
 import com.stafo.app.databinding.CustomBottomSheetAttendanceLayoutBinding
@@ -54,20 +62,27 @@ import com.stafo.app.screens.emp.EmployeeLeaveHistoryActivity
 import com.stafo.app.screens.emp.EmployeeProfileDetails
 import com.stafo.app.screens.emp.EmployeePunchInActivity
 import com.stafo.app.screens.emp.QRCodeAttendanceEmpActivity
+import com.stafo.app.screens.expense.ExpenseDashboardActivity
 import com.stafo.app.screens.notification.NotificationActivity
 import com.stafo.app.screens.settings.HolidayActivity
 import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
 import com.stafo.app.screens.settings.PolicyActivity
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.SubMenuActivity
+import com.stafo.app.screens.tms.TaskMSDashboard
+import com.stafo.app.screens.tripPlan.TripDashboardActivity
 import com.stafo.app.screens.ui.EmplyeeyerProfile
 import com.stafo.app.screens.ui.WishListActivity
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.checkExactAlarmPermission
 import com.stafo.app.utils.convertTo12HourFormat
 import com.stafo.app.utils.doLogout
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getFormattedDate2
 import com.stafo.app.utils.getGreetingBasedOnTime
+import com.stafo.app.utils.getTripServiceAction
+import com.stafo.app.utils.requestIgnoreBatteryOptimization
+import com.stafo.app.utils.setEMPDevice
 import com.stafo.app.utils.setEmployeeBranchId
 import com.stafo.app.utils.setEmployeeComId
 import com.stafo.app.utils.setIsLock
@@ -76,6 +91,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+
 
 class EmployeeDashboard : AppCompatActivity() {
     private lateinit var binding: ActivityEmpDashboardBinding
@@ -97,8 +113,11 @@ class EmployeeDashboard : AppCompatActivity() {
     private val PLACE_SEARCH_REQUEST_CODE = 101
 
     private val calendar = Calendar.getInstance()
-    private lateinit var reviewManager: FakeReviewManager
     private var mEmplyeeInfo: EmployeeInfo? = null
+    private var isTrip: Boolean = false
+
+    private lateinit var appUpdateManager: AppUpdateManager
+    private val MY_REQUEST_CODE = 123
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,47 +129,70 @@ class EmployeeDashboard : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        isTrip = getTripServiceAction(applicationContext)
         window.statusBarColor = ContextCompat.getColor(this, R.color.colorTextPrimary)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        // reviewManager = ReviewManagerFactory.create(this)
-        reviewManager = FakeReviewManager(this)
 
-
-        /* if (getIsLockUser() ==true){
-             if (getIsLock() ==true){
-                 val delayMillis = 100L
-                 Handler(Looper.getMainLooper()).postDelayed({
-                     showLockScreen()
-                 }, delayMillis)
-
-             }
-         }else{
-             showScreenLockDialog()
-         }*/
-
-
-
-
-
-
-
+        // Initialize the AppUpdateManager
+        appUpdateManager = AppUpdateManagerFactory.create(this)
+        checkForAppUpdate()
 
         setupViews()
         onClickListener()
-        //setupImageSlider()
+
     }
+
+
+    private fun checkForAppUpdate() {
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(
+                    AppUpdateType.IMMEDIATE
+                )
+            ) {
+
+                appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo, AppUpdateType.IMMEDIATE, this, MY_REQUEST_CODE
+                )
+            }
+        }.addOnFailureListener {
+            Log.e("TAG", "checkForAppUpdate: ${it.message}")
+        }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == MY_REQUEST_CODE) {
+            when (resultCode) {
+                RESULT_OK -> Log.e("TAG", "onActivityResult: Success")
+                RESULT_CANCELED -> {
+                    CustomToast(this, "Update is required to continue")
+                    finish()
+                }
+
+                ActivityResult.RESULT_IN_APP_UPDATE_FAILED -> {
+                    CustomToast(this, "Update failed. Please try again.")
+                    finish()
+                }
+            }
+        }
+    }
+
 
     private fun setupViews() {
         binding?.apply {
+
             tvHeaderGreeting.text = getGreetingBasedOnTime()
             tvHeaderEmpName.text = getEmployeeDetails()?.name ?: " Guest"
             tvHeaderEmpNo.text = getEmployeeDetails()?.emp_id ?: "--"
             rvLeaves.layoutManager =
                 LinearLayoutManager(this@EmployeeDashboard, LinearLayoutManager.HORIZONTAL, false)
             rvWishes.layoutManager = LinearLayoutManager(
-                this@EmployeeDashboard,
-                LinearLayoutManager.HORIZONTAL,
-                false
+                this@EmployeeDashboard, LinearLayoutManager.HORIZONTAL, false
             )
 
         }
@@ -163,9 +205,8 @@ class EmployeeDashboard : AppCompatActivity() {
 
         binding.rvActivities.layoutManager =
             LinearLayoutManager(this@EmployeeDashboard, LinearLayoutManager.HORIZONTAL, false)
-        val actionsAdapter = ActionsListAdapter(actionList(),
-            this@EmployeeDashboard,
-            object : ActionsListAdapter.ActionClickListener {
+        val actionsAdapter = ActionsListAdapter(
+            actionList(), this@EmployeeDashboard, object : ActionsListAdapter.ActionClickListener {
                 override fun onActionClick(action: String) {
                     when (action) {
                         "Attendance" -> {
@@ -175,58 +216,49 @@ class EmployeeDashboard : AppCompatActivity() {
                                     EmployeeAttendanceRecordActivity::class.java
                                 ).apply {
                                     putExtra("EMP_ID", "${getEmployeeDetails()?.id.toString()}")
-                                }
-                            )
+                                })
                             overridePendingTransition(
-                                R.anim.slide_from_right,
-                                R.anim.slide_to_left
+                                R.anim.slide_from_right, R.anim.slide_to_left
                             )
                         }
 
                         "Leaves" -> {
                             startActivity(
                                 Intent(
-                                    this@EmployeeDashboard,
-                                    EmployeeLeaveHistoryActivity::class.java
+                                    this@EmployeeDashboard, EmployeeLeaveHistoryActivity::class.java
                                 )
                             )
                             overridePendingTransition(
-                                R.anim.slide_from_right,
-                                R.anim.slide_to_left
+                                R.anim.slide_from_right, R.anim.slide_to_left
                             )
                         }
 
                         "Branches" -> {
                             startActivity(
                                 Intent(
-                                    this@EmployeeDashboard,
-                                    EmpBranchDetailsActivity::class.java
+                                    this@EmployeeDashboard, EmpBranchDetailsActivity::class.java
                                 )
                             )
                             overridePendingTransition(
-                                R.anim.slide_from_right,
-                                R.anim.slide_to_left
+                                R.anim.slide_from_right, R.anim.slide_to_left
                             )
                         }
 
-                        "Policy" -> {
+                        "Policies" -> {
                             startActivity(
                                 Intent(
-                                    this@EmployeeDashboard,
-                                    PolicyActivity::class.java
+                                    this@EmployeeDashboard, PolicyActivity::class.java
                                 )
                             )
                             overridePendingTransition(
-                                R.anim.slide_from_right,
-                                R.anim.slide_to_left
+                                R.anim.slide_from_right, R.anim.slide_to_left
                             )
                         }
 
                         "CRM" -> {
                             startActivity(
                                 Intent(
-                                    this@EmployeeDashboard,
-                                    CRMLeadDashboard::class.java
+                                    this@EmployeeDashboard, CRMLeadDashboard::class.java
                                 )
                             )
                         }
@@ -234,8 +266,39 @@ class EmployeeDashboard : AppCompatActivity() {
                         "Holidays" -> {
                             startActivity(
                                 Intent(
-                                    this@EmployeeDashboard,
-                                    HolidayActivity::class.java
+                                    this@EmployeeDashboard, HolidayActivity::class.java
+                                )
+                            )
+                        }
+
+                        "Expenses" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard, ExpenseDashboardActivity::class.java
+                                )
+                            )
+                        }
+
+                        "CRM" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard, CRMLeadDashboard::class.java
+                                )
+                            )
+                        }
+
+                        "Task" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard, TaskMSDashboard::class.java
+                                )
+                            )
+                        }
+
+                        "Trip" -> {
+                            startActivity(
+                                Intent(
+                                    this@EmployeeDashboard, TripDashboardActivity::class.java
                                 )
                             )
                         }
@@ -256,10 +319,11 @@ class EmployeeDashboard : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        isTrip = getTripServiceAction(applicationContext)
         settingsViewModel.getEmployeDashboard(this)
         settingsViewModel.fetchEmployeeDetails(
-            this@EmployeeDashboard,
-            getEmployeeDetails()?.id.toString()
+            this@EmployeeDashboard, getEmployeeDetails()?.id.toString()
         )
 
     }
@@ -274,7 +338,7 @@ class EmployeeDashboard : AppCompatActivity() {
             }
 
             ivNotification.setOnClickListener {
-                startActivity(Intent(this@EmployeeDashboard,NotificationActivity::class.java))
+                startActivity(Intent(this@EmployeeDashboard, NotificationActivity::class.java))
                 overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
             }
 
@@ -282,8 +346,7 @@ class EmployeeDashboard : AppCompatActivity() {
             tvActivitiesViewAll.setOnClickListener {
                 startActivity(
                     Intent(
-                        this@EmployeeDashboard,
-                        SubMenuActivity::class.java
+                        this@EmployeeDashboard, SubMenuActivity::class.java
                     )
                 )
 
@@ -291,8 +354,7 @@ class EmployeeDashboard : AppCompatActivity() {
             }
 
             settingsViewModel.fetchEmployeeDetails(
-                this@EmployeeDashboard,
-                getEmployeeDetails()?.id.toString()
+                this@EmployeeDashboard, getEmployeeDetails()?.id.toString()
             )
 
             settingsViewModel.getBannerImage(this@EmployeeDashboard)
@@ -300,8 +362,7 @@ class EmployeeDashboard : AppCompatActivity() {
             binding.tvLeaveViewAll.setOnClickListener {
                 startActivity(
                     Intent(
-                        this@EmployeeDashboard,
-                        LeaveRequestHistoryActivity::class.java
+                        this@EmployeeDashboard, LeaveRequestHistoryActivity::class.java
                     )
                 )
             }
@@ -334,8 +395,6 @@ class EmployeeDashboard : AppCompatActivity() {
 
                 if (binding.btnPunchIn.text == "Punch Out") {
                     binding.btnPunchIn.isEnabled = true
-
-
                     val builder = AlertDialog.Builder(this@EmployeeDashboard)
                     builder.setTitle(R.string.app_name)
                     builder.setMessage("Are you sure? You want to punch out!")
@@ -373,8 +432,7 @@ class EmployeeDashboard : AppCompatActivity() {
             tvHeaderSetting.setOnClickListener {
                 startActivity(
                     Intent(
-                        this@EmployeeDashboard,
-                        EmplyeeyerProfile::class.java
+                        this@EmployeeDashboard, EmplyeeyerProfile::class.java
                     )
                 )
             }
@@ -386,8 +444,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private fun isLocationPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            this, Manifest.permission.ACCESS_BACKGROUND_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     }
 
@@ -439,39 +496,32 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
     private fun showSettingsDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Permission Required")
+        AlertDialog.Builder(this).setTitle("Permission Required")
             .setMessage("Background location access is required. Please enable it in settings.")
             .setPositiveButton("Go to Settings") { _, _ ->
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 val uri = Uri.fromParts("package", packageName, null)
                 intent.data = uri
                 startActivity(intent)
-            }
-            .setNegativeButton("Cancel") { dialog, _ ->
+            }.setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
-            }
-            .show()
+            }.show()
     }
 
 
     private fun observeViewModel() {
-
-
-        settingsViewModel.mEmployeeDashboardResponse.observe(this) {
+        /*settingsViewModel.mEmployeeDashboardResponse.observe(this) {
             if (it.status) {
                 mEmplyeeInfo = it.employeeInfo
                 setEmployeeComId(it.employeeInfo.companyId.toString())
                 setEmployeeBranchId(it.employeeInfo.branchId.toString())
-
-
                 it.employeeInfo.shifts.firstOrNull()?.let { shift ->
                     val startTime12Hr = convertTo12HourFormat(shift.startTime)
                     val endTime12Hr = convertTo12HourFormat(shift.endTime)
                     binding.tvOfficeTiming.text =
                         "Your Office timing is $startTime12Hr to $endTime12Hr"
 
-                }?: run {
+                } ?: run {
                     binding.tvOfficeTiming.text = "Your Office timing is 10 AM to 8 PM"
                 }
 
@@ -483,8 +533,7 @@ class EmployeeDashboard : AppCompatActivity() {
                     builder.setPositiveButton("Accept") { dialog, which ->
 
                         settingsViewModel.sendGeoLocationRequest(
-                            this@EmployeeDashboard,
-                            getEmployeeDetails()?.id.toString(), "1"
+                            this@EmployeeDashboard, getEmployeeDetails()?.id.toString(), "1"
                         )
 
                         dialog.dismiss()
@@ -494,8 +543,7 @@ class EmployeeDashboard : AppCompatActivity() {
                     builder.setNegativeButton("Reject") { dialog, which ->
 
                         settingsViewModel.sendGeoLocationRequest(
-                            this@EmployeeDashboard,
-                            getEmployeeDetails()?.id.toString(), "2"
+                            this@EmployeeDashboard, getEmployeeDetails()?.id.toString(), "2"
                         )
                         dialog.dismiss()
                     }
@@ -508,170 +556,280 @@ class EmployeeDashboard : AppCompatActivity() {
 
                 wishList.clear()
 
-
-
-
                 if (!it.employeeInfo.punches.isNullOrEmpty()) {
-                    Log.d("res", "true ")
-
+                    val todayDate =
+                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                     val punchesToday = it.employeeInfo.punches.filter { punch ->
-                        val punchDate = punch.punchIn?.let {
-                            SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(it)
-                        }?.let {
-                            SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(it)
-                        }
-                        punchDate == SimpleDateFormat(
-                            "yyyy-MM-dd",
-                            Locale.getDefault()
-                        ).format(Date())
+                        punch.punchIn?.startsWith(todayDate) == true
                     }
 
+                    Log.e("trackLocation", "response: $punchesToday")
+
+                    val geoStatus = it.employeeInfo.geoStatus
+                    val shiftEndTime = it.employeeInfo.shifts.firstOrNull()?.endTime
+                    val now = Calendar.getInstance()
+
+                    Log.e("trackLocation", "shift time : ${shiftEndTime}")
+
                     if (punchesToday.isNotEmpty()) {
-                        val lastPunch = punchesToday.first()
-                        val punchInTime = lastPunch.punchIn
-                        val punchOutTime = lastPunch.punchOut
-                        val geoStatus = it.employeeInfo.geoStatus
-                        val shiftEndTime = it.employeeInfo.shifts.firstOrNull()?.endTime
-
-                        if (punchInTime != null && geoStatus == "1") {
-
-                            if (!isServiceRunning(LocationForegroundService::class.java)) {
-                                startService(Intent(this, LocationForegroundService::class.java))
-                            }
+                        val ongoingPunch =
+                            punchesToday.lastOrNull { punch -> punch.punchIn != null && punch.punchOut == null }
 
 
+                        if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo") {
+                            if (ongoingPunch != null) {
+                                checkExactAlarmPermission(this) { exactAlarmGranted ->
+                                    if (exactAlarmGranted) {
+                                        requestIgnoreBatteryOptimization(this) { batteryOptGranted ->
+                                            if (batteryOptGranted) {
+                                                Log.e("trackLocation", "start 0")
+
+                                                if (!isTrip) {
+                                                    startLocationServiceIfNotRunning()
+                                                }
 
 
+                                                val shiftEndReached = shiftEndTime?.let { endTime ->
+                                                    val shiftEndCal = Calendar.getInstance()
+                                                    val end: Date? = try {
+                                                        SimpleDateFormat(
+                                                            "hh:mm a", Locale.getDefault()
+                                                        ).parse(endTime)
+                                                    } catch (e: Exception) {
+                                                        try {
+                                                            SimpleDateFormat(
+                                                                "HH:mm", Locale.getDefault()
+                                                            ).parse(endTime)
+                                                        } catch (ex: Exception) {
+                                                            null
+                                                        }
+                                                    }
+
+                                                    if (end != null) {
+                                                        val endCal = Calendar.getInstance()
+                                                        endCal.time = end
+                                                        shiftEndCal.set(
+                                                            Calendar.HOUR_OF_DAY,
+                                                            endCal.get(Calendar.HOUR_OF_DAY)
+                                                        )
+                                                        shiftEndCal.set(
+                                                            Calendar.MINUTE,
+                                                            endCal.get(Calendar.MINUTE)
+                                                        )
+                                                        shiftEndCal.set(Calendar.SECOND, 0)
+                                                        now.after(shiftEndCal)
+                                                    } else {
+                                                        false
+                                                    }
+                                                } ?: false
 
 
-                        }
+                                                if (shiftEndReached) {
 
-                        if (punchInTime != null && punchOutTime != null) {
+                                                    if (!isTrip) {
+                                                        stopLocationServiceIfRunning()
+                                                    }
 
-                            if (isServiceRunning(LocationForegroundService::class.java)) {
+                                                    Log.e(
+                                                        "trackLocation",
+                                                        "Stopped service after shift end 1."
+                                                    )
+                                                }
 
-                                val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                startService(stopIntent)
-
-                                /*val serviceIntent = Intent(this, LocationForegroundService::class.java)
-                                stopService(serviceIntent)*/
-                                Log.d("res", "Stopped service after punch out.")
-                            }
-
-                            // If last punch has both In and Out, allow another Punch In
-                            binding.btnPunchIn.text = "Punch In"
-                            binding.btnPunchIn.isEnabled = true
-                            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-                            binding.tvOfficeTiming.text = "Punched Out At ${
-                                getFormattedDate2(
-                                    punchOutTime,
-                                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
-                                    "hh:mm a dd MMM yyyy"
-                                )
-                            }"
-
-                        } else if (punchInTime != null) {
-                            // If last punch only has In, allow Punch Out
-                            binding.btnPunchIn.text = "Punch Out"
-                            binding.btnPunchIn.isEnabled = true
-                            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-                            binding.tvOfficeTiming.text = "Punched In At ${
-                                getFormattedDate2(
-                                    punchInTime,
-                                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
-                                    "hh:mm a dd MMM yyyy"
-                                )
-                            }"
-                        }
-                       /* val currentDateTime = Calendar.getInstance()
-                        if (shiftEndTime != null) {
-
-
-                            val shiftEndCalendar = Calendar.getInstance()
-                            val shiftEndTimeDate =
-                                SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
-
-                            shiftEndTimeDate?.let {
-                                shiftEndCalendar.set(Calendar.HOUR_OF_DAY, it.hours)
-                                shiftEndCalendar.set(Calendar.MINUTE, it.minutes)
-                                shiftEndCalendar.set(Calendar.SECOND, 0)
-                            }
-
-                            if (shiftEndTime != null && currentDateTime.after(shiftEndCalendar)) {
-
-                                Log.d("res", "end time service")
-
-
-                                if (isServiceRunning(LocationForegroundService::class.java)) {
-
-                                    val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                    stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                    startService(stopIntent)
-                                    *//*val serviceIntent = Intent(this, LocationForegroundService::class.java)
-                                    stopService(serviceIntent)*//*
-                                    Log.d("res", "Stopped service after shift end.")
+                                                if (shiftEndTime.isNullOrEmpty()) {
+                                                    if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(
+                                                            Calendar.MINUTE
+                                                        ) == 0
+                                                    ) {
+                                                        if (!isTrip) {
+                                                            stopLocationServiceIfRunning()
+                                                        }
+                                                        Log.e(
+                                                            "trackLocation",
+                                                            "Stopped service at 9 PM, no shift end."
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
-                            }
-                        }else{
-                            if (isServiceRunning(LocationForegroundService::class.java)) {
 
-                                val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                startService(stopIntent)
-                                Log.d("res", "Stopped service not find shift time.")
                             }
 
-                        }*/
 
-                        val currentDateTime = Calendar.getInstance()
-
-                        if (!shiftEndTime.isNullOrEmpty()) {
-                            val shiftEndCalendar = Calendar.getInstance()
-                            val shiftEndTimeDate =
-                                SimpleDateFormat("HH:mm", Locale.getDefault()).parse(shiftEndTime)
-
-                            shiftEndTimeDate?.let {
-                                shiftEndCalendar.set(Calendar.HOUR_OF_DAY, it.hours)
-                                shiftEndCalendar.set(Calendar.MINUTE, it.minutes)
-                                shiftEndCalendar.set(Calendar.SECOND, 0)
-                            }
-
-                            if (currentDateTime.after(shiftEndCalendar)) {
-                                Log.d("res", "End time reached, stopping service.")
-
-                                if (isServiceRunning(LocationForegroundService::class.java)) {
-                                    val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                    stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                    startService(stopIntent)
-                                    Log.d("res", "Stopped service after shift end.")
-                                }
-                            }
                         } else {
 
-                            val currentHour = currentDateTime.get(Calendar.HOUR_OF_DAY)
-                            val currentMinute = currentDateTime.get(Calendar.MINUTE)
+                            if (ongoingPunch != null) {
+                                updateUIForPunchIn(ongoingPunch.punchIn!!)
+                                if (geoStatus == "1") {
+                                    checkExactAlarmPermission(this) { exactAlarmGranted ->
+                                        if (exactAlarmGranted) {
+                                            requestIgnoreBatteryOptimization(this) { batteryOptGranted ->
+                                                if (batteryOptGranted) {
 
-                            if (currentHour == 20 && currentMinute == 0) {
+                                                    Log.e("trackLocation", "start 1")
 
-                                Log.d("res", "Shift time is empty, checking 8:00 PM condition.")
+                                                    if (!isTrip) {
+                                                        startLocationServiceIfNotRunning()
+                                                    }
 
-                                if (isServiceRunning(LocationForegroundService::class.java)) {
-                                    val stopIntent = Intent(this, LocationForegroundService::class.java)
-                                    stopIntent.action = "STOP_FOREGROUND_SERVICE"
-                                    startService(stopIntent)
-                                    Log.d("res", "Stopped service at 8:00 PM as shift time was empty.")
+                                                    val shiftEndReached =
+                                                        shiftEndTime?.let { endTime ->
+                                                            val shiftEndCal = Calendar.getInstance()
+                                                            val end: Date? = try {
+                                                                SimpleDateFormat(
+                                                                    "hh:mm a", Locale.getDefault()
+                                                                ).parse(endTime)
+                                                            } catch (e: Exception) {
+                                                                try {
+                                                                    SimpleDateFormat(
+                                                                        "HH:mm", Locale.getDefault()
+                                                                    ).parse(endTime)
+                                                                } catch (ex: Exception) {
+                                                                    null
+                                                                }
+                                                            }
+
+                                                            if (end != null) {
+                                                                val endCal = Calendar.getInstance()
+                                                                endCal.time = end
+                                                                shiftEndCal.set(
+                                                                    Calendar.HOUR_OF_DAY,
+                                                                    endCal.get(Calendar.HOUR_OF_DAY)
+                                                                )
+                                                                shiftEndCal.set(
+                                                                    Calendar.MINUTE,
+                                                                    endCal.get(Calendar.MINUTE)
+                                                                )
+                                                                shiftEndCal.set(Calendar.SECOND, 0)
+                                                                now.after(shiftEndCal)
+                                                            } else {
+                                                                false
+                                                            }
+                                                        } ?: false
+
+
+                                                    if (shiftEndReached) {
+                                                        if (!isTrip) {
+                                                            stopLocationServiceIfRunning()
+                                                        }
+                                                        Log.e(
+                                                            "trackLocation",
+                                                            "Stopped service after shift end 2."
+                                                        )
+                                                    }
+
+                                                    if (shiftEndTime.isNullOrEmpty()) {
+                                                        if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(
+                                                                Calendar.MINUTE
+                                                            ) == 0
+                                                        ) {
+                                                            if (!isTrip) {
+                                                                stopLocationServiceIfRunning()
+                                                            }
+                                                            Log.e(
+                                                                "trackLocation",
+                                                                "Stopped service at 9 PM, no shift end."
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    if (!isTrip) {
+                                        stopLocationServiceIfRunning()
+                                    }
+                                }
+
+                            } else {
+                                val lastPunch = punchesToday.lastOrNull()
+                                val punchOutTime = lastPunch?.punchOut
+
+                                if (punchOutTime != null) {
+                                    updateUIForPunchOut(punchOutTime)
+                                    if (!isTrip) {
+                                        stopLocationServiceIfRunning()
+                                    }
+                                } else {
+                                    binding.btnPunchIn.text = "Punch In"
+                                    binding.btnPunchIn.isEnabled = true
+                                    binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+                                    val shiftEndReached = shiftEndTime?.let { endTime ->
+                                        val shiftEndCal = Calendar.getInstance()
+                                        val end: Date? = try {
+                                            SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(
+                                                endTime
+                                            )
+                                        } catch (e: Exception) {
+                                            try {
+                                                SimpleDateFormat(
+                                                    "HH:mm", Locale.getDefault()
+                                                ).parse(endTime)
+                                            } catch (ex: Exception) {
+                                                null
+                                            }
+                                        }
+
+                                        if (end != null) {
+                                            val endCal = Calendar.getInstance()
+                                            endCal.time = end
+                                            shiftEndCal.set(
+                                                Calendar.HOUR_OF_DAY,
+                                                endCal.get(Calendar.HOUR_OF_DAY)
+                                            )
+                                            shiftEndCal.set(
+                                                Calendar.MINUTE, endCal.get(Calendar.MINUTE)
+                                            )
+                                            shiftEndCal.set(Calendar.SECOND, 0)
+                                            now.after(shiftEndCal)
+                                        } else {
+                                            false
+                                        }
+                                    } ?: false
+
+
+                                    if (shiftEndReached) {
+                                        if (!isTrip) {
+                                            stopLocationServiceIfRunning()
+                                        }
+                                        Log.e("trackLocation", "Stopped service after shift end 3.")
+                                    } else if (shiftEndTime.isNullOrEmpty()) {
+                                        if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(Calendar.MINUTE) == 0) {
+                                            if (!isTrip) {
+                                                stopLocationServiceIfRunning()
+                                            }
+                                            Log.e(
+                                                "trackLocation",
+                                                "Stopped service at 9 PM, no shift end."
+                                            )
+                                        }
+                                    }
                                 }
                             }
-                        }
 
+                        }
 
 
                     } else {
                         binding.btnPunchIn.text = "Punch In"
                         binding.btnPunchIn.isEnabled = true
                         binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+                        if (!isTrip) {
+                            stopLocationServiceIfRunning()
+                        }
                     }
+                } else {
+                    binding.btnPunchIn.text = "Punch In"
+                    binding.btnPunchIn.isEnabled = true
+                    binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+
+                    if (!isTrip) {
+                        stopLocationServiceIfRunning()
+                    }
+
                 }
 
 
@@ -727,12 +885,9 @@ class EmployeeDashboard : AppCompatActivity() {
                 binding.rvLeaves.visibility = View.VISIBLE
                 binding.llLeaves.visibility = View.GONE
 
-                binding.rvLeaves.layoutManager =
-                    LinearLayoutManager(
-                        this@EmployeeDashboard,
-                        LinearLayoutManager.HORIZONTAL,
-                        false
-                    )
+                binding.rvLeaves.layoutManager = LinearLayoutManager(
+                    this@EmployeeDashboard, LinearLayoutManager.HORIZONTAL, false
+                )
 
                 val rvAdapter = AdapterOnLeave(it.employeesOnLeave, this)
                 binding.rvLeaves.adapter = rvAdapter
@@ -741,6 +896,24 @@ class EmployeeDashboard : AppCompatActivity() {
                 binding.rvLeaves.visibility = View.GONE
                 binding.llLeaves.visibility = View.VISIBLE
             }
+        }*/
+
+        settingsViewModel.mEmployeeDashboardResponse.observe(this) { response ->
+
+            if (!response.status) return@observe
+
+            val employee = response.employeeInfo
+            mEmplyeeInfo = employee
+
+            setEmployeeComId(employee.companyId.toString())
+            setEmployeeBranchId(employee.branchId.toString())
+
+            setupOfficeTiming(employee)
+            handleGeoPermission(employee)
+            handleAttendance(employee)
+
+            setupWishList(response)
+            setupLeaves(response)
         }
 
 
@@ -754,14 +927,15 @@ class EmployeeDashboard : AppCompatActivity() {
 
         settingsViewModel.mFetchEmployeeDetailsResponse.observe(this) {
             if (it.status) {
+
+                it.data?.deviceId?.takeIf { it.isNotEmpty() }?.let { setEMPDevice(this, it) }
+
                 if (!it.imageUrl.isNullOrEmpty()) {
 
                     binding.ivHeaderProfilePic.visibility = View.VISIBLE
                     val imageUrl = it.imageUrl
 
-                    Glide.with(this)
-                        .load(imageUrl)
-                        .into(binding.ivHeaderProfilePic)
+                    Glide.with(this).load(imageUrl).into(binding.ivHeaderProfilePic)
 
 
                 } else {
@@ -779,11 +953,10 @@ class EmployeeDashboard : AppCompatActivity() {
 
             if (it.status) {
 
-                if (it.data.banner.isNotEmpty()){
+                if (it.data.banner.isNotEmpty()) {
                     binding.imageSlider.setSliderAdapter(
                         SliderAdapter(
-                            it.data.path,
-                            it.data.banner
+                            it.data.path, it.data.banner
                         )
                     )
 
@@ -797,79 +970,303 @@ class EmployeeDashboard : AppCompatActivity() {
     }
 
 
+    private fun setupOfficeTiming(employee: EmployeeInfo) {
+        val shift = employee.shifts.firstOrNull()
+
+        binding.tvOfficeTiming.text = if (shift != null) {
+            val start = convertTo12HourFormat(shift.startTime)
+            val end = convertTo12HourFormat(shift.endTime)
+            "Your Office timing is $start to $end"
+        } else {
+            "Your Office timing is 10 AM to 8 PM"
+        }
+    }
+
+    private fun handleGeoPermission(employee: EmployeeInfo) {
+        if (employee.geoStatus == "0") {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.app_name)
+                .setMessage("Your admin has requested to track your live location. Do you accept?")
+                .setPositiveButton("Accept") { dialog, _ ->
+                    sendGeoRequest("1")
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Reject") { dialog, _ ->
+                    sendGeoRequest("2")
+                    dialog.dismiss()
+                }
+                .show()
+        }
+    }
+
+    private fun sendGeoRequest(status: String) {
+        settingsViewModel.sendGeoLocationRequest(
+            this,
+            getEmployeeDetails()?.id.toString(),
+            status
+        )
+    }
+
+    private fun startLocationServiceIfNotRunning() {
+        if (!isServiceRunning(LocationForegroundService::class.java)) {
+            startService(Intent(this, LocationForegroundService::class.java))
+        }
+    }
+
+    private fun handleAttendance(employee: EmployeeInfo) {
+
+        val punches = employee.punches ?: emptyList()
+
+        if (punches.isEmpty()) {
+            updateUIForPunchIn("")
+            stopTracking()
+            return
+        }
+
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+        val punchesToday = punches.filter {
+            it.punchIn?.startsWith(today) == true
+        }
+
+        if (punchesToday.isEmpty()) {
+            updateUIForPunchIn(punches?.get(0)?.punchIn ?: "")
+            stopTracking()
+            return
+        }
+
+        val ongoingPunch = punchesToday.lastOrNull {
+            it.punchIn != null && it.punchOut == null
+        }
+
+        val lastPunch = punchesToday.lastOrNull()
+        val shiftEndTime = employee.shifts.firstOrNull()?.endTime
+        val geoStatus = employee.geoStatus
+
+        if (ongoingPunch != null) {
+            handleOngoingPunch(ongoingPunch, employee, shiftEndTime, geoStatus)
+        } else {
+            handleCompletedPunch(lastPunch, shiftEndTime)
+        }
+    }
+
+    private fun handleOngoingPunch(
+        punch: Punch,
+        employee: EmployeeInfo,
+        shiftEndTime: String?,
+        geoStatus: String?,
+    ) {
+
+        updateUIForPunchIn(punch.punchIn!!)
+
+        val shouldTrack =
+            employee.attendance_type == "geo" || geoStatus == "1"
+
+        if (shouldTrack) {
+            startTrackingWithPermissions {
+                if (isShiftEnded(shiftEndTime)) {
+                    stopTracking()
+                }
+            }
+        } else {
+            stopTracking()
+        }
+    }
+
+    private fun handleCompletedPunch(lastPunch: Punch?, shiftEndTime: String?) {
+
+        val punchOut = lastPunch?.punchOut
+
+        if (punchOut != null) {
+            updateUIForPunchOut(punchOut)
+            stopTracking()
+        } else {
+            updateUIForPunchIn(punchOut ?: "")
+
+            if (isShiftEnded(shiftEndTime)) {
+                stopTracking()
+            }
+        }
+    }
+
+    private fun isShiftEnded(shiftEndTime: String?): Boolean {
+
+        val now = Calendar.getInstance()
+
+        val end = shiftEndTime?.let {
+            try {
+                SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(it)
+            } catch (e: Exception) {
+                try {
+                    SimpleDateFormat("HH:mm", Locale.getDefault()).parse(it)
+                } catch (ex: Exception) {
+                    null
+                }
+            }
+        }
+
+        if (end != null) {
+            val endCal = Calendar.getInstance().apply { time = end }
+
+            val shiftEndCal = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, endCal.get(Calendar.HOUR_OF_DAY))
+                set(Calendar.MINUTE, endCal.get(Calendar.MINUTE))
+                set(Calendar.SECOND, 0)
+            }
+
+            return now.after(shiftEndCal)
+        }
+
+        // fallback → 9 PM
+        return now.get(Calendar.HOUR_OF_DAY) == 21 &&
+                now.get(Calendar.MINUTE) == 0
+    }
+
+
+    private fun startTrackingWithPermissions(onReady: () -> Unit) {
+        checkExactAlarmPermission(this) { alarmGranted ->
+            if (!alarmGranted) return@checkExactAlarmPermission
+
+            requestIgnoreBatteryOptimization(this) { batteryGranted ->
+                if (!batteryGranted) return@requestIgnoreBatteryOptimization
+
+                if (!isTrip) {
+                    startLocationServiceIfNotRunning()
+                }
+
+                onReady()
+            }
+        }
+    }
+
+    private fun stopTracking() {
+        if (!isTrip) {
+            stopLocationServiceIfRunning()
+        }
+    }
+
+    private fun setupWishList(response: EmployeeDashboardResponse) {
+
+        wishList.clear()
+
+        response.birthday?.forEach {
+            wishList.add(
+                DashboardWish(
+                    it.id, it.emp_id, it.date_of_birth ?: "",
+                    it.name, it.email, it.phone, it.image,
+                    "Birthday", ""
+                )
+            )
+        }
+
+        response.annyversary?.forEach {
+            wishList.add(
+                DashboardWish(
+                    it.id, it.emp_id, "",
+                    it.name, it.email, it.phone,
+                    it.image ?: "", "Anniversary",
+                    it.date_of_joining
+                )
+            )
+        }
+
+        if (wishList.isNotEmpty()) {
+            binding.llNoWishes.visibility = View.GONE
+            binding.rvWishes.visibility = View.VISIBLE
+            binding.rvWishes.adapter = AdapterWishList(wishList, this)
+        } else {
+            binding.llNoWishes.visibility = View.VISIBLE
+            binding.rvWishes.visibility = View.GONE
+        }
+    }
+
+    private fun setupLeaves(response: EmployeeDashboardResponse) {
+
+        val leaves = response.employeesOnLeave
+
+        if (!leaves.isNullOrEmpty()) {
+            binding.rvLeaves.visibility = View.VISIBLE
+            binding.llLeaves.visibility = View.GONE
+
+            binding.rvLeaves.layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+            binding.rvLeaves.adapter = AdapterOnLeave(leaves, this)
+        } else {
+            binding.rvLeaves.visibility = View.GONE
+            binding.llLeaves.visibility = View.VISIBLE
+        }
+    }
+
+    private fun stopLocationServiceIfRunning() {
+        Log.e("trackLocation", "stop ")
+        if (isServiceRunning(LocationForegroundService::class.java)) {
+            /*val stopIntent = Intent(this, LocationForegroundService::class.java)
+            stopIntent.action = "STOP_FOREGROUND_SERVICE"*/
+            //ContextCompat.startForegroundService(this, stopIntent)
+
+            val stopIntent = Intent(this, LocationForegroundService::class.java)
+            stopIntent.action = "STOP_FOREGROUND_SERVICE"
+            stopService(stopIntent)
+        }
+    }
+
+
+    private fun updateUIForPunchIn(punchInTime: String) {
+
+        binding.btnPunchIn.apply {
+            text = "Punch Out"
+            isEnabled = true
+            setBackgroundResource(R.drawable.button_background)
+        }
+
+        val formattedTime = getFormattedDate2(
+            punchInTime,
+            listOf(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                "yyyy-MM-dd HH:mm:ss"
+            ),
+            "hh:mm a dd MMM yyyy"
+        )
+
+        binding.tvOfficeTiming.text = "Punched In At $formattedTime"
+    }
+
+    private fun updateUIForPunchOut(punchOutTime: String) {
+        runOnUiThread {
+            binding.btnPunchIn.text = "Punch In"
+            binding.btnPunchIn.isEnabled = true
+            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+            binding.tvOfficeTiming.text = "Punched Out At ${
+                getFormattedDate2(
+                    punchOutTime,
+                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
+                    "hh:mm a dd MMM yyyy"
+                )
+            }"
+        }
+    }
+
+
     override fun onBackPressed() {
         super.onBackPressed()
         finishAffinity()
     }
 
-    private fun showRateDialog() {
-        /*val request = reviewManager.requestReviewFlow()
-        request.addOnCompleteListener { request ->
-            if (request.isSuccessful) {
-                Log.i("CheckReview","IsSuccess")
-                val reviewInfo = request.result
-                val flow = reviewManager.launchReviewFlow(this@EmployeeDashboard, reviewInfo)
-                flow.addOnCompleteListener { _ ->
-                    // The flow has finished. The API does not indicate whether the user
-                    // reviewed or not, or even whether the review dialog was shown. Thus, no
-                    // matter the result, we continue our app flow.
-                }
-            } else {
-                // There was some problem, continue regardless of the result.
-                // you can show your own rate dialog alert and redirect user to your app page
-                // on play store.
-            }
-        }*/
-        val request = reviewManager.requestReviewFlow()
-        request.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.i("CheckReview", "IsSuccess")
-                val reviewInfo = task.result
-                val flow = reviewManager.launchReviewFlow(this@EmployeeDashboard, reviewInfo)
-
-                flow.addOnCompleteListener { _ ->
-                    Log.i("CheckReview", "Review flow completed")
-                }
-            } else {
-                openPlayStoreForReview(this)
-                Log.e("CheckReview", "Review flow request failed", task.exception)
-
-                // Handle error (optional: show a custom review dialog)
-                task.exception?.let { exception ->
-                    when (exception) {
-                        is com.google.android.play.core.review.ReviewException -> {
-                            Log.e("CheckReview", "Review API error: ${exception.message}")
-                        }
-
-                        else -> {
-                            Log.e("CheckReview", "Unknown error: ${exception.message}")
-                        }
-                    }
-                }
-
-                // Alternative action: Show custom rating dialog or redirect to Play Store
-            }
-        }
-    }
-
 
     private fun showScreenLockDialog() {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.app_name)
+        AlertDialog.Builder(this).setTitle(R.string.app_name)
             .setMessage("Are you using a screen lock for better security?")
             .setPositiveButton("Yes") { dialog, _ ->
                 setIsLockUser(true)
                 setIsLock(true)
                 showLockScreen()
                 dialog.dismiss()
-            }
-            .setNegativeButton("No") { dialog, _ ->
+            }.setNegativeButton("No") { dialog, _ ->
                 setIsLockUser(true)
                 setIsLock(false)
                 dialog.dismiss()
-            }
-            .setCancelable(false)
-            .show()
+            }.setCancelable(false).show()
     }
 
     private fun showLockScreen() {
@@ -877,8 +1274,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
         if (keyguardManager.isDeviceSecure) {
             val intent = keyguardManager.createConfirmDeviceCredentialIntent(
-                "Unlock Your Phone",
-                "Please confirm your identity"
+                "Unlock Your Phone", "Please confirm your identity"
             )
             if (intent != null) {
                 lockScreenLauncher.launch(intent)
@@ -928,21 +1324,41 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
     private fun showCustomBottomSheet() {
+
+        /*   val rootView = window.decorView.findViewById<View>(android.R.id.content)
+           rootView.post {
+               val screenshot = getBitmapFromView(rootView)
+
+               val blurProcessor = RSBlurProcessor(this)
+               val blurredBitmap = blurProcessor.blur(screenshot, radius = 30f, repeat = 1)
+
+               if (blurredBitmap != null) {
+                   val blurOverlay: ImageView = binding.blurOverlay
+                   blurOverlay.setImageBitmap(blurredBitmap)
+                   blurOverlay.visibility = View.VISIBLE
+                   binding.rootContainer.visibility = View.VISIBLE
+               }
+           }*/
+
         bottomSheetDialog = BottomSheetDialog(this)
         bottomSheetDialogBinding = CustomBottomSheetAttendanceLayoutBinding.inflate(layoutInflater)
         bottomSheetDialog.setOnShowListener { dialog ->
-            val bottomSheet = (dialog as BottomSheetDialog)
-                .findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            val bottomSheet =
+                (dialog as BottomSheetDialog).findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.setBackgroundResource(android.R.color.transparent)
         }
 
         bottomSheetDialog.setCancelable(false)
         bottomSheetDialogBinding.bottomSheetCancel.setOnClickListener {
+            binding.blurOverlay.visibility = View.GONE
+            binding.rootContainer.visibility = View.GONE
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialogBinding.llGeoAttendance.setOnClickListener {
             if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo") {
                 if (isLocationEnabled()) {
+                    binding.blurOverlay.visibility = View.GONE
+                    binding.rootContainer.visibility = View.GONE
                     bottomSheetDialog.dismiss()
                     startActivity(Intent(this, EmployeePunchInActivity::class.java))
                 } else {
@@ -954,6 +1370,8 @@ class EmployeeDashboard : AppCompatActivity() {
         bottomSheetDialogBinding.llSelfieAttendance.setOnClickListener {
             if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "selfie" || mEmplyeeInfo?.attendance_type == null) {
                 if (isLocationEnabled()) {
+                    binding.blurOverlay.visibility = View.GONE
+                    binding.rootContainer.visibility = View.GONE
                     bottomSheetDialog.dismiss()
                     startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
                 } else {
@@ -970,25 +1388,37 @@ class EmployeeDashboard : AppCompatActivity() {
 
             if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "qr code") {
                 if (isLocationEnabled()) {
+                    binding.blurOverlay.visibility = View.GONE
+                    binding.rootContainer.visibility = View.GONE
                     bottomSheetDialog.dismiss()
                     startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
                 } else {
                     requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                 }
-            } else CustomToast(this, "QR Attendance is not enabled for you")
-            /* startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
+            } else CustomToast(this, "QR Attendance is not enabled for you")/* startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
              bottomSheetDialog.dismiss()*/
 
         }
 
         bottomSheetDialog.setContentView(bottomSheetDialogBinding.root)
         bottomSheetDialog.show()
+
     }
+
+    fun getBitmapFromView(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.layout(view.left, view.top, view.right, view.bottom)
+        view.draw(canvas)
+        return bitmap
+    }
+
 
     private fun isLocationEnabled(): Boolean {
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
     }
 
     private val locationSettingsLauncher =
@@ -999,15 +1429,11 @@ class EmployeeDashboard : AppCompatActivity() {
         }
 
     private fun showLocationServicesDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Enable Location Services")
+        AlertDialog.Builder(this).setTitle("Enable Location Services")
             .setMessage("This app requires location services to be enabled. Please turn on location services.")
             .setPositiveButton("OK") { _, _ ->
                 locationSettingsLauncher.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-            }
-            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-            .create()
-            .show()
+            }.setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }.create().show()
     }
 
     private val requestLocationPermissionLauncher =
@@ -1021,8 +1447,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private fun checkLocationPermissionAndFind() {
         if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                this, Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             getLocation()
@@ -1036,18 +1461,15 @@ class EmployeeDashboard : AppCompatActivity() {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (ActivityCompat.checkSelfPermission(
                 this, android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 this, android.Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
+                this, arrayOf(
                     android.Manifest.permission.ACCESS_FINE_LOCATION,
                     android.Manifest.permission.ACCESS_COARSE_LOCATION
-                ),
-                LOCATION_PERMISSION_REQUEST_CODE
+                ), LOCATION_PERMISSION_REQUEST_CODE
             )
             return
         }
@@ -1058,19 +1480,13 @@ class EmployeeDashboard : AppCompatActivity() {
         if (hasGps || hasNetwork) {
             if (hasGps) {
                 locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    5000,
-                    0F,
-                    gpsLocationListener
+                    LocationManager.GPS_PROVIDER, 5000, 0F, gpsLocationListener
                 )
             }
 
             if (hasNetwork) {
                 locationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER,
-                    5000,
-                    0F,
-                    networkLocationListener
+                    LocationManager.NETWORK_PROVIDER, 5000, 0F, networkLocationListener
                 )
             }
 
@@ -1131,13 +1547,16 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
     private fun actionList(): List<ActionModel> {
-        mActionList.add(ActionModel("Attendance", R.drawable.ic_employee))
+        mActionList.add(ActionModel("Attendance", R.drawable.ic_attendace))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
+        mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
+        mActionList.add(ActionModel("Trip", R.drawable.ic_trip))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
         mActionList.add(ActionModel("BBPS", R.drawable.ic_bbps_ic))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
-        mActionList.add(ActionModel("Policy", R.drawable.ic_policy))
+        mActionList.add(ActionModel("Policies", R.drawable.ic_policy))
+        mActionList.add(ActionModel("Expenses", R.drawable.ic_crm))
         return mActionList
     }
 
@@ -1155,4 +1574,12 @@ class EmployeeDashboard : AppCompatActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("NetworkHandler", " onDestroy called on activity")
+    }
+
+
 }

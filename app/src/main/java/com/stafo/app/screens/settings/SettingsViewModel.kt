@@ -22,6 +22,7 @@ import com.stafo.app.base.request.AddBranchRequest
 import com.stafo.app.screens.auth.LoginActivity
 import com.stafo.app.screens.auth.dataClass.AddBranchResponse
 import com.stafo.app.screens.auth.dataClass.SelfieAttendanceResponse
+import com.stafo.app.screens.emp.dataClass.AttendanceRequestResponse
 import com.stafo.app.screens.payroll.dataClass.AllReportsListResponse
 import com.stafo.app.screens.payroll.dataClass.SalaryRequest
 import com.stafo.app.screens.payroll.dataClass.SalaryResponse
@@ -35,7 +36,11 @@ import com.stafo.app.screens.settings.dataClass.AssignBranchRequest
 import com.stafo.app.screens.settings.dataClass.AssignBranchResponse
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentRequest
 import com.stafo.app.screens.settings.dataClass.AssignDepartmentResponse
+import com.stafo.app.screens.settings.dataClass.AttendanceActionRequest
+import com.stafo.app.screens.settings.dataClass.AttendanceRequestListResponse
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
+import com.stafo.app.screens.settings.dataClass.AttendanceUpdateRequest
+import com.stafo.app.screens.settings.dataClass.AttendanceUpdateResponse
 import com.stafo.app.screens.settings.dataClass.BannerResponse
 import com.stafo.app.screens.settings.dataClass.BranchListResponse
 import com.stafo.app.screens.settings.dataClass.ChangeDeviceRequest
@@ -84,6 +89,11 @@ import com.stafo.app.screens.settings.dataClass.InActiveEmpResponse
 import com.stafo.app.screens.settings.dataClass.JobTitleResponse
 import com.stafo.app.screens.settings.dataClass.LeaveRequestBody
 import com.stafo.app.screens.settings.dataClass.LeaveResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeDeleteResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeListResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeRequest
+import com.stafo.app.screens.settings.dataClass.LeaveTypeResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeUpdateResponse
 import com.stafo.app.screens.settings.dataClass.LocationLogRequest
 import com.stafo.app.screens.settings.dataClass.LocationLogResponse
 import com.stafo.app.screens.settings.dataClass.OnLeaveResponse
@@ -126,7 +136,9 @@ import com.stafo.app.screens.settings.dataClass.UpgradePackageResponse
 import com.stafo.app.screens.settings.dataClass.VerifyGSTNumberResponse
 import com.stafo.app.screens.settings.dataClass.VerifyRegisterNumberResponse
 import com.stafo.app.screens.settings.dataClass.ViewBranchResponse
+import com.stafo.app.screens.tms.dataClass.DeleteTaskResponse
 import com.stafo.app.utils.CustomToast
+import com.stafo.app.utils.doLogout
 import com.stafo.app.utils.getUserAccessToken
 import com.stafo.app.utils.isNetworkAvailable
 import kotlinx.coroutines.Dispatchers
@@ -174,8 +186,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -326,12 +337,14 @@ class SettingsViewModel : BaseViewModel() {
 
     val mDepartmentCreateResponse: LiveData<DepartmentCreateResponse> get() = mDepartmentCreate
 
-    private var mEmployeeUploadImage: MutableLiveData<EmployeeUploadImageResponse> = MutableLiveData()
+    private var mEmployeeUploadImage: MutableLiveData<EmployeeUploadImageResponse> =
+        MutableLiveData()
 
     val mEmployeeUploadImageResponse: LiveData<EmployeeUploadImageResponse> get() = mEmployeeUploadImage
 
 
-    private var mCompanyUploadImage: MutableLiveData<UpdateCompanyProfileResponse> = MutableLiveData()
+    private var mCompanyUploadImage: MutableLiveData<UpdateCompanyProfileResponse> =
+        MutableLiveData()
 
     val mCompanyUploadImageResponse: LiveData<UpdateCompanyProfileResponse> get() = mCompanyUploadImage
 
@@ -350,29 +363,28 @@ class SettingsViewModel : BaseViewModel() {
     val mAadhaarVerifyResponse: LiveData<PanVerifyResponse> get() = mAadhaarVerfication
 
 
-
-
-    private var mVerifyRegisterNumber: MutableLiveData<VerifyRegisterNumberResponse> = MutableLiveData()
+    private var mVerifyRegisterNumber: MutableLiveData<VerifyRegisterNumberResponse> =
+        MutableLiveData()
 
     val mVerifyRegisterNumberResponse: LiveData<VerifyRegisterNumberResponse> get() = mVerifyRegisterNumber
-
 
 
     private var mDelete: MutableLiveData<DeleteResponse> = MutableLiveData()
 
     val mDeleteResponse: LiveData<DeleteResponse> get() = mDelete
 
-    private var mEmployeeViewDocument: MutableLiveData<EmployeeViewDocumentResponse> = MutableLiveData()
+    private var mEmployeeViewDocument: MutableLiveData<EmployeeViewDocumentResponse> =
+        MutableLiveData()
 
     val mEmployeeViewDocumentResponse: LiveData<EmployeeViewDocumentResponse> get() = mEmployeeViewDocument
-
 
 
     private var mChangeDevice: MutableLiveData<ChangeDeviceResponse> = MutableLiveData()
 
     val mChangeDeviceResponse: LiveData<ChangeDeviceResponse> get() = mChangeDevice
 
-    private var mGetCompanyViewRequestDevice: MutableLiveData<CompanyViewRequestDeviceResponse> = MutableLiveData()
+    private var mGetCompanyViewRequestDevice: MutableLiveData<CompanyViewRequestDeviceResponse> =
+        MutableLiveData()
 
     val mGetCompanyViewRequestDeviceResponse: LiveData<CompanyViewRequestDeviceResponse> get() = mGetCompanyViewRequestDevice
 
@@ -400,11 +412,9 @@ class SettingsViewModel : BaseViewModel() {
     val mGenerateQRCodeResponse: LiveData<Bitmap> get() = mGenerateQRCode
 
 
-
     private var mSendFeedback: MutableLiveData<SendFeedbackResponse> = MutableLiveData()
 
     val mSendFeedbackResponse: LiveData<SendFeedbackResponse> get() = mSendFeedback
-
 
 
     private var mDeleteCompany: MutableLiveData<DeleteCompanyResponse> = MutableLiveData()
@@ -419,7 +429,6 @@ class SettingsViewModel : BaseViewModel() {
     private var mInActiveEmp: MutableLiveData<InActiveEmpResponse> = MutableLiveData()
 
     val mInActiveEmpResponse: LiveData<InActiveEmpResponse> get() = mInActiveEmp
-
 
 
     private var mSelfieUpload: MutableLiveData<SelfieUploadResponse> = MutableLiveData()
@@ -454,7 +463,8 @@ class SettingsViewModel : BaseViewModel() {
 
     val mAssignDepartmentResponse: LiveData<AssignDepartmentResponse> get() = mAssignDepartment
 
-    private var mReportsEmployeeList: MutableLiveData<ReportsEmployeeListResponse> = MutableLiveData()
+    private var mReportsEmployeeList: MutableLiveData<ReportsEmployeeListResponse> =
+        MutableLiveData()
 
     val mReportsEmployeeListResponse: LiveData<ReportsEmployeeListResponse> get() = mReportsEmployeeList
 
@@ -497,12 +507,399 @@ class SettingsViewModel : BaseViewModel() {
 
     val mUpdateShiftResponse: LiveData<UpdateShiftResponse> get() = mUpdateShift
 
-    private var mLocationLog: MutableLiveData<LocationLogResponse> = MutableLiveData()
 
-    val mLocationLogResponse: LiveData<LocationLogResponse> get() = mLocationLog
+    private var mLeaveTypeList: MutableLiveData<LeaveTypeListResponse> = MutableLiveData()
+
+    val mLeaveTypeListResponse: LiveData<LeaveTypeListResponse> get() = mLeaveTypeList
+
+    private var mLeaveTypeCreate: MutableLiveData<LeaveTypeResponse> = MutableLiveData()
+
+    val mLeaveTypeCreateResponse: LiveData<LeaveTypeResponse> get() = mLeaveTypeCreate
+
+    private var mLeaveTypeUpdate: MutableLiveData<LeaveTypeUpdateResponse> = MutableLiveData()
+
+    val mLeaveTypeUpdateResponse: LiveData<LeaveTypeUpdateResponse> get() = mLeaveTypeUpdate
 
 
-    fun locationLog(mContext: Context,request: LocationLogRequest) {
+    private var mLeaveTypeDelete: MutableLiveData<LeaveTypeDeleteResponse> = MutableLiveData()
+
+    val mLeaveTypeDeleteResponse: LiveData<LeaveTypeDeleteResponse> get() = mLeaveTypeDelete
+
+
+    private var mAttendanceUpdate: MutableLiveData<AttendanceUpdateResponse> = MutableLiveData()
+
+    val mAttendanceUpdateResponse: LiveData<AttendanceUpdateResponse> get() = mAttendanceUpdate
+
+    private var mAttendanceRequestList: MutableLiveData<AttendanceRequestListResponse> =
+        MutableLiveData()
+
+    val mAttendanceRequestListResponse: LiveData<AttendanceRequestListResponse> get() = mAttendanceRequestList
+
+
+    private var mAttendanceRequest: MutableLiveData<AttendanceRequestResponse> = MutableLiveData()
+
+    val mAttendanceRequestResponse: LiveData<AttendanceRequestResponse> get() = mAttendanceRequest
+
+
+    private var mAttendanceRequestAction: MutableLiveData<DeleteTaskResponse> = MutableLiveData()
+
+    val mAttendanceRequestActionResponse: LiveData<DeleteTaskResponse> get() = mAttendanceRequestAction
+
+    fun attendanceRequestStatusUpdate(mContext: Context, id: Int, request: AttendanceActionRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response =
+                    ASLEmpMng.instance.apiStores()?.callAttendanceStatusUpdate(id, request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAttendanceRequestAction.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun attendanceRequest(mContext: Context, request: AttendanceUpdateRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callAttendanceRequest(request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAttendanceRequest.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun attendanceRequestList(mContext: Context, postId: String,userType:Boolean) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = if (userType) {
+                    ASLEmpMng.instance.apiStores()?.callGetAttendanceRequestList(
+                        employeeId = postId,
+                        companyId = null
+                    )
+                } else {
+                    ASLEmpMng.instance.apiStores()?.callGetAttendanceRequestList(
+                        companyId = postId,
+                        employeeId = null
+                    )
+                }
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAttendanceRequestList.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun updateAttendance(mContext: Context, comId: Int, request: AttendanceUpdateRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callAttendanceUpdate(comId, request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mAttendanceUpdate.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun deleteLeaveType(mContext: Context, leaveId: Int) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callLeaveTypeDelete(leaveId)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mLeaveTypeDelete.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun updateLeaveType(mContext: Context, leaveId: Int, request: LeaveTypeRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callLeaveTypeUpdate(leaveId, request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mLeaveTypeUpdate.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+    fun getLeaveTypeList(mContext: Context, comId: Int) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callLeaveTypeList(comId)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mLeaveTypeList.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    fun createLeaveType(mContext: Context, request: LeaveTypeRequest) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+        getLoaderLiveData().value = "load"
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = ASLEmpMng.instance.apiStores()?.callLeaveTypeCreate(request)
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    response?.let {
+                        if (it.isSuccessful) {
+                            mLeaveTypeCreate.postValue(response.body())
+                        } else {
+                            it.errorBody()?.charStream()?.let { errorStream ->
+                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                CustomToast(mContext as LoginActivity, error?.message ?: "")
+                            } ?: run {
+                                CustomToast(
+                                    mContext,
+                                    mContext.getString(R.string.error_something_went_wrong)
+                                )
+                            }
+                        }
+                    } ?: run {
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    getLoaderLiveData().value = "stop"
+                    CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                }
+            }
+        }
+    }
+
+
+    /*fun locationLog(mContext: Context,request: LocationLogRequest) {
 
         if (!isNetworkAvailable(mContext)) {
             CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
@@ -547,15 +944,12 @@ class SettingsViewModel : BaseViewModel() {
                 }
             }
         }
-    }
+    }*/
 
 
-
-
-    fun updateShift(mContext: Context, id:Int,request: ShiftCreateRequest) {
+    fun updateShift(mContext: Context, id: Int, request: ShiftCreateRequest) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -564,7 +958,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
 
 
-                val response = ASLEmpMng.instance.apiStores()?.callUpdateShift(id,request)
+                val response = ASLEmpMng.instance.apiStores()?.callUpdateShift(id, request)
                 Log.d("res", "shift Edit " + response?.body())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
@@ -584,8 +978,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -600,12 +993,9 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-    fun editBranch(mContext: Context, id:Int,request: AddBranchRequest) {
+    fun editBranch(mContext: Context, id: Int, request: AddBranchRequest) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -614,7 +1004,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
 
 
-                val response = ASLEmpMng.instance.apiStores()?.callEditBranch(id,request)
+                val response = ASLEmpMng.instance.apiStores()?.callEditBranch(id, request)
                 Log.d("res", "branch Edit " + response?.body())
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
@@ -634,8 +1024,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -650,17 +1039,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
     fun viewAllReportsList(
-        mContext: Context,
-        id: String
+        mContext: Context, id: String
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -669,7 +1051,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callViewReportsList(id.toInt())
 
-                Log.d("res","All reports list  $response")
+                Log.d("res", "All reports list  $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -688,8 +1070,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -705,11 +1086,9 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getSalarySlip(
-        mContext: Context,
-        request: SalarySlipRequest
+        mContext: Context, request: SalarySlipRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -718,7 +1097,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callSalarySlip(request)
 
-                Log.d("res","save salary  $response")
+                Log.d("res", "save salary  $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -737,8 +1116,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -753,11 +1131,9 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun saveSalary(
-        mContext: Context,
-        request: SalaryRequest
+        mContext: Context, request: SalaryRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -766,7 +1142,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callSaveSalary(request)
 
-                Log.d("res","save salary  $response")
+                Log.d("res", "save salary  $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -785,8 +1161,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -801,13 +1176,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
     fun generateSalary(
-        mContext: Context,
-        request: SalaryGeneratedRequest
+        mContext: Context, request: SalaryGeneratedRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -816,7 +1188,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callSalaryGenerate(request)
 
-                Log.d("res","genearte salary  $response")
+                Log.d("res", "genearte salary  $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -835,8 +1207,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -852,11 +1223,9 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun deleteSalaryType(
-        mContext: Context,
-        request: SalaryTypeDeleteRequest
+        mContext: Context, request: SalaryTypeDeleteRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -865,7 +1234,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callDeleteSalaryType(request)
 
-                Log.d("res","delete s_type  $response")
+                Log.d("res", "delete s_type  $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -884,8 +1253,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -900,11 +1268,9 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun salaryTypeList(
-        mContext: Context,
-        request: SalaryTypeListRequest
+        mContext: Context, request: SalaryTypeListRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -913,7 +1279,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callSalaryTypeList(request)
 
-                Log.d("res","leave reports $response")
+                Log.d("res", "leave reports $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -932,13 +1298,14 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+
+                Log.e("salary-type", "salary ${e.message}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
@@ -949,11 +1316,9 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun createSalaryType(
-        mContext: Context,
-        request: SalaryTypeRequest
+        mContext: Context, request: SalaryTypeRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -962,7 +1327,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callSalaryType(request)
 
-                Log.d("res","leave reports $response")
+                Log.d("res", "leave reports $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -981,8 +1346,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -998,11 +1362,9 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun reportsAllEmployeeLeave(
-        mContext: Context,
-        request: ReportsEmployeeListRequest
+        mContext: Context, request: ReportsEmployeeListRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1011,7 +1373,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callReportsLeave(request)
 
-                Log.d("res","leave reports $response")
+                Log.d("res", "leave reports $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1030,8 +1392,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1046,11 +1407,9 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun reportsAllEmployeeAttendance(
-        mContext: Context,
-        request: ReportsEmployeeListRequest
+        mContext: Context, request: ReportsEmployeeListRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1058,7 +1417,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callReportsAttendance(request)
-                Log.d("res","attendance reports $response")
+                Log.d("res", "attendance reports $response")
 
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
@@ -1078,8 +1437,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1095,11 +1453,9 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun reportsEmployeeList(
-        mContext: Context,
-        request: ReportsEmployeeListRequest
+        mContext: Context, request: ReportsEmployeeListRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1108,7 +1464,7 @@ class SettingsViewModel : BaseViewModel() {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callReportsEmployeeList(request)
 
-                Log.d("res","emp list reports $response")
+                Log.d("res", "emp list reports $response")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -1127,8 +1483,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1144,11 +1499,9 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun assignBranch(
-        mContext: Context,
-        request: AssignBranchRequest
+        mContext: Context, request: AssignBranchRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1174,8 +1527,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1190,11 +1542,9 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun assignDepartment(
-        mContext: Context,
-        request: AssignDepartmentRequest
+        mContext: Context, request: AssignDepartmentRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1220,8 +1570,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1237,11 +1586,9 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getEmpAttendanceBranch(
-        mContext: Context,
-        request: GetAttendanceBranchRequest
+        mContext: Context, request: GetAttendanceBranchRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1267,8 +1614,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1283,14 +1629,14 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
     fun getBannerImage(
         mContext: Context
     ) {
+
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1314,8 +1660,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1330,14 +1675,13 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
     fun upgradePackage(
         mContext: Context
     ) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1361,8 +1705,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1377,19 +1720,13 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
     fun postRemoveSelfie(
-        mContext: Context,
-        request: RemoveSelfieRequest
+        mContext: Context, request: RemoveSelfieRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1413,8 +1750,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1429,19 +1765,13 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
     fun uploadSelfieAttendance(
-        mContext: Context,
-        employeeId: String,
-        file: File?
+        mContext: Context, employeeId: String, file: File?
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1454,12 +1784,15 @@ class SettingsViewModel : BaseViewModel() {
                     }
                     return@launch
                 }
-                val requestBodyEmployeeId = RequestBody.create("text/plain".toMediaTypeOrNull(), employeeId)
+                val requestBodyEmployeeId =
+                    RequestBody.create("text/plain".toMediaTypeOrNull(), employeeId)
                 val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
 
-                val imagePart = MultipartBody.Part.createFormData("selfie_image", file.name, requestFile)
+                val imagePart =
+                    MultipartBody.Part.createFormData("selfie_image", file.name, requestFile)
 
-                val response = ASLEmpMng.instance.apiStores()?.uploadSelfieImage(requestBodyEmployeeId,imagePart)
+                val response = ASLEmpMng.instance.apiStores()
+                    ?.uploadSelfieImage(requestBodyEmployeeId, imagePart)
 
 
                 Log.d("res", "add selfie image :${response?.body().toString()}")
@@ -1481,8 +1814,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1497,19 +1829,13 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
     fun postActiveInactiveEmp(
-        mContext: Context,
-        request: InActiveEmpRequest
+        mContext: Context, request: InActiveEmpRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1533,8 +1859,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1549,14 +1874,15 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
     fun createLeavePolicyCompany(
-        mContext: Context,
-        request: CreateLeavePolicyRequest
+        mContext: Context, request: CreateLeavePolicyRequest
     ) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1580,8 +1906,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1596,15 +1921,13 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
     fun deleteAccount(
         mContext: Context
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1628,8 +1951,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1645,11 +1967,9 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun postFeedback(
-        mContext: Context,
-        request: SendFeedbackRequest
+        mContext: Context, request: SendFeedbackRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1675,8 +1995,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1691,20 +2010,11 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
-
-
     fun generateQRCode(
-        mContext: Context,
-        request: GenerateQCodeRequest
+        mContext: Context, request: GenerateQCodeRequest
 
-        ) {
+    ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1715,7 +2025,7 @@ class SettingsViewModel : BaseViewModel() {
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     if (response == null) {
-                        CustomToast(mContext,  "Response is null")
+                        CustomToast(mContext, "Response is null")
                         return@withContext
                     }
                     response?.let {
@@ -1726,23 +2036,22 @@ class SettingsViewModel : BaseViewModel() {
                         } else {
 
                             val errorMessage = response.errorBody()?.string() ?: "Unknown error"
-                            CustomToast(mContext,  "API Error: $errorMessage")
-                      /*      it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    "else run"+mContext.getString(R.string.error_something_went_wrong)
-                                )
+                            CustomToast(mContext, "API Error: $errorMessage")/*      it.errorBody()?.charStream()?.let { errorStream ->
+                                      val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                      CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                  } ?: run {
+                                      CustomToast(
+                                          mContext,
+                                          "else run"+mContext.getString(R.string.error_something_went_wrong)
+                                      )
 
 
-                            }*/
+                                  }*/
                         }
                     } ?: run {
                         CustomToast(
                             mContext,
-                            "run"+mContext.getString(R.string.error_something_went_wrong)
+                            "run" + mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1775,13 +2084,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
     fun markAttendanceQREmp(
-        mContext: Context,
-        request: QRAttendanceMarkRequest
+        mContext: Context, request: QRAttendanceMarkRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1808,8 +2114,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1825,11 +2130,9 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun setAttendanceTypeEmployee(
-        mContext: Context,
-        request: SetAttendanceTypeRequest
+        mContext: Context, request: SetAttendanceTypeRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -1856,8 +2159,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1872,20 +2174,13 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
-
     fun getDayAttendanceRecordEmp(
-        mContext: Context,
-        request: DayPunchINRequest
+        mContext: Context, request: DayPunchINRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -1910,8 +2205,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -1926,17 +2220,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
     fun selfieAttendanceEmpolyee(
-        mContext: Context,
-        employeeId: Int,
-        file: File?
+        mContext: Context, employeeId: Int, file: File?
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().postValue("load")
@@ -1953,23 +2240,27 @@ class SettingsViewModel : BaseViewModel() {
                     }
                     return@launch
                 }
-                val requestBody = employeeId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+                val requestBody =
+                    employeeId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
                 val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
                 val imagePart = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
-                val response = ASLEmpMng.instance.apiStores()?.selfieAttendanceEmp(requestBody, imagePart)
+                val response =
+                    ASLEmpMng.instance.apiStores()?.selfieAttendanceEmp(requestBody, imagePart)
 
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().postValue("stop")
 
                     if (response == null) {
-                        CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
                         return@withContext
                     }
 
                     if (response.isSuccessful) {
 
-                        Log.d("res",response.body().toString())
+                        Log.d("res", response.body().toString())
                         mSelfieAttendanceEmp.postValue(response.body())
                     } else {
                         val errorResponse = response.errorBody()?.charStream()?.use { reader ->
@@ -1991,19 +2282,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
-
-
     fun companyAcceptRequestDeviceChange(
-        mContext: Context,
-        request: CompanyViewRequestDevice
+        mContext: Context, request: CompanyViewRequestDevice
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2030,8 +2312,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2046,21 +2327,18 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
     fun companyAcceptRequestDeviceChange(
-        mContext: Context,
-        request: CompanyAcceptDeviceRequest
+        mContext: Context, request: CompanyAcceptDeviceRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = ASLEmpMng.instance.apiStores()?.callCompanyAcceptRequestDevice(request)
+                val response =
+                    ASLEmpMng.instance.apiStores()?.callCompanyAcceptRequestDevice(request)
                 Log.d("res", "device accept :${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
@@ -2080,8 +2358,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2096,14 +2373,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
     fun requestDeviceChange(
-        mContext: Context,
-        request: ChangeDeviceRequest
+        mContext: Context, request: ChangeDeviceRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2130,8 +2403,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2146,11 +2418,9 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun viewEmployeeDocuments(
-        mContext: Context,
-        request: EmployeeViewDocumentRequest
+        mContext: Context, request: EmployeeViewDocumentRequest
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2177,8 +2447,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2193,17 +2462,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
     fun companyDeleteBranch(
-        mContext: Context,
-        id:Int
+        mContext: Context, id: Int
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2230,8 +2492,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2244,10 +2505,15 @@ class SettingsViewModel : BaseViewModel() {
             }
         }
     }
+
     fun companyDeleteShift(
-        mContext: Context,
-        id:Int
+        mContext: Context, id: Int
     ) {
+
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -2272,8 +2538,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2288,11 +2553,9 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun companyDeleteHoliday(
-        mContext: Context,
-        id:Int
+        mContext: Context, id: Int
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2319,8 +2582,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2335,11 +2597,9 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun companyRGSVerify(
-        mContext: Context,
-        request: PanVerifyRequestBody
+        mContext: Context, request: PanVerifyRequestBody
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2365,8 +2625,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2381,11 +2640,9 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun companyGSTVerify(
-        mContext: Context,
-        request: PanVerifyRequestBody
+        mContext: Context, request: PanVerifyRequestBody
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2412,8 +2669,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2428,12 +2684,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun companyPanVerify(
-        mContext: Context,
-        request: PanVerifyRequestBody
+        mContext: Context, request: PanVerifyRequestBody
     ) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2460,8 +2714,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2476,13 +2729,12 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun comapnyAadhaarVerfication(
-        mContext: Context,
-        request: PanVerifyRequestBody
+        mContext: Context, request: PanVerifyRequestBody
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
+
         getLoaderLiveData().value = "load"
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -2507,8 +2759,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2524,11 +2775,9 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun changeCompanyProfileImage(
-        mContext: Context,
-        file: File?
+        mContext: Context, file: File?
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2546,7 +2795,8 @@ class SettingsViewModel : BaseViewModel() {
 
                 val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
 
-                val imagePart = MultipartBody.Part.createFormData("image_name", file.name, requestFile)
+                val imagePart =
+                    MultipartBody.Part.createFormData("image_name", file.name, requestFile)
 
                 val response = ASLEmpMng.instance.apiStores()?.updateCompanyImage(imagePart)
 
@@ -2570,8 +2820,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2586,20 +2835,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
-
     fun changeEmpProfileImage(
-        mContext: Context,
-        employeeId: Int,
-        file: File?
+        mContext: Context, employeeId: Int, file: File?
     ) {
-
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2620,7 +2859,8 @@ class SettingsViewModel : BaseViewModel() {
                 val imagePart = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
                 val response = ASLEmpMng.instance.apiStores()?.updateEmployeeImage(
-                    employeeId, imagePart)
+                    employeeId, imagePart
+                )
 
 
                 Log.d("res", "emp change image :${response?.body().toString()}")
@@ -2642,8 +2882,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2658,17 +2897,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
     fun createDepartment(
-        mContext: Context,
-        request: DepartmentCreateRequest
+        mContext: Context, request: DepartmentCreateRequest
     ) {
-
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2695,8 +2927,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2712,13 +2943,10 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun postEmpUploadDocument(
-        mContext: Context,
-        employeeId: String,
-        documents: List<Triple<String, String, File>>
+        mContext: Context, employeeId: String, documents: List<Triple<String, String, File>>
     ) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2736,8 +2964,7 @@ class SettingsViewModel : BaseViewModel() {
                         documentName.toRequestBody("text/plain".toMediaTypeOrNull())
                     documentParts.add(
                         MultipartBody.Part.createFormData(
-                            "documents[$index][document_name]",
-                            documentName
+                            "documents[$index][document_name]", documentName
                         )
                     )
 
@@ -2745,24 +2972,20 @@ class SettingsViewModel : BaseViewModel() {
                         documentTypeId.toRequestBody("text/plain".toMediaTypeOrNull())
                     documentParts.add(
                         MultipartBody.Part.createFormData(
-                            "documents[$index][document_type_id]",
-                            documentTypeId
+                            "documents[$index][document_type_id]", documentTypeId
                         )
                     )
 
                     val requestFile = file.asRequestBody("application/pdf".toMediaTypeOrNull())
                     documentParts.add(
                         MultipartBody.Part.createFormData(
-                            "documents[$index][file]",
-                            file.name,
-                            requestFile
+                            "documents[$index][file]", file.name, requestFile
                         )
                     )
                 }
 
                 val response = ASLEmpMng.instance.apiStores()?.callEmployeeUploadDocument(
-                    employeeId = employeeIdBody,
-                    documents = documentParts
+                    employeeId = employeeIdBody, documents = documentParts
                 )
                 Log.d("res", "emp doc :${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
@@ -2783,8 +3006,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2802,7 +3024,6 @@ class SettingsViewModel : BaseViewModel() {
     fun uploadPolicy(mContext: Context, title: String, description: String, file: File) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2837,8 +3058,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2852,9 +3072,8 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun fetchPolicy(mContext: Context,id:Int) {
+    fun fetchPolicy(mContext: Context, id: Int) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -2881,8 +3100,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2898,12 +3116,9 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun postCompanyUpdateDocument(
-        mContext: Context,
-        imageUris: List<Uri>,
-        documentTypeIds: List<Int>
+        mContext: Context, imageUris: List<Uri>, documentTypeIds: List<Int>
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -2936,8 +3151,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
                 val response = ASLEmpMng.instance.apiStores()?.callCompanyUpdateDocument(
-                    documentTypeIds = documentTypeParts,
-                    documents = documentParts
+                    documentTypeIds = documentTypeParts, documents = documentParts
                 )
 
 
@@ -2961,8 +3175,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -2995,7 +3208,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getGeoLocationHist(mContext: Context, request: GeoLocationHistResquest) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3022,8 +3234,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3040,7 +3251,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getJobTitleList(mContext: Context) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3067,8 +3277,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3085,7 +3294,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getEmployeeLeaveHist(mContext: Context, request: GetEmployeeLeaveHistRequestBody) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3114,8 +3322,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3132,7 +3339,6 @@ class SettingsViewModel : BaseViewModel() {
     fun getAllLeaveList(mContext: Context, request: LeaveRequestBody) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3161,8 +3367,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3180,7 +3385,6 @@ class SettingsViewModel : BaseViewModel() {
     fun assignShift(mContext: Context, employeeId: String, selectedShiftIds: List<String>) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3194,7 +3398,8 @@ class SettingsViewModel : BaseViewModel() {
 
                 Log.d("res", "Final Shift Data: $shiftIdsMap, Employee ID: $employeeId")
 
-                val response = ASLEmpMng.instance.apiStores()?.callAssignShift(employeeId, shiftIdsMap)
+                val response =
+                    ASLEmpMng.instance.apiStores()?.callAssignShift(employeeId, shiftIdsMap)
 
                 Log.d("res", "Response: ${response?.body().toString()}")
 
@@ -3207,10 +3412,15 @@ class SettingsViewModel : BaseViewModel() {
                             val errorBody = it.errorBody()?.string()
                             Log.e("API_ERROR", "Error response: $errorBody")
 
-                            CustomToast(mContext, errorBody ?: mContext.getString(R.string.error_something_went_wrong))
+                            CustomToast(
+                                mContext,
+                                errorBody ?: mContext.getString(R.string.error_something_went_wrong)
+                            )
                         }
                     } ?: run {
-                        CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                        CustomToast(
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
+                        )
                     }
                 }
             } catch (e: Exception) {
@@ -3224,10 +3434,8 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
     fun punchInRequest(mContext: Context, request: PunchInRequest) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3256,8 +3464,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3274,17 +3481,13 @@ class SettingsViewModel : BaseViewModel() {
 
     fun updateEmployeeDetails(mContext: Context, id: String, request: UpdateEmployeeProfile) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-
-                Log.d("res", "update: $id ${getUserAccessToken()}")
                 val response = ASLEmpMng.instance.apiStores()?.callUpdateEmployee(id, request)
-                Log.d("res", "update: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -3303,13 +3506,13 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                Log.e("profile", "update error: ${e.message}", e)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
@@ -3321,17 +3524,13 @@ class SettingsViewModel : BaseViewModel() {
 
     fun fetchEmployeeDetails(mContext: Context, id: String) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
-
-
                 val response = ASLEmpMng.instance.apiStores()?.callFetchEmployeeDetails(id)
-                Log.d("res", "details: ${response?.body().toString()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -3350,8 +3549,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3368,7 +3566,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun updateCompanyProfile(mContext: Context, request: UpdateCompanyProfile) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3397,8 +3594,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3414,6 +3610,12 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getEmployeeAttendRecord(mContext: Context, id: String, date: String) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
+
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3439,8 +3641,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3457,7 +3658,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getAllEmployeeList(mContext: Context) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3484,8 +3684,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3500,6 +3699,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun getOnLeaveList(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3523,8 +3726,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3542,7 +3744,6 @@ class SettingsViewModel : BaseViewModel() {
     fun postPendingLeave(mContext: Context, request: ApproveLeaveRequest) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3569,8 +3770,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3585,6 +3785,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
     fun getPendingLeaveList(mContext: Context) {
+        if (!isNetworkAvailable(mContext)) {
+            return
+        }
+
         getLoaderLiveData().value = "load"
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -3608,8 +3812,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3626,7 +3829,6 @@ class SettingsViewModel : BaseViewModel() {
     fun getHolidayList(mContext: Context, id: String) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3634,7 +3836,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = ASLEmpMng.instance.apiStores()?.callHolidayList(id.toInt())
-                Log.d("res","holiday: ${response?.body()}")
+                Log.d("res", "holiday: ${response?.body()}")
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
@@ -3653,8 +3855,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3668,10 +3869,8 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
-
     fun getCompanyDetails(mContext: Context) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3685,20 +3884,28 @@ class SettingsViewModel : BaseViewModel() {
                         if (it.isSuccessful) {
                             mCompanyProfile.postValue(it.body())
                         } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
+                            when (it.code()) {
+                                401 -> {
+                                    doLogout(mContext)
+                                }
+
+                                else -> {
+                                    it.errorBody()?.charStream()?.let { errorStream ->
+                                        val error =
+                                            Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                        CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                    } ?: run {
+                                        CustomToast(
+                                            mContext,
+                                            mContext.getString(R.string.error_something_went_wrong)
+                                        )
+                                    }
+                                }
                             }
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3712,10 +3919,51 @@ class SettingsViewModel : BaseViewModel() {
         }
     }
 
+    /*  fun getCompanyDetails(mContext: Context) {
+          if (!isNetworkAvailable(mContext)) {
+              return
+          }
+
+          getLoaderLiveData().value = "load"
+          viewModelScope.launch(Dispatchers.IO) {
+              try {
+                  val response = ASLEmpMng.instance.apiStores()?.callCompanyProfile()
+                  withContext(Dispatchers.Main) {
+                      getLoaderLiveData().value = "stop"
+                      response?.let {
+                          if (it.isSuccessful) {
+                              mCompanyProfile.postValue(it.body())
+                          } else {
+                              it.errorBody()?.charStream()?.let { errorStream ->
+                                  val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                  CustomToast(mContext as LoginActivity, error?.message ?: "")
+                              } ?: run {
+                                  CustomToast(
+                                      mContext,
+                                      mContext.getString(R.string.error_something_went_wrong)
+                                  )
+                              }
+                          }
+                      } ?: run {
+                          CustomToast(
+                              mContext,
+                              mContext.getString(R.string.error_something_went_wrong)
+                          )
+                      }
+                  }
+              } catch (e: Exception) {
+                  e.printStackTrace()
+                  withContext(Dispatchers.Main) {
+                      getLoaderLiveData().value = "stop"
+                      CustomToast(mContext, mContext.getString(R.string.error_something_went_wrong))
+                  }
+              }
+          }
+      }*/
+
 
     fun requestLeaveEmp(mContext: Context, request: EmployeeLeaveRequestBody) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3744,8 +3992,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3761,9 +4008,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun addHoliday(mContext: Context, request: CreateHolidayRequest) {
-
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -3789,8 +4034,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3807,7 +4051,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getCompanyDashboard(mContext: Context) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3822,20 +4065,28 @@ class SettingsViewModel : BaseViewModel() {
                         if (it.isSuccessful) {
                             mAttendanceSummary.postValue(it.body())
                         } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
+                            when (it.code()) {
+                                401 -> {
+                                    doLogout(mContext)
+                                }
+
+                                else -> {
+                                    it.errorBody()?.charStream()?.let { errorStream ->
+                                        val error =
+                                            Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                        CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                    } ?: run {
+                                        CustomToast(
+                                            mContext,
+                                            mContext.getString(R.string.error_something_went_wrong)
+                                        )
+                                    }
+                                }
                             }
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3853,7 +4104,6 @@ class SettingsViewModel : BaseViewModel() {
     fun getEmpList(mContext: Context, date: String) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
         getLoaderLiveData().value = "load"
@@ -3882,8 +4132,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3899,7 +4148,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getViewBranchList(mContext: Context, id: String) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3931,8 +4179,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3949,7 +4196,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getShiftList(mContext: Context, id: String) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -3976,8 +4222,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -3993,9 +4238,7 @@ class SettingsViewModel : BaseViewModel() {
 
 
     fun getBranchList(mContext: Context, id: String) {
-
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -4024,8 +4267,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4041,7 +4283,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getDepartmentList(mContext: Context, id: String) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -4070,8 +4311,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4089,7 +4329,6 @@ class SettingsViewModel : BaseViewModel() {
     fun createBranch(mContext: Context, request: AddBranchRequest) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -4118,8 +4357,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4134,18 +4372,10 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
-
-
-
-
     fun addEmployee(
-        mContext: Context,
-        request: AddEmpRequestBody
+        mContext: Context, request: AddEmpRequestBody
     ) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext, "Network not available. Please check your internet connection and try again.")
             return
         }
 
@@ -4178,11 +4408,8 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-
-
     fun createNewShift(mContext: Context, request: ShiftCreateRequest) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -4214,8 +4441,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4232,7 +4458,6 @@ class SettingsViewModel : BaseViewModel() {
     fun sendGeoLocationRequest(mContext: Context, empID: String, permission: String) {
 
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -4266,8 +4491,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4284,7 +4508,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getEmployeDashboard(mContext: Context) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -4299,20 +4522,28 @@ class SettingsViewModel : BaseViewModel() {
                         if (it.isSuccessful) {
                             mEmployeeDashoard.postValue(it.body())
                         } else {
-                            it.errorBody()?.charStream()?.let { errorStream ->
-                                val error = Gson().fromJson(errorStream, ErrorResponse::class.java)
-                                CustomToast(mContext as LoginActivity, error?.message ?: "")
-                            } ?: run {
-                                CustomToast(
-                                    mContext,
-                                    mContext.getString(R.string.error_something_went_wrong)
-                                )
+                            when (it.code()) {
+                                401 -> {
+                                    doLogout(mContext)
+                                }
+
+                                else -> {
+                                    it.errorBody()?.charStream()?.let { errorStream ->
+                                        val error =
+                                            Gson().fromJson(errorStream, ErrorResponse::class.java)
+                                        CustomToast(mContext as LoginActivity, error?.message ?: "")
+                                    } ?: run {
+                                        CustomToast(
+                                            mContext,
+                                            mContext.getString(R.string.error_something_went_wrong)
+                                        )
+                                    }
+                                }
                             }
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }
@@ -4329,7 +4560,6 @@ class SettingsViewModel : BaseViewModel() {
 
     fun getMonthlyAttendance(mContext: Context, date: String, emp: String) {
         if (!isNetworkAvailable(mContext)) {
-            CustomToast(mContext,"Network not available.Please check your internet connection and try again.")
             return
         }
 
@@ -4358,8 +4588,7 @@ class SettingsViewModel : BaseViewModel() {
                         }
                     } ?: run {
                         CustomToast(
-                            mContext,
-                            mContext.getString(R.string.error_something_went_wrong)
+                            mContext, mContext.getString(R.string.error_something_went_wrong)
                         )
                     }
                 }

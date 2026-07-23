@@ -47,7 +47,7 @@ class AdapterEmployeeAllLeaveList(
                     binding.txtStatus.setBackgroundResource(R.drawable.capsule_reject_button)
                 }
 
-                if (this.leaveType == 1) {
+              /*  if (this.leaveType == 1) {
                     binding.txtLeaveType.text = "Casual Leave"
                 } else if (this.leaveType == 2) {
                     binding.txtLeaveType.text = "Sick Leave"
@@ -55,7 +55,12 @@ class AdapterEmployeeAllLeaveList(
                     binding.txtLeaveType.text = "Privilege Leave"
                 } else {
                     binding.txtLeaveType.text = "Casual Leave"
-                }
+                }*/
+
+                binding.txtLeaveType.text = this.leaveTypeObj?.name ?: "N/A"
+
+
+
                 binding.txtDescription.text = this.reason
                 val capitalizedStatus = this.status.replaceFirstChar { it.uppercaseChar() }
                 binding.txtStatus.text = capitalizedStatus
@@ -63,7 +68,15 @@ class AdapterEmployeeAllLeaveList(
                     "${getFormatDate(this.fromDate)} - ${getFormatDate(this.toDate)}"
 
 
-                binding.txtDays.text = "${calculateDuration(this.fromDate, this.toDate)} days"
+                val formattedNoDays = calculateDuration(this.fromDate, this.toDate)
+                if (formattedNoDays == "1") {
+                    binding.txtDays.text = "$formattedNoDays day"
+                } else {
+                    binding.txtDays.text = "$formattedNoDays days"
+                }
+
+
+               // binding.txtDays.text = "${calculateDuration(this.fromDate, this.toDate)} days"
 
 
             }

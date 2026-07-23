@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
+import android.widget.PopupMenu
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +21,9 @@ import com.stafo.app.R
 import com.stafo.app.base.adapter.EmployeeAttendanceAdapter
 import com.stafo.app.databinding.ActivityEmployeeAttendanceBinding
 import com.stafo.app.screens.dashboard.EmployerDashboard
+import com.stafo.app.screens.settings.AttendanceRequestActivity
+import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
+import com.stafo.app.screens.settings.LeaveTypeDashboardActivity
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.dataClass.EmployeeDataList
 import com.stafo.app.utils.CustomLoader
@@ -63,6 +68,11 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        settingsViewModel.getEmpList(this@EmplyeeAttendaceListActivity, mSelectedDate)
+    }
+
     private fun showDatePicker() {
         val datePickerDialog = DatePickerDialog(
             this, { DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
@@ -89,7 +99,7 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
     }
 
     private fun onClickListener() {
-        binding?.apply {
+        binding.apply {
 
             val currentDate = SimpleDateFormat("dd MMM yy", Locale.getDefault()).format(calendar.time)
             binding.txtDate.setText(currentDate)
@@ -117,6 +127,14 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
                 showDatePicker()
             }
 
+            imageSettings.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@EmplyeeAttendaceListActivity,
+                        AttendanceRequestActivity::class.java
+                    ))
+            }
+
             //progressBar.updateProgress(50.0F)
             //  progressBar.updateProgress(Random().nextInt(100).toFloat())
 
@@ -124,31 +142,26 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
         }
     }
 
+
+
+
+
+
     private fun observeViewModel() {
-
-
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-
         settingsViewModel.mEmployeeListResponse.observe(this) {
             Log.d("res", "token ${getUserAccessToken()}")
             if (it.status) {
-
-
                 if (it.data.isNotEmpty()) {
                     binding.txtMsg.visibility = View.GONE
-
                     binding.etDirSearch.isFocusable = true
                     binding.etDirSearch.isFocusableInTouchMode = true
-
-
                     attendList=it.data
                     filteredList=attendList
-
-
                     val layoutManager: RecyclerView.LayoutManager =
                         LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                     binding.rvEmpAttendList.setLayoutManager(layoutManager)
-                    rvAdapter = EmployeeAttendanceAdapter(attendList, this)
+                    rvAdapter = EmployeeAttendanceAdapter(attendList, this,mSelectedDate)
                     binding.rvEmpAttendList.adapter = rvAdapter
                     rvAdapter.notifyDataSetChanged()
                 } else {
@@ -156,8 +169,6 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
                     binding.etDirSearch.isFocusableInTouchMode = false
                     binding.txtMsg.visibility = View.VISIBLE
                 }
-
-
 
 
                /* if (it.data.isNotEmpty()) {

@@ -39,6 +39,16 @@
     </string-array>
 
 
+    <string-array name="task_status">
+        <item>Select Status</item>
+        <item>Active</item>
+        <item>In Progress</item>
+        <item>Pending</item>
+        <item>Completed</item>
+        <item>Overdue</item>
+    </string-array>
+
+
     <string-array name="leave_type">
         <item>Sick Leave</item>
         <item>Casual Leave</item>
@@ -53,6 +63,15 @@
     </string-array>
     <string-array name="leave_settings">
         <item>Create Leave Policy</item>
+        <item>History</item>
+    </string-array>
+
+    <string-array name="request_attendance_emp">
+        <item>Request Attendance</item>
+    </string-array>
+
+    <string-array name="request_attendance_com">
+        <item>Request Attendance</item>
         <item>History</item>
     </string-array>
     <string-array name="emp_leave">
@@ -84,6 +103,13 @@
         <item>Leave Reports</item>
     </string-array>
 
+    <string-array name="attendance_type">
+        <item>Select Attendance Type</item>
+        <item>Present</item>
+        <item>Absent</item>
+        <item>Leave</item>
+    </string-array>
+
     <string-array name="position_type">
         <item>Junior Software Developer</item>
         <item>Software Engineer</item>
@@ -96,5 +122,17 @@
         <item>Data Analyst</item>
         <item>Graphic Designer</item>
         <item>UI/UX Designer</item>
+    </string-array>
+
+    <string-array name="attendance_type">
+        <item>Select Attendance</item>
+        <item>Present</item>
+        <item>Absent</item>
+        <item>Half Day</item>
+        <item>Leave</item>
+    </string-array>
+    <string-array name="request_attendance_com">
+        <item>Request Attendance</item>
+        <item>Edit Attendance</item>
     </string-array>
 </resources>

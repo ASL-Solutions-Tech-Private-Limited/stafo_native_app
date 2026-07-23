@@ -1,15 +1,16 @@
 package com.stafo.app.screens.settings
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.graphics.Color
+import android.graphics.RenderEffect
+import android.graphics.Shader
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -26,14 +27,12 @@ import com.stafo.app.R
 import com.stafo.app.base.adapter.EmpListAdapter
 import com.stafo.app.base.adapter.RadioShiftAdapter
 import com.stafo.app.databinding.ActivityViewAllEmployeeBinding
-import com.stafo.app.screens.settings.dataClass.AssignShiftRequest
 import com.stafo.app.screens.settings.dataClass.GetEmployee
 import com.stafo.app.screens.settings.dataClass.SetAttendanceTypeRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.stafo.app.base.adapter.ShiftAdapter
 import com.stafo.app.screens.settings.dataClass.InActiveEmpRequest
 import com.stafo.app.screens.settings.dataClass.RemoveSelfieRequest
 import com.stafo.app.screens.settings.dataClass.Shift
@@ -214,12 +213,14 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
                     rvRadioShift.adapter = rvRadioShiftAdapter
                     rvAdapter.notifyDataSetChanged()
                 } else {
+                    binding.blurOverlay.visibility = View.GONE
                     CustomToast(this, "No shifts available.Please add shifts first!")
                     shiftBottomSheetDialog.dismiss()
                 }
 
 
             } else {
+                binding.blurOverlay.visibility = View.GONE
                 CustomToast(this, it.message)
                 shiftBottomSheetDialog.dismiss()
             }
@@ -257,6 +258,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
             if (it.success) {
                 CustomToast(this, it.message)
+                binding.blurOverlay.visibility = View.GONE
                 shiftBottomSheetDialog.dismiss()
                 settingsViewModel.getAllEmployeeList(this@ViewAllEmployeeActivity)
 
@@ -276,6 +278,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         settingsViewModel.mSetAttendanceTypeResponse.observe(this) {
             if (it.status) {
                 CustomToast(this, it.message)
+                binding.blurOverlay.visibility = View.GONE
                 bottomSheetDialog.dismiss()
             } else {
                 CustomToast(this, it.message)
@@ -293,7 +296,9 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         }
     }
 
-    fun is24HourFormat(time: String): Boolean {
+
+
+    private fun is24HourFormat(time: String): Boolean {
         return try {
             val format24 = SimpleDateFormat("HH:mm", Locale.getDefault())
             format24.isLenient = false
@@ -304,7 +309,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         }
     }
 
-    fun convertTo12HourFormat(time24: String): String {
+    private fun convertTo12HourFormat(time24: String): String {
         return try {
             val sdf24 = SimpleDateFormat("HH:mm", Locale.getDefault())
             val sdf12 = SimpleDateFormat("hh:mm a", Locale.getDefault())
@@ -393,6 +398,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
     @SuppressLint("MissingInflatedId")
     fun showCustomBottomSheet(id: Int, getAttendanceType: String?) {
+        applyGlassyOverlay(binding.blurOverlay)
         bottomSheetDialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.attendance_mode_bottom_sheet_layout, null)
 
@@ -400,15 +406,12 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
             val bottomSheet = (dialog as BottomSheetDialog)
                 .findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.setBackgroundResource(android.R.color.transparent)
+
         }
 
         bottomSheetDialog.setCancelable(false)
 
         val btnCancel = view.findViewById<AppCompatImageView>(R.id.bottom_sheet_cancel)
-        /*     val llFromOffice = view.findViewById<LinearLayout>(R.id.ll_from_office)
-             val llFromAny = view.findViewById<LinearLayout>(R.id.ll_from_any)
-             val imgOffice = view.findViewById<ImageView>(R.id.img_office)
-             val imgAny = view.findViewById<ImageView>(R.id.img_any)*/
         val switchAllow = view.findViewById<SwitchCompat>(R.id.switch_allow)
         val switchSelfie = view.findViewById<SwitchCompat>(R.id.switch_selfie)
         val switchQr = view.findViewById<SwitchCompat>(R.id.switch_qr)
@@ -464,30 +467,6 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
             }
         }
 
-
-        /*   llFromOffice.setOnClickListener {
-
-               attendanceLocation = "from office"
-               llFromOffice.setBackgroundResource(R.drawable.custom_switch_card_bg)
-               llFromAny.setBackgroundResource(R.drawable.custom_switch_card_bg2)
-
-               imgOffice.setImageResource(R.drawable.ic_lv_active_radio)
-               imgAny.setImageResource(R.drawable.ic_lv_inactive_radio)
-
-           }
-
-           llFromAny.setOnClickListener {
-               attendanceLocation = "from anywhere"
-               llFromOffice.setBackgroundResource(R.drawable.custom_switch_card_bg2)
-               llFromAny.setBackgroundResource(R.drawable.custom_switch_card_bg)
-
-               imgOffice.setImageResource(R.drawable.ic_lv_inactive_radio)
-               imgAny.setImageResource(R.drawable.ic_lv_active_radio)
-           }*/
-
-
-
-
         btnSetAttendanceType.setOnClickListener {
 
             if (attendanceType == "false") {
@@ -509,6 +488,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
 
         btnCancel.setOnClickListener {
+            binding.blurOverlay.visibility = View.GONE
             bottomSheetDialog.dismiss()
         }
 
@@ -522,10 +502,13 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         bottomSheetDialog.show()
 
 
+
     }
 
     @SuppressLint("MissingInflatedId")
     fun showShiftCustomBottomSheet(id: String) {
+
+        applyGlassyOverlay(binding.blurOverlay)
         shiftBottomSheetDialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.shift_time_bottom_sheet_layout, null)
 
@@ -573,17 +556,30 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
 
 
         btnCancel.setOnClickListener {
+            binding.blurOverlay.visibility = View.GONE
             shiftID = ""
             shiftBottomSheetDialog.dismiss()
         }
 
 
         shiftBottomSheetDialog.setContentView(view)
-
-
         shiftBottomSheetDialog.show()
 
 
+    }
+
+    @SuppressLint("NewApi")
+    private fun applyGlassyOverlay(blurView: View) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val blurEffect = RenderEffect.createBlurEffect(
+                30f, 30f, Shader.TileMode.CLAMP
+            )
+            blurView.setRenderEffect(blurEffect)
+        } else {
+            blurView.setBackgroundColor(Color.parseColor("#99FFFFFF"))
+        }
+
+        blurView.visibility = View.VISIBLE
     }
 
 

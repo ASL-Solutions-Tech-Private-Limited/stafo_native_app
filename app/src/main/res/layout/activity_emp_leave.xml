@@ -245,36 +245,22 @@
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
-                <RelativeLayout
-                    android:layout_marginTop="@dimen/_6sdp"
-                    android:id="@+id/rl_spn_subordinate"
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/tie_leave_type"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible">
+                    android:layout_height="@dimen/_37sdp"
+                    android:paddingHorizontal="@dimen/_10sdp"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    android:textSize="@dimen/_12ssp"
+                    android:fontFamily="@font/gilroy_regular"
+                    android:textColor="@color/black"
+                    android:background="@drawable/edit_text_background"
+                    android:drawableEnd="@drawable/ic_arrow_down"
+                 android:drawableTint="@color/black"/>
 
-                    <Spinner
-                        android:id="@+id/spinner_leave_type"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_36sdp"
-                        android:background="@drawable/edit_text_background"
-                        android:dropDownVerticalOffset="@dimen/_34sdp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="5dip"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_12ssp" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/_16sdp"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/ic_arrow_down"
-                        android:tint="@color/black"
-                        tools:ignore="UseAppTint" />
-                </RelativeLayout>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -303,7 +289,7 @@
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/edt_from_date"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_36sdp"
+                            android:layout_height="@dimen/_37sdp"
                             android:layout_marginTop="@dimen/_6sdp"
                             android:focusableInTouchMode="false"
                             android:focusable="false"
@@ -352,7 +338,7 @@
                         <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/edt_to_date"
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_36sdp"
+                            android:layout_height="@dimen/_37sdp"
                             android:layout_marginTop="@dimen/_6sdp"
                             android:focusableInTouchMode="false"
                             android:focusable="false"
@@ -430,11 +416,14 @@
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edt_description"
                     android:layout_width="match_parent"
-                    android:layout_height="80dip"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_6sdp"
                     android:background="@drawable/edit_text_background"
                     android:gravity="left|top"
                     android:hint="Descriptions"
+                    android:inputType="textMultiLine"
+                    android:minLines="3"
+                    android:maxLines="4"
                     android:paddingHorizontal="@dimen/_8sdp"
                     android:paddingVertical="@dimen/_6sdp"
                     android:textColor="@color/black"

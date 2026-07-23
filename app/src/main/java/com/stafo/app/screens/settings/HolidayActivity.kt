@@ -98,7 +98,6 @@ class HolidayActivity : AppCompatActivity() {
         settingsViewModel.mHolidayListResponse.observe(this) {
 
             if (it.status) {
-
                 if (it.data.isNotEmpty()){
                     binding.txtMsg.visibility = View.GONE
                     val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)

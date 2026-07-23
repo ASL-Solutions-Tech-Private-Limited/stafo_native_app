@@ -13,6 +13,25 @@
         android:layout_height="match_parent"
         tools:context=".screens.dashboard.EmployeeDashboard">
 
+        <FrameLayout
+            android:id="@+id/root_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:elevation="1dp"
+            android:background="@color/white"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+            <ImageView
+                android:id="@+id/blur_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#99FFFFFF"
+                android:visibility="gone" />
+        </FrameLayout>
+
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"

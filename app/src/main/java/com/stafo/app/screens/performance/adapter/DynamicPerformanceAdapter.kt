@@ -34,13 +34,29 @@ class DynamicPerformanceAdapter(
 
         holder.editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                item.points = s.toString()
+                val text = s.toString()
+                val num = text.toIntOrNull()
+
+                if (num != null) {
+                    if (num > 100) {
+                        holder.editText.removeTextChangedListener(this)
+                        holder.editText.setText("100")
+                        holder.editText.setSelection(holder.editText.text?.length ?: 3)
+                        item.points = "100"
+                        holder.editText.addTextChangedListener(this)
+                    } else {
+                        item.points = text
+                    }
+                } else {
+                    item.points = ""
+                }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
+
 
     override fun getItemCount(): Int = inputList.size
 

@@ -12,7 +12,7 @@ data class SalaryType(
     val payment_type: String,
     val salary_type: String,
     val salary_type_description: String,
-    val amount: Int,
+    val amount: String,
     val amount_type: String,
     val status: String,
     val created_at: String,

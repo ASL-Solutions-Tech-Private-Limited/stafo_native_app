@@ -39,106 +39,84 @@ class AdapterEmployeeRecord(
         return ViewHolder(binding)
     }
 
-   /* @RequiresApi(Build.VERSION_CODES.O)
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)
-        with(holder.binding) {
-            tvDay.text = extractDayNameDateAndMonth(item.date).first
-            tvDate.text = extractDayNameDateAndMonth(item.date).second.toString()
-            llcAttend.visibility = View.VISIBLE
-
-
-
-
-         *//*   if (item.isPresent == "Absent") {
-                llcAttend.visibility = View.GONE
-                llcWeekOff.visibility = View.VISIBLE
-                tvWeekOffDay.text = extractDayNameDateAndMonth(item.date).first
-                tvWeekOffDate.text = extractDayNameDateAndMonth(item.date).second.toString()
-            } else {
-                llcAttend.visibility = View.VISIBLE
-              *//**//*  llcWeekOff.visibility = View.GONE
-                tvCheckIn.text = item.punchIn
-                tvCheckOut.text = if (item.punchOut == "null") "" else item.punchOut
-
-                tvWorkingHrs.text =
-                    if (!item.punchIn.isNullOrEmpty() && !item.punchOut.isNullOrEmpty()) {
-                        calculateHours2(item.punchIn, item.punchOut)
-                    } else {
-                        ""
-                    }*//**//*
-            }*//*
-
-            holder.itemView.setOnClickListener {
-
-                val intent = Intent(context, EmpDayAttendanceRecordActivity::class.java).apply {
-                    putExtra("EMP_ID", employeeId)
-                }
-
-                context.startActivity(intent)
-            }
-
-            val storeDate = item.date
-            if (storeDate == getCurrentDate()) {
-                holder.binding.clLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.green_light_400))
-            } else {
-                holder.binding.clLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
-            }
-        }
-    }*/
-
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         val item = getItem(position)
 
         with(holder.binding) {
+
+            // 🔹 Placeholder (empty grid cells)
             if (item.isPlaceholder) {
                 llcAttend.visibility = View.INVISIBLE
-                clLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
+                clLayout.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.white)
+                )
                 return
             }
 
-            // Extract day name and day of month
-            val (dayName, dayOfMonth) = extractDayNameDateAndMonth2(item.date)
-
-            tvDate.text = dayOfMonth
             llcAttend.visibility = View.VISIBLE
+
+            // 🔹 Extract date info
+            val (dayName, dayOfMonth) = extractDayNameDateAndMonth2(item.date)
+            tvDate.text = dayOfMonth
+
+            // 🔹 Default background
             rtlDate.setBackgroundResource(R.drawable.custom_date_bg)
+
+            // 🔹 Status-based UI
             when (item.isPresent) {
-                "Absent" -> {
-                    rtlDate.setBackgroundResource(R.drawable.custom_absent_bg)
-                }
+
                 "Present" -> {
                     rtlDate.setBackgroundResource(R.drawable.custom_present_bg)
                 }
-            }
 
-            if (dayName == "Sun") {
-                Log.d("date", "get value: $dayName date :${item.date}")
-                rtlDate.setBackgroundResource(R.drawable.custom_sunday_bg)
-            }
-
-            holder.itemView.setOnClickListener {
-
-                val intent = Intent(context, EmpDayAttendanceRecordActivity::class.java).apply {
-                    putExtra("EMP_ID", employeeId)
-                    putExtra("select_date", item.date)
+                "Absent" -> {
+                    rtlDate.setBackgroundResource(R.drawable.custom_absent_bg)
                 }
-                context.startActivity(intent)
+
+                "Week Off" -> {
+                    rtlDate.setBackgroundResource(R.drawable.custom_weekoff_bg)
+                }
+
+                "Holiday" -> {
+                    rtlDate.setBackgroundResource(R.drawable.custom_holiday_bg)
+                }
+
+                else -> {
+                    rtlDate.setBackgroundResource(R.drawable.custom_date_bg)
+                }
             }
 
-            val storeDate = item.date
-            if (storeDate == getCurrentDate()) {
-                holder.binding.clLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.pastel_red_light2))
+            // 🔹 Click handling (only for valid working days)
+            if (item.isPresent == "Present" || item.isPresent == "Absent") {
+                holder.itemView.setOnClickListener {
+
+                    val intent = Intent(context, EmpDayAttendanceRecordActivity::class.java).apply {
+                        putExtra("EMP_ID", employeeId)
+                        putExtra("select_date", item.date)
+                    }
+
+                    context.startActivity(intent)
+                }
             } else {
-                holder.binding.clLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
+                holder.itemView.setOnClickListener(null)
             }
 
+            // 🔹 Highlight Today
+            if (item.date == getCurrentDate()) {
+                clLayout.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.pastel_red_light2)
+                )
+            } else {
+                clLayout.setBackgroundColor(
+                    ContextCompat.getColor(context, R.color.white)
+                )
+            }
         }
     }
 
-
+    // 🔹 DiffUtil
     class DiffCallback : DiffUtil.ItemCallback<DateItem>() {
         override fun areItemsTheSame(oldItem: DateItem, newItem: DateItem): Boolean {
             return oldItem.date == newItem.date
@@ -149,13 +127,15 @@ class AdapterEmployeeRecord(
         }
     }
 
+    // 🔹 Get current date
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getCurrentDate(): String {
+    private fun getCurrentDate(): String {
         val currentDate = LocalDate.now()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         return currentDate.format(formatter)
     }
 
+    // 🔹 Scroll to current date
     @RequiresApi(Build.VERSION_CODES.O)
     fun getCurrentDatePosition(): Int {
         return currentList.indexOfFirst { it.date == getCurrentDate() }

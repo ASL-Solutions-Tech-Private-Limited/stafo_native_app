@@ -215,8 +215,8 @@
 
 
     <string name="foreground_service_sample_notification_channel_general_name">General notification</string>
-    <string name="foreground_service_sample_notification_title">Live Location Tracking Enabled</string>
-    <string name="foreground_service_sample_notification_description">STAFO app is running in the background.</string>
+    <string name="foreground_service_sample_notification_title">Stafo is Running</string>
+    <string name="foreground_service_sample_notification_description"> We’re tracking for your attendance—don\'t force stop the app.</string>
 
     <string name="foreground_service_sample_description">This sample app demonstrates how to use the foreground service on Android 14.\n\nIt will start a foreground service to fetch last known location and to observe any updates to the location.\n\nIt also shows how to bind to a service to update UI.</string>
 

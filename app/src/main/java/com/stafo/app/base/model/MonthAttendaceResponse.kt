@@ -1,5 +1,7 @@
 package com.stafo.app.base.model
 
+import com.google.gson.annotations.SerializedName
+
 /*data class MonthAttendaceResponse(
     val status: Boolean,
     val message: String,
@@ -36,7 +38,9 @@ data class AttendanceHistory(
 data class MonthAttendaceResponse(
     val status: Boolean,
     val message: String,
-    val data: List<AttendanceHistory>
+    val data: List<AttendanceHistory>?,
+    val holidays: List<Holiday>?,
+    val shifts: List<ShiftAttendance>?,
 )
 
 data class AttendanceHistory(
@@ -54,7 +58,7 @@ data class AttendanceHistory(
     val updated_at: String,
     val branch: AttendBranch,
     val employee: AttendEmployee,
-    val department: Any?
+    val department: Any?,
 )
 
 data class AttendBranch(
@@ -67,7 +71,7 @@ data class AttendBranch(
     val radar: Int,
     val status: Int,
     val created_at: String,
-    val updated_at: String
+    val updated_at: String,
 )
 
 data class AttendEmployee(
@@ -106,5 +110,44 @@ data class AttendEmployee(
     val created_at: String,
     val updated_at: String,
     val shift_id: Int?,
-    val attendance_type: String?
+    val attendance_type: String?,
+)
+
+data class Holiday(
+    val id: Long,
+    @SerializedName("company_id")
+    val companyId: Long,
+    val title: String,
+    val description: String?,
+    @SerializedName("start_date")
+    val startDate: String,
+    @SerializedName("end_date")
+    val endDate: String,
+    @SerializedName("created_at")
+    val createdAt: String?,
+    @SerializedName("updated_at")
+    val updatedAt: String?,
+)
+
+data class ShiftAttendance(
+    val id: Long,
+    @SerializedName("shift_name")
+    val shiftName: String,
+    @SerializedName("start_time")
+    val startTime: String,
+    @SerializedName("end_time")
+    val endTime: String,
+    @SerializedName("company_id")
+    val companyId: Long,
+    @SerializedName("created_at")
+    val createdAt: String,
+    @SerializedName("updated_at")
+    val updatedAt: String,
+    val sunday: Int,
+    val monday: Int,
+    val tuesday: Int,
+    val wednesday: Int,
+    val thursday: Int,
+    val friday: Int,
+    val saturday: Int,
 )
