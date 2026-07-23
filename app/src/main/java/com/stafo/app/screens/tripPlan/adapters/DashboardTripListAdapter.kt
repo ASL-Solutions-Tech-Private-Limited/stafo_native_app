@@ -41,22 +41,22 @@ class DashboardTripListAdapter(
             "Expenses: ${formatAmount(item?.total_expenses?.toDouble() ?: 0.0)}"
         binding.cardRide.background = gradientBackgrounds[position]
         binding.tvStatus.text = item.status ?: "Pending"
-        if (item.status?.toLowerCase(Locale.ROOT) == "completed") {
+        if (item.status?.lowercase(Locale.ROOT) == "completed") {
             binding.tvStatus.backgroundTintList =
                 holder.itemView.resources.getColorStateList(R.color.green)
             binding.ivEdit.visibility = View.GONE
             binding.ivDelete.visibility = View.GONE
-        } else if (item.status?.toLowerCase(Locale.ROOT) == "pending") {
+        } else if (item.status?.lowercase(Locale.ROOT) == "pending") {
             binding.tvStatus.backgroundTintList =
                 holder.itemView.resources.getColorStateList(R.color.pending_colour)
             binding.ivEdit.visibility = View.VISIBLE
             binding.ivDelete.visibility = View.VISIBLE
-        } else if (item.status?.toLowerCase(Locale.ROOT) == "cancelled") {
+        } else if (item.status?.lowercase(Locale.ROOT) == "cancelled") {
             binding.tvStatus.backgroundTintList =
                 holder.itemView.resources.getColorStateList(R.color.pastel_red)
             binding.ivEdit.visibility = View.GONE
             binding.ivDelete.visibility = View.GONE
-        } else if (item.status?.toLowerCase(Locale.ROOT) == "ongoing") {
+        } else if (item.status?.lowercase(Locale.ROOT) == "ongoing") {
             binding.tvStatus.backgroundTintList =
                 holder.itemView.resources.getColorStateList(R.color.xp_blue)
             binding.ivEdit.visibility = View.GONE

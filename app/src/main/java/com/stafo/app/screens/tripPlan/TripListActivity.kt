@@ -19,6 +19,8 @@ import com.stafo.app.utils.CommonDialogListener
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.showCommonAlertDialog
+import java.util.Locale
+import java.util.Locale.getDefault
 
 class TripListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTripListBinding
@@ -50,7 +52,7 @@ class TripListActivity : AppCompatActivity() {
 
         binding.btnFilter.setOnClickListener {
             showSearchDialog(filterType, "Select Filter Type") {
-                mFlag = it.title.toLowerCase().replace(" ", "").trim()
+                mFlag = it.title.lowercase(getDefault()).replace(" ", "").trim()
                 mTripViewModel.getTripList(this)
             }
         }

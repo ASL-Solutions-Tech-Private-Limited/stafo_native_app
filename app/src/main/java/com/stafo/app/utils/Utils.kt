@@ -23,7 +23,6 @@ import android.graphics.Paint
 import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.location.LocationManager
 import android.net.ConnectivityManager
@@ -64,7 +63,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -72,7 +70,6 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
-import com.stafo.app.screens.auth.LoginWithOTPActivity
 import com.google.gson.Gson
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -84,6 +81,8 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.orhanobut.hawk.Hawk
 import com.stafo.app.R
 import com.stafo.app.base.EndOfDaySyncWorker
+import com.stafo.app.base.model.Holiday
+import com.stafo.app.base.model.ShiftAttendance
 import com.stafo.app.screens.ui.SplashActivity
 import com.trackier.sdk.TrackierEvent
 import com.trackier.sdk.TrackierSDK.trackEvent
@@ -104,11 +103,10 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
@@ -2094,5 +2092,35 @@ fun getExpenseIcon(type: String): String {
 }
 
 
+fun isWeekOff(date: LocalDate, shift: ShiftAttendance?): Boolean {
 
+    // 🔒 If shift is null → assume NO week off (or change based on your business rule)
+    shift ?: return false
+
+    return when (date.dayOfWeek) {
+        DayOfWeek.SUNDAY -> shift.sunday == 0
+        DayOfWeek.MONDAY -> shift.monday == 0
+        DayOfWeek.TUESDAY -> shift.tuesday == 0
+        DayOfWeek.WEDNESDAY -> shift.wednesday == 0
+        DayOfWeek.THURSDAY -> shift.thursday == 0
+        DayOfWeek.FRIDAY -> shift.friday == 0
+        DayOfWeek.SATURDAY -> shift.saturday == 0
+    }
+}
+
+fun prepareHolidaySet(holidayList: List<Holiday>): Set<String> {
+    val holidaySet = mutableSetOf<String>()
+
+    holidayList.forEach { holiday ->
+        var date = LocalDate.parse(holiday.startDate)
+        val end = LocalDate.parse(holiday.endDate)
+
+        while (!date.isAfter(end)) {
+            holidaySet.add(date.toString())
+            date = date.plusDays(1)
+        }
+    }
+
+    return holidaySet
+}
 

@@ -1,6 +1,7 @@
 package com.stafo.app.base.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,8 +45,9 @@ class AdapterHoliday (
                  binding.txtHolidayName.text = this.title
                  binding.txtHolidayDay.text = formatDay(this.start_date)
                  binding.txtHolidayDate.text = formatDate(this.start_date)
+                 binding.txtHolidayDate.text = formatDate(this.start_date)
                  binding.txtHolidayMonth.text = formatMonthDate(this.start_date)
-
+                 Log.e("TAG", "onBindViewHolder: ${formatDate(this.start_date)}", )
                  if (isEmp)
                      binding.itemDelete.visibility = View.GONE
                  else binding.itemDelete.visibility = View.VISIBLE

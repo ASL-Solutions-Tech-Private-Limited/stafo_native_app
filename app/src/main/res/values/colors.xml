@@ -60,6 +60,7 @@
     <color name="status_completed">#0ACF83</color>
     <color name="status_overdue">#FF5C5C</color>
     <color name="steel_blue">#90D5FF</color>
+    <color name="holiday">#FFF3E0</color>
     <color name="emerald_green">#0AAA40</color>
     <color name="green">#008000</color>
 </resources>

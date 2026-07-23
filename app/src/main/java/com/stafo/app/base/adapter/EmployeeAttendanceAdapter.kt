@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.gson.Gson
 import com.stafo.app.R
 import com.stafo.app.databinding.ItemEmpAttendaceLayoutBinding
 import com.stafo.app.screens.emp.EditAttendanceActivity
@@ -112,8 +113,6 @@ class EmployeeAttendanceAdapter(
 
                     }
                 } else {
-
-
                     if (selectDate == today) {
                         binding.ivUpdateAttendance.visibility = View.GONE
                     }
@@ -135,6 +134,7 @@ class EmployeeAttendanceAdapter(
                     val intent =
                         Intent(context, EmployeeAttendanceRecordActivity::class.java).apply {
                             putExtra("EMP_ID", employeeId.toString())
+                            putExtra("EmployeeDetails", Gson().toJson(attendList[position]))
                         }
 
                     context.startActivity(intent)

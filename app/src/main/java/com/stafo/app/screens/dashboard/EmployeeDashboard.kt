@@ -1,8 +1,6 @@
 package com.stafo.app.screens.dashboard
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.ActivityManager
 import android.app.KeyguardManager
 import android.app.Service
@@ -11,9 +9,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.RenderEffect
-import android.graphics.Shader
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -21,13 +16,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.renderscript.Allocation
-import android.renderscript.Element
-import android.renderscript.RenderScript
-import android.renderscript.ScriptIntrinsicBlur
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -56,8 +46,10 @@ import com.stafo.app.base.adapter.AdapterWishList
 import com.stafo.app.base.adapter.SliderAdapter
 import com.stafo.app.base.model.ActionModel
 import com.stafo.app.base.model.DashboardWish
+import com.stafo.app.base.model.EmployeeDashboardResponse
 import com.stafo.app.base.model.EmployeeInfo
 import com.stafo.app.base.model.FullScreenDialog
+import com.stafo.app.base.model.Punch
 import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmpDashboardBinding
 import com.stafo.app.databinding.CustomBottomSheetAttendanceLayoutBinding
@@ -71,7 +63,6 @@ import com.stafo.app.screens.emp.EmployeePunchInActivity
 import com.stafo.app.screens.emp.QRCodeAttendanceEmpActivity
 import com.stafo.app.screens.expense.ExpenseDashboardActivity
 import com.stafo.app.screens.notification.NotificationActivity
-import com.stafo.app.screens.payroll.SalarySlipActivity
 import com.stafo.app.screens.settings.HolidayActivity
 import com.stafo.app.screens.settings.LeaveRequestHistoryActivity
 import com.stafo.app.screens.settings.PolicyActivity
@@ -395,8 +386,6 @@ class EmployeeDashboard : AppCompatActivity() {
 
                 if (binding.btnPunchIn.text == "Punch Out") {
                     binding.btnPunchIn.isEnabled = true
-
-
                     val builder = AlertDialog.Builder(this@EmployeeDashboard)
                     builder.setTitle(R.string.app_name)
                     builder.setMessage("Are you sure? You want to punch out!")
@@ -512,15 +501,11 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
     private fun observeViewModel() {
-
-
-        settingsViewModel.mEmployeeDashboardResponse.observe(this) {
+        /*settingsViewModel.mEmployeeDashboardResponse.observe(this) {
             if (it.status) {
                 mEmplyeeInfo = it.employeeInfo
                 setEmployeeComId(it.employeeInfo.companyId.toString())
                 setEmployeeBranchId(it.employeeInfo.branchId.toString())
-
-
                 it.employeeInfo.shifts.firstOrNull()?.let { shift ->
                     val startTime12Hr = convertTo12HourFormat(shift.startTime)
                     val endTime12Hr = convertTo12HourFormat(shift.endTime)
@@ -532,7 +517,6 @@ class EmployeeDashboard : AppCompatActivity() {
                 }
 
                 if (it.employeeInfo.geoStatus != null && it.employeeInfo.geoStatus == "0") {
-
                     val builder = AlertDialog.Builder(this)
                     builder.setTitle(R.string.app_name)
                     builder.setMessage("Your admin has requested to track your live location. Do you accept?")
@@ -557,11 +541,7 @@ class EmployeeDashboard : AppCompatActivity() {
                     dialog.show()
 
                 }
-
-
-
                 wishList.clear()
-
                 if (!it.employeeInfo.punches.isNullOrEmpty()) {
                     val todayDate =
                         SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
@@ -578,10 +558,7 @@ class EmployeeDashboard : AppCompatActivity() {
                     Log.e("trackLocation", "shift time : ${shiftEndTime}")
 
                     if (punchesToday.isNotEmpty()) {
-                        val ongoingPunch =
-                            punchesToday.lastOrNull { punch -> punch.punchIn != null && punch.punchOut == null }
-
-
+                        val ongoingPunch = punchesToday.lastOrNull { punch -> punch.punchIn != null && punch.punchOut == null }
                         if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo") {
                             if (ongoingPunch != null) {
                                 checkExactAlarmPermission(this) { exactAlarmGranted ->
@@ -901,6 +878,24 @@ class EmployeeDashboard : AppCompatActivity() {
                 binding.rvLeaves.visibility = View.GONE
                 binding.llLeaves.visibility = View.VISIBLE
             }
+        }*/
+
+        settingsViewModel.mEmployeeDashboardResponse.observe(this) { response ->
+
+            if (!response.status) return@observe
+
+            val employee = response.employeeInfo
+            mEmplyeeInfo = employee
+
+            setEmployeeComId(employee.companyId.toString())
+            setEmployeeBranchId(employee.branchId.toString())
+
+            setupOfficeTiming(employee)
+            handleGeoPermission(employee)
+            handleAttendance(employee)
+
+            setupWishList(response)
+            setupLeaves(response)
         }
 
 
@@ -957,9 +952,231 @@ class EmployeeDashboard : AppCompatActivity() {
     }
 
 
+    private fun setupOfficeTiming(employee: EmployeeInfo) {
+        val shift = employee.shifts.firstOrNull()
+
+        binding.tvOfficeTiming.text = if (shift != null) {
+            val start = convertTo12HourFormat(shift.startTime)
+            val end = convertTo12HourFormat(shift.endTime)
+            "Your Office timing is $start to $end"
+        } else {
+            "Your Office timing is 10 AM to 8 PM"
+        }
+    }
+
+    private fun handleGeoPermission(employee: EmployeeInfo) {
+        if (employee.geoStatus == "0") {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.app_name)
+                .setMessage("Your admin has requested to track your live location. Do you accept?")
+                .setPositiveButton("Accept") { dialog, _ ->
+                    sendGeoRequest("1")
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Reject") { dialog, _ ->
+                    sendGeoRequest("2")
+                    dialog.dismiss()
+                }
+                .show()
+        }
+    }
+
+    private fun sendGeoRequest(status: String) {
+        settingsViewModel.sendGeoLocationRequest(
+            this,
+            getEmployeeDetails()?.id.toString(),
+            status
+        )
+    }
+
     private fun startLocationServiceIfNotRunning() {
         if (!isServiceRunning(LocationForegroundService::class.java)) {
             startService(Intent(this, LocationForegroundService::class.java))
+        }
+    }
+
+    private fun handleAttendance(employee: EmployeeInfo) {
+
+        val punches = employee.punches ?: emptyList()
+
+        if (punches.isEmpty()) {
+            updateUIForPunchIn("")
+            stopTracking()
+            return
+        }
+
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+        val punchesToday = punches.filter {
+            it.punchIn?.startsWith(today) == true
+        }
+
+        if (punchesToday.isEmpty()) {
+            updateUIForPunchIn(punches?.get(0)?.punchIn ?: "")
+            stopTracking()
+            return
+        }
+
+        val ongoingPunch = punchesToday.lastOrNull {
+            it.punchIn != null && it.punchOut == null
+        }
+
+        val lastPunch = punchesToday.lastOrNull()
+        val shiftEndTime = employee.shifts.firstOrNull()?.endTime
+        val geoStatus = employee.geoStatus
+
+        if (ongoingPunch != null) {
+            handleOngoingPunch(ongoingPunch, employee, shiftEndTime, geoStatus)
+        } else {
+            handleCompletedPunch(lastPunch, shiftEndTime)
+        }
+    }
+
+    private fun handleOngoingPunch(
+        punch: Punch,
+        employee: EmployeeInfo,
+        shiftEndTime: String?,
+        geoStatus: String?,
+    ) {
+
+        updateUIForPunchIn(punch.punchIn!!)
+
+        val shouldTrack =
+            employee.attendance_type == "geo" || geoStatus == "1"
+
+        if (shouldTrack) {
+            startTrackingWithPermissions {
+                if (isShiftEnded(shiftEndTime)) {
+                    stopTracking()
+                }
+            }
+        } else {
+            stopTracking()
+        }
+    }
+
+    private fun handleCompletedPunch(lastPunch: Punch?, shiftEndTime: String?) {
+
+        val punchOut = lastPunch?.punchOut
+
+        if (punchOut != null) {
+            updateUIForPunchOut(punchOut)
+            stopTracking()
+        } else {
+            updateUIForPunchIn(punchOut ?: "")
+
+            if (isShiftEnded(shiftEndTime)) {
+                stopTracking()
+            }
+        }
+    }
+
+    private fun isShiftEnded(shiftEndTime: String?): Boolean {
+
+        val now = Calendar.getInstance()
+
+        val end = shiftEndTime?.let {
+            try {
+                SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(it)
+            } catch (e: Exception) {
+                try {
+                    SimpleDateFormat("HH:mm", Locale.getDefault()).parse(it)
+                } catch (ex: Exception) {
+                    null
+                }
+            }
+        }
+
+        if (end != null) {
+            val endCal = Calendar.getInstance().apply { time = end }
+
+            val shiftEndCal = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, endCal.get(Calendar.HOUR_OF_DAY))
+                set(Calendar.MINUTE, endCal.get(Calendar.MINUTE))
+                set(Calendar.SECOND, 0)
+            }
+
+            return now.after(shiftEndCal)
+        }
+
+        // fallback → 9 PM
+        return now.get(Calendar.HOUR_OF_DAY) == 21 &&
+                now.get(Calendar.MINUTE) == 0
+    }
+
+
+    private fun startTrackingWithPermissions(onReady: () -> Unit) {
+        checkExactAlarmPermission(this) { alarmGranted ->
+            if (!alarmGranted) return@checkExactAlarmPermission
+
+            requestIgnoreBatteryOptimization(this) { batteryGranted ->
+                if (!batteryGranted) return@requestIgnoreBatteryOptimization
+
+                if (!isTrip) {
+                    startLocationServiceIfNotRunning()
+                }
+
+                onReady()
+            }
+        }
+    }
+
+    private fun stopTracking() {
+        if (!isTrip) {
+            stopLocationServiceIfRunning()
+        }
+    }
+
+    private fun setupWishList(response: EmployeeDashboardResponse) {
+
+        wishList.clear()
+
+        response.birthday?.forEach {
+            wishList.add(
+                DashboardWish(
+                    it.id, it.emp_id, it.date_of_birth ?: "",
+                    it.name, it.email, it.phone, it.image,
+                    "Birthday", ""
+                )
+            )
+        }
+
+        response.annyversary?.forEach {
+            wishList.add(
+                DashboardWish(
+                    it.id, it.emp_id, "",
+                    it.name, it.email, it.phone,
+                    it.image ?: "", "Anniversary",
+                    it.date_of_joining
+                )
+            )
+        }
+
+        if (wishList.isNotEmpty()) {
+            binding.llNoWishes.visibility = View.GONE
+            binding.rvWishes.visibility = View.VISIBLE
+            binding.rvWishes.adapter = AdapterWishList(wishList, this)
+        } else {
+            binding.llNoWishes.visibility = View.VISIBLE
+            binding.rvWishes.visibility = View.GONE
+        }
+    }
+
+    private fun setupLeaves(response: EmployeeDashboardResponse) {
+
+        val leaves = response.employeesOnLeave
+
+        if (!leaves.isNullOrEmpty()) {
+            binding.rvLeaves.visibility = View.VISIBLE
+            binding.llLeaves.visibility = View.GONE
+
+            binding.rvLeaves.layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+            binding.rvLeaves.adapter = AdapterOnLeave(leaves, this)
+        } else {
+            binding.rvLeaves.visibility = View.GONE
+            binding.llLeaves.visibility = View.VISIBLE
         }
     }
 
@@ -978,18 +1195,23 @@ class EmployeeDashboard : AppCompatActivity() {
 
 
     private fun updateUIForPunchIn(punchInTime: String) {
-        runOnUiThread {
-            binding.btnPunchIn.text = "Punch Out"
-            binding.btnPunchIn.isEnabled = true
-            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-            binding.tvOfficeTiming.text = "Punched In At ${
-                getFormattedDate2(
-                    punchInTime,
-                    listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd HH:mm:ss"),
-                    "hh:mm a dd MMM yyyy"
-                )
-            }"
+
+        binding.btnPunchIn.apply {
+            text = "Punch Out"
+            isEnabled = true
+            setBackgroundResource(R.drawable.button_background)
         }
+
+        val formattedTime = getFormattedDate2(
+            punchInTime,
+            listOf(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                "yyyy-MM-dd HH:mm:ss"
+            ),
+            "hh:mm a dd MMM yyyy"
+        )
+
+        binding.tvOfficeTiming.text = "Punched In At $formattedTime"
     }
 
     private fun updateUIForPunchOut(punchOutTime: String) {

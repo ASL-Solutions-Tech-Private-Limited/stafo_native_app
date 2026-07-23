@@ -51,7 +51,7 @@ class NewDeviceRegisterActivity : AppCompatActivity() {
                 binding?.btnRequestRegister?.isEnabled = false
                 binding?.btnRequestRegister?.alpha = .5f
                 binding?.btnRequestRegister?.text = "Pending"
-                binding?.txtAdmin?.text = "Your request is pending"
+                binding?.txtAdmin?.text = "Your request is pending.\nIf Approved please relogin"
                 CustomToast(this,it.message)
             }else{
                 CustomToast(this,it.message)

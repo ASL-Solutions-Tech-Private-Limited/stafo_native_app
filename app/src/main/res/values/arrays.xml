@@ -107,4 +107,16 @@
         <item>Graphic Designer</item>
         <item>UI/UX Designer</item>
     </string-array>
+
+    <string-array name="attendance_type">
+        <item>Select Attendance</item>
+        <item>Present</item>
+        <item>Absent</item>
+        <item>Half Day</item>
+        <item>Leave</item>
+    </string-array>
+    <string-array name="request_attendance_com">
+        <item>Request Attendance</item>
+        <item>Edit Attendance</item>
+    </string-array>
 </resources>

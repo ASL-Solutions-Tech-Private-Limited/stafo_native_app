@@ -21,6 +21,7 @@ import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getIsCOMPANYLogin
 import com.stafo.app.utils.showCommonAlertDialog
+import java.util.Locale
 
 class VehicleListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityVehicleListBinding
@@ -56,7 +57,7 @@ class VehicleListActivity : AppCompatActivity() {
 
         binding.btnFilter.setOnClickListener {
             showSearchDialog(filterType, "Select Filter Type") {
-                mFlag = it.title.toLowerCase().replace(" ", "").trim()
+                mFlag = it.title.lowercase(Locale.ROOT).replace(" ", "").trim()
                 mTripViewModel.getVehicleList(this)
             }
         }

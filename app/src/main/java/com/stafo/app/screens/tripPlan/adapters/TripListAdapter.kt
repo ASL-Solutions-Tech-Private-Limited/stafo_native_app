@@ -43,7 +43,7 @@ class TripListAdapter(
             "Expenses: ${formatAmount(item.total_expenses?.toDouble() ?: 0.0)}"
         binding.cardRide.background = gradientBackgrounds[position]
         binding.tvStatus.text = item.status ?: "Pending"
-        when (item.status?.toLowerCase(Locale.ROOT)) {
+        when (item.status?.lowercase(Locale.ROOT)) {
             "completed" -> {
                 binding.tvStatus.backgroundTintList =
                     holder.itemView.resources.getColorStateList(R.color.green)

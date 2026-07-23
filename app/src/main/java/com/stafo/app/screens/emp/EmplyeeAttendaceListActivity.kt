@@ -148,26 +148,16 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
 
 
     private fun observeViewModel() {
-
-
         settingsViewModel.getLoaderLiveData().observe(this) { handleLoader(it) }
-
         settingsViewModel.mEmployeeListResponse.observe(this) {
             Log.d("res", "token ${getUserAccessToken()}")
             if (it.status) {
-
-
                 if (it.data.isNotEmpty()) {
                     binding.txtMsg.visibility = View.GONE
-
                     binding.etDirSearch.isFocusable = true
                     binding.etDirSearch.isFocusableInTouchMode = true
-
-
                     attendList=it.data
                     filteredList=attendList
-
-
                     val layoutManager: RecyclerView.LayoutManager =
                         LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
                     binding.rvEmpAttendList.setLayoutManager(layoutManager)
@@ -179,8 +169,6 @@ class EmplyeeAttendaceListActivity : AppCompatActivity() {
                     binding.etDirSearch.isFocusableInTouchMode = false
                     binding.txtMsg.visibility = View.VISIBLE
                 }
-
-
 
 
                /* if (it.data.isNotEmpty()) {

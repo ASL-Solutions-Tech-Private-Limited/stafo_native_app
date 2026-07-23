@@ -123,8 +123,6 @@ object ApiClient {
                     Log.e("AuthDebug", "oldDevice: $oldDevice  currentDevice: $currentDevice")
 
                     if (response.code == 401) {
-
-
                         Handler(Looper.getMainLooper()).post {
                             CustomToast(context,"Session expired. Please log in again.")
                         }
