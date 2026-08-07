@@ -72,6 +72,7 @@
 
     <string-array name="request_attendance_com">
         <item>Request Attendance</item>
+        <item>Edit Attendance</item>
         <item>History</item>
     </string-array>
     <string-array name="emp_leave">
@@ -103,12 +104,7 @@
         <item>Leave Reports</item>
     </string-array>
 
-    <string-array name="attendance_type">
-        <item>Select Attendance Type</item>
-        <item>Present</item>
-        <item>Absent</item>
-        <item>Leave</item>
-    </string-array>
+
 
     <string-array name="position_type">
         <item>Junior Software Developer</item>
@@ -131,8 +127,5 @@
         <item>Half Day</item>
         <item>Leave</item>
     </string-array>
-    <string-array name="request_attendance_com">
-        <item>Request Attendance</item>
-        <item>Edit Attendance</item>
-    </string-array>
+
 </resources>

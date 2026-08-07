@@ -16,13 +16,13 @@ import com.stafo.app.utils.isPromoExpired
 class PromoCodeAdapter(private val context: Context, private val items: List<DataPromo>) :
     RecyclerView.Adapter<PromoCodeAdapter.PromoViewHolder>() {
 
-    inner class PromoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val label = view.findViewById<TextView>(R.id.labelText)
-        val labelContainer = view.findViewById<LinearLayout>(R.id.label_container)
-        val code = view.findViewById<TextView>(R.id.code)
-        val offerLine = view.findViewById<TextView>(R.id.offerLine)
-        val desc = view.findViewById<TextView>(R.id.offerDesc)
-        val apply = view.findViewById<TextView>(R.id.apply)
+    class PromoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val label: TextView = view.findViewById(R.id.labelText)
+        val labelContainer: LinearLayout = view.findViewById(R.id.label_container)
+        val code: TextView = view.findViewById(R.id.code)
+        val offerLine: TextView = view.findViewById(R.id.offerLine)
+        val desc: TextView = view.findViewById(R.id.offerDesc)
+        val apply: TextView = view.findViewById(R.id.apply)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PromoViewHolder {
@@ -34,38 +34,36 @@ class PromoCodeAdapter(private val context: Context, private val items: List<Dat
     override fun onBindViewHolder(holder: PromoViewHolder, position: Int) {
         val item = items[position]
         holder.label.text = "₹${item.cashback} OFF"
-        holder.labelContainer.background =
-            if (isPromoExpired(item.expiresAt ?: "")) ContextCompat.getDrawable(
-                holder.itemView.context,
-                R.drawable.bg_label_red
-            ) else ContextCompat.getDrawable(holder.itemView.context, R.drawable.bg_label_gray)
+        
+        val expired = isPromoExpired(item.expiresAt ?: "")
 
+        holder.labelContainer.background = ContextCompat.getDrawable(
+            holder.itemView.context,
+            if (expired) R.drawable.bg_label_gray else R.drawable.bg_label_red,
+        )
 
-        if (isPromoExpired(item.expiresAt ?: "")) {
-            ContextCompat.getDrawable(
-                holder.itemView.context,
-                R.drawable.bg_label_red
-            )
-            holder.apply.visibility = View.VISIBLE
-            holder.apply.text = "COPY"
-            holder.apply.isClickable = true
-            holder.apply.isFocusable = true
-            holder.apply.alpha = 1f
-        } else {
-            ContextCompat.getDrawable(holder.itemView.context, R.drawable.bg_label_gray)
+        if (expired) {
             holder.apply.visibility = View.VISIBLE
             holder.apply.text = "Expired"
             holder.apply.isClickable = false
             holder.apply.isFocusable = false
             holder.apply.alpha = .5f
+        } else {
+            holder.apply.visibility = View.VISIBLE
+            holder.apply.text = "COPY"
+            holder.apply.isClickable = true
+            holder.apply.isFocusable = true
+            holder.apply.alpha = 1f
         }
 
         holder.code.text = item.code
         holder.offerLine.text = item.applicable
         holder.desc.text =
-            "${item.type?.toUpperCase()} ₹${item.cashback} off on ${item.applicable?.toUpperCase()}.Maximum ₹${item.maxAmount}"
+            "${item.type?.uppercase()} ₹${item.cashback} off on ${item.applicable?.uppercase()}.Maximum ₹${item.maxAmount}"
         holder.apply.setOnClickListener {
-            copyTextFromTextView(context, holder.code)
+            if (!expired) {
+                copyTextFromTextView(context, holder.code)
+            }
         }
     }
 

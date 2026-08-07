@@ -132,6 +132,11 @@ import com.stafo.app.screens.settings.dataClass.InActiveEmpResponse
 import com.stafo.app.screens.settings.dataClass.JobTitleResponse
 import com.stafo.app.screens.settings.dataClass.LeaveRequestBody
 import com.stafo.app.screens.settings.dataClass.LeaveResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeDeleteResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeListResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeRequest
+import com.stafo.app.screens.settings.dataClass.LeaveTypeResponse
+import com.stafo.app.screens.settings.dataClass.LeaveTypeUpdateResponse
 import com.stafo.app.screens.settings.dataClass.LocationLogRequest
 import com.stafo.app.screens.settings.dataClass.LocationLogResponse
 import com.stafo.app.screens.settings.dataClass.OnLeaveResponse

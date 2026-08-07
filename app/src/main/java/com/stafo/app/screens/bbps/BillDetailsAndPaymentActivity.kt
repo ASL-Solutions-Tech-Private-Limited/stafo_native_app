@@ -33,6 +33,7 @@ import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getIsEMPLogin
 import org.json.JSONObject
 import java.security.MessageDigest
+import java.util.Locale
 
 class BillDetailsAndPaymentActivity : AppCompatActivity() {
     private val TAG = "BillDetailsAndPaymentActivity"
@@ -155,7 +156,7 @@ class BillDetailsAndPaymentActivity : AppCompatActivity() {
                         val label = prop.name.split("(?=[A-Z])".toRegex())
                             .joinToString(" ") { it.replaceFirstChar(Char::uppercaseChar) }
 
-                        if (prop.name.toLowerCase().contains("balance")) {
+                        if (prop.name.lowercase(Locale.ROOT).contains("balance")) {
                             val label = "Balance"
                             val value =
                                 rawValue.toLongOrNull()?.let { "%.2f".format(it) } ?: rawValue

@@ -14,7 +14,6 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.stafo.app.databinding.ItemDynamicInputBinding
 import com.stafo.app.screens.bbps.dataClasses.BillerDetailsResponse
-import com.stafo.app.utils.getInputTypeUtil
 import org.json.JSONObject
 
 class DynamicInputAdapter(

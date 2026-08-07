@@ -25,9 +25,6 @@ class BBPSDashboard : AppCompatActivity() {
     private lateinit var bannerAdapter: BannerAdapterBBPS
     private val bannerHandler = Handler(Looper.getMainLooper())
     private var bannerRunnable: Runnable? = null
-    private val bbpsViewModel: BBPSViewModel by lazy {
-        BBPSViewModel()
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -126,13 +123,19 @@ class BBPSDashboard : AppCompatActivity() {
             startActivity(Intent(this, BBPSBillerListActivity::class.java))
         }
         binding.ivBack.setOnClickListener { finish() }
-        binding?.apply {
+        binding.apply {
             tvZeroConvenienceFee.text = "Salary Calculation"
             tvZeroConvenienceFeeDesc.text = "Automated, error-free payroll linked to attendance."
             tvNewInsurancePremium.text = "NEW:Geo Location Tracking"
             tvNewInsurancePremiumDesc.text = "Live tracking for field staff with complete history."
-            Glide.with(ivProfile).load(getCompanyDetails()?.companyName ?: "")
-                .placeholder(R.drawable.ic_bbps_ic).into(ivProfile)
+            
+            val companyName = getCompanyDetails()?.companyName ?: "ASL"
+            val profileBitmap = com.stafo.app.utils.generateTextBitmap(companyName)
+            
+            Glide.with(ivProfile)
+                .load(profileBitmap)
+                .placeholder(R.drawable.ic_bbps_ic)
+                .into(ivProfile)
 
             tvViewProfile.setOnClickListener {
                 startActivity(

@@ -7,6 +7,8 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Context.BATTERY_SERVICE
@@ -950,6 +952,17 @@ inline fun <reified T> String.fromJsonToModel(): T? {
 
 val aadhaarPattern = "^[2-9]{1}[0-9]{11}$".toRegex()
 
+fun jsonObjectToMap(jsonObject: JSONObject): Map<String, Any> {
+    val map = mutableMapOf<String, Any>()
+    val keys = jsonObject.keys()
+    while (keys.hasNext()) {
+        val key = keys.next()
+        val value = jsonObject.get(key)
+        map[key] = value
+    }
+    return map
+}
+
 fun isAadhaarValid(aadhaar: String): Boolean {
     return aadhaarPattern.matches(aadhaar)
 }
@@ -1828,19 +1841,18 @@ fun formatUtcTo12HourLocalTimeLegacy(utcTime: String): String {
         " "
     }
 }
-fun generateGradientDrawables(count: Int): List<GradientDrawable> {
-    val gradientList = mutableListOf<GradientDrawable>()
+val gradientList = listOf(
+    intArrayOf(Color.parseColor("#FF5F6D"), Color.parseColor("#FFC371")),  // red-orange
+    intArrayOf(Color.parseColor("#36D1DC"), Color.parseColor("#5B86E5")),  // cyan-blue
+    intArrayOf(Color.parseColor("#FFB75E"), Color.parseColor("#ED8F03")),  // orange
+    intArrayOf(Color.parseColor("#11998e"), Color.parseColor("#38ef7d")),  // green-teal
+    intArrayOf(Color.parseColor("#7F00FF"), Color.parseColor("#E100FF")),  // purple
+    intArrayOf(Color.parseColor("#FC466B"), Color.parseColor("#3F5EFB")),  // red-blue
+    intArrayOf(Color.parseColor("#f7971e"), Color.parseColor("#ffd200"))   // amber-yellow
+)
 
-    // Safe color combinations that work well with white text
-    val gradientColorPairs = listOf(
-        intArrayOf(Color.parseColor("#FF5F6D"), Color.parseColor("#FFC371")),  // red-orange
-        intArrayOf(Color.parseColor("#36D1DC"), Color.parseColor("#5B86E5")),  // cyan-blue
-        intArrayOf(Color.parseColor("#FFB75E"), Color.parseColor("#ED8F03")),  // orange
-        intArrayOf(Color.parseColor("#11998e"), Color.parseColor("#38ef7d")),  // green-teal
-        intArrayOf(Color.parseColor("#7F00FF"), Color.parseColor("#E100FF")),  // purple
-        intArrayOf(Color.parseColor("#FC466B"), Color.parseColor("#3F5EFB")),  // red-blue
-        intArrayOf(Color.parseColor("#f7971e"), Color.parseColor("#ffd200"))   // amber-yellow
-    )
+fun generateGradientDrawables(count: Int): List<GradientDrawable> {
+    val drawables = mutableListOf<GradientDrawable>()
 
     val orientations = listOf(
         GradientDrawable.Orientation.LEFT_RIGHT,
@@ -1849,17 +1861,17 @@ fun generateGradientDrawables(count: Int): List<GradientDrawable> {
     )
 
     repeat(count) {
-        val colors = gradientColorPairs.random()
+        val colors = gradientList.random()
         val orientation = orientations.random()
 
         val gradient = GradientDrawable(orientation, colors).apply {
             cornerRadius = 32f
         }
 
-        gradientList.add(gradient)
+        drawables.add(gradient)
     }
 
-    return gradientList
+    return drawables
 }
 
 
@@ -2126,5 +2138,24 @@ fun prepareHolidaySet(holidayList: List<Holiday>): Set<String> {
     }
 
     return holidaySet
+}
+
+fun copyTextFromTextView(context: Context, textView: TextView) {
+    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText("Promo Code", textView.text)
+    clipboard.setPrimaryClip(clip)
+    Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+}
+
+fun isPromoExpired(expiresAt: String): Boolean {
+    if (expiresAt.isBlank()) return true
+    return try {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val expiryDate = sdf.parse(expiresAt)
+        val currentDate = Date()
+        expiryDate?.before(currentDate) ?: true
+    } catch (e: Exception) {
+        true
+    }
 }
 
