@@ -78,7 +78,6 @@ class LocationForegroundService : Service() {
             startAsForegroundService()
             startLocationUpdates()
             startRecurringTimer()
-            scheduleServiceRestart()
         } else {
             Log.e(TAG, "Location permission not granted.")
             Toast.makeText(this, "Location permission not granted.", Toast.LENGTH_SHORT).show()
@@ -90,45 +89,7 @@ class LocationForegroundService : Service() {
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
-        Log.d(TAG, "onTaskRemoved called, scheduling restart alarm")
-
-        val intent = Intent(applicationContext, UpdateReceiver::class.java).apply {
-            action = "RESTART_SERVICE"
-        }
-
-        val alarmIntent = PendingIntent.getBroadcast(
-            applicationContext,
-            1234,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (alarmManager.canScheduleExactAlarms()) {
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                        SystemClock.elapsedRealtime() + 5000,
-                        alarmIntent
-                    )
-                    Log.d(TAG, "Exact alarm scheduled")
-                } else {
-                    Log.w(TAG, "Exact alarm permission not granted. Redirect user to settings if necessary.")
-
-                    // Optionally, guide the user to Settings to grant this permission
-                }
-            } else {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime() + 5000,
-                    alarmIntent
-                )
-            }
-        } catch (e: SecurityException) {
-            Log.e(TAG, "SecurityException while scheduling alarm: ${e.message}")
-        }
+        Log.d(TAG, "onTaskRemoved called. Service will rely on START_STICKY to restart if needed.")
     }
 
 
@@ -142,8 +103,6 @@ class LocationForegroundService : Service() {
         coroutineScope.cancel()
         timerJob?.cancel()
 
-        cancelServiceRestartAlarm()
-
         try {
             stopForeground(true)
         } catch (e: Exception) {
@@ -153,16 +112,7 @@ class LocationForegroundService : Service() {
         stopSelf()
     }
 
-    private fun cancelServiceRestartAlarm() {
-        val intent = Intent(applicationContext, LocationForegroundService::class.java)
-        val pendingIntent = PendingIntent.getService(
-            applicationContext, 0, intent, PendingIntent.FLAG_IMMUTABLE
-        )
 
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.cancel(pendingIntent)
-        Log.d(TAG, "Cancelled repeating restart alarm.")
-    }
 
 
     override fun onDestroy() {
@@ -176,75 +126,11 @@ class LocationForegroundService : Service() {
         // no stopSelf() here!
     }
 
-    private fun scheduleServiceRestart() {
-        val intent = Intent(applicationContext, LocationForegroundService::class.java)
-        val pendingIntent = PendingIntent.getService(
-            applicationContext,
-            0,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
-        )
 
-        if (pendingIntent != null) {
-            Log.d(TAG, "Restart alarm already scheduled, skipping.")
-            return
-        }
-
-        val newPendingIntent = PendingIntent.getService(
-            applicationContext,
-            0,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setRepeating(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            SystemClock.elapsedRealtime() + 5000,
-            5000,
-            newPendingIntent
-        )
-        Log.d(TAG, "Restart alarm scheduled.")
-    }
 
 
     private fun startAsForegroundService() {
-
-       /* val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val existingNotification = notificationManager.activeNotifications.find {
-            it.id == NOTIFICATION_ID
-        }
-
-
-        val notification = if (existingNotification == null) {
-            NotificationsHelper.buildNotification(this)
-        } else {
-            NotificationCompat.Builder(this, NotificationsHelper.NOTIFICATION_CHANNEL_ID)
-                .setContentTitle("").setContentText("").setSmallIcon(R.drawable.ic_notification)
-                .build()
-        }*/
-
-        if (hasNotificationShown) {
-            return
-        }
-
         val notification = NotificationsHelper.buildNotification(this)
-
-        ServiceCompat.startForeground(
-            this,
-            NOTIFICATION_ID,
-            notification,
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
-            } else {
-                0
-            }
-        )
-
-        hasNotificationShown = true
-
-
 
         ServiceCompat.startForeground(
             this,
@@ -474,8 +360,7 @@ class LocationForegroundService : Service() {
     companion object {
         private const val TAG = "LocationForegroundService"
         private const val NOTIFICATION_ID = 1
-        private val LOCATION_UPDATES_INTERVAL_MS = 1.seconds.inWholeMilliseconds
-        private var hasNotificationShown = false
+        private val LOCATION_UPDATES_INTERVAL_MS = 15.seconds.inWholeMilliseconds
     }
 }
 

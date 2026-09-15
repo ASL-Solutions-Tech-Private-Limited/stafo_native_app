@@ -24,6 +24,7 @@ import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeDetails
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -222,17 +223,29 @@ class EmployeePunchInActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     private fun enableMyLocation() {
+        val fineLocationGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val coarseLocationGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
+        if (fineLocationGranted || coarseLocationGranted) {
+            try {
+                mMap.isMyLocationEnabled = true
+            } catch (e: SecurityException) {
+                Log.e("LocationError", "Security exception: ${e.message}")
+            }
 
-        if (ContextCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-
-            mMap.isMyLocationEnabled = true
-
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener { location ->
                 if (location != null) {
+                    val isMock = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        location.isMock
+                    } else {
+                        location.isFromMockProvider
+                    }
+
+                    if (isMock) {
+                        CustomToast(this, "Fake Location Detected! Please disable mock location apps.")
+                        return@addOnSuccessListener
+                    }
+
                     getLati = location.latitude
                     getLongi = location.longitude
                     Log.e("punchin", "$getLati $getLongi")
@@ -240,11 +253,13 @@ class EmployeePunchInActivity : AppCompatActivity(), OnMapReadyCallback {
                     val currentLatLng = LatLng(location.latitude, location.longitude)
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15f))
                     mMap.addMarker(MarkerOptions().position(currentLatLng).title("You are here"))
+                } else {
+                    CustomToast(this, "Unable to fetch current location. Ensure GPS is on.")
                 }
             }
         } else {
             ActivityCompat.requestPermissions(
-                this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1001
+                this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1001
             )
         }
     }

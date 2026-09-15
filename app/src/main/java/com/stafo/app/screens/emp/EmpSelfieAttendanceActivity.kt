@@ -36,6 +36,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageProxy
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Granularity
 import com.google.android.gms.location.LocationCallback
@@ -44,6 +46,10 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.face.FaceDetection
+import com.google.mlkit.vision.face.FaceDetectorOptions
+import java.util.concurrent.Executors
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityEmpSelfieAttendanceBinding
 import com.stafo.app.screens.settings.SettingsViewModel
@@ -82,6 +88,12 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
     private var mEmpID = ""
 
     private lateinit var loadingDialog: AlertDialog
+
+    private var isBranchDataLoaded = false
+    private var isPhotoTaken = false
+    private var isReadyToScan = false
+    private var faceDetectedTimestamp: Long = 0L
+    private val cameraExecutor = Executors.newSingleThreadExecutor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -206,9 +218,71 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
 
             val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
 
+            val imageAnalysis = ImageAnalysis.Builder()
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .build()
+
+            val faceDetectorOptions = FaceDetectorOptions.Builder()
+                .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
+                .build()
+            val faceDetector = FaceDetection.getClient(faceDetectorOptions)
+
+            imageAnalysis.setAnalyzer(cameraExecutor) { imageProxy ->
+                @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
+                val mediaImage = imageProxy.image
+                if (mediaImage != null) {
+                    val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+                    faceDetector.process(image)
+                        .addOnSuccessListener { faces ->
+                            if (!isPhotoTaken && isBranchDataLoaded) {
+                                if (!isReadyToScan) {
+                                    binding.tvFaceStatus.text = "Align your face in the circle..."
+                                    binding.tvFaceStatus.setTextColor(Color.WHITE)
+                                    return@addOnSuccessListener
+                                }
+
+                                if (faces.size == 1) {
+                                    if (faceDetectedTimestamp == 0L) {
+                                        faceDetectedTimestamp = System.currentTimeMillis()
+                                        binding.tvFaceStatus.text = "Hold still..."
+                                        binding.tvFaceStatus.setTextColor(Color.YELLOW)
+                                    } else if (System.currentTimeMillis() - faceDetectedTimestamp > 1500) {
+                                        binding.tvFaceStatus.text = "Face detected! Capturing..."
+                                        binding.tvFaceStatus.setTextColor(Color.GREEN)
+                                        isPhotoTaken = true
+                                        takePhoto()
+                                    }
+                                } else {
+                                    faceDetectedTimestamp = 0L // reset timer
+                                    if (faces.size > 1) {
+                                        binding.tvFaceStatus.text = "Too many faces! Only one allowed."
+                                        binding.tvFaceStatus.setTextColor(Color.RED)
+                                    } else {
+                                        binding.tvFaceStatus.text = "Position face in frame..."
+                                        binding.tvFaceStatus.setTextColor(Color.WHITE)
+                                    }
+                                }
+                            }
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("FaceDetection", "Detection failed", e)
+                        }
+                        .addOnCompleteListener {
+                            imageProxy.close()
+                        }
+                } else {
+                    imageProxy.close()
+                }
+            }
+
             try {
                 cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture, imageAnalysis)
+
+                // Give the user 2.5 seconds to align their face in the circle before scanning begins
+                Handler(Looper.getMainLooper()).postDelayed({
+                    isReadyToScan = true
+                }, 2500)
 
             } catch (e: Exception) {
                 Log.e("TAG", "startCamera: ${e.localizedMessage}")
@@ -450,18 +524,14 @@ class EmpSelfieAttendanceActivity : AppCompatActivity() {
                     branchLat = branchData.latitude.toDouble()
                     branchLong = branchData.longitude.toDouble()
                     radar = branchData.radar.toFloat()
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        takePhoto()
-                    }, 100)
+                    isBranchDataLoaded = true
                 } else {
                     checkBranch = false
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        takePhoto()
-                    }, 100)
+                    isBranchDataLoaded = true
                 }
             } else {
                 checkBranch = false
-
+                isBranchDataLoaded = true
             }
         }
     }

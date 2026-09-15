@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.PolyUtil
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityAutoSearchPlaceBinding
 import com.stafo.app.screens.settings.SettingsViewModel
@@ -93,10 +94,9 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
 
         googleMap.setOnMarkerClickListener { marker ->
             val tag = marker.tag
-            if (tag is Pair<*, *>) {
-                val haltIndex = tag.first as? Int ?: 0
-                val duration = tag.second as? Double ?: 0.0
-                showHaltTooltip(haltIndex, duration)
+            if (tag is String) {
+                showHaltTooltip(tag)
+                marker.showInfoWindow()
                 true
             } else false
         }
@@ -117,7 +117,8 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
                     TimedGeoPoint(
                         latitude = point.latitude.toDouble(),
                         longitude = point.longitude.toDouble(),
-                        timestamp = parseTimestamp(point.createdAt)
+                        timestamp = parseTimestamp(point.createdAt),
+                        batteryPercentage = point.batteryPercentage
                     )
                 }
                 drawRouteWithHalts(geoPoints)
@@ -141,94 +142,65 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val geoPoints = points.map { LatLng(it.latitude, it.longitude) }
 
-        // Start Marker
-        val startHalt = checkIfPointIsHalt(points.first(), points)
-        val startTitle = if (startHalt != null) "Start Point\n(Halt: ${
-            String.format(
-                "%.1f",
-                startHalt / 60000.0
-            )
-        } mins)" else "Start Point"
-        addCustomMarker(geoPoints.first(), startTitle, MarkerType.START)
-
-        // End Marker
-        val endHalt = checkIfPointIsHalt(points.last(), points)
-        val endTitle = if (endHalt != null) "End Point\n(Halt: ${
-            String.format(
-                "%.1f",
-                endHalt / 60000.0
-            )
-        } mins)" else "End Point"
-        addCustomMarker(geoPoints.last(), endTitle, MarkerType.END)
-
-        // Draw polyline
+        val simplifiedGeoPoints = PolyUtil.simplify(geoPoints, 5.0)
         googleMap.addPolyline(
-            PolylineOptions().addAll(geoPoints)
-                .color(ContextCompat.getColor(this, android.R.color.holo_red_dark))
+            PolylineOptions().addAll(simplifiedGeoPoints)
+                .color(ContextCompat.getColor(this, android.R.color.holo_blue_dark))
                 .width(10f)
         )
 
-        // Intermediate Halts
-        val haltMarkers = detectHalts(points)
-        val start = points.first()
-        val end = points.last()
-        val filteredHalts = haltMarkers.filter {
-            calculateDistance(it.latitude, it.longitude, start.latitude, start.longitude) > 50 &&
-                    calculateDistance(it.latitude, it.longitude, end.latitude, end.longitude) > 50
-        }
+        val halts = detectHalts(points)
 
-        filteredHalts.forEachIndexed { index, halt ->
+        val startPoint = points.first()
+        val endPoint = points.last()
+
+        val startHalt = halts.find { calculateDistance(it.latitude, it.longitude, startPoint.latitude, startPoint.longitude) <= 100.0 }
+        var startTitle = "Start Point"
+        if (startHalt != null) startTitle += "\n(Halt: ${String.format("%.1f", startHalt.duration / 60000.0)} mins)"
+        if (startPoint.batteryPercentage != null) startTitle += "\nBattery: ${startPoint.batteryPercentage}%"
+        addCustomMarker(geoPoints.first(), startTitle, MarkerType.START, 0, startPoint)
+
+        val endHalt = halts.find { calculateDistance(it.latitude, it.longitude, endPoint.latitude, endPoint.longitude) <= 100.0 && it != startHalt }
+        var endTitle = "End Point"
+        if (endHalt != null) endTitle += "\n(Halt: ${String.format("%.1f", endHalt.duration / 60000.0)} mins)"
+        if (endPoint.batteryPercentage != null) endTitle += "\nBattery: ${endPoint.batteryPercentage}%"
+        addCustomMarker(geoPoints.last(), endTitle, MarkerType.END, 0, endPoint)
+
+        val intermediateHalts = halts.filter { it != startHalt && it != endHalt }
+        intermediateHalts.forEachIndexed { index, halt ->
             val latLng = LatLng(halt.latitude, halt.longitude)
             val duration = halt.duration / 60000.0
-            addCustomMarker(
-                latLng,
-                "Halt #${index + 1}\n${String.format("%.1f", duration)} mins",
-                MarkerType.HALT,
-                index + 1,
-                duration
-            )
+            var title = "Halt #${index + 1}\nDuration: ${String.format("%.1f", duration)} mins"
+            if (halt.batteryPercentage != null) title += "\nBattery: ${halt.batteryPercentage}%"
+            addCustomMarker(latLng, title, MarkerType.HALT, index + 1, TimedGeoPoint(halt.latitude, halt.longitude, halt.startTime, halt.batteryPercentage))
         }
 
-        // Camera Bounds
         val bounds = LatLngBounds.builder().apply {
-            geoPoints.forEach { include(it) }
+            simplifiedGeoPoints.forEach { include(it) }
         }.build()
-
         googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
     }
 
     private fun detectHalts(points: List<TimedGeoPoint>): List<HaltInfo> {
         val halts = mutableListOf<HaltInfo>()
         val radius = 200.0
-        val minHaltDuration = 10 * 60 * 1000 // 30 mins
+        val minHaltDuration = 10 * 60 * 1000 // 10 mins
 
         var startIndex = 0
         while (startIndex < points.size - 1) {
             var endIndex = startIndex + 1
-            while (endIndex < points.size && isWithinRadius(
-                    points[startIndex],
-                    points[endIndex],
-                    radius
-                )
-            ) {
+            while (endIndex < points.size && isWithinRadius(points[startIndex], points[endIndex], radius)) {
                 endIndex++
             }
             val duration = points[endIndex - 1].timestamp - points[startIndex].timestamp
             if (duration >= minHaltDuration) {
                 val avgLat = points.subList(startIndex, endIndex).map { it.latitude }.average()
                 val avgLng = points.subList(startIndex, endIndex).map { it.longitude }.average()
-                halts.add(HaltInfo(avgLat, avgLng, duration))
+                halts.add(HaltInfo(avgLat, avgLng, duration, points[startIndex].timestamp, points[endIndex - 1].timestamp, points[startIndex].batteryPercentage))
             }
             startIndex = endIndex
         }
         return halts
-    }
-
-    private fun checkIfPointIsHalt(point: TimedGeoPoint, all: List<TimedGeoPoint>): Long? {
-        val nearby = all.filter { isWithinRadius(point, it, 200.0) }
-        if (nearby.size < 2) return null
-        val duration = nearby.last().timestamp - nearby.first().timestamp
-        return if (duration >= 30 * 60 * 1000) duration else null
     }
 
     private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float {
@@ -248,39 +220,20 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
         title: String,
         markerType: MarkerType,
         haltIndex: Int = 0,
-        durationMinutes: Double = 0.0
+        pointData: TimedGeoPoint? = null
     ) {
-        val markerOptions = MarkerOptions()
-            .position(position)
-            .title(title)
+        val markerOptions = MarkerOptions().position(position).title(title)
 
-        // Use default markers
         when (markerType) {
-            MarkerType.START -> {
-                // Use default start marker with no custom icon (or use any color if desired)
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-            }
-
-            MarkerType.END -> {
-                // Use default end marker with no custom icon (or use any color if desired)
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-            }
-
-            MarkerType.HALT -> {
-                // Use default halt marker with no custom icon (or use any color if desired)
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-            }
+            MarkerType.START -> markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+            MarkerType.END -> markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+            MarkerType.HALT -> markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
         }
 
-        // Add the marker to the map
         val marker = googleMap.addMarker(markerOptions)
-
-        // If it's a halt marker, attach additional data (e.g., halt index and duration)
-        if (markerType == MarkerType.HALT) {
-            marker?.tag = Pair(haltIndex, durationMinutes)
+        if (marker != null && pointData != null) {
+            marker.tag = title
         }
-
-        Log.d("MarkerAdded", "Added ${markerType.name} marker at $position with title: $title")
     }
 
 
@@ -299,10 +252,8 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    private fun showHaltTooltip(haltNumber: Int, durationMinutes: Double) {
-        val message =
-            "Halt #$haltNumber\nStayed for ${String.format("%.1f", durationMinutes)} minutes"
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    private fun showHaltTooltip(title: String) {
+        Toast.makeText(this, title, Toast.LENGTH_LONG).show()
     }
 
     private fun showDatePicker() {
@@ -324,12 +275,19 @@ class AutoSearchPlaceActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun parseTimestamp(dateTime: String): Long {
-        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-        return sdf.parse(dateTime)?.time ?: 0L
+        val formats = listOf("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd'T'HH:mm:ss")
+        for (pattern in formats) {
+            try {
+                val sdf = SimpleDateFormat(pattern, Locale.getDefault())
+                sdf.timeZone = java.util.TimeZone.getTimeZone("UTC")
+                return sdf.parse(dateTime)?.time ?: continue
+            } catch (e: Exception) {}
+        }
+        return 0L
     }
 
 
-    data class TimedGeoPoint(val latitude: Double, val longitude: Double, val timestamp: Long)
-    data class HaltInfo(val latitude: Double, val longitude: Double, val duration: Long)
+    data class TimedGeoPoint(val latitude: Double, val longitude: Double, val timestamp: Long, val batteryPercentage: String? = null)
+    data class HaltInfo(val latitude: Double, val longitude: Double, val duration: Long, val startTime: Long, val endTime: Long, val batteryPercentage: String? = null)
 }
 

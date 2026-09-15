@@ -16,8 +16,12 @@ class UpdateReceiver : BroadcastReceiver() {
         if (!isServiceRunning(context,LocationForegroundService::class.java)) {
             val serviceIntent = Intent(context, LocationForegroundService::class.java)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(serviceIntent)
-                Log.e("service"," true startForegroundService")
+                try {
+                    context.startForegroundService(serviceIntent)
+                    Log.e("service"," true startForegroundService")
+                } catch (e: Exception) {
+                    Log.e("service", "Failed to start foreground service: ${e.message}")
+                }
             } else {
                 Log.e("service"," else startService")
                 context.startService(serviceIntent)

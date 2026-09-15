@@ -989,10 +989,12 @@ class EmployeeDashboard : AppCompatActivity() {
                 .setMessage("Your admin has requested to track your live location. Do you accept?")
                 .setPositiveButton("Accept") { dialog, _ ->
                     sendGeoRequest("1")
+                    startTrackingWithPermissions {}
                     dialog.dismiss()
                 }
                 .setNegativeButton("Reject") { dialog, _ ->
                     sendGeoRequest("2")
+                    stopTracking()
                     dialog.dismiss()
                 }
                 .show()
@@ -1007,9 +1009,28 @@ class EmployeeDashboard : AppCompatActivity() {
         )
     }
 
+    private fun hasFineLocationPermission(): Boolean = ContextCompat.checkSelfPermission(
+        this, Manifest.permission.ACCESS_FINE_LOCATION
+    ) == PackageManager.PERMISSION_GRANTED
+
+    private val trackingLocationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            Log.e("trackLocation", "trackingLocationPermissionLauncher: granted=$granted")
+            if (granted) {
+                mEmplyeeInfo?.let { updateLocationTracking(it) }
+            } else {
+                CustomToast(this, "Location permission is required for live tracking")
+            }
+        }
+
     private fun startLocationServiceIfNotRunning() {
         if (!isServiceRunning(LocationForegroundService::class.java)) {
-            startService(Intent(this, LocationForegroundService::class.java))
+            Log.e("trackLocation", "startLocationServiceIfNotRunning: starting service")
+            ContextCompat.startForegroundService(
+                this, Intent(this, LocationForegroundService::class.java)
+            )
+        } else {
+            Log.e("trackLocation", "startLocationServiceIfNotRunning: already running")
         }
     }
 
@@ -1019,50 +1040,55 @@ class EmployeeDashboard : AppCompatActivity() {
 
         if (punches.isEmpty()) {
             updateUIForPunchIn("")
-            stopTracking()
-            return
-        }
-
-        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-
-        val punchesToday = punches.filter {
-            it.punchIn?.startsWith(today) == true
-        }
-
-        if (punchesToday.isEmpty()) {
-            updateUIForPunchIn(punches?.get(0)?.punchIn ?: "")
-            stopTracking()
-            return
-        }
-
-        val ongoingPunch = punchesToday.lastOrNull {
-            it.punchIn != null && it.punchOut == null
-        }
-
-        val lastPunch = punchesToday.lastOrNull()
-        val shiftEndTime = employee.shifts.firstOrNull()?.endTime
-        val geoStatus = employee.geoStatus
-
-        if (ongoingPunch != null) {
-            handleOngoingPunch(ongoingPunch, employee, shiftEndTime, geoStatus)
         } else {
-            handleCompletedPunch(lastPunch, shiftEndTime)
+            val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+            val punchesToday = punches.filter {
+                it.punchIn?.startsWith(today) == true
+            }
+
+            if (punchesToday.isEmpty()) {
+                updateUIForPunchIn(punches[0].punchIn ?: "")
+            } else {
+                val ongoingPunch = punchesToday.lastOrNull {
+                    it.punchIn != null && it.punchOut == null
+                }
+                val lastPunch = punchesToday.lastOrNull()
+
+                if (ongoingPunch != null) {
+                    updateUIForPunchIn(ongoingPunch.punchIn!!)
+                } else {
+                    val punchOut = lastPunch?.punchOut
+                    if (punchOut != null) {
+                        updateUIForPunchOut(punchOut)
+                    } else {
+                        updateUIForPunchIn(punchOut ?: "")
+                    }
+                }
+            }
         }
+
+        // Location tracking is driven purely by geoStatus/attendance_type,
+        // independent of punch state, so "Accept" starts tracking right away.
+        updateLocationTracking(employee)
     }
 
-    private fun handleOngoingPunch(
-        punch: Punch,
-        employee: EmployeeInfo,
-        shiftEndTime: String?,
-        geoStatus: String?,
-    ) {
+    private fun updateLocationTracking(employee: EmployeeInfo) {
+        val shiftEndTime = employee.shifts.firstOrNull()?.endTime
+        val shouldTrack = employee.attendance_type == "geo" || employee.geoStatus == "1"
 
-        updateUIForPunchIn(punch.punchIn!!)
-
-        val shouldTrack =
-            employee.attendance_type == "geo" || geoStatus == "1"
+        Log.e(
+            "trackLocation",
+            "updateLocationTracking: geoStatus=${employee.geoStatus} attendance_type=${employee.attendance_type} shouldTrack=$shouldTrack isTrip=$isTrip"
+        )
 
         if (shouldTrack) {
+            if (!hasFineLocationPermission()) {
+                Log.e("trackLocation", "updateLocationTracking: ACCESS_FINE_LOCATION missing, requesting")
+                trackingLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                return
+            }
+
             startTrackingWithPermissions {
                 if (isShiftEnded(shiftEndTime)) {
                     stopTracking()
@@ -1070,22 +1096,6 @@ class EmployeeDashboard : AppCompatActivity() {
             }
         } else {
             stopTracking()
-        }
-    }
-
-    private fun handleCompletedPunch(lastPunch: Punch?, shiftEndTime: String?) {
-
-        val punchOut = lastPunch?.punchOut
-
-        if (punchOut != null) {
-            updateUIForPunchOut(punchOut)
-            stopTracking()
-        } else {
-            updateUIForPunchIn(punchOut ?: "")
-
-            if (isShiftEnded(shiftEndTime)) {
-                stopTracking()
-            }
         }
     }
 
@@ -1125,13 +1135,17 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private fun startTrackingWithPermissions(onReady: () -> Unit) {
         checkExactAlarmPermission(this) { alarmGranted ->
+            Log.e("trackLocation", "startTrackingWithPermissions: alarmGranted=$alarmGranted")
             if (!alarmGranted) return@checkExactAlarmPermission
 
             requestIgnoreBatteryOptimization(this) { batteryGranted ->
+                Log.e("trackLocation", "startTrackingWithPermissions: batteryGranted=$batteryGranted isTrip=$isTrip")
                 if (!batteryGranted) return@requestIgnoreBatteryOptimization
 
                 if (!isTrip) {
                     startLocationServiceIfNotRunning()
+                } else {
+                    Log.e("trackLocation", "startTrackingWithPermissions: skipped, isTrip=true")
                 }
 
                 onReady()

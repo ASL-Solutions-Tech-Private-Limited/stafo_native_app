@@ -81,6 +81,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <TextView
+            android:id="@+id/tv_face_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/custom_punch_details_bg"
+            android:backgroundTint="#80000000"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="Position face in frame..."
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:fontFamily="@font/gilroy_bold"/>
+
     </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

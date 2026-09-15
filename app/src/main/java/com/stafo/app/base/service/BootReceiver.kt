@@ -10,7 +10,11 @@ class BootReceiver : BroadcastReceiver() {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             val serviceIntent = Intent(context, LocationForegroundService::class.java)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(serviceIntent)
+                try {
+                    context.startForegroundService(serviceIntent)
+                } catch (e: Exception) {
+                    // Ignored if OS blocks it
+                }
             } else {
                 context.startService(serviceIntent)
             }

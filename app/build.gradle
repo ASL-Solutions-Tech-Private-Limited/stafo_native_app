@@ -276,4 +276,7 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:3.3.0'
     implementation 'com.github.angads25:toggle:1.1.0'
 
+    // Google ML Kit Face Detection
+    implementation 'com.google.mlkit:face-detection:16.1.6'
+
 }
