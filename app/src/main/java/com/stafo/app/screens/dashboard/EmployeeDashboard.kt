@@ -2,6 +2,7 @@ package com.stafo.app.screens.dashboard
 
 import android.Manifest
 import android.app.ActivityManager
+import android.app.Dialog
 import android.app.KeyguardManager
 import android.app.Service
 import android.content.Context
@@ -15,8 +16,10 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -49,7 +52,6 @@ import com.stafo.app.base.model.DashboardWish
 import com.stafo.app.base.model.EmployeeDashboardResponse
 import com.stafo.app.base.model.EmployeeInfo
 import com.stafo.app.base.model.FullScreenDialog
-import com.stafo.app.base.model.Punch
 import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.databinding.ActivityEmpDashboardBinding
 import com.stafo.app.databinding.CustomBottomSheetAttendanceLayoutBinding
@@ -302,6 +304,7 @@ class EmployeeDashboard : AppCompatActivity() {
                                 )
                             )
                         }
+
                         "BBPS" -> {
                             startActivity(
                                 Intent(
@@ -317,6 +320,8 @@ class EmployeeDashboard : AppCompatActivity() {
         binding.rvActivities.adapter = actionsAdapter
     }
 
+    private var isBatteryNoticeDismissed = false
+
     override fun onResume() {
         super.onResume()
 
@@ -325,7 +330,31 @@ class EmployeeDashboard : AppCompatActivity() {
         settingsViewModel.fetchEmployeeDetails(
             this@EmployeeDashboard, getEmployeeDetails()?.id.toString()
         )
+        checkAndShowBatteryNotice()
+    }
 
+    private fun checkAndShowBatteryNotice() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val pm = getSystemService(Context.POWER_SERVICE) as? PowerManager
+            val isIgnored = pm?.isIgnoringBatteryOptimizations(packageName) == true
+
+            if (!isIgnored && !isBatteryNoticeDismissed) {
+                binding.cardBatteryNotice.visibility = View.VISIBLE
+                binding.btnEnableBatteryNotice.setOnClickListener {
+                    requestIgnoreBatteryOptimization(this) {
+                        checkAndShowBatteryNotice()
+                    }
+                }
+                binding.btnDismissBatteryNotice.setOnClickListener {
+                    isBatteryNoticeDismissed = true
+                    binding.cardBatteryNotice.visibility = View.GONE
+                }
+            } else {
+                binding.cardBatteryNotice.visibility = View.GONE
+            }
+        } else {
+            binding.cardBatteryNotice.visibility = View.GONE
+        }
     }
 
 
@@ -589,66 +618,11 @@ class EmployeeDashboard : AppCompatActivity() {
                                                 }
 
 
-                                                val shiftEndReached = shiftEndTime?.let { endTime ->
-                                                    val shiftEndCal = Calendar.getInstance()
-                                                    val end: Date? = try {
-                                                        SimpleDateFormat(
-                                                            "hh:mm a", Locale.getDefault()
-                                                        ).parse(endTime)
-                                                    } catch (e: Exception) {
-                                                        try {
-                                                            SimpleDateFormat(
-                                                                "HH:mm", Locale.getDefault()
-                                                            ).parse(endTime)
-                                                        } catch (ex: Exception) {
-                                                            null
-                                                        }
-                                                    }
-
-                                                    if (end != null) {
-                                                        val endCal = Calendar.getInstance()
-                                                        endCal.time = end
-                                                        shiftEndCal.set(
-                                                            Calendar.HOUR_OF_DAY,
-                                                            endCal.get(Calendar.HOUR_OF_DAY)
-                                                        )
-                                                        shiftEndCal.set(
-                                                            Calendar.MINUTE,
-                                                            endCal.get(Calendar.MINUTE)
-                                                        )
-                                                        shiftEndCal.set(Calendar.SECOND, 0)
-                                                        now.after(shiftEndCal)
-                                                    } else {
-                                                        false
-                                                    }
-                                                } ?: false
-
-
-                                                if (shiftEndReached) {
-
+                                                if (isShiftEnded(shiftEndTime)) {
                                                     if (!isTrip) {
                                                         stopLocationServiceIfRunning()
                                                     }
-
-                                                    Log.e(
-                                                        "trackLocation",
-                                                        "Stopped service after shift end 1."
-                                                    )
-                                                }
-
-                                                if (shiftEndTime.isNullOrEmpty()) {
-                                                    if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(
-                                                            Calendar.MINUTE
-                                                        ) == 0
-                                                    ) {
-                                                        if (!isTrip) {
-                                                            stopLocationServiceIfRunning()
-                                                        }
-                                                        Log.e(
-                                                            "trackLocation",
-                                                            "Stopped service at 9 PM, no shift end."
-                                                        )
-                                                    }
+                                                    Log.e("trackLocation", "Stopped service after shift end 1.")
                                                 }
                                             }
                                         }
@@ -674,65 +648,11 @@ class EmployeeDashboard : AppCompatActivity() {
                                                         startLocationServiceIfNotRunning()
                                                     }
 
-                                                    val shiftEndReached =
-                                                        shiftEndTime?.let { endTime ->
-                                                            val shiftEndCal = Calendar.getInstance()
-                                                            val end: Date? = try {
-                                                                SimpleDateFormat(
-                                                                    "hh:mm a", Locale.getDefault()
-                                                                ).parse(endTime)
-                                                            } catch (e: Exception) {
-                                                                try {
-                                                                    SimpleDateFormat(
-                                                                        "HH:mm", Locale.getDefault()
-                                                                    ).parse(endTime)
-                                                                } catch (ex: Exception) {
-                                                                    null
-                                                                }
-                                                            }
-
-                                                            if (end != null) {
-                                                                val endCal = Calendar.getInstance()
-                                                                endCal.time = end
-                                                                shiftEndCal.set(
-                                                                    Calendar.HOUR_OF_DAY,
-                                                                    endCal.get(Calendar.HOUR_OF_DAY)
-                                                                )
-                                                                shiftEndCal.set(
-                                                                    Calendar.MINUTE,
-                                                                    endCal.get(Calendar.MINUTE)
-                                                                )
-                                                                shiftEndCal.set(Calendar.SECOND, 0)
-                                                                now.after(shiftEndCal)
-                                                            } else {
-                                                                false
-                                                            }
-                                                        } ?: false
-
-
-                                                    if (shiftEndReached) {
+                                                    if (isShiftEnded(shiftEndTime)) {
                                                         if (!isTrip) {
                                                             stopLocationServiceIfRunning()
                                                         }
-                                                        Log.e(
-                                                            "trackLocation",
-                                                            "Stopped service after shift end 2."
-                                                        )
-                                                    }
-
-                                                    if (shiftEndTime.isNullOrEmpty()) {
-                                                        if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(
-                                                                Calendar.MINUTE
-                                                            ) == 0
-                                                        ) {
-                                                            if (!isTrip) {
-                                                                stopLocationServiceIfRunning()
-                                                            }
-                                                            Log.e(
-                                                                "trackLocation",
-                                                                "Stopped service at 9 PM, no shift end."
-                                                            )
-                                                        }
+                                                        Log.e("trackLocation", "Stopped service after shift end 2.")
                                                     }
                                                 }
                                             }
@@ -757,55 +677,11 @@ class EmployeeDashboard : AppCompatActivity() {
                                     binding.btnPunchIn.text = "Punch In"
                                     binding.btnPunchIn.isEnabled = true
                                     binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
-                                    val shiftEndReached = shiftEndTime?.let { endTime ->
-                                        val shiftEndCal = Calendar.getInstance()
-                                        val end: Date? = try {
-                                            SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(
-                                                endTime
-                                            )
-                                        } catch (e: Exception) {
-                                            try {
-                                                SimpleDateFormat(
-                                                    "HH:mm", Locale.getDefault()
-                                                ).parse(endTime)
-                                            } catch (ex: Exception) {
-                                                null
-                                            }
-                                        }
-
-                                        if (end != null) {
-                                            val endCal = Calendar.getInstance()
-                                            endCal.time = end
-                                            shiftEndCal.set(
-                                                Calendar.HOUR_OF_DAY,
-                                                endCal.get(Calendar.HOUR_OF_DAY)
-                                            )
-                                            shiftEndCal.set(
-                                                Calendar.MINUTE, endCal.get(Calendar.MINUTE)
-                                            )
-                                            shiftEndCal.set(Calendar.SECOND, 0)
-                                            now.after(shiftEndCal)
-                                        } else {
-                                            false
-                                        }
-                                    } ?: false
-
-
-                                    if (shiftEndReached) {
+                                    if (isShiftEnded(shiftEndTime)) {
                                         if (!isTrip) {
                                             stopLocationServiceIfRunning()
                                         }
                                         Log.e("trackLocation", "Stopped service after shift end 3.")
-                                    } else if (shiftEndTime.isNullOrEmpty()) {
-                                        if (now.get(Calendar.HOUR_OF_DAY) == 21 && now.get(Calendar.MINUTE) == 0) {
-                                            if (!isTrip) {
-                                                stopLocationServiceIfRunning()
-                                            }
-                                            Log.e(
-                                                "trackLocation",
-                                                "Stopped service at 9 PM, no shift end."
-                                            )
-                                        }
                                     }
                                 }
                             }
@@ -983,22 +859,76 @@ class EmployeeDashboard : AppCompatActivity() {
     }
 
     private fun handleGeoPermission(employee: EmployeeInfo) {
-        if (employee.geoStatus == "0") {
-            AlertDialog.Builder(this)
-                .setTitle(R.string.app_name)
-                .setMessage("Your admin has requested to track your live location. Do you accept?")
-                .setPositiveButton("Accept") { dialog, _ ->
-                    sendGeoRequest("1")
-                    startTrackingWithPermissions {}
-                    dialog.dismiss()
-                }
-                .setNegativeButton("Reject") { dialog, _ ->
-                    sendGeoRequest("2")
-                    stopTracking()
-                    dialog.dismiss()
-                }
-                .show()
+        if (employee.geoStatus == "1") {
+            showLocationRequestDialog()
         }
+    }
+
+    private fun showLocationRequestDialog() {
+        val dialog = Dialog(this, android.R.style.Theme_Light_NoTitleBar_Fullscreen)
+        dialog.setContentView(R.layout.dialog_location_request_fullscreen)
+        dialog.setCancelable(false)
+
+        val btnClose = dialog.findViewById<View>(R.id.btnClose)
+        val btnDecline = dialog.findViewById<View>(R.id.btnDecline)
+        val swipeContainer = dialog.findViewById<View>(R.id.swipeTrackContainer)
+        val swipeThumb = dialog.findViewById<View>(R.id.swipeThumb)
+
+        var initialX = 0f
+        var isAccepted = false
+
+        swipeThumb.setOnTouchListener { view, event ->
+            if (isAccepted) return@setOnTouchListener false
+
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    initialX = event.rawX - view.x
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val containerWidth = swipeContainer.width
+                    val thumbWidth = view.width
+                    val maxScroll = (containerWidth - thumbWidth - view.paddingLeft - view.paddingRight).toFloat()
+
+                    var newX = event.rawX - initialX
+                    if (newX < 0f) newX = 0f
+                    if (newX > maxScroll) newX = maxScroll
+
+                    view.x = newX
+
+                    if (newX >= maxScroll * 0.80f && !isAccepted) {
+                        isAccepted = true
+                        view.animate().x(maxScroll).setDuration(100).withEndAction {
+                            dialog.dismiss()
+                            sendGeoRequest("2")
+                            startTrackingWithPermissions {}
+                        }.start()
+                    }
+                    true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    if (!isAccepted) {
+                        view.animate().x(0f).setDuration(200).start()
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
+
+        btnClose.setOnClickListener {
+            sendGeoRequest("0")
+            stopTracking()
+            dialog.dismiss()
+        }
+
+        btnDecline.setOnClickListener {
+            sendGeoRequest("0")
+            stopTracking()
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun sendGeoRequest(status: String) {
@@ -1075,7 +1005,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private fun updateLocationTracking(employee: EmployeeInfo) {
         val shiftEndTime = employee.shifts.firstOrNull()?.endTime
-        val shouldTrack = employee.attendance_type == "geo" || employee.geoStatus == "1"
+        val shouldTrack = employee.attendance_type == "geo" || employee.geoStatus == "2"
 
         Log.e(
             "trackLocation",
@@ -1084,7 +1014,10 @@ class EmployeeDashboard : AppCompatActivity() {
 
         if (shouldTrack) {
             if (!hasFineLocationPermission()) {
-                Log.e("trackLocation", "updateLocationTracking: ACCESS_FINE_LOCATION missing, requesting")
+                Log.e(
+                    "trackLocation",
+                    "updateLocationTracking: ACCESS_FINE_LOCATION missing, requesting"
+                )
                 trackingLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                 return
             }
@@ -1100,7 +1033,6 @@ class EmployeeDashboard : AppCompatActivity() {
     }
 
     private fun isShiftEnded(shiftEndTime: String?): Boolean {
-
         val now = Calendar.getInstance()
 
         val end = shiftEndTime?.let {
@@ -1124,12 +1056,18 @@ class EmployeeDashboard : AppCompatActivity() {
                 set(Calendar.SECOND, 0)
             }
 
+            // Handle night shifts (e.g. shift ends at 02:00 AM next day).
+            // If the shift end time is morning/noon, but the current time is evening,
+            // then the shift actually ends on the next calendar day.
+            if (shiftEndCal.get(Calendar.HOUR_OF_DAY) <= 12 && now.get(Calendar.HOUR_OF_DAY) > 12) {
+                shiftEndCal.add(Calendar.DAY_OF_MONTH, 1)
+            }
+
             return now.after(shiftEndCal)
         }
 
-        // fallback → 9 PM
-        return now.get(Calendar.HOUR_OF_DAY) == 21 &&
-                now.get(Calendar.MINUTE) == 0
+        // Fallback: Automatically stop tracking if it is 9 PM or later.
+        return now.get(Calendar.HOUR_OF_DAY) >= 21
     }
 
 
@@ -1138,18 +1076,13 @@ class EmployeeDashboard : AppCompatActivity() {
             Log.e("trackLocation", "startTrackingWithPermissions: alarmGranted=$alarmGranted")
             if (!alarmGranted) return@checkExactAlarmPermission
 
-            requestIgnoreBatteryOptimization(this) { batteryGranted ->
-                Log.e("trackLocation", "startTrackingWithPermissions: batteryGranted=$batteryGranted isTrip=$isTrip")
-                if (!batteryGranted) return@requestIgnoreBatteryOptimization
-
-                if (!isTrip) {
-                    startLocationServiceIfNotRunning()
-                } else {
-                    Log.e("trackLocation", "startTrackingWithPermissions: skipped, isTrip=true")
-                }
-
-                onReady()
+            if (!isTrip) {
+                startLocationServiceIfNotRunning()
+            } else {
+                Log.e("trackLocation", "startTrackingWithPermissions: skipped, isTrip=true")
             }
+
+            onReady()
         }
     }
 
@@ -1566,7 +1499,7 @@ class EmployeeDashboard : AppCompatActivity() {
         mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
         mActionList.add(ActionModel("Trip", R.drawable.ic_trip))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
-        mActionList.add(ActionModel("BBPS", R.drawable.ic_bbps_ic))
+        // mActionList.add(ActionModel("BBPS", R.drawable.ic_bbps_ic))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policies", R.drawable.ic_policy))

@@ -233,6 +233,87 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <!-- Battery Optimization Notice Card -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_battery_notice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:visibility="gone"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/header_layout">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/top_rounded_bg"
+                        android:backgroundTint="#FEF3C7"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="⚡"
+                                android:textSize="@dimen/_16ssp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/gilroy_bold"
+                                android:text="Uninterrupted Location Tracking"
+                                android:textColor="#92400E"
+                                android:textSize="@dimen/_12ssp" />
+
+                            <ImageView
+                                android:id="@+id/btn_dismiss_battery_notice"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Dismiss"
+                                android:padding="4dp"
+                                android:src="@drawable/ic_back"
+                                app:tint="#92400E" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:text="Enable background battery execution so STAFO doesn't pause location updates during active shifts."
+                            android:textColor="#B45309"
+                            android:textSize="@dimen/_10ssp" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btn_enable_battery_notice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_28sdp"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/button_background"
+                            android:backgroundTint="#D97706"
+                            android:paddingHorizontal="16dp"
+                            android:text="Enable Background Running"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_10ssp" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_activities"
                     android:layout_width="wrap_content"
@@ -243,7 +324,7 @@
                     android:text="Activities"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/header_layout" />
+                    app:layout_constraintTop_toBottomOf="@id/card_battery_notice" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_activities_viewAll"
@@ -256,7 +337,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/header_layout" />
+                    app:layout_constraintTop_toBottomOf="@id/card_battery_notice" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_activities"

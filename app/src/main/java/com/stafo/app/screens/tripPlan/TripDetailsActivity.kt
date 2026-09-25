@@ -587,22 +587,14 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun startLocationServiceIfNotRunning(fromTripDetails: Boolean = true) {
         checkExactAlarmPermission(this) { exactAlarmGranted ->
             if (exactAlarmGranted) {
-                requestIgnoreBatteryOptimization(this) { batteryOptGranted ->
-                    if (batteryOptGranted) {
-
-                        if (!isServiceRunning(LocationForegroundService::class.java)) {
-                            setTripServiceAction(this, true)
-                            val intent = Intent(this, LocationForegroundService::class.java)
-                            intent.putExtra("FROM_TRIP_DETAILS", fromTripDetails)
-                            ContextCompat.startForegroundService(this, intent)
-                        }
-
-                    }
+                if (!isServiceRunning(LocationForegroundService::class.java)) {
+                    setTripServiceAction(this, true)
+                    val intent = Intent(this, LocationForegroundService::class.java)
+                    intent.putExtra("FROM_TRIP_DETAILS", fromTripDetails)
+                    ContextCompat.startForegroundService(this, intent)
                 }
             }
         }
-
-
     }
 
     private fun stopLocationServiceIfRunning() {

@@ -16,10 +16,25 @@ android {
         applicationId "com.stafo.app"
         minSdk 24
         targetSdk 35
-        versionCode 14
-        versionName "1.2.0"
+        versionCode 16
+        versionName "1.6.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            def keystorePropertiesFile = rootProject.file("local.properties")
+            def keystoreProperties = new Properties()
+            if (keystorePropertiesFile.exists()) {
+                keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+            }
+
+            storeFile file("../stafoJSK")
+            storePassword project.findProperty("RELEASE_STORE_PASSWORD") ?: keystoreProperties["RELEASE_STORE_PASSWORD"] ?: System.getenv("RELEASE_STORE_PASSWORD") ?: ""
+            keyAlias project.findProperty("RELEASE_KEY_ALIAS") ?: keystoreProperties["RELEASE_KEY_ALIAS"] ?: System.getenv("RELEASE_KEY_ALIAS") ?: "key0"
+            keyPassword project.findProperty("RELEASE_KEY_PASSWORD") ?: keystoreProperties["RELEASE_KEY_PASSWORD"] ?: System.getenv("RELEASE_KEY_PASSWORD") ?: ""
+        }
     }
 
     buildTypes {
@@ -29,6 +44,7 @@ android {
 
         }
         release {
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField 'boolean', 'LOG_ENABLED', 'false'
             buildConfigField "Boolean", "DEBUG_MODE", "false"

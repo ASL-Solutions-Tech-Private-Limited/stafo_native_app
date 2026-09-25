@@ -8,6 +8,7 @@ import com.stafo.app.base.network.RetrofitInstance
 import com.stafo.app.database.AppDatabase
 import com.stafo.app.database.dataClass.LocationEntity
 import com.stafo.app.screens.settings.dataClass.EmployeePostLocationRequest
+import com.stafo.app.utils.getBatteryPercentage
 import com.stafo.app.utils.getEmployeeDetails
 import com.stafo.app.utils.getUserAccessToken
 import kotlinx.coroutines.CoroutineScope
@@ -41,7 +42,8 @@ class EndOfDaySyncWorker(appContext: Context, workerParams: WorkerParameters) :
             val request = EmployeePostLocationRequest(
                 employee_id = getEmployeeDetails()?.id.toString(),
                 latitude = locations[0].latitude,
-                longitude = locations[0].longitude
+                longitude = locations[0].longitude,
+                battery_status = "${getBatteryPercentage(applicationContext)}%"
             )
 
             CoroutineScope(Dispatchers.IO).launch {

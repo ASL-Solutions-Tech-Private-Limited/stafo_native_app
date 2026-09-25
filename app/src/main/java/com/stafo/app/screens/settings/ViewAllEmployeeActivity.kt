@@ -129,7 +129,7 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
                                 if (type == "Request Location") {
                                     settingsViewModel.sendGeoLocationRequest(
                                         this@ViewAllEmployeeActivity,
-                                        empID, "0"
+                                        empID, "1"
                                     )
                                 }
                             }

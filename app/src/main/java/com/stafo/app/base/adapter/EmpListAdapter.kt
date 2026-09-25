@@ -186,16 +186,16 @@ class EmpListAdapter(
                     }
 
 
-                    if (this.geo_status == "1") {
-                        // Case when geo_status is "1"
+                    if (this.geo_status == "2") {
+                        // Case when geo_status is "2" (Tracking Active)
+                        binding.llcReqLocation.visibility = View.GONE
+                        binding.llcViewMap.visibility = View.VISIBLE
+                    } else if (this.geo_status == "1") {
+                        // Case when geo_status is "1" (Request Pending)
                         binding.llcReqLocation.visibility = View.GONE
                         binding.llcViewMap.visibility = View.GONE
-                    } else if (!this.geo_status.isNullOrEmpty()) {
-                        // Case when geo_status is NOT NULL and NOT "1"
-                        binding.llcReqLocation.visibility = View.VISIBLE
-                        binding.llcViewMap.visibility = View.GONE
                     } else {
-                        // Case when geo_status is NULL or EMPTY
+                        // Case when geo_status is "0" or NULL/EMPTY
                         binding.llcViewMap.visibility = View.GONE
                         binding.llcReqLocation.visibility = View.VISIBLE
                     }

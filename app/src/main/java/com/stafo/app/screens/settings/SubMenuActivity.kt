@@ -14,8 +14,8 @@ import com.stafo.app.R
 import com.stafo.app.base.adapter.SubMneuActionsListAdapter
 import com.stafo.app.base.model.ActionModel
 import com.stafo.app.databinding.ActivitySubMenuBinding
-import com.stafo.app.screens.bbps.BBPSDashboard
 import com.stafo.app.databinding.PayrollBottomSheetLayoutBinding
+import com.stafo.app.screens.bbps.BBPSDashboard
 import com.stafo.app.screens.crm.CRMLeadDashboard
 import com.stafo.app.screens.emp.EmpBranchDetailsActivity
 import com.stafo.app.screens.emp.EmployeeAttendanceRecordActivity
@@ -69,7 +69,6 @@ class SubMenuActivity : AppCompatActivity() {
         binding.apply {
 
 
-
             ivBack.setOnClickListener {
                 onBackPressed()
             }
@@ -107,10 +106,12 @@ class SubMenuActivity : AppCompatActivity() {
                                 "Payroll" -> {
                                     showCustomPayrollBottomSheet()
                                 }
+
                                 "Salary\nDisbursement" -> {
                                     startActivity(
                                         Intent(
-                                            this@SubMenuActivity, SalaryDisbursementActivity::class.java
+                                            this@SubMenuActivity,
+                                            SalaryDisbursementActivity::class.java
                                         )
                                     )
                                     overridePendingTransition(
@@ -252,6 +253,7 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                 }
+
                                 "BBPS" -> {
                                     startActivity(
                                         Intent(
@@ -364,6 +366,7 @@ class SubMenuActivity : AppCompatActivity() {
                                         )
                                     )
                                 }
+
                                 "BBPS" -> {
                                     startActivity(
                                         Intent(
@@ -395,7 +398,7 @@ class SubMenuActivity : AppCompatActivity() {
         mActionList.add(ActionModel("Performance\nType", R.drawable.ic_performace))
         mActionList.add(ActionModel("Rank List", R.drawable.ic_rank))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
-        mActionList.add(ActionModel("BBPS", R.drawable.ic_bbps_ic))
+        // mActionList.add(ActionModel("BBPS", R.drawable.ic_bbps_ic))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Office Policies", R.drawable.ic_policy))
@@ -410,7 +413,7 @@ class SubMenuActivity : AppCompatActivity() {
         mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
         mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
         mActionList.add(ActionModel("Leaves", R.drawable.ic_leaves))
-        mActionList.add(ActionModel("BBPS", R.drawable.ic_bbps_ic))
+        // mActionList.add(ActionModel("BBPS", R.drawable.ic_bbps_ic))
         mActionList.add(ActionModel("Branches", R.drawable.ic_branches))
         mActionList.add(ActionModel("Holidays", R.drawable.ic_holidays))
         mActionList.add(ActionModel("Policies", R.drawable.ic_policy))

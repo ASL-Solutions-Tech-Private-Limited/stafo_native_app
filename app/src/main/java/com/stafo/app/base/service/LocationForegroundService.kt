@@ -283,7 +283,10 @@ class LocationForegroundService : Service() {
     private suspend fun postGeoLocation(lat: String, long: String): Boolean {
         return try {
             val request = EmployeePostLocationRequest(
-                employee_id = getEmployeeDetails()?.id.toString(), latitude = lat, longitude = long
+                employee_id = getEmployeeDetails()?.id.toString(),
+                latitude = lat,
+                longitude = long,
+                battery_status = "${getBatteryPercentage(this@LocationForegroundService)}%"
             )
 
             val token = getUserAccessToken() ?: return false

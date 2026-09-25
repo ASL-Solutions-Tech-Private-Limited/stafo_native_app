@@ -9,6 +9,7 @@ import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.ComponentName
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Context.BATTERY_SERVICE
@@ -85,6 +86,7 @@ import com.stafo.app.R
 import com.stafo.app.base.EndOfDaySyncWorker
 import com.stafo.app.base.model.Holiday
 import com.stafo.app.base.model.ShiftAttendance
+import com.stafo.app.base.service.LocationForegroundService
 import com.stafo.app.screens.ui.SplashActivity
 import com.trackier.sdk.TrackierEvent
 import com.trackier.sdk.TrackierSDK.trackEvent
@@ -160,9 +162,12 @@ fun hideSoftKeyboard(mContext: Activity?) {
             return
         }
         if (mContext.currentFocus != null) {
-            val inputMethodManager =
-                mContext.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(mContext.currentFocus!!.windowToken, 0)
+            val currentFocus = mContext.currentFocus
+            if (currentFocus != null) {
+                val inputMethodManager =
+                    mContext.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+            }
         }
     } catch (e: Exception) {
         e.printStackTrace()
@@ -288,15 +293,13 @@ fun formatDate(dateToFormat: String?): String? {
     if (dateToFormat != null) {
         try {
             Log.e("DATE", "Input Date Date is $dateToFormat")
-            val convertedDate = SimpleDateFormat("dd MMM yyyy,HH:mm a")
-                .format(
-                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                        .parse(dateToFormat)
-                )
-            Log.e("DATE", "Output Date is $convertedDate")
-
-            //Update Date
-            return convertedDate
+            val parsedDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).parse(dateToFormat)
+            if (parsedDate != null) {
+                val convertedDate = SimpleDateFormat("dd MMM yyyy,HH:mm a", java.util.Locale.getDefault()).format(parsedDate)
+                Log.e("DATE", "Output Date is $convertedDate")
+                return convertedDate
+            }
+            return dateToFormat
         } catch (e: ParseException) {
             e.printStackTrace()
         }
@@ -401,15 +404,12 @@ fun formatDateForCricSkillGame(dateToFormat: String?): String {
     if (dateToFormat != null) {
         try {
             Log.e("DATE", "Input Date Date is $dateToFormat")
-            val convertedDate = SimpleDateFormat("yyyy-MM-dd HH:mm a")
-                .format(
-                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")//
-                        .parse(dateToFormat)
-                )
-            Log.e("DATE", "Output Date is $convertedDate")
-
-            //Update Date
-            return convertedDate
+            val parsedDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault()).parse(dateToFormat)
+            if (parsedDate != null) {
+                val convertedDate = SimpleDateFormat("dd MMM yyyy", java.util.Locale.getDefault()).format(parsedDate)
+                return convertedDate
+            }
+            return dateToFormat
         } catch (e: ParseException) {
             e.printStackTrace()
         }
@@ -422,8 +422,8 @@ fun timer(currentTime: String, scheduleTime: String): String {
     val dtArrival = scheduleTime
     val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     try {
-        val dateDeparture: Date = format.parse(dtDeparture)
-        val dateArrival: Date = format.parse(dtArrival)
+        val dateDeparture = format.parse(dtDeparture) ?: java.util.Date()
+        val dateArrival = format.parse(dtArrival) ?: java.util.Date()
         dateArrival.compareTo(dateDeparture)
         val diff = dateArrival.time - dateDeparture.time
         val day: Long = TimeUnit.DAYS.toDays(diff)
@@ -481,6 +481,7 @@ fun getTimeDifferent(dateToFormat: String?) {
 
     try {
         val oldDate = dateFormat.parse(dateToFormat)
+        if (oldDate == null) return
         System.out.println(oldDate)
         val currentDate = Date()
         val diff = currentDate.time - oldDate.time
@@ -792,7 +793,7 @@ fun parseDate(dateString: String): String {
     val outputFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
 
     val date = inputFormat.parse(dateString)
-    return outputFormat.format(date)
+    return if (date != null) outputFormat.format(date) else ""
 }
 
 fun getDates(): Pair<String, String> {
@@ -808,72 +809,23 @@ fun getDates(): Pair<String, String> {
 }
 
 fun getIPAddress(context: Context): String? {
-    val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-    // Check if Wi-Fi is connected
-    val wifiInfo =
-        (context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager).connectionInfo
-    if (wifiInfo.networkId != -1) {
-        val ipAddress = wifiInfo.ipAddress
-        val ipByteArray = byteArrayOf(
-            (ipAddress and 0xff).toByte(),
-            (ipAddress shr 8 and 0xff).toByte(),
-            (ipAddress shr 16 and 0xff).toByte(),
-            (ipAddress shr 24 and 0xff).toByte()
-        )
-
-        try {
-            val inetAddress = InetAddress.getByAddress(ipByteArray)
-            return inetAddress.hostAddress
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    // Check if mobile data is connected
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-        val network = connectivityManager.activeNetwork
-        val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
-        if (networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true) {
-            val inetAddresses = NetworkInterface.getNetworkInterfaces()
-            while (inetAddresses.hasMoreElements()) {
-                val inetAddress = inetAddresses.nextElement()
-                val addresses = inetAddress.inetAddresses
-                while (addresses.hasMoreElements()) {
-                    val address = addresses.nextElement()
-                    if (!address.isLoopbackAddress && address is InetAddress && address.hostAddress.contains(
-                            ":"
-                        ).not()
-                    ) {
-                        return address.hostAddress
+    try {
+        val interfaces = NetworkInterface.getNetworkInterfaces()
+        for (intf in java.util.Collections.list(interfaces)) {
+            val addrs = java.util.Collections.list(intf.inetAddresses)
+            for (addr in addrs) {
+                if (!addr.isLoopbackAddress) {
+                    val sAddr = addr.hostAddress
+                    val isIPv4 = sAddr.indexOf(':') < 0
+                    if (isIPv4) {
+                        return sAddr
                     }
                 }
             }
         }
-    } else {
-        val networks = connectivityManager.allNetworks
-        for (network in networks) {
-            val networkInfo = connectivityManager.getNetworkInfo(network)
-            if (networkInfo?.type == ConnectivityManager.TYPE_MOBILE) {
-                val inetAddresses = NetworkInterface.getNetworkInterfaces()
-                while (inetAddresses.hasMoreElements()) {
-                    val inetAddress = inetAddresses.nextElement()
-                    val addresses = inetAddress.inetAddresses
-                    while (addresses.hasMoreElements()) {
-                        val address = addresses.nextElement()
-                        if (!address.isLoopbackAddress && address is InetAddress && address.hostAddress.contains(
-                                ":"
-                            ).not()
-                        ) {
-                            return address.hostAddress
-                        }
-                    }
-                }
-            }
-        }
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
-
     return null
 }
 
@@ -1409,6 +1361,13 @@ fun getFormatDate(inputDate: String?): String {
 
 
 fun doLogout(mContext: Context) {
+    try {
+        val serviceIntent = Intent(mContext, LocationForegroundService::class.java)
+        mContext.stopService(serviceIntent)
+        WorkManager.getInstance(mContext).cancelUniqueWork("endOfDaySyncWork")
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
     Hawk.deleteAll()
     val prefs = mContext.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
     prefs.edit().clear().apply()
@@ -1422,7 +1381,7 @@ fun getFormattedDate(date: String, dateFormat: String, returnDateFormat: String)
     val outputFormat = SimpleDateFormat(returnDateFormat, Locale.getDefault())
 
     val dateObj = inputFormat.parse(date)
-    return outputFormat.format(dateObj)
+    return if (dateObj != null) outputFormat.format(dateObj) else ""
 }
 
 fun getFormattedDate2(date: String, possibleFormats: List<String>, returnDateFormat: String): String {
@@ -1432,7 +1391,7 @@ fun getFormattedDate2(date: String, possibleFormats: List<String>, returnDateFor
         try {
             val inputFormat = SimpleDateFormat(format, Locale.getDefault())
             val dateObj = inputFormat.parse(date)
-            return outputFormat.format(dateObj)
+            if (dateObj != null) return outputFormat.format(dateObj) else return ""
         } catch (e: ParseException) {
 
         }
@@ -1470,8 +1429,8 @@ fun extractDayNameDateAndMonth2(dateStr: String?): Pair<String, String> {
 
 fun calculateHours(inTime: String, outTime: String): String {
     val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-    val inDate = timeFormat.parse(inTime)
-    val outDate = timeFormat.parse(outTime)
+    val inDate = timeFormat.parse(inTime) ?: java.util.Date()
+    val outDate = timeFormat.parse(outTime) ?: java.util.Date()
     val differenceInMillis = outDate.time - inDate.time
     val differenceInHours = (differenceInMillis / (1000 * 60 * 60)).toInt()
     val differenceInMinutes = ((differenceInMillis % (1000 * 60 * 60)) / (1000 * 60)).toInt()
@@ -1484,8 +1443,8 @@ fun calculateHours2(punchIn: String?, punchOut: String?): String {
 
     return try {
         val format = SimpleDateFormat("HH:mm", Locale.getDefault())
-        val inTime = format.parse(punchIn)
-        val outTime = format.parse(punchOut)
+        val inTime = format.parse(punchIn) ?: java.util.Date()
+        val outTime = format.parse(punchOut) ?: java.util.Date()
 
         val diff = outTime.time - inTime.time
         val hours = (diff / (1000 * 60 * 60)).toInt()
@@ -1835,7 +1794,7 @@ fun formatUtcTo12HourLocalTimeLegacy(utcTime: String): String {
         val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
         outputFormat.timeZone = TimeZone.getDefault()
 
-        val date: Date = inputFormat.parse(utcTime)!!
+        val date = inputFormat.parse(utcTime) ?: java.util.Date()
         outputFormat.format(date)
     } catch (e: Exception) {
         " "
@@ -1883,7 +1842,7 @@ fun convertTo12HourFormat2(dateTime: String?): String {
 
     return try {
         val date = inputFormat.parse(dateTime)
-        outputFormat.format(date!!)
+        date?.let { outputFormat.format(it) } ?: ""
     } catch (e: Exception) {
         e.printStackTrace()
         "--"
@@ -1899,7 +1858,7 @@ fun convertTo12HourFormat3(dateTime: String?): String {
 
     return try {
         val date = inputFormat.parse(dateTime)
-        outputFormat.format(date!!)
+        date?.let { outputFormat.format(it) } ?: ""
     } catch (e: Exception) {
         e.printStackTrace()
         "--"
@@ -1993,14 +1952,84 @@ fun checkExactAlarmPermission(context: Context, onResult: (Boolean) -> Unit) {
 }
 
 fun requestIgnoreBatteryOptimization(context: Context, onResult: (Boolean) -> Unit) {
-    val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-    if (!pm.isIgnoringBatteryOptimizations(context.packageName)) {
-        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-        intent.data = Uri.parse("package:${context.packageName}")
-        (context as Activity).startActivityForResult(intent, 1002)
-        onResult(false)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val pm = context.getSystemService(Context.POWER_SERVICE) as? PowerManager
+        if (pm != null && !pm.isIgnoringBatteryOptimizations(context.packageName)) {
+            try {
+                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                    data = Uri.parse("package:${context.packageName}")
+                }
+                if (context is Activity) {
+                    context.startActivityForResult(intent, 1002)
+                } else {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                }
+                onResult(false)
+            } catch (e: Exception) {
+                try {
+                    val fallbackIntent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                    if (context !is Activity) {
+                        fallbackIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    context.startActivity(fallbackIntent)
+                } catch (ex: Exception) {
+                    try {
+                        val appDetailsIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = Uri.parse("package:${context.packageName}")
+                        }
+                        if (context !is Activity) {
+                            appDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
+                        context.startActivity(appDetailsIntent)
+                    } catch (e2: Exception) {
+                        e2.printStackTrace()
+                    }
+                }
+                onResult(false)
+            }
+        } else {
+            onResult(true)
+        }
     } else {
         onResult(true)
+    }
+}
+
+fun openOEMBatterySettings(context: Context) {
+    val manufacturer = Build.MANUFACTURER.lowercase(Locale.ROOT)
+    val intents = mutableListOf<Intent>()
+
+    when {
+        manufacturer.contains("xiaomi") || manufacturer.contains("redmi") -> {
+            intents.add(Intent().setComponent(ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")))
+            intents.add(Intent().setComponent(ComponentName("com.miui.securitycenter", "com.miui.powercenter.PowerSettings")))
+        }
+        manufacturer.contains("oppo") || manufacturer.contains("realme") -> {
+            intents.add(Intent().setComponent(ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity")))
+            intents.add(Intent().setComponent(ComponentName("com.oppo.safe", "com.oppo.safe.permission.startup.StartupAppListActivity")))
+        }
+        manufacturer.contains("vivo") -> {
+            intents.add(Intent().setComponent(ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.BgStartUpManager")))
+            intents.add(Intent().setComponent(ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity")))
+        }
+        manufacturer.contains("huawei") || manufacturer.contains("honor") -> {
+            intents.add(Intent().setComponent(ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity")))
+            intents.add(Intent().setComponent(ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")))
+        }
+        manufacturer.contains("samsung") -> {
+            intents.add(Intent().setComponent(ComponentName("com.samsung.android.looper", "com.samsung.android.sm.ui.battery.BatteryActivity")))
+        }
+    }
+
+    for (intent in intents) {
+        try {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+            return
+        } catch (e: Exception) {
+            // Try next OEM intent
+        }
     }
 }
 @RequiresApi(Build.VERSION_CODES.O)

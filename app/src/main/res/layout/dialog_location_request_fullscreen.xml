@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="24dp">
+
+    <!-- Top Close/Decline Button -->
+    <ImageView
+        android:id="@+id/btnClose"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Close"
+        android:padding="6dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#64748B" />
+
+    <TextView
+        android:id="@+id/tvHeaderTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/gilroy_semi_bold"
+        android:text="Location Permission"
+        android:textColor="#64748B"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintBottom_toBottomOf="@id/btnClose"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btnClose" />
+
+    <!-- Main Content Container -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@id/bottomContainer"
+        app:layout_constraintTop_toBottomOf="@id/btnClose">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <!-- Location Icon Circle -->
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_location_icon_circle"
+                android:padding="20dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="Location Icon"
+                    android:src="@drawable/ic_location"
+                    app:tint="#4F46E5" />
+            </FrameLayout>
+
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/gilroy_bold"
+                android:gravity="center"
+                android:text="Live Location Tracking Request"
+                android:textColor="#1E293B"
+                android:textSize="@dimen/_18ssp" />
+
+            <!-- Subtitle -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/gilroy_medium"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp"
+                android:text="Your admin has requested live location tracking during work hours to manage attendance and field updates accurately."
+                android:textColor="#64748B"
+                android:textSize="@dimen/_12ssp" />
+
+            <!-- Info Cards Container -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:orientation="vertical">
+
+                <!-- Feature 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/top_rounded_bg"
+                    android:backgroundTint="#F8FAFC"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📍"
+                        android:textSize="@dimen/_18ssp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/gilroy_semi_bold"
+                            android:text="Real-Time Verification"
+                            android:textColor="#1E293B"
+                            android:textSize="@dimen/_12ssp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:text="Automated, accurate shift attendance and duty logs."
+                            android:textColor="#64748B"
+                            android:textSize="@dimen/_10ssp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Feature 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/top_rounded_bg"
+                    android:backgroundTint="#F8FAFC"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🛡️"
+                        android:textSize="@dimen/_18ssp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/gilroy_semi_bold"
+                            android:text="Privacy Protected"
+                            android:textColor="#1E293B"
+                            android:textSize="@dimen/_12ssp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:text="Tracking automatically stops once your shift ends."
+                            android:textColor="#64748B"
+                            android:textSize="@dimen/_10ssp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Feature 3 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/top_rounded_bg"
+                    android:backgroundTint="#F8FAFC"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔋"
+                        android:textSize="@dimen/_18ssp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/gilroy_semi_bold"
+                            android:text="Battery Optimized"
+                            android:textColor="#1E293B"
+                            android:textSize="@dimen/_12ssp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:fontFamily="@font/gilroy_medium"
+                            android:text="Low power background service ensures minimal battery usage."
+                            android:textColor="#64748B"
+                            android:textSize="@dimen/_10ssp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Action Container -->
+    <LinearLayout
+        android:id="@+id/bottomContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Swipe to Accept Track Container -->
+        <FrameLayout
+            android:id="@+id/swipeTrackContainer"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/bg_swipe_track">
+
+            <!-- Label in background -->
+            <TextView
+                android:id="@+id/tvSwipeHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="32dp"
+                android:fontFamily="@font/gilroy_bold"
+                android:letterSpacing="0.05"
+                android:text="SWIPE TO ACCEPT   ❯❯❯"
+                android:textColor="#4F46E5"
+                android:textSize="@dimen/_13ssp" />
+
+            <!-- Draggable Swipe Thumb -->
+            <FrameLayout
+                android:id="@+id/swipeThumb"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_swipe_thumb"
+                android:elevation="4dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="Swipe Handle"
+                    android:rotation="180"
+                    android:src="@drawable/ic_back"
+                    app:tint="@color/white" />
+            </FrameLayout>
+
+        </FrameLayout>
+
+        <!-- Decline Button -->
+        <TextView
+            android:id="@+id/btnDecline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="?attr/selectableItemBackground"
+            android:fontFamily="@font/gilroy_semi_bold"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="Decline Request"
+            android:textColor="#64748B"
+            android:textSize="@dimen/_13ssp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
