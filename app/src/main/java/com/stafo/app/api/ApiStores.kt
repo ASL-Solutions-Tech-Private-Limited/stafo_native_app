@@ -1245,9 +1245,8 @@ interface ApiStores {
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<AttendanceRequestResponse>
 
-    @POST("api/attendance-request-status-update/{attendance_request_id}")
+    @POST("api/company/missed-punchout-action")
     suspend fun callAttendanceStatusUpdate(
-        @Path("attendance_request_id") id: Int,
         @Body request: AttendanceActionRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<DeleteTaskResponse>

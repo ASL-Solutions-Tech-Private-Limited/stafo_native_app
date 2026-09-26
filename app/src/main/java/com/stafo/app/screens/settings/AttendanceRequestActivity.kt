@@ -196,7 +196,10 @@ class AttendanceRequestActivity : AppCompatActivity() {
         AlertDialog.Builder(this).setTitle("Confirm Action")
             .setMessage("Are you sure? You want to mark this request as $status?")
             .setPositiveButton("OK") { dialog, _ ->
-                val request = AttendanceActionRequest(status = status)
+                val request = AttendanceActionRequest(
+                    request_id = id,
+                    status = status
+                )
                 settingsViewModel.attendanceRequestStatusUpdate(
                     this@AttendanceRequestActivity, id, request
                 )
@@ -204,6 +207,54 @@ class AttendanceRequestActivity : AppCompatActivity() {
             }.setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
             }.show()
+    }
+
+    fun openRejectDialog(id: Int) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_reject_missed_punch, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val rbHalfDay = dialogView.findViewById<android.widget.RadioButton>(R.id.rb_half_day)
+        val rbAbsent = dialogView.findViewById<android.widget.RadioButton>(R.id.rb_absent)
+        val etRejectReason = dialogView.findViewById<android.widget.EditText>(R.id.et_reject_reason)
+        val btnCancel = dialogView.findViewById<android.view.View>(R.id.btn_cancel_reject)
+        val btnSubmit = dialogView.findViewById<android.view.View>(R.id.btn_submit_reject)
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnSubmit.setOnClickListener {
+            val reason = etRejectReason.text.toString().trim()
+            if (reason.isEmpty()) {
+                CustomToast(this, "Please enter rejection reason")
+                return@setOnClickListener
+            }
+
+            val attendanceType = when {
+                rbHalfDay.isChecked -> "Halfday"
+                rbAbsent.isChecked -> "Absent"
+                else -> "Present"
+            }
+
+            val request = AttendanceActionRequest(
+                request_id = id,
+                status = "Rejected",
+                reject_reason = reason,
+                reject_attendance_type = attendanceType
+            )
+
+            settingsViewModel.attendanceRequestStatusUpdate(
+                this@AttendanceRequestActivity, id, request
+            )
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
 }

@@ -555,7 +555,7 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response =
-                    ASLEmpMng.instance.apiStores()?.callAttendanceStatusUpdate(id, request)
+                    ASLEmpMng.instance.apiStores()?.callAttendanceStatusUpdate(request)
                 withContext(Dispatchers.Main) {
                     getLoaderLiveData().value = "stop"
                     response?.let {
