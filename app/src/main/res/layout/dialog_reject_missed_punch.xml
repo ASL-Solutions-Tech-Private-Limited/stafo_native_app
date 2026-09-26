@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/top_rounded_bg"
+    android:backgroundTint="@color/white"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/gilroy_bold"
+        android:text="Reject Missed Punch-Out Request"
+        android:textColor="#1E293B"
+        android:textSize="@dimen/_14ssp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/gilroy_semi_bold"
+        android:text="Mark Attendance Status As:"
+        android:textColor="#475569"
+        android:textSize="@dimen/_11ssp" />
+
+    <!-- Attendance Status Selection -->
+    <RadioGroup
+        android:id="@+id/rg_attendance_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_present"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:fontFamily="@font/gilroy_medium"
+            android:text="Present"
+            android:textColor="#1E293B"
+            android:textSize="@dimen/_11ssp" />
+
+        <RadioButton
+            android:id="@+id/rb_half_day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/gilroy_medium"
+            android:text="Half Day"
+            android:textColor="#1E293B"
+            android:textSize="@dimen/_11ssp" />
+
+        <RadioButton
+            android:id="@+id/rb_absent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/gilroy_medium"
+            android:text="Absent"
+            android:textColor="#1E293B"
+            android:textSize="@dimen/_11ssp" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/gilroy_semi_bold"
+        android:text="Rejection Reason:"
+        android:textColor="#475569"
+        android:textSize="@dimen/_11ssp" />
+
+    <EditText
+        android:id="@+id/et_reject_reason"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/custom_item_card_bg"
+        android:gravity="top|start"
+        android:hint="Type reason for rejection..."
+        android:inputType="textMultiLine"
+        android:padding="12dp"
+        android:textColor="#1E293B"
+        android:textColorHint="#94A3B8"
+        android:textSize="@dimen/_11ssp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_cancel_reject"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_30sdp"
+            android:background="?attr/selectableItemBackground"
+            android:fontFamily="@font/gilroy_semi_bold"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="#64748B"
+            android:textSize="@dimen/_11ssp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_submit_reject"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/custom_reject_btn_bg"
+            android:fontFamily="@font/gilroy_bold"
+            android:paddingHorizontal="16dp"
+            android:text="Submit Rejection"
+            android:textAllCaps="false"
+            android:textColor="#EF4444"
+            android:textSize="@dimen/_11ssp" />
+
+    </LinearLayout>
+
+</LinearLayout>

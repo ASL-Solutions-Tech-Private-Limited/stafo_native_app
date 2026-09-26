@@ -215,4 +215,52 @@ class AttendanceRequestActivity : AppCompatActivity() {
             }.show()
     }
 
+    fun openRejectDialog(id: Int) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_reject_missed_punch, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val rbHalfDay = dialogView.findViewById<android.widget.RadioButton>(R.id.rb_half_day)
+        val rbAbsent = dialogView.findViewById<android.widget.RadioButton>(R.id.rb_absent)
+        val etRejectReason = dialogView.findViewById<android.widget.EditText>(R.id.et_reject_reason)
+        val btnCancel = dialogView.findViewById<android.view.View>(R.id.btn_cancel_reject)
+        val btnSubmit = dialogView.findViewById<android.view.View>(R.id.btn_submit_reject)
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnSubmit.setOnClickListener {
+            val reason = etRejectReason.text.toString().trim()
+            if (reason.isEmpty()) {
+                CustomToast(this, "Please enter rejection reason")
+                return@setOnClickListener
+            }
+
+            val (attendanceType, isHalfDay) = when {
+                rbHalfDay.isChecked -> Pair("Half Day", 1)
+                rbAbsent.isChecked -> Pair("Absent", 0)
+                else -> Pair("Present", 0)
+            }
+
+            val request = AttendanceActionRequest(
+                status = "Rejected",
+                reject_reason = reason,
+                attendance = attendanceType,
+                halfday = isHalfDay
+            )
+
+            settingsViewModel.attendanceRequestStatusUpdate(
+                this@AttendanceRequestActivity, id, request
+            )
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
 }

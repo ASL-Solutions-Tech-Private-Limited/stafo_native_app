@@ -249,11 +249,70 @@
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/txt_reason1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_status"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:hint="Reason"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/txt_reason"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_status"
+            android:layout_alignParentEnd="true"
+            android:layout_alignStart="@+id/txt_leave_date"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:hint=""
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/txt_reject_reason1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_reason"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:hint="Reject Reason"
+            android:visibility="gone"
+            android:singleLine="true"
+            android:textColor="@color/pastel_red"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/txt_reject_reason"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_reason"
+            android:layout_alignParentEnd="true"
+            android:layout_alignStart="@+id/txt_leave_date"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:fontFamily="@font/gilroy_medium"
+            android:hint=""
+            android:visibility="gone"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:textColor="@color/pastel_red"
+            android:textSize="@dimen/_12ssp" />
+
         <RelativeLayout
             android:id="@+id/rtl_action_request"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_status"
+            android:layout_below="@+id/txt_reject_reason"
             android:layout_alignParentEnd="true"
             android:visibility="gone"
             android:layout_marginTop="@dimen/_12sdp"

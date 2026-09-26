@@ -1226,7 +1226,7 @@ interface ApiStores {
     ): Response<AttendanceUpdateResponse>
 
 
-    @GET("api/attendance-request-list")
+    @GET("api/employee/missed-punchout-list")
     suspend fun callGetAttendanceRequestList(
         @Query("company_id") companyId: String? = null,
         @Query("employee_id") employeeId: String? = null,

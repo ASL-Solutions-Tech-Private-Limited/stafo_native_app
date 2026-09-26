@@ -33,29 +33,45 @@ class AdapterAttendanceRequest(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             with(list[position]) {
-                binding.txtEmpName.text = this.employee.name
-                binding.txtLeaveDate.text = "${getFormatDate(this.date)}"
-                binding.txtStartDate.text = (this.in_time)
-                binding.txtEndDate.text = (this.out_time)
-
+                val empNameDisplay = if (!this.employee.emp_id.isNullOrBlank()) {
+                    "${this.employee.name} (${this.employee.emp_id})"
+                } else {
+                    this.employee.name
+                }
+                binding.txtEmpName.text = empNameDisplay
+                binding.txtLeaveDate.text = getFormatDate(this.date)
+                binding.txtStartDate.text = this.in_time ?: "--"
+                binding.txtEndDate.text = this.out_time ?: "--"
 
                 val placeholderBitmap = generateTextBitmap(this.employee.name ?: "?")
                 binding.approveLvEmpImage.setImageBitmap(placeholderBitmap)
 
-                if (this.halfday==0){
-                    binding.txtDuration.text = "Full Day"
-                }else{
-                    binding.txtDuration.text = "Half Day"
+                if (this.halfday == 0) {
+                    binding.txtDuration.text = this.attendance ?: "Present (Full Day)"
+                } else {
+                    binding.txtDuration.text = this.attendance ?: "Half Day"
                 }
+
                 binding.txtBranch.text = this.branch?.branch_name ?: "--"
                 binding.txtDepartment.text = this.department?.name ?: "--"
+
+                binding.txtReason.text = if (!this.reason.isNullOrBlank()) this.reason else "--"
+
+                if (!this.reject_reason.isNullOrBlank()) {
+                    binding.txtRejectReason1.visibility = View.VISIBLE
+                    binding.txtRejectReason.visibility = View.VISIBLE
+                    binding.txtRejectReason.text = this.reject_reason
+                } else {
+                    binding.txtRejectReason1.visibility = View.GONE
+                    binding.txtRejectReason.visibility = View.GONE
+                }
 
                 if (this.status == "Pending") {
                     binding.txtStatus.text = "Pending"
                     binding.txtStatus.setTextColor(context.getColor(R.color.pending_colour))
-                    if (userType=="emp"){
+                    if (userType == "emp") {
                         binding.rtlActionRequest.visibility = View.GONE
-                    }else{
+                    } else {
                         binding.rtlActionRequest.visibility = View.VISIBLE
                     }
                 } else if (this.status == "Approved") {
@@ -67,16 +83,13 @@ class AdapterAttendanceRequest(
                     binding.txtStatus.setTextColor(context.getColor(R.color.pastel_red))
                     binding.rtlActionRequest.visibility = View.GONE
                 }
-                binding.txtDepartment.text = this.department?.name ?: "--"
 
                 binding.btnApprove.setOnClickListener {
                     (context as AttendanceRequestActivity).actionRequest(this.id, "Approved")
                 }
                 binding.btnReject.setOnClickListener {
-                    (context as AttendanceRequestActivity).actionRequest(this.id, "Rejected")
+                    (context as AttendanceRequestActivity).openRejectDialog(this.id)
                 }
-
-
             }
         }
     }
