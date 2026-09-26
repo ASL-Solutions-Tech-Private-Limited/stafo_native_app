@@ -971,36 +971,55 @@ class EmployeeDashboard : AppCompatActivity() {
                punchOut == "null"
     }
 
+    private fun showDefaultPunchInUI() {
+        runOnUiThread {
+            binding.btnPunchIn.text = "Punch In"
+            binding.btnPunchIn.isEnabled = true
+            binding.btnPunchIn.setBackgroundResource(R.drawable.button_background)
+            val shift = mEmplyeeInfo?.shifts?.firstOrNull()
+            if (shift != null) {
+                val start = convertTo12HourFormat(shift.startTime)
+                val end = convertTo12HourFormat(shift.endTime)
+                binding.tvOfficeTiming.text = "Your Office timing is $start to $end"
+            } else {
+                binding.tvOfficeTiming.text = "Your Office timing is 10 AM to 8 PM"
+            }
+        }
+    }
+
     private fun handleAttendance(employee: EmployeeInfo) {
 
         val punches = employee.punches ?: emptyList()
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
-        if (punches.isEmpty()) {
-            updateUIForPunchIn("")
+        // Filter punches strictly for TODAY
+        val punchesToday = punches.filter {
+            it.punchIn?.startsWith(today) == true
+        }
+
+        if (punchesToday.isEmpty()) {
+            // No punches today (or user forgot to punch out yesterday) -> Ready to Punch In today
+            showDefaultPunchInUI()
         } else {
-            val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            val lastPunchToday = punchesToday.lastOrNull()
+            val punchInTime = lastPunchToday?.punchIn
+            val punchOutTime = lastPunchToday?.punchOut
 
-            val punchesToday = punches.filter {
-                it.punchIn?.startsWith(today) == true
-            }
+            // User is actively punched in TODAY only if:
+            // punchIn exists today, and punchOut is genuinely NULL/BLANK (not 0000-00-00...)
+            val isOngoingPunchToday = !punchInTime.isNullOrBlank() &&
+                    (punchOutTime == null || punchOutTime.isBlank()) &&
+                    punchOutTime?.startsWith("0000") != true
 
-            if (punchesToday.isEmpty()) {
-                updateUIForPunchIn(punches[0].punchIn ?: "")
+            if (isOngoingPunchToday) {
+                // Currently Punched In -> Show "Punch Out" button
+                updateUIForPunchIn(punchInTime!!)
             } else {
-                val ongoingPunch = punchesToday.lastOrNull {
-                    !it.punchIn.isNullOrBlank() && isInvalidPunchOut(it.punchOut)
-                }
-                val lastPunch = punchesToday.lastOrNull()
-
-                if (ongoingPunch != null) {
-                    updateUIForPunchIn(ongoingPunch.punchIn!!)
+                // Punch completed or 0000... auto punched out -> Show "Punch In" button
+                if (!isInvalidPunchOut(punchOutTime)) {
+                    updateUIForPunchOut(punchOutTime!!)
                 } else {
-                    val punchOut = lastPunch?.punchOut
-                    if (!isInvalidPunchOut(punchOut)) {
-                        updateUIForPunchOut(punchOut!!)
-                    } else {
-                        updateUIForPunchIn(lastPunch?.punchIn ?: "")
-                    }
+                    showDefaultPunchInUI()
                 }
             }
         }
