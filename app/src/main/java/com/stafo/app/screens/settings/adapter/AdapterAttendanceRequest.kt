@@ -73,7 +73,7 @@ class AdapterAttendanceRequest(
                     (context as AttendanceRequestActivity).actionRequest(this.id, "Approved")
                 }
                 binding.btnReject.setOnClickListener {
-                    (context as AttendanceRequestActivity).actionRequest(this.id, "Rejected")
+                    (context as AttendanceRequestActivity).openRejectDialog(this.id)
                 }
 
 
