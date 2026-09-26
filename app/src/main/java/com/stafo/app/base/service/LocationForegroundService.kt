@@ -136,25 +136,45 @@ class LocationForegroundService : Service() {
             NotificationsHelper.createNotificationChannel(this)
             val notification = NotificationsHelper.buildNotification(this)
 
-            ServiceCompat.startForeground(
-                this,
-                NOTIFICATION_ID,
-                notification,
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
-                } else {
-                    0
-                }
-            )
+            val foregroundServiceType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && hasLocationPermission()) {
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+            } else {
+                0
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                ServiceCompat.startForeground(
+                    this,
+                    NOTIFICATION_ID,
+                    notification,
+                    foregroundServiceType
+                )
+            } else {
+                startForeground(NOTIFICATION_ID, notification)
+            }
+        } catch (e: SecurityException) {
+            Log.e(TAG, "SecurityException starting foreground service: ${e.message}")
+            try {
+                startForeground(NOTIFICATION_ID, NotificationsHelper.buildNotification(this))
+            } catch (ex: Exception) {
+                stopSelf()
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start foreground service: ${e.message}")
+            stopSelf()
         }
     }
 
 
-    private fun hasLocationPermission(): Boolean = ContextCompat.checkSelfPermission(
-        this, Manifest.permission.ACCESS_FINE_LOCATION
-    ) == PackageManager.PERMISSION_GRANTED
+    private fun hasLocationPermission(): Boolean {
+        val fineLocation = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val coarseLocation = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        return fineLocation || coarseLocation
+    }
 
     private fun startLocationUpdates() {
         try {

@@ -1,10 +1,12 @@
 package com.stafo.app.screens.tripPlan
 
+import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
@@ -587,11 +589,19 @@ class TripDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun startLocationServiceIfNotRunning(fromTripDetails: Boolean = true) {
         checkExactAlarmPermission(this) { exactAlarmGranted ->
             if (exactAlarmGranted) {
-                if (!isServiceRunning(LocationForegroundService::class.java)) {
-                    setTripServiceAction(this, true)
-                    val intent = Intent(this, LocationForegroundService::class.java)
-                    intent.putExtra("FROM_TRIP_DETAILS", fromTripDetails)
-                    ContextCompat.startForegroundService(this, intent)
+                val hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                if (hasPermission) {
+                    if (!isServiceRunning(LocationForegroundService::class.java)) {
+                        setTripServiceAction(this, true)
+                        val intent = Intent(this, LocationForegroundService::class.java)
+                        intent.putExtra("FROM_TRIP_DETAILS", fromTripDetails)
+                        try {
+                            ContextCompat.startForegroundService(this, intent)
+                        } catch (e: Exception) {
+                            Log.e("TripDetails", "Failed to start location service: ${e.message}")
+                        }
+                    }
                 }
             }
         }

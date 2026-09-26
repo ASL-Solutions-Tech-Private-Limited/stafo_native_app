@@ -950,11 +950,19 @@ class EmployeeDashboard : AppCompatActivity() {
         }
 
     private fun startLocationServiceIfNotRunning() {
+        if (!hasFineLocationPermission()) {
+            Log.e("trackLocation", "startLocationServiceIfNotRunning: location permission not granted")
+            return
+        }
         if (!isServiceRunning(LocationForegroundService::class.java)) {
             Log.e("trackLocation", "startLocationServiceIfNotRunning: starting service")
-            ContextCompat.startForegroundService(
-                this, Intent(this, LocationForegroundService::class.java)
-            )
+            try {
+                ContextCompat.startForegroundService(
+                    this, Intent(this, LocationForegroundService::class.java)
+                )
+            } catch (e: Exception) {
+                Log.e("trackLocation", "Failed to start foreground service: ${e.message}")
+            }
         } else {
             Log.e("trackLocation", "startLocationServiceIfNotRunning: already running")
         }
