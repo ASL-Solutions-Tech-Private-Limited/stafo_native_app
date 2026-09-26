@@ -60,12 +60,15 @@ class LocationForegroundService : Service() {
     override fun onCreate() {
         super.onCreate()
         NotificationsHelper.createNotificationChannel(this)
+        startAsForegroundService()
         setupLocationUpdates()
         locationDao = AppDatabase.getDatabase(this).locationDao()
     }
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        startAsForegroundService()
+
         if (intent?.action == "STOP_FOREGROUND_SERVICE") {
             stopForegroundService()
             return START_NOT_STICKY
@@ -75,12 +78,11 @@ class LocationForegroundService : Service() {
         tripSource = isFromTripDetails
 
         if (hasLocationPermission()) {
-            startAsForegroundService()
             startLocationUpdates()
             startRecurringTimer()
         } else {
-            Log.e(TAG, "Location permission not granted.")
-            Toast.makeText(this, "Location permission not granted.", Toast.LENGTH_SHORT).show()
+            Log.e(TAG, "Location permission not granted. Stopping foreground service.")
+            stopForegroundService()
         }
 
         return START_STICKY
@@ -130,18 +132,23 @@ class LocationForegroundService : Service() {
 
 
     private fun startAsForegroundService() {
-        val notification = NotificationsHelper.buildNotification(this)
+        try {
+            NotificationsHelper.createNotificationChannel(this)
+            val notification = NotificationsHelper.buildNotification(this)
 
-        ServiceCompat.startForeground(
-            this,
-            NOTIFICATION_ID,
-            notification,
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
-            } else {
-                0
-            }
-        )
+            ServiceCompat.startForeground(
+                this,
+                NOTIFICATION_ID,
+                notification,
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+                } else {
+                    0
+                }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start foreground service: ${e.message}")
+        }
     }
 
 
