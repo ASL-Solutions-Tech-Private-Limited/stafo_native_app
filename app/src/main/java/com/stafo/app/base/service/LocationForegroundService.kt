@@ -166,7 +166,7 @@ class LocationForegroundService : Service() {
             )
         } catch (e: SecurityException) {
             Log.e(TAG, "Location permission not granted", e)
-            Toast.makeText(this, "Location permission is required.", Toast.LENGTH_SHORT).show()
+            stopForegroundService()
         }
     }
 
