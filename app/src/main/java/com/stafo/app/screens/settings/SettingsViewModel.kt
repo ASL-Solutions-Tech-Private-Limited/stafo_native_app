@@ -642,14 +642,12 @@ class SettingsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = if (userType) {
-                    ASLEmpMng.instance.apiStores()?.callGetAttendanceRequestList(
-                        employeeId = postId,
-                        companyId = null
+                    ASLEmpMng.instance.apiStores()?.callGetEmployeeMissedPunchoutList(
+                        employeeId = postId
                     )
                 } else {
-                    ASLEmpMng.instance.apiStores()?.callGetAttendanceRequestList(
-                        companyId = postId,
-                        employeeId = null
+                    ASLEmpMng.instance.apiStores()?.callGetCompanyMissedPunchoutList(
+                        companyId = postId
                     )
                 }
                 withContext(Dispatchers.Main) {

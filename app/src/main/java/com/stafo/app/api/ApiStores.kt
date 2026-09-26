@@ -1226,9 +1226,14 @@ interface ApiStores {
     ): Response<AttendanceUpdateResponse>
 
 
-    @GET("api/employee/missed-punchout-list")
-    suspend fun callGetAttendanceRequestList(
+    @GET("api/company/missed-punchout-list")
+    suspend fun callGetCompanyMissedPunchoutList(
         @Query("company_id") companyId: String? = null,
+        @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
+    ): Response<AttendanceRequestListResponse>
+
+    @GET("api/employee/missed-punchout-list")
+    suspend fun callGetEmployeeMissedPunchoutList(
         @Query("employee_id") employeeId: String? = null,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<AttendanceRequestListResponse>
