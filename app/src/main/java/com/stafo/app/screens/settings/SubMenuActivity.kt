@@ -302,6 +302,18 @@ class SubMenuActivity : AppCompatActivity() {
                                     )
                                 }
 
+                                "Attendance\nRequests", "Attendance Requests", "Missed Punch\nRequests" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity,
+                                            AttendanceRequestActivity::class.java
+                                        )
+                                    )
+                                    overridePendingTransition(
+                                        R.anim.slide_from_right, R.anim.slide_to_left
+                                    )
+                                }
+
 
                                 "CRM" -> {
                                     startActivity(
