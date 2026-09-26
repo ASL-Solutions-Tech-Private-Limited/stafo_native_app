@@ -1005,21 +1005,26 @@ class EmployeeDashboard : AppCompatActivity() {
             // No punches today (or user forgot to punch out yesterday) -> Ready to Punch In today
             showDefaultPunchInUI()
         } else {
-            val lastPunchToday = punchesToday.lastOrNull()
-            val punchInTime = lastPunchToday?.punchIn
-            val punchOutTime = lastPunchToday?.punchOut
+            // Find any ongoing/active punch session TODAY
+            // (i.e. punchIn exists today AND punchOut is null/blank, NOT 0000...)
+            val ongoingPunchToday = punchesToday.findLast { punch ->
+                !punch.punchIn.isNullOrBlank() &&
+                (punch.punchOut == null || punch.punchOut.isBlank()) &&
+                punch.punchOut?.startsWith("0000") != true
+            } ?: punchesToday.find { punch ->
+                !punch.punchIn.isNullOrBlank() &&
+                (punch.punchOut == null || punch.punchOut.isBlank()) &&
+                punch.punchOut?.startsWith("0000") != true
+            }
 
-            // User is actively punched in TODAY only if:
-            // punchIn exists today, and punchOut is genuinely NULL/BLANK (not 0000-00-00...)
-            val isOngoingPunchToday = !punchInTime.isNullOrBlank() &&
-                    (punchOutTime == null || punchOutTime.isBlank()) &&
-                    punchOutTime?.startsWith("0000") != true
-
-            if (isOngoingPunchToday) {
-                // Currently Punched In -> Show "Punch Out" button
-                updateUIForPunchIn(punchInTime!!)
+            if (ongoingPunchToday != null) {
+                // User IS currently punched in -> Show "Punch Out" button
+                updateUIForPunchIn(ongoingPunchToday.punchIn!!)
             } else {
-                // Punch completed or 0000... auto punched out -> Show "Punch In" button
+                // ALL punches today have punchOut -> User IS currently punched out -> Show "Punch In" button
+                val lastCompletedPunch = punchesToday.maxByOrNull { it.id } ?: punchesToday.last()
+                val punchOutTime = lastCompletedPunch.punchOut
+
                 if (!isInvalidPunchOut(punchOutTime)) {
                     updateUIForPunchOut(punchOutTime!!)
                 } else {

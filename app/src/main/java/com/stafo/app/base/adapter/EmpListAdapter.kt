@@ -143,15 +143,13 @@ class EmpListAdapter(
 
 
                     if (punchesToday.isNotEmpty()) {
-                        val ongoingPunch = punchesToday.lastOrNull { punch ->
+                        val ongoingPunchToday = punchesToday.find { punch ->
                             !punch.punchIn.isNullOrBlank() &&
-                            (punch.punchOut.isNullOrBlank() ||
-                             punch.punchOut == "0000-00-00 00:00:00" ||
-                             punch.punchOut.startsWith("0000") ||
-                             punch.punchOut == "null")
+                            (punch.punchOut == null || punch.punchOut.isBlank()) &&
+                            punch.punchOut?.startsWith("0000") != true
                         }
 
-                        if (ongoingPunch != null) {
+                        if (ongoingPunchToday != null) {
                             binding.ivPunch.backgroundTintList = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     context, R.color.pastel_red
@@ -165,8 +163,11 @@ class EmpListAdapter(
                             )
                         }
                     } else {
-                        binding.ivPunch.backgroundTintList =
-                            ColorStateList.valueOf(ContextCompat.getColor(context, R.color.green))
+                        binding.ivPunch.backgroundTintList = ColorStateList.valueOf(
+                            ContextCompat.getColor(
+                                context, R.color.green
+                            )
+                        )
                     }
 
 
