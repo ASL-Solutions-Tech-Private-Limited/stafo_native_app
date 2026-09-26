@@ -485,26 +485,22 @@ class EmployeeDashboard : AppCompatActivity() {
     }
 
     private fun requestLocationPermission() {
+        if (!hasFineLocationPermission()) {
+            trackingLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            return
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            when {
-                ContextCompat.checkSelfPermission(
+            if (ContextCompat.checkSelfPermission(
                     this, Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    showCustomBottomSheet()
-                }
-
-                ActivityCompat.shouldShowRequestPermissionRationale(
-                    this, Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                ) -> {
-                    requestPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-                }
-
-                else -> {
-                    requestPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-                }
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                showCustomBottomSheet()
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
             }
         } else {
-            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            showCustomBottomSheet()
         }
     }
 
