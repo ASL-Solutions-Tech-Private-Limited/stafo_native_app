@@ -422,6 +422,7 @@ class SubMenuActivity : AppCompatActivity() {
 
     private fun empActionList(): List<ActionModel> {
         mActionList.add(ActionModel("Attendance", R.drawable.ic_attendace))
+        mActionList.add(ActionModel("Attendance\nRequests", R.drawable.ic_attendace))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
         mActionList.add(ActionModel("Trips", R.drawable.ic_trip))

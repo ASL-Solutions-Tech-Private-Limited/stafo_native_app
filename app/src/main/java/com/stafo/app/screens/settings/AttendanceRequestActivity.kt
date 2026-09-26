@@ -1,5 +1,6 @@
 package com.stafo.app.screens.settings
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.stafo.app.R
 import com.stafo.app.databinding.ActivityAttendanceRequestBinding
+import com.stafo.app.screens.emp.EditAttendanceActivity
 import com.stafo.app.screens.settings.adapter.AdapterAttendanceRequest
 import com.stafo.app.screens.settings.dataClass.AttendanceActionRequest
 import com.stafo.app.screens.settings.dataClass.AttendanceRequestData
@@ -48,12 +50,35 @@ class AttendanceRequestActivity : AppCompatActivity() {
 
         onClickListener()
         observeViewModel()
-        if (getIsCOMPANYLogin(this)){
+        if (getIsCOMPANYLogin(this)) {
             binding.llSearchHead.visibility = View.VISIBLE
+            binding.btnRequestAttendance.visibility = View.GONE
             setupSearchListener()
-        }else binding.llSearchHead.visibility = View.GONE
+        } else {
+            binding.llSearchHead.visibility = View.GONE
+            binding.btnRequestAttendance.visibility = View.VISIBLE
+            binding.btnRequestAttendance.setOnClickListener {
+                startActivity(Intent(this, EditAttendanceActivity::class.java))
+            }
+        }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        loadRequestData()
+    }
 
+    private fun loadRequestData() {
+        if (getIsCOMPANYLogin(this)) {
+            getEmployeeComId()?.let {
+                settingsViewModel.attendanceRequestList(this, it, false)
+            }
+        } else {
+            userType = "emp"
+            getEmployeeDetails()?.let { details ->
+                settingsViewModel.attendanceRequestList(this, details.id.toString(), true)
+            }
+        }
     }
 
     private fun observeViewModel() {
@@ -131,46 +156,12 @@ class AttendanceRequestActivity : AppCompatActivity() {
 
     private fun onClickListener() {
         binding.apply {
-
-            if (getIsCOMPANYLogin(this@AttendanceRequestActivity)) {
-                getEmployeeComId()?.let {
-                    settingsViewModel.attendanceRequestList(this@AttendanceRequestActivity, it,false)
-                }
-            } else {
-                userType="emp"
-                getEmployeeDetails()?.let { it1 ->
-                    settingsViewModel.attendanceRequestList(
-                        this@AttendanceRequestActivity, it1.id.toString(),true)
-                }
-
-            }
-
-
-
-
-
             swipeRefreshLayout.setOnRefreshListener {
                 swipeRefreshLayout.isRefreshing = false
-
-                if (getIsCOMPANYLogin(this@AttendanceRequestActivity)) {
-                    getEmployeeComId()?.let {
-                        settingsViewModel.attendanceRequestList(this@AttendanceRequestActivity, it,false)
-                    }
-                } else {
-                    userType="emp"
-                    getEmployeeDetails()?.let { it1 ->
-                        settingsViewModel.attendanceRequestList(
-                            this@AttendanceRequestActivity, it1.id.toString(),true)
-                    }
-
-                }
-
-
+                loadRequestData()
             }
 
             imageBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-
-
         }
     }
 
@@ -213,54 +204,6 @@ class AttendanceRequestActivity : AppCompatActivity() {
             }.setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
             }.show()
-    }
-
-    fun openRejectDialog(id: Int) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_reject_missed_punch, null)
-        val dialog = AlertDialog.Builder(this)
-            .setView(dialogView)
-            .setCancelable(true)
-            .create()
-
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
-        val rbHalfDay = dialogView.findViewById<android.widget.RadioButton>(R.id.rb_half_day)
-        val rbAbsent = dialogView.findViewById<android.widget.RadioButton>(R.id.rb_absent)
-        val etRejectReason = dialogView.findViewById<android.widget.EditText>(R.id.et_reject_reason)
-        val btnCancel = dialogView.findViewById<android.view.View>(R.id.btn_cancel_reject)
-        val btnSubmit = dialogView.findViewById<android.view.View>(R.id.btn_submit_reject)
-
-        btnCancel.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        btnSubmit.setOnClickListener {
-            val reason = etRejectReason.text.toString().trim()
-            if (reason.isEmpty()) {
-                CustomToast(this, "Please enter rejection reason")
-                return@setOnClickListener
-            }
-
-            val (attendanceType, isHalfDay) = when {
-                rbHalfDay.isChecked -> Pair("Half Day", 1)
-                rbAbsent.isChecked -> Pair("Absent", 0)
-                else -> Pair("Present", 0)
-            }
-
-            val request = AttendanceActionRequest(
-                status = "Rejected",
-                reject_reason = reason,
-                attendance = attendanceType,
-                halfday = isHalfDay
-            )
-
-            settingsViewModel.attendanceRequestStatusUpdate(
-                this@AttendanceRequestActivity, id, request
-            )
-            dialog.dismiss()
-        }
-
-        dialog.show()
     }
 
 }

@@ -182,21 +182,26 @@ class EditAttendanceActivity : AppCompatActivity() {
 
 
                     if (!empName.isNullOrBlank()) {
+                        val reasonStr = binding.tieReason.text?.toString()?.trim()
+
                         val request = AttendanceUpdateRequest(
                             employee_id = empId.toInt(),
                             attendance = selectedAttendanceType,
                             date = selectedDate,
                             in_time = selectedInTime,
                             out_time = selectedOutTime,
-                            halfday = attendanceDayValue
+                            halfday = attendanceDayValue,
+                            reason = reasonStr
                         )
 
                         settingsViewModel.updateAttendance(
                             this@EditAttendanceActivity, postItemId.toInt(), request
                         )
-                    }else{
+                    } else {
 
                         getEmployeeDetails()?.let { it1 ->
+                            val reasonStr = binding.tieReason.text?.toString()?.trim()
+
                             val request = AttendanceUpdateRequest(
                                 employee_id = it1.id,
                                 company_id = it1.company_id,
@@ -206,7 +211,8 @@ class EditAttendanceActivity : AppCompatActivity() {
                                 date = selectedDate,
                                 in_time = selectedInTime,
                                 out_time = selectedOutTime,
-                                halfday = attendanceDayValue
+                                halfday = attendanceDayValue,
+                                reason = reasonStr
                             )
 
                             settingsViewModel.attendanceRequest(
