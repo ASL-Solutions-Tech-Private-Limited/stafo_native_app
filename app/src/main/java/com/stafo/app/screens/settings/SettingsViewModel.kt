@@ -41,6 +41,7 @@ import com.stafo.app.screens.settings.dataClass.AttendanceRequestListResponse
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.stafo.app.screens.settings.dataClass.AttendanceUpdateRequest
 import com.stafo.app.screens.settings.dataClass.AttendanceUpdateResponse
+import com.stafo.app.screens.settings.dataClass.MissedPunchoutRequest
 import com.stafo.app.screens.settings.dataClass.BannerResponse
 import com.stafo.app.screens.settings.dataClass.BranchListResponse
 import com.stafo.app.screens.settings.dataClass.ChangeDeviceRequest
@@ -589,7 +590,7 @@ class SettingsViewModel : BaseViewModel() {
     }
 
 
-    fun attendanceRequest(mContext: Context, request: AttendanceUpdateRequest) {
+    fun attendanceRequest(mContext: Context, request: MissedPunchoutRequest) {
 
         if (!isNetworkAvailable(mContext)) {
             return

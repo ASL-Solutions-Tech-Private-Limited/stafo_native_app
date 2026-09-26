@@ -84,6 +84,7 @@ import com.stafo.app.screens.settings.dataClass.AttendanceRequestListResponse
 import com.stafo.app.screens.settings.dataClass.AttendanceSummaryResponse
 import com.stafo.app.screens.settings.dataClass.AttendanceUpdateRequest
 import com.stafo.app.screens.settings.dataClass.AttendanceUpdateResponse
+import com.stafo.app.screens.settings.dataClass.MissedPunchoutRequest
 import com.stafo.app.screens.settings.dataClass.BannerResponse
 import com.stafo.app.screens.settings.dataClass.BranchListResponse
 import com.stafo.app.screens.settings.dataClass.ChangeDeviceRequest
@@ -1239,9 +1240,9 @@ interface ApiStores {
     ): Response<AttendanceRequestListResponse>
 
 
-    @POST("api/attendance-request")
+    @POST("api/employee/missed-punchout-request")
     suspend fun callAttendanceRequest(
-        @Body request: AttendanceUpdateRequest,
+        @Body request: MissedPunchoutRequest,
         @HeaderMap headers: Map<String, String> = ApiClient.headerMap()
     ): Response<AttendanceRequestResponse>
 

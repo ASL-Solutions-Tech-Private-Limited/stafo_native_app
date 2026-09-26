@@ -21,6 +21,7 @@ import com.stafo.app.R
 import com.stafo.app.databinding.ActivityEditAttendanceBinding
 import com.stafo.app.screens.settings.SettingsViewModel
 import com.stafo.app.screens.settings.dataClass.AttendanceUpdateRequest
+import com.stafo.app.screens.settings.dataClass.MissedPunchoutRequest
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeDetails
@@ -70,13 +71,19 @@ class EditAttendanceActivity : AppCompatActivity() {
             settingsViewModel.getAllEmployeeList(this@EditAttendanceActivity)
 
             if (!empName.isNullOrBlank()) {
-                binding.tieEmpName.visibility = View.VISIBLE
+                binding.tilEmpName.visibility = View.VISIBLE
                 binding.tieEmpName.setText(empName)
                 binding.tieDate.setText(showFormatDate(selectedDate))
                 tvTopTitle.text = "Edit Attendance"
             } else {
-                binding.tieEmpName.visibility = View.GONE
-                tvTopTitle.text = "Request Attendance"
+                binding.tilEmpName.visibility = View.GONE
+                binding.tvAttendanceTypeLabel.visibility = View.GONE
+                binding.spinnerAttendanceType.visibility = View.GONE
+                binding.tvStartDate.visibility = View.GONE
+                binding.edtInTime.visibility = View.GONE
+                binding.rgLeav.visibility = View.GONE
+                tvTopTitle.text = "Request Missed Punch Out"
+                btnUpdateAttendance.text = "Submit Punch-Out Request"
             }
 
             val options = resources.getStringArray(R.array.attendance_type)
@@ -153,121 +160,81 @@ class EditAttendanceActivity : AppCompatActivity() {
             }
 
             btnUpdateAttendance.setOnClickListener {
-                if (selectedAttendanceType.isBlank()) {
-                    CustomToast(this@EditAttendanceActivity, "Please select attendance type")
-                    return@setOnClickListener
-                }
+                if (!empName.isNullOrBlank()) {
+                    // Admin Editing Attendance Flow
+                    if (selectedAttendanceType.isBlank()) {
+                        CustomToast(this@EditAttendanceActivity, "Please select attendance type")
+                        return@setOnClickListener
+                    }
 
-                if (selectedDate.isBlank()) {
-                    CustomToast(this@EditAttendanceActivity, "Please select date")
-                    return@setOnClickListener
-                }
+                    if (selectedDate.isBlank()) {
+                        CustomToast(this@EditAttendanceActivity, "Please select date")
+                        return@setOnClickListener
+                    }
 
+                    if (selectedAttendanceType == "Present") {
+                        if (selectedInTime.isBlank()) {
+                            CustomToast(this@EditAttendanceActivity, "Please select In Time")
+                            return@setOnClickListener
+                        }
 
-                if (selectedAttendanceType == "Present") {
-                    if (selectedInTime.isBlank()) {
-                        CustomToast(this@EditAttendanceActivity, "Please select In Time")
+                        if (selectedOutTime.isBlank()) {
+                            CustomToast(this@EditAttendanceActivity, "Please select Out Time")
+                            return@setOnClickListener
+                        }
+
+                        if (attendanceDayValue == -1) {
+                            CustomToast(this@EditAttendanceActivity, "Please select Full/Half Day")
+                            return@setOnClickListener
+                        }
+                    }
+
+                    val reasonStr = binding.tieReason.text?.toString()?.trim()
+
+                    val request = AttendanceUpdateRequest(
+                        employee_id = empId.toInt(),
+                        attendance = selectedAttendanceType,
+                        date = selectedDate,
+                        in_time = selectedInTime,
+                        out_time = selectedOutTime,
+                        halfday = attendanceDayValue,
+                        reason = reasonStr
+                    )
+
+                    settingsViewModel.updateAttendance(
+                        this@EditAttendanceActivity, postItemId.toInt(), request
+                    )
+                } else {
+                    // Employee Requesting Missed Punch Out Flow
+                    if (selectedDate.isBlank()) {
+                        CustomToast(this@EditAttendanceActivity, "Please select Date")
                         return@setOnClickListener
                     }
 
                     if (selectedOutTime.isBlank()) {
-                        CustomToast(this@EditAttendanceActivity, "Please select Out Time")
+                        CustomToast(this@EditAttendanceActivity, "Please select Missed Punch Out Time")
                         return@setOnClickListener
                     }
 
-                    if (attendanceDayValue == -1) {
-                        CustomToast(this@EditAttendanceActivity, "Please select Full/Half Day")
+                    val reasonStr = binding.tieReason.text?.toString()?.trim() ?: ""
+                    if (reasonStr.isBlank()) {
+                        CustomToast(this@EditAttendanceActivity, "Please enter Reason")
                         return@setOnClickListener
                     }
 
-
-                    if (!empName.isNullOrBlank()) {
-                        val reasonStr = binding.tieReason.text?.toString()?.trim()
-
-                        val request = AttendanceUpdateRequest(
-                            employee_id = empId.toInt(),
-                            attendance = selectedAttendanceType,
+                    getEmployeeDetails()?.let { details ->
+                        val request = MissedPunchoutRequest(
+                            employee_id = details.id,
                             date = selectedDate,
-                            in_time = selectedInTime,
-                            out_time = selectedOutTime,
-                            halfday = attendanceDayValue,
+                            punch_out_time = selectedOutTime,
                             reason = reasonStr
                         )
 
-                        settingsViewModel.updateAttendance(
-                            this@EditAttendanceActivity, postItemId.toInt(), request
+                        settingsViewModel.attendanceRequest(
+                            this@EditAttendanceActivity, request
                         )
-                    } else {
-
-                        getEmployeeDetails()?.let { it1 ->
-                            val reasonStr = binding.tieReason.text?.toString()?.trim()
-
-                            val request = AttendanceUpdateRequest(
-                                employee_id = it1.id,
-                                company_id = it1.company_id,
-                                branch_id = it1.branch_id?.toIntOrNull() ?: 0,
-                                department_id = it1.department_id?.toIntOrNull() ?: 0,
-                                attendance = selectedAttendanceType,
-                                date = selectedDate,
-                                in_time = selectedInTime,
-                                out_time = selectedOutTime,
-                                halfday = attendanceDayValue,
-                                reason = reasonStr
-                            )
-
-                            settingsViewModel.attendanceRequest(
-                                this@EditAttendanceActivity, request
-                            )
-
-                        }
-                    }
-
-
-
-
-
-
-
-                } else {
-
-                    if (!empName.isNullOrBlank()) {
-                        val request = AttendanceUpdateRequest(
-                            employee_id = empId.toInt(),
-                            attendance = selectedAttendanceType,
-                            date = selectedDate,
-                            in_time = selectedInTime,
-                            out_time = selectedOutTime,
-                            halfday = attendanceDayValue
-                        )
-
-                        settingsViewModel.updateAttendance(
-                            this@EditAttendanceActivity, postItemId.toInt(), request
-                        )
-                    } else {
-                        getEmployeeDetails()?.let { it1 ->
-                            val request = AttendanceUpdateRequest(
-                                employee_id = it1.id,
-                                company_id = it1.company_id,
-                                branch_id = it1.branch_id?.toIntOrNull() ?: 0,
-                                department_id = it1.department_id?.toIntOrNull() ?: 0,
-                                attendance = selectedAttendanceType,
-                                date = selectedDate,
-                                in_time = selectedInTime,
-                                out_time = selectedOutTime,
-                                halfday = attendanceDayValue
-                            )
-
-                            settingsViewModel.attendanceRequest(
-                                this@EditAttendanceActivity, request
-                            )
-
-                        }
-
-
                     }
                 }
-
-
             }
 
 
