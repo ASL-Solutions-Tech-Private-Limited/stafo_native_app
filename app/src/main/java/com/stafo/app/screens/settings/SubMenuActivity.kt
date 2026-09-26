@@ -167,6 +167,18 @@ class SubMenuActivity : AppCompatActivity() {
 
                                 }
 
+                                "Attendance\nRequests", "Attendance Requests", "Missed Punch\nRequests" -> {
+                                    startActivity(
+                                        Intent(
+                                            this@SubMenuActivity,
+                                            AttendanceRequestActivity::class.java
+                                        )
+                                    )
+                                    overridePendingTransition(
+                                        R.anim.slide_from_right, R.anim.slide_to_left
+                                    )
+                                }
+
                                 "Branches" -> {
                                     startActivity(
                                         Intent(
@@ -387,6 +399,7 @@ class SubMenuActivity : AppCompatActivity() {
 
     private fun actionList(): List<ActionModel> {
         mActionList.add(ActionModel("Employee", R.drawable.ic_employee))
+        mActionList.add(ActionModel("Attendance\nRequests", R.drawable.ic_attendace))
         mActionList.add(ActionModel("CRM", R.drawable.ic_crm))
         mActionList.add(ActionModel("Task", R.drawable.ic_tasks))
         mActionList.add(ActionModel("Trips", R.drawable.ic_trip))
