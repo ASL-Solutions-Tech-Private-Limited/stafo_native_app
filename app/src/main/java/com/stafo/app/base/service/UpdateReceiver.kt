@@ -7,28 +7,29 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import androidx.core.content.ContextCompat.getSystemService
-import java.security.Provider
-
+import com.stafo.app.utils.getEmployeeDetails
+import com.stafo.app.utils.getUserAccessToken
 
 class UpdateReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
-        if (!isServiceRunning(context,LocationForegroundService::class.java)) {
+        val token = getUserAccessToken()
+        val empDetails = getEmployeeDetails()
+        if (token.isNullOrBlank() || empDetails == null) return
+
+        if (!isServiceRunning(context, LocationForegroundService::class.java)) {
             val serviceIntent = Intent(context, LocationForegroundService::class.java)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 try {
                     context.startForegroundService(serviceIntent)
-                    Log.e("service"," true startForegroundService")
+                    Log.e("service", " true startForegroundService")
                 } catch (e: Exception) {
                     Log.e("service", "Failed to start foreground service: ${e.message}")
                 }
             } else {
-                Log.e("service"," else startService")
+                Log.e("service", " else startService")
                 context.startService(serviceIntent)
             }
-        } else Log.e("service","else part of receiver")
-
-
+        } else Log.e("service", "else part of receiver")
     }
 
     private fun isServiceRunning(context: Context, serviceClass: Class<out Service>): Boolean {

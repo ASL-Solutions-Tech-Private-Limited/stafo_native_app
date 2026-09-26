@@ -1035,11 +1035,18 @@ class EmployeeDashboard : AppCompatActivity() {
 
     private fun updateLocationTracking(employee: EmployeeInfo) {
         val shiftEndTime = employee.shifts.firstOrNull()?.endTime
-        val shouldTrack = employee.attendance_type == "geo" || employee.geoStatus == "2"
+
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        val punchesToday = employee.punches?.filter { it.punchIn?.startsWith(today) == true } ?: emptyList()
+        val isPunchedInToday = punchesToday.lastOrNull()?.let {
+            !it.punchIn.isNullOrBlank() && isInvalidPunchOut(it.punchOut)
+        } == true
+
+        val shouldTrack = employee.geoStatus == "2" || isTrip || (employee.attendance_type == "geo" && isPunchedInToday)
 
         Log.e(
             "trackLocation",
-            "updateLocationTracking: geoStatus=${employee.geoStatus} attendance_type=${employee.attendance_type} shouldTrack=$shouldTrack isTrip=$isTrip"
+            "updateLocationTracking: geoStatus=${employee.geoStatus} attendance_type=${employee.attendance_type} isPunchedInToday=$isPunchedInToday shouldTrack=$shouldTrack isTrip=$isTrip"
         )
 
         if (shouldTrack) {

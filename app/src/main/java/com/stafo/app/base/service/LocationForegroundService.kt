@@ -74,6 +74,15 @@ class LocationForegroundService : Service() {
             return START_NOT_STICKY
         }
 
+        val token = getUserAccessToken()
+        val empDetails = getEmployeeDetails()
+
+        if (token.isNullOrBlank() || empDetails == null || empDetails.id == null) {
+            Log.e(TAG, "User is logged out or token is missing. Stopping service.")
+            stopForegroundService()
+            return START_NOT_STICKY
+        }
+
         val isFromTripDetails = intent?.getBooleanExtra("FROM_TRIP_DETAILS", false) == true
         tripSource = isFromTripDetails
 
