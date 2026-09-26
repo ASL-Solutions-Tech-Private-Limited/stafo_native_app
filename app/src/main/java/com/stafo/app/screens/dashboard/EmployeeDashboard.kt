@@ -602,7 +602,7 @@ class EmployeeDashboard : AppCompatActivity() {
 
                     if (punchesToday.isNotEmpty()) {
                         val ongoingPunch =
-                            punchesToday.lastOrNull { punch -> punch.punchIn != null && punch.punchOut == null }
+                            punchesToday.lastOrNull { punch -> !punch.punchIn.isNullOrBlank() && isInvalidPunchOut(punch.punchOut) }
 
 
                         if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo") {
@@ -964,6 +964,13 @@ class EmployeeDashboard : AppCompatActivity() {
         }
     }
 
+    private fun isInvalidPunchOut(punchOut: String?): Boolean {
+        return punchOut.isNullOrBlank() ||
+               punchOut == "0000-00-00 00:00:00" ||
+               punchOut.startsWith("0000") ||
+               punchOut == "null"
+    }
+
     private fun handleAttendance(employee: EmployeeInfo) {
 
         val punches = employee.punches ?: emptyList()
@@ -981,7 +988,7 @@ class EmployeeDashboard : AppCompatActivity() {
                 updateUIForPunchIn(punches[0].punchIn ?: "")
             } else {
                 val ongoingPunch = punchesToday.lastOrNull {
-                    it.punchIn != null && it.punchOut == null
+                    !it.punchIn.isNullOrBlank() && isInvalidPunchOut(it.punchOut)
                 }
                 val lastPunch = punchesToday.lastOrNull()
 
@@ -989,10 +996,10 @@ class EmployeeDashboard : AppCompatActivity() {
                     updateUIForPunchIn(ongoingPunch.punchIn!!)
                 } else {
                     val punchOut = lastPunch?.punchOut
-                    if (punchOut != null) {
-                        updateUIForPunchOut(punchOut)
+                    if (!isInvalidPunchOut(punchOut)) {
+                        updateUIForPunchOut(punchOut!!)
                     } else {
-                        updateUIForPunchIn(punchOut ?: "")
+                        updateUIForPunchIn(lastPunch?.punchIn ?: "")
                     }
                 }
             }

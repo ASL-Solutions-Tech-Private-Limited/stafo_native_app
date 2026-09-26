@@ -144,7 +144,11 @@ class EmpListAdapter(
 
                     if (punchesToday.isNotEmpty()) {
                         val ongoingPunch = punchesToday.lastOrNull { punch ->
-                            punch.punchIn != null && punch.punchOut == null
+                            !punch.punchIn.isNullOrBlank() &&
+                            (punch.punchOut.isNullOrBlank() ||
+                             punch.punchOut == "0000-00-00 00:00:00" ||
+                             punch.punchOut.startsWith("0000") ||
+                             punch.punchOut == "null")
                         }
 
                         if (ongoingPunch != null) {
