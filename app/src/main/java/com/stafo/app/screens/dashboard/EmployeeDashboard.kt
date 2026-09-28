@@ -1312,22 +1312,16 @@ class EmployeeDashboard : AppCompatActivity() {
     }
 
 
+    private fun getAllowedAttendanceName(): String {
+        return when (mEmplyeeInfo?.attendance_type?.lowercase(Locale.getDefault())) {
+            "geo" -> "Geo Attendance"
+            "selfie" -> "Selfie Attendance"
+            "qr code", "qr" -> "QR Code Attendance"
+            else -> if (!mEmplyeeInfo?.attendance_type.isNullOrBlank()) mEmplyeeInfo!!.attendance_type else "Selfie Attendance"
+        }
+    }
+
     private fun showCustomBottomSheet() {
-
-        /*   val rootView = window.decorView.findViewById<View>(android.R.id.content)
-           rootView.post {
-               val screenshot = getBitmapFromView(rootView)
-
-               val blurProcessor = RSBlurProcessor(this)
-               val blurredBitmap = blurProcessor.blur(screenshot, radius = 30f, repeat = 1)
-
-               if (blurredBitmap != null) {
-                   val blurOverlay: ImageView = binding.blurOverlay
-                   blurOverlay.setImageBitmap(blurredBitmap)
-                   blurOverlay.visibility = View.VISIBLE
-                   binding.rootContainer.visibility = View.VISIBLE
-               }
-           }*/
 
         bottomSheetDialog = BottomSheetDialog(this)
         bottomSheetDialogBinding = CustomBottomSheetAttendanceLayoutBinding.inflate(layoutInflater)
@@ -1343,50 +1337,61 @@ class EmployeeDashboard : AppCompatActivity() {
             binding.rootContainer.visibility = View.GONE
             bottomSheetDialog.dismiss()
         }
-        bottomSheetDialogBinding.llGeoAttendance.setOnClickListener {
-            if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "geo") {
-                if (isLocationEnabled()) {
-                    binding.blurOverlay.visibility = View.GONE
-                    binding.rootContainer.visibility = View.GONE
-                    bottomSheetDialog.dismiss()
-                    startActivity(Intent(this, EmployeePunchInActivity::class.java))
+
+        val allowedType = mEmplyeeInfo?.attendance_type?.lowercase(Locale.getDefault()) ?: "selfie"
+        val isGeoAllowed = allowedType == "geo"
+        val isSelfieAllowed = allowedType == "selfie" || allowedType == "selfie attendance" || mEmplyeeInfo?.attendance_type == null
+        val isQrAllowed = allowedType == "qr code" || allowedType == "qr"
+
+        bottomSheetDialogBinding.apply {
+            llGeoAttendance.alpha = if (isGeoAllowed) 1.0f else 0.4f
+            llSelfieAttendance.alpha = if (isSelfieAllowed) 1.0f else 0.4f
+            llQrAttendance.alpha = if (isQrAllowed) 1.0f else 0.4f
+
+            llGeoAttendance.setOnClickListener {
+                if (isGeoAllowed) {
+                    if (isLocationEnabled()) {
+                        binding.blurOverlay.visibility = View.GONE
+                        binding.rootContainer.visibility = View.GONE
+                        bottomSheetDialog.dismiss()
+                        startActivity(Intent(this@EmployeeDashboard, EmployeePunchInActivity::class.java))
+                    } else {
+                        requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                    }
                 } else {
-                    requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                    CustomToast(this@EmployeeDashboard, "Geo Attendance is not allowed. Allowed mode: ${getAllowedAttendanceName()}")
                 }
-            } else CustomToast(this, "Geo Attendance is not enabled for you")
-        }
+            }
 
-        bottomSheetDialogBinding.llSelfieAttendance.setOnClickListener {
-            if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "selfie" || mEmplyeeInfo?.attendance_type == null) {
-                if (isLocationEnabled()) {
-                    binding.blurOverlay.visibility = View.GONE
-                    binding.rootContainer.visibility = View.GONE
-                    bottomSheetDialog.dismiss()
-                    startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
+            llSelfieAttendance.setOnClickListener {
+                if (isSelfieAllowed) {
+                    if (isLocationEnabled()) {
+                        binding.blurOverlay.visibility = View.GONE
+                        binding.rootContainer.visibility = View.GONE
+                        bottomSheetDialog.dismiss()
+                        startActivity(Intent(this@EmployeeDashboard, EmpSelfieAttendanceActivity::class.java))
+                    } else {
+                        requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                    }
                 } else {
-                    requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                    CustomToast(this@EmployeeDashboard, "Selfie Attendance is not allowed. Allowed mode: ${getAllowedAttendanceName()}")
                 }
-            } else CustomToast(this, "Selfie Attendance is not enabled for you")
+            }
 
-
-            /*   startActivity(Intent(this, EmpSelfieAttendanceActivity::class.java))
-               bottomSheetDialog.dismiss()*/
-        }
-
-        bottomSheetDialogBinding.llQrAttendance.setOnClickListener {
-
-            if (mEmplyeeInfo != null && mEmplyeeInfo?.attendance_type == "qr code") {
-                if (isLocationEnabled()) {
-                    binding.blurOverlay.visibility = View.GONE
-                    binding.rootContainer.visibility = View.GONE
-                    bottomSheetDialog.dismiss()
-                    startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
+            llQrAttendance.setOnClickListener {
+                if (isQrAllowed) {
+                    if (isLocationEnabled()) {
+                        binding.blurOverlay.visibility = View.GONE
+                        binding.rootContainer.visibility = View.GONE
+                        bottomSheetDialog.dismiss()
+                        startActivity(Intent(this@EmployeeDashboard, QRCodeAttendanceEmpActivity::class.java))
+                    } else {
+                        requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                    }
                 } else {
-                    requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                    CustomToast(this@EmployeeDashboard, "QR Attendance is not allowed. Allowed mode: ${getAllowedAttendanceName()}")
                 }
-            } else CustomToast(this, "QR Attendance is not enabled for you")/* startActivity(Intent(this, QRCodeAttendanceEmpActivity::class.java))
-             bottomSheetDialog.dismiss()*/
-
+            }
         }
 
         bottomSheetDialog.setContentView(bottomSheetDialogBinding.root)
