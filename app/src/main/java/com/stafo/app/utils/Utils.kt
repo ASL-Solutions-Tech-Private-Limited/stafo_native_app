@@ -83,6 +83,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.orhanobut.hawk.Hawk
 import com.stafo.app.R
+import com.stafo.app.api.ApiClient
 import com.stafo.app.base.EndOfDaySyncWorker
 import com.stafo.app.base.model.Holiday
 import com.stafo.app.base.model.ShiftAttendance
@@ -1362,12 +1363,14 @@ fun getFormatDate(inputDate: String?): String {
 
 fun doLogout(mContext: Context) {
     try {
+        ApiClient.SessionManager.reset()
         val serviceIntent = Intent(mContext, LocationForegroundService::class.java)
         mContext.stopService(serviceIntent)
         WorkManager.getInstance(mContext).cancelUniqueWork("endOfDaySyncWork")
     } catch (e: Exception) {
         e.printStackTrace()
     }
+    ApiClient.SessionManager.reset()
     Hawk.deleteAll()
     val prefs = mContext.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
     prefs.edit().clear().apply()

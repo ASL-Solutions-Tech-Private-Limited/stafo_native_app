@@ -108,30 +108,36 @@ object ApiClient {
                 .sslSocketFactory(sslContext.socketFactory, trustManager)
                 .hostnameVerifier { _, _ -> true }
                 .addInterceptor { chain ->
-                    Log.e("AuthDebug", "Interceptor triggered")
-                    if (SessionManager.isLoggedOut) {
+                    val request = chain.request()
+                    val path = request.url.encodedPath
+
+                    val isAuthRequest = path.contains("login", ignoreCase = true) ||
+                            path.contains("otp", ignoreCase = true) ||
+                            path.contains("register", ignoreCase = true) ||
+                            path.contains("verify", ignoreCase = true)
+
+                    if (SessionManager.isLoggedOut && !isAuthRequest) {
                         throw IOException("Session expired. No further API calls allowed.")
                     }
 
-                    val request = chain.request()
                     val response = chain.proceed(request)
 
-
                     val oldDevice = getEMPDevice(context)
-                    val currentDevice = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+                    val currentDevice = Settings.Secure.getString(
+                        context.contentResolver,
+                        Settings.Secure.ANDROID_ID
+                    )
 
-                    Log.e("AuthDebug", "oldDevice: $oldDevice  currentDevice: $currentDevice")
+                    Log.e("AuthDebug", "oldDevice: $oldDevice  currentDevice: $currentDevice code: ${response.code}")
 
-                    if (response.code == 401) {
+                    if ((response.code == 401 || response.code == 403) && !isAuthRequest) {
                         Handler(Looper.getMainLooper()).post {
-                            CustomToast(context,"Session expired. Please log in again.")
+                            CustomToast(context, "Session expired. Please log in again.")
                         }
                         SessionManager.logout(context)
-
-                    } else if (!oldDevice.isNullOrBlank() && oldDevice != currentDevice) {
-
+                    } else if (!isAuthRequest && !oldDevice.isNullOrBlank() && oldDevice != currentDevice) {
                         Handler(Looper.getMainLooper()).post {
-                            CustomToast(context,"Device mismatch detected. You have been logged out.")
+                            CustomToast(context, "Device mismatch detected. You have been logged out.")
                         }
                         SessionManager.logout(context)
                     }
@@ -195,14 +201,17 @@ object ApiClient {
     }*/
 
     object SessionManager {
+        @Volatile
         var isLoggedOut = false
+
+        fun reset() {
+            isLoggedOut = false
+        }
 
         fun logout(context: Context) {
             if (!isLoggedOut) {
                 isLoggedOut = true
-
-               doLogout(context)
-
+                doLogout(context)
             }
         }
     }
