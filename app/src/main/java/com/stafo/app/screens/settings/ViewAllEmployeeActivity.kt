@@ -1,11 +1,15 @@
 package com.stafo.app.screens.settings
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.RenderEffect
 import android.graphics.Shader
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -23,20 +27,22 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.stafo.app.R
 import com.stafo.app.base.adapter.EmpListAdapter
 import com.stafo.app.base.adapter.RadioShiftAdapter
 import com.stafo.app.databinding.ActivityViewAllEmployeeBinding
 import com.stafo.app.screens.settings.dataClass.GetEmployee
+import com.stafo.app.screens.settings.dataClass.InActiveEmpRequest
+import com.stafo.app.screens.settings.dataClass.RemoveSelfieRequest
 import com.stafo.app.screens.settings.dataClass.SetAttendanceTypeRequest
+import com.stafo.app.screens.settings.dataClass.Shift
+import com.stafo.app.screens.settings.dataClass.ShiftDataList
 import com.stafo.app.utils.CustomLoader
 import com.stafo.app.utils.CustomToast
 import com.stafo.app.utils.getEmployeeComId
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.stafo.app.screens.settings.dataClass.InActiveEmpRequest
-import com.stafo.app.screens.settings.dataClass.RemoveSelfieRequest
-import com.stafo.app.screens.settings.dataClass.Shift
-import com.stafo.app.screens.settings.dataClass.ShiftDataList
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -55,6 +61,9 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
     private var empList: List<GetEmployee> = listOf()
     private var filteredList: List<GetEmployee> = listOf()
     private var shiftList: List<ShiftDataList> = listOf()
+
+    private var mCurrentSelfieEmpId = -1
+    private val REQUEST_CODE_SELFIE_PICKER = 2001
 
     //for bottom sheet
     private lateinit var bottomSheetDialog: BottomSheetDialog
@@ -279,7 +288,25 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
             if (it.status) {
                 CustomToast(this, it.message)
                 binding.blurOverlay.visibility = View.GONE
-                bottomSheetDialog.dismiss()
+                if (::bottomSheetDialog.isInitialized && bottomSheetDialog.isShowing) {
+                    bottomSheetDialog.dismiss()
+                }
+            } else {
+                CustomToast(this, it.message)
+            }
+        }
+
+        settingsViewModel.mSelfieUploadResponse.observe(this) {
+            if (it.status) {
+                CustomToast(this, "Selfie image uploaded successfully!")
+                settingsViewModel.getAllEmployeeList(this@ViewAllEmployeeActivity)
+                if (mCurrentSelfieEmpId != -1) {
+                    val request = SetAttendanceTypeRequest(
+                        employee_id = mCurrentSelfieEmpId,
+                        attendance_type = "selfie"
+                    )
+                    settingsViewModel.setAttendanceTypeEmployee(this, request)
+                }
             } else {
                 CustomToast(this, it.message)
             }
@@ -459,11 +486,19 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
             }
         }
 
-        switchSelfie.setOnCheckedChangeListener { _, isChecked ->
+        val selectedEmp = empList.find { it.id == id }
+        val hasSelfie = selectedEmp?.hasSelfie == true || !selectedEmp?.selfieImage.isNullOrBlank() || !selectedEmp?.selfieImagePath.isNullOrBlank()
+
+        switchSelfie.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                attendanceType = "selfie"
-                switchGeo.isChecked = false
-                switchQr.isChecked = false
+                if (!hasSelfie) {
+                    buttonView.isChecked = false
+                    showNoSelfieDialog(id)
+                } else {
+                    attendanceType = "selfie"
+                    switchGeo.isChecked = false
+                    switchQr.isChecked = false
+                }
             }
         }
 
@@ -493,16 +528,127 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
         }
 
 
-
-
-
         bottomSheetDialog.setContentView(view)
-
-
         bottomSheetDialog.show()
+    }
 
+    private fun showNoSelfieDialog(employeeId: Int) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_no_selfie_warning, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
 
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
+        val btnCancel = dialogView.findViewById<View>(R.id.btn_cancel_warning)
+        val btnAddSelfie = dialogView.findViewById<View>(R.id.btn_add_selfie_warning)
+
+        btnCancel.setOnClickListener { dialog.dismiss() }
+        btnAddSelfie.setOnClickListener {
+            dialog.dismiss()
+            showChooseSelfieSourceDialog(employeeId)
+        }
+
+        dialog.show()
+    }
+
+    private fun showChooseSelfieSourceDialog(employeeId: Int) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_choose_selfie_source, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val optionCamera = dialogView.findViewById<View>(R.id.ll_option_camera)
+        val optionGallery = dialogView.findViewById<View>(R.id.ll_option_gallery)
+        val btnCancel = dialogView.findViewById<View>(R.id.btn_cancel_source)
+
+        mCurrentSelfieEmpId = employeeId
+
+        optionCamera.setOnClickListener {
+            dialog.dismiss()
+            ImagePicker.with(this)
+                .crop()
+                .cameraOnly()
+                .compress(1024)
+                .maxResultSize(1080, 1080)
+                .start(REQUEST_CODE_SELFIE_PICKER)
+        }
+
+        optionGallery.setOnClickListener {
+            dialog.dismiss()
+            ImagePicker.with(this)
+                .crop()
+                .galleryOnly()
+                .compress(1024)
+                .maxResultSize(1080, 1080)
+                .start(REQUEST_CODE_SELFIE_PICKER)
+        }
+
+        btnCancel.setOnClickListener { dialog.dismiss() }
+
+        dialog.show()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_SELFIE_PICKER && resultCode == Activity.RESULT_OK && data?.data != null) {
+            val uri = data.data!!
+            val file = getFileFromUri(uri)
+            if (file != null && mCurrentSelfieEmpId != -1) {
+                settingsViewModel.uploadSelfieAttendance(this, mCurrentSelfieEmpId.toString(), file)
+            } else {
+                CustomToast(this, "File selection failed")
+            }
+        }
+    }
+
+    private fun getFileFromUri(uri: Uri): File? {
+        val fileName = getFileName(uri) ?: return null
+        val file = File(cacheDir, fileName)
+
+        return try {
+            contentResolver.openInputStream(uri)?.use { inputStream ->
+                file.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+            file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    private fun getFileName(uri: Uri): String? {
+        var name: String? = null
+
+        if (uri.scheme == "content") {
+            contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    if (nameIndex != -1) {
+                        name = cursor.getString(nameIndex)
+                    }
+                }
+            }
+        }
+
+        if (name.isNullOrEmpty()) {
+            name = uri.path?.let { path ->
+                val cut = path.lastIndexOf('/')
+                if (cut != -1) {
+                    path.substring(cut + 1)
+                } else {
+                    path
+                }
+            }
+        }
+
+        return name ?: "unknown_file"
     }
 
     @SuppressLint("MissingInflatedId")

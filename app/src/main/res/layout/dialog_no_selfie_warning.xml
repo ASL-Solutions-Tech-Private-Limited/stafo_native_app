@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/top_rounded_bg"
+    android:backgroundTint="@color/white"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/gilroy_bold"
+        android:text="No Reference Selfie Found"
+        android:textColor="#1E293B"
+        android:textSize="@dimen/_14ssp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/gilroy_medium"
+        android:lineSpacingExtra="3dp"
+        android:text="This employee does not have a reference selfie photo. Please add a selfie image before enabling Selfie Attendance."
+        android:textColor="#64748B"
+        android:textSize="@dimen/_11ssp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_cancel_warning"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_30sdp"
+            android:background="?attr/selectableItemBackground"
+            android:fontFamily="@font/gilroy_semi_bold"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="#64748B"
+            android:textSize="@dimen/_11ssp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_add_selfie_warning"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/gilroy_bold"
+            android:paddingHorizontal="16dp"
+            android:text="+ Add Selfie"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_11ssp" />
+
+    </LinearLayout>
+
+</LinearLayout>

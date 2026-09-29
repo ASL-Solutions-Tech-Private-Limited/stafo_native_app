@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/top_rounded_bg"
+    android:backgroundTint="@color/white"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/gilroy_bold"
+        android:text="Add Reference Selfie"
+        android:textColor="#1E293B"
+        android:textSize="@dimen/_14ssp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/gilroy_medium"
+        android:text="Choose how to capture or upload the employee's selfie photo."
+        android:textColor="#64748B"
+        android:textSize="@dimen/_11ssp" />
+
+    <!-- Camera Option (Recommended) -->
+    <LinearLayout
+        android:id="@+id/ll_option_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/top_rounded_bg"
+        android:backgroundTint="#F0FDF4"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📸"
+            android:textSize="@dimen/_20ssp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gilroy_bold"
+                    android:text="Camera"
+                    android:textColor="#1E293B"
+                    android:textSize="@dimen/_12ssp" />
+
+                <!-- Recommended Badge -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/custom_emp_item_bg2"
+                    android:backgroundTint="#DCFCE7"
+                    android:fontFamily="@font/gilroy_bold"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="2dp"
+                    android:text="RECOMMENDED"
+                    android:textColor="#166534"
+                    android:textSize="@dimen/_8sdp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Capture a live photo using device camera for best accuracy."
+                android:textColor="#15803D"
+                android:textSize="@dimen/_10ssp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/gilroy_bold"
+            android:text="❯"
+            android:textColor="#166534"
+            android:textSize="@dimen/_14ssp" />
+    </LinearLayout>
+
+    <!-- Gallery / File Option -->
+    <LinearLayout
+        android:id="@+id/ll_option_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/top_rounded_bg"
+        android:backgroundTint="#F8FAFC"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🖼️"
+            android:textSize="@dimen/_20ssp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/gilroy_bold"
+                android:text="Browse Gallery / File"
+                android:textColor="#1E293B"
+                android:textSize="@dimen/_12ssp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/gilroy_medium"
+                android:text="Choose an existing clear photo from gallery or files."
+                android:textColor="#64748B"
+                android:textSize="@dimen/_10ssp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/gilroy_bold"
+            android:text="❯"
+            android:textColor="#64748B"
+            android:textSize="@dimen/_14ssp" />
+    </LinearLayout>
+
+    <!-- Cancel Button -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_cancel_source"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_32sdp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackground"
+        android:fontFamily="@font/gilroy_semi_bold"
+        android:text="Cancel"
+        android:textAllCaps="false"
+        android:textColor="#64748B"
+        android:textSize="@dimen/_11ssp" />
+
+</LinearLayout>
