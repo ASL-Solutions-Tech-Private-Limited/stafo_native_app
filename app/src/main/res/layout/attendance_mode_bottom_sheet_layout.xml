@@ -101,22 +101,42 @@
 
             <ImageView
                 android:id="@+id/img_selfie"
-                android:layout_alignParentStart="true"
-                android:src="@drawable/profile_picture"
-                android:padding="@dimen/_1sdp"
                 android:layout_width="@dimen/_16sdp"
-                android:layout_height="@dimen/_16sdp"/>
-            <TextView
-                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_height="@dimen/_16sdp"
+                android:layout_alignParentStart="true"
+                android:padding="@dimen/_1sdp"
+                android:src="@drawable/profile_picture" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-             android:layout_toRightOf="@+id/img_selfie"
                 android:layout_centerVertical="true"
-                android:layout_gravity="start"
-                android:fontFamily="@font/gilroy_regular"
-                android:text="Selfie Attendance"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_11ssp" />
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_toStartOf="@+id/switch_selfie"
+                android:layout_toEndOf="@+id/img_selfie"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gilroy_regular"
+                    android:text="Selfie Attendance"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_11ssp" />
+
+                <TextView
+                    android:id="@+id/btn_change_selfie_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:fontFamily="@font/gilroy_bold"
+                    android:text="📷 Change Photo"
+                    android:textColor="#2563EB"
+                    android:textSize="@dimen/_9ssp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_selfie"

@@ -15,6 +15,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.CheckBox
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -486,8 +487,19 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
             }
         }
 
+        val btnChangePhoto = view.findViewById<TextView>(R.id.btn_change_selfie_photo)
+
         val selectedEmp = empList.find { it.id == id }
         val hasSelfie = selectedEmp?.hasSelfie == true || !selectedEmp?.selfieImage.isNullOrBlank() || !selectedEmp?.selfieImagePath.isNullOrBlank()
+
+        if (hasSelfie) {
+            btnChangePhoto.visibility = View.VISIBLE
+            btnChangePhoto.setOnClickListener {
+                showChooseSelfieSourceDialog(id)
+            }
+        } else {
+            btnChangePhoto.visibility = View.GONE
+        }
 
         switchSelfie.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
@@ -498,6 +510,11 @@ class ViewAllEmployeeActivity : AppCompatActivity() {
                     attendanceType = "selfie"
                     switchGeo.isChecked = false
                     switchQr.isChecked = false
+                    btnChangePhoto.visibility = View.VISIBLE
+                }
+            } else {
+                if (!hasSelfie) {
+                    btnChangePhoto.visibility = View.GONE
                 }
             }
         }
